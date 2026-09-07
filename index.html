@@ -491,10 +491,10 @@
   }
   .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
   .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
-  /* touch devices can't hover — keep the first item of each practice open by default */
+  /* touch devices can't hover — open the first item of whichever practice is in view while scrolling */
   @media (hover: none) {
-    .practice li:first-child .t { color: var(--focus); }
-    .practice li:first-child .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+    .practice.in-view li:first-child .t { color: var(--focus); }
+    .practice.in-view li:first-child .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
   }
 
   /* ---------- Process timeline ---------- */
@@ -1766,6 +1766,15 @@
       revealEls.forEach(function (el) { io.observe(el); });
     } else {
       revealEls.forEach(function (el) { el.classList.add("in"); });
+    }
+
+    /* practices (touch): open the first item of whichever card is in view while scrolling */
+    var practiceCards = document.querySelectorAll(".practice");
+    if (practiceCards.length && "IntersectionObserver" in window) {
+      var pio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.target.classList.toggle("in-view", en.isIntersecting); });
+      }, { rootMargin: "-20% 0px -30% 0px", threshold: 0 });
+      practiceCards.forEach(function (c) { pio.observe(c); });
     }
 
     /* timeline activation + progress */
