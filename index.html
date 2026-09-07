@@ -483,27 +483,18 @@
   }
   .practice li:first-child { border-top: 0; }
   .practice li .n { font-size: .68rem; color: var(--faint); font-variant-numeric: tabular-nums; }
-  .practice li .t { font-size: .9rem; font-weight: 550; transition: color .3s cubic-bezier(.2, .7, .2, 1); }
+  .practice li .t { font-size: .9rem; font-weight: 550; transition: color .18s ease; }
   .practice li .desc {
     margin: 0; max-height: 0; opacity: 0; overflow: hidden;
     font-size: .8rem; color: var(--muted);
-    transform: translateY(-4px);
-    transition:
-      max-height .5s cubic-bezier(.2, .7, .2, 1),
-      opacity .42s ease,
-      transform .5s cubic-bezier(.2, .7, .2, 1),
-      margin .5s cubic-bezier(.2, .7, .2, 1);
+    transition: max-height .35s ease, opacity .28s ease, margin .3s ease;
   }
   .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
-  .practice li:hover .desc, .practice li:focus-within .desc {
-    max-height: 4.5rem; opacity: 1; margin-top: .35rem; transform: translateY(0);
-  }
+  .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
   /* touch devices can't hover — open the first item of whichever practice is in view while scrolling */
   @media (hover: none) {
     .practice.in-view li:first-child .t { color: var(--focus); }
-    .practice.in-view li:first-child .desc {
-      max-height: 4.5rem; opacity: 1; margin-top: .35rem; transform: translateY(0);
-    }
+    .practice.in-view li:first-child .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
   }
 
   /* ---------- Process timeline ---------- */
@@ -1782,7 +1773,7 @@
     if (practiceCards.length && "IntersectionObserver" in window) {
       var pio = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) { en.target.classList.toggle("in-view", en.isIntersecting); });
-      }, { rootMargin: "-12% 0px -18% 0px", threshold: 0 });
+      }, { rootMargin: "-20% 0px -30% 0px", threshold: 0 });
       practiceCards.forEach(function (c) { pio.observe(c); });
     }
 
