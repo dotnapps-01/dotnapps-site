@@ -463,8 +463,12 @@
     .practice:nth-child(5) { grid-column: 1 / -1; max-width: 480px; margin-inline: auto; }
   }
   @media (max-width: 620px) {
-    .practices { grid-template-columns: 1fr; }
+    /* single column: size each card to its content instead of stretching to the tallest */
+    .practices { grid-template-columns: 1fr; grid-auto-rows: auto; gap: .6rem; }
     .practice:nth-child(5) { max-width: none; }
+    .practice { padding: 1.1rem 1.15rem 1.15rem; }
+    .practice-head { margin-bottom: .7rem; }
+    .practice li { padding: .48rem 0; }
   }
   .practice:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
   .practice-head { display: flex; align-items: baseline; gap: .6rem; margin-bottom: 1rem; }
