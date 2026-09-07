@@ -427,8 +427,28 @@
   /* ---------- Products ---------- */
   .product { border: 1px solid var(--hairline); border-radius: 20px; background: var(--sunken); padding: clamp(1.75rem, 5vw, 3rem); }
   .product-top { display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
-  .product-badge { width: 38px; aspect-ratio: 1; display: grid; place-items: center; flex: none; }
-  .product-badge svg { width: 100%; height: 100%; }
+  /* Business OS identity — a graphite app tile (the OS shell that holds the coloured apps below) */
+  .product-badge {
+    width: 46px; aspect-ratio: 1; border-radius: 23%;
+    display: grid; place-items: center; flex: none;
+    position: relative; overflow: hidden; color: #fff;
+    background: linear-gradient(158deg, #6c6c72 0%, #48484a 44%, #29292b 100%);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, .42),
+      inset 0 -2px 3px rgba(0, 0, 0, .26),
+      inset 0 0 0 .5px rgba(0, 0, 0, .16),
+      0 3px 9px -1px rgba(0, 0, 0, .3),
+      0 1px 2px rgba(0, 0, 0, .14);
+  }
+  .product-badge::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .3) 0%, rgba(255, 255, 255, .06) 42%, transparent 58%);
+  }
+  .product-badge svg { width: 58%; height: 58%; position: relative; z-index: 1; }
+  .product-badge svg .fg { fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .24)); }
+  :root[data-theme="dark"] .product-badge {
+    background: linear-gradient(158deg, #7c7c82 0%, #59595d 44%, #3a3a3d 100%);
+  }
   .logomark { display: block; }
   .lg-fg { fill: var(--text); }
   .product-top h3 { font-size: clamp(1.6rem, 3.8vw, 2.2rem); margin: 0; }
@@ -475,7 +495,7 @@
   @media (max-width: 640px) {
     .product { text-align: center; }
     .product-top { flex-direction: column; align-items: center; gap: .85rem; }
-    .product-badge { width: 46px; }
+    .product-badge { width: 52px; }
     .product-top > div { max-width: 34rem; }
     .product-top h3 { font-size: 1.7rem; }
     .product-top p { margin-left: auto; margin-right: auto; }
@@ -1379,8 +1399,8 @@
 
     <div class="product reveal">
       <div class="product-top">
-        <span class="product-badge">
-          <svg viewBox="26 27.4 48 45.1" class="logomark" aria-hidden="true"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>
+        <span class="product-badge" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><rect class="fg" x="18" y="18" width="30" height="30"/><path class="fg" d="M52 18H74L82 26V48H52Z"/><rect class="fg" x="18" y="52" width="30" height="30"/><rect class="fg" x="52" y="52" width="30" height="30"/></svg>
         </span>
         <div>
           <h3 class="serif">Business OS</h3>
