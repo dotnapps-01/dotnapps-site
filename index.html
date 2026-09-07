@@ -257,16 +257,16 @@
     position: fixed; top: 68px; left: 50%;
     transform: translateX(-50%) translateY(-8px) scale(.98);
     transform-origin: top center;
-    width: min(30rem, calc(100vw - 2rem));
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 2rem;
-    padding: 1.4rem 1.6rem 1.5rem;
-    background: color-mix(in srgb, var(--frame) 62%, transparent);
-    backdrop-filter: blur(40px) saturate(200%);
-    -webkit-backdrop-filter: blur(40px) saturate(200%);
-    border: 1px solid color-mix(in srgb, var(--frame) 55%, transparent);
+    width: min(32rem, calc(100vw - 2rem));
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 2.5rem;
+    padding: 1.5rem 1.7rem 1.6rem;
+    background: color-mix(in srgb, var(--frame) 96%, transparent);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid var(--hairline);
     border-radius: 22px;
     box-shadow:
-      0 24px 64px -18px rgba(0, 0, 0, .26), 0 6px 20px rgba(0, 0, 0, .08),
+      0 28px 70px -16px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .12),
       inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
     opacity: 0; visibility: hidden; pointer-events: none;
     transition: opacity .2s ease, transform .24s cubic-bezier(.2, .7, .2, 1), visibility .24s;
@@ -1048,13 +1048,14 @@
       transform: translateX(-50%) translateY(-8px) scale(.97);
       transform-origin: top center;
       width: min(340px, calc(100vw - 2.5rem)); max-width: none;
-      opacity: 0; visibility: hidden; overflow: visible; pointer-events: none;
+      max-height: calc(100dvh - 2.5rem); overflow-y: auto; overscroll-behavior: contain;
+      opacity: 0; visibility: hidden; pointer-events: none;
       flex-direction: column; align-items: stretch; gap: 0;
       margin: 0; padding: 1rem 1.1rem 1.2rem;
-      background: color-mix(in srgb, var(--frame) 55%, transparent);
-      backdrop-filter: blur(44px) saturate(210%);
-      -webkit-backdrop-filter: blur(44px) saturate(210%);
-      border: 1px solid color-mix(in srgb, var(--frame) 60%, transparent);
+      background: color-mix(in srgb, var(--frame) 90%, transparent);
+      backdrop-filter: blur(34px) saturate(190%);
+      -webkit-backdrop-filter: blur(34px) saturate(190%);
+      border: 1px solid var(--hairline);
       border-radius: 30px;
       box-shadow:
         0 28px 70px -18px rgba(0, 0, 0, .28), 0 8px 24px rgba(0, 0, 0, .09),
