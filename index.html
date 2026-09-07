@@ -1046,8 +1046,7 @@
       display: flex; position: fixed;
       top: 24px; left: 50%;
       transform: translateX(-50%) translateY(-8px) scale(.97);
-      /* collapse toward the hamburger (top-right of the pill) — the genie's mouth */
-      transform-origin: 84% -6%;
+      transform-origin: top center;
       width: min(340px, calc(100vw - 2.5rem)); max-width: none;
       max-height: calc(100svh - 2.5rem); overflow-y: auto; overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
@@ -1063,59 +1062,12 @@
         0 28px 70px -18px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .12),
         inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
       /* own compositing layer so iOS repaints the scrolled content over the blur */
-      will-change: transform, clip-path;
-      clip-path: inset(0 round 30px);
-      transition: opacity .2s ease, visibility .3s;
+      will-change: transform;
+      transition: opacity .22s ease, transform .26s cubic-bezier(.2,.7,.2,1), visibility .26s;
     }
     .nav.open .nav-links {
       opacity: 1; visibility: visible; pointer-events: auto;
       transform: translateX(-50%) translateY(0) scale(1) translateZ(0);
-      /* backwards (not forwards): once it settles, the base rounded clip-path
-         and this transform take over again, so the corners stay rounded */
-      animation: genieOpen .5s cubic-bezier(.33,.1,.16,1) backwards;
-    }
-    .nav.closing .nav-links {
-      visibility: visible; opacity: 1; pointer-events: none;
-      animation: genieClose .34s cubic-bezier(.5,0,.78,.34) both;
-    }
-    /* macOS-style genie: a thin tapered neck near the toggle unfurls into the card */
-    @keyframes genieOpen {
-      0% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-18px) scale(.05);
-        clip-path: polygon(76% 0%, 100% 0%, 97% 7%, 81% 7%);
-      }
-      22% { opacity: 1; }
-      40% {
-        transform: translateX(-50%) translateY(-5px) scaleX(.13) scaleY(.48);
-        clip-path: polygon(68% 0%, 100% 0%, 91% 100%, 79% 100%);
-      }
-      68% {
-        transform: translateX(-50%) translateY(0) scaleX(.62) scaleY(.9);
-        clip-path: polygon(22% 0%, 100% 0%, 96% 100%, 6% 100%);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
-        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-      }
-    }
-    @keyframes genieClose {
-      0% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
-        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-      }
-      42% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scaleX(.5) scaleY(.84);
-        clip-path: polygon(26% 0%, 100% 0%, 95% 100%, 7% 100%);
-      }
-      100% {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-18px) scale(.05);
-        clip-path: polygon(76% 0%, 100% 0%, 97% 7%, 81% 7%);
-      }
     }
 
     .menu-head {
@@ -2015,43 +1967,17 @@
     /* mobile menu */
     var navToggle = document.querySelector(".nav-toggle");
     if (navToggle) {
-      var navLinks = nav.querySelector(".nav-links");
-      var closeTimer;
-      var finishClose = function () {
-        clearTimeout(closeTimer);
-        nav.classList.remove("open", "closing");
-        if (navLinks) navLinks.removeEventListener("animationend", onCloseEnd);
-      };
-      var onCloseEnd = function (e) {
-        if (!e || e.target === navLinks) finishClose();
-      };
       var closeMenu = function () {
+        nav.classList.remove("open");
         navToggle.setAttribute("aria-expanded", "false");
         var d = nav.querySelector(".nav-drop");
         if (d) d.classList.remove("open");
-        if (!nav.classList.contains("open") || nav.classList.contains("closing")) {
-          finishClose();
-          return;
-        }
-        var animated = navLinks &&
-          !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) &&
-          window.matchMedia("(max-width: 820px)").matches;
-        if (!animated) { finishClose(); return; }
-        /* let the genie-out animation play, then drop the classes */
-        nav.classList.add("closing");
-        navLinks.addEventListener("animationend", onCloseEnd);
-        closeTimer = setTimeout(finishClose, 500);
       };
       navToggle.addEventListener("click", function (e) {
         e.stopPropagation();
-        if (nav.classList.contains("open") && !nav.classList.contains("closing")) {
-          closeMenu();
-        } else {
-          clearTimeout(closeTimer);
-          nav.classList.remove("closing");
-          nav.classList.add("open");
-          navToggle.setAttribute("aria-expanded", "true");
-        }
+        var open = nav.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        if (!open) { var d = nav.querySelector(".nav-drop"); if (d) d.classList.remove("open"); }
       });
       /* desktop only: "Resources" is a hover mega-menu; on mobile the panel
          is always shown (its links close the menu via the handler below) */
