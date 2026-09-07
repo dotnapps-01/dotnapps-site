@@ -7,8 +7,9 @@ its own product line, **Business OS**.
 
 ## What's here
 
-A single self-contained page: [`index.html`](index.html). No build step, no
-dependencies — open it in a browser or serve the folder statically.
+Two pages — [`index.html`](index.html) (home) and [`about.html`](about.html)
+(`/about`) — sharing [`site.css`](site.css) and [`site.js`](site.js). No build
+step, no dependencies — serve the folder statically.
 
 - Monochrome design system (black / white / greys, one blue for focus & links)
 - Space Grotesk type, light + dark themes with a manual toggle
