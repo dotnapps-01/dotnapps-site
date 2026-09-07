@@ -29,5 +29,9 @@ python3 -m http.server 8080
 
 ## Deploy
 
-Any static host works. For GitHub Pages: Settings → Pages → deploy from
-`main` / root.
+Live at **https://www.dotnapps.com** (Vercel, auto-deploys on push to `main`).
+`dotnapps.com` 308-redirects to `www`. Config in [`vercel.json`](vercel.json);
+no build step. `robots.txt` / `sitemap.xml` / `og.png` / `favicon.svg` are
+served from the repo root.
+
+Any static host works too — it's a single `index.html`.
