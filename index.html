@@ -1984,15 +1984,15 @@
           e.preventDefault();
           var open = dropBtn.parentElement.classList.toggle("open");
           dropBtn.setAttribute("aria-expanded", open ? "true" : "false");
-          /* iOS Safari sometimes doesn't paint content shown inside a fixed,
-             transformed scroll container — kick a recomposite */
-          var card = document.getElementById("navmenu");
-          if (card) {
-            card.style.transform = "translateX(-50%) translateY(0) scale(1) translateZ(0)";
-            requestAnimationFrame(function () {
-              card.style.transform = "";
-              card.scrollTop = card.scrollTop;
-            });
+          /* iOS Safari won't paint content revealed inside this fixed,
+             transformed scroll container — rebuild the card's render tree */
+          if (open) {
+            var card = document.getElementById("navmenu");
+            if (card) {
+              card.style.display = "none";
+              void card.offsetHeight;
+              card.style.display = "";
+            }
           }
         }
       });
