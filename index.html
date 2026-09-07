@@ -487,6 +487,11 @@
   }
   .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
   .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+  /* touch devices can't hover — keep the first item of each practice open by default */
+  @media (hover: none) {
+    .practice li:first-child .t { color: var(--focus); }
+    .practice li:first-child .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+  }
 
   /* ---------- Process timeline ---------- */
   .process-grid { display: grid; grid-template-columns: minmax(240px, 330px) 1fr; gap: clamp(1.5rem, 5vw, 3.5rem); }
