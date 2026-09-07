@@ -489,12 +489,16 @@
     font-size: .8rem; color: var(--muted);
     transition: max-height .35s ease, opacity .28s ease, margin .3s ease;
   }
-  .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
-  .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
-  /* touch devices can't hover — keep the first item of each practice open by default */
+  /* desktop: hover reveals the description */
+  @media (hover: hover) {
+    .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
+    .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+  }
+  /* touch: tap to open, one at a time (JS marks .is-open; first item opens by default) */
   @media (hover: none) {
-    .practice li:first-child .t { color: var(--focus); }
-    .practice li:first-child .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+    .practice li { cursor: pointer; }
+    .practice li.is-open .t, .practice li:focus-visible .t { color: var(--focus); }
+    .practice li.is-open .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
   }
 
   /* ---------- Process timeline ---------- */
@@ -1766,6 +1770,27 @@
       revealEls.forEach(function (el) { io.observe(el); });
     } else {
       revealEls.forEach(function (el) { el.classList.add("in"); });
+    }
+
+    /* practices on touch: single-open accordion, first item open by default */
+    if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
+      document.querySelectorAll(".practice").forEach(function (card) {
+        var items = [].slice.call(card.querySelectorAll("ul > li"));
+        if (!items.length) return;
+        items[0].classList.add("is-open");
+        items.forEach(function (li) {
+          li.setAttribute("tabindex", "0");
+          var toggle = function () {
+            var wasOpen = li.classList.contains("is-open");
+            items.forEach(function (o) { o.classList.remove("is-open"); });
+            if (!wasOpen) li.classList.add("is-open");
+          };
+          li.addEventListener("click", toggle);
+          li.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+          });
+        });
+      });
     }
 
     /* timeline activation + progress */
