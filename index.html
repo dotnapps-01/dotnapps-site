@@ -908,6 +908,49 @@
   .brief .magnetic button { cursor: pointer; }
   .brief-done { font-size: .86rem; color: var(--muted); margin: .3rem 0 0; text-transform: none; letter-spacing: normal; font-weight: 400; }
 
+  /* ---------- Modal forms ---------- */
+  .modal {
+    border: 1px solid var(--hairline); padding: 0; margin: auto;
+    width: min(30rem, calc(100vw - 2rem)); max-width: none;
+    max-height: min(calc(100dvh - 2rem), 44rem); overflow: auto;
+    border-radius: 20px; background: var(--frame); color: var(--text);
+    box-shadow: var(--shadow-card);
+    overscroll-behavior: contain;
+  }
+  .modal::backdrop {
+    background: color-mix(in srgb, var(--text) 42%, transparent);
+    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  }
+  .modal[open] { animation: modalIn .24s cubic-bezier(.2, .7, .2, 1); }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+  .modal-inner { padding: 1.4rem 1.4rem 1.5rem; }
+  .modal-head { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.1rem; }
+  .modal-head h3 { margin: 0; font-size: 1.15rem; font-weight: 650; letter-spacing: -.02em; }
+  .modal-head p { margin: .3rem 0 0; font-size: .85rem; color: var(--muted); }
+  .modal-close {
+    margin-left: auto; margin-right: -.3rem; flex: none;
+    width: 32px; height: 32px; border: 0; background: none; color: var(--muted); cursor: pointer;
+    display: grid; place-items: center; border-radius: 999px;
+    transition: background .16s ease, color .16s ease;
+  }
+  .modal-close:hover { background: var(--sunken); color: var(--text); }
+  .modal-close svg { width: 15px; height: 15px; }
+  .mform { display: grid; gap: .7rem; text-align: left; }
+  .mform[hidden] { display: none; }
+  .mform .row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .mform label { display: flex; flex-direction: column; gap: .3rem; font-size: .66rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  .mform input, .mform select, .mform textarea {
+    font: inherit; font-size: .92rem; text-transform: none; letter-spacing: normal; font-weight: 400;
+    color: var(--text); background: var(--frame);
+    border: 1px solid var(--border); border-radius: 10px; padding: .6rem .7rem;
+  }
+  .mform textarea { resize: vertical; min-height: 84px; }
+  .mform input:focus, .mform select:focus, .mform textarea:focus { outline: 2px solid var(--focus); outline-offset: 1px; border-color: var(--focus); }
+  .mform .full { grid-column: 1 / -1; }
+  .mform button[type="submit"] { margin-top: .3rem; width: 100%; justify-content: center; }
+  .mform-done { font-size: .85rem; color: var(--muted); text-transform: none; letter-spacing: normal; font-weight: 400; margin: 0; }
+  @media (max-width: 480px) { .mform .row { grid-template-columns: 1fr; } }
+
   /* ===================== RESPONSIVE ===================== */
   @media (max-width: 960px) {
     h1 { font-size: clamp(2.15rem, 6vw, 3.1rem); }
@@ -1130,7 +1173,7 @@
     <a href="#process">Process</a>
     <a href="#faq">FAQ</a>
     <button class="menu-theme" type="button" data-theme-toggle aria-label="Switch colour theme"><span class="tl">Theme</span> <span class="tw" aria-hidden="true">&#9683;</span></button>
-    <a class="btn btn--solid nav-contact" href="#contact">Contact</a>
+    <a class="btn btn--solid nav-contact" href="#contact" data-modal="contact">Contact</a>
   </div>
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menu">
     <i></i><i></i><i></i>
@@ -1153,7 +1196,7 @@
       <p>Dotnapps designs and builds software for other companies &mdash; and runs Business&nbsp;OS, our own suite of business apps. The same team does both.</p>
       <div class="hero-actions">
         <a class="btn btn--solid" href="#contact">Start a project</a>
-        <a class="btn btn--ghost" href="#products">Explore Business OS</a>
+        <a class="btn btn--ghost" href="#products" data-modal="businessos">Explore Business OS</a>
       </div>
       <ul class="hero-caps">
         <li>Custom software</li>
@@ -1555,7 +1598,7 @@
       <h3>We're building the team</h3>
       <p>Open roles for senior engineers and product designers who like shipping.</p>
     </div>
-    <a class="btn btn--ghost" href="mailto:careers@dotnapps.com">See open roles</a>
+    <a class="btn btn--ghost" href="mailto:careers@dotnapps.com" data-modal="careers">See open roles</a>
   </section>
 
   <!-- ===================== CONTACT ===================== -->
@@ -1586,6 +1629,53 @@
     </form>
   </section>
 
+  <dialog class="modal" id="formModal" aria-labelledby="modalTitle">
+    <div class="modal-inner">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle" data-modal-title></h3>
+          <p data-modal-sub></p>
+        </div>
+        <button class="modal-close" type="button" aria-label="Close" data-modal-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <form class="mform" data-form="contact" hidden>
+        <label class="full">Your name<input type="text" name="name" autocomplete="name" required></label>
+        <label class="full">Email<input type="email" name="email" autocomplete="email" required></label>
+        <label class="full">Message<textarea name="message" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Send</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the message ready to send.</p>
+      </form>
+
+      <form class="mform" data-form="careers" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Role
+          <select name="role"><option>Senior Engineer</option><option>Product Designer</option><option>Other</option></select>
+        </label>
+        <label class="full">Portfolio or LinkedIn<input type="url" name="link" placeholder="https://"></label>
+        <label class="full">Anything else<textarea name="note"></textarea></label>
+        <button class="btn btn--solid" type="submit">Send application</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the application ready to send.</p>
+      </form>
+
+      <form class="mform" data-form="businessos" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Work email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Company<input type="text" name="company" autocomplete="organization"></label>
+        <label class="full">Which apps, and what for?<textarea name="detail" placeholder="e.g. CRM + Invoice for a 12-person sales team" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Request access</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the request ready to send.</p>
+      </form>
+    </div>
+  </dialog>
+
   <footer>
     <div class="foot-lead">
       <span class="foot-brand">
@@ -1613,8 +1703,8 @@
         <a href="#process">How we work</a>
         <a href="#compare">How we compare</a>
         <a href="#faq">FAQ</a>
-        <a href="#careers">Careers</a>
-        <a href="#contact">Contact</a>
+        <a href="#careers" data-modal="careers">Careers</a>
+        <a href="#contact" data-modal="contact">Contact</a>
       </div>
     </div>
     <p class="copy">&copy; 2026 Dotnapps &middot; product &amp; engineering studio.</p>
@@ -1696,6 +1786,65 @@
         var done = document.getElementById("brief-done");
         if (done) done.hidden = false;
         window.location.href = href;
+      });
+    }
+
+    /* dedicated form modals (careers / Business OS / general contact) */
+    var fm = document.getElementById("formModal");
+    if (fm && typeof fm.showModal === "function") {
+      var FORMS = {
+        contact:    { title: "Say hello",          sub: "A short note — we read every one.",                     to: "hello@dotnapps.com",   subj: function () { return "Hello from dotnapps.com"; } },
+        careers:    { title: "Join the team",       sub: "Senior engineers and product designers who like shipping.",  to: "careers@dotnapps.com", subj: function (d) { return "Application — " + (d.get("role") || "role"); } },
+        businessos: { title: "Business OS access",  sub: "Tell us what you'd run on it.",                              to: "hello@dotnapps.com",   subj: function () { return "Business OS — access request"; } }
+      };
+      var mTitle = fm.querySelector("[data-modal-title]");
+      var mSub = fm.querySelector("[data-modal-sub]");
+      var mPanels = fm.querySelectorAll(".mform");
+      var mTrigger = null;
+
+      var openModal = function (key, trigger) {
+        var cfg = FORMS[key];
+        if (!cfg) return;
+        mTrigger = trigger || null;
+        mTitle.textContent = cfg.title;
+        mSub.textContent = cfg.sub;
+        mPanels.forEach(function (p) {
+          var on = p.getAttribute("data-form") === key;
+          p.hidden = !on;
+          if (on) { p.reset(); p.querySelector(".mform-done").hidden = true; }
+        });
+        fm.showModal();
+        var first = fm.querySelector(".mform:not([hidden]) input, .mform:not([hidden]) textarea");
+        if (first) setTimeout(function () { first.focus(); }, 40);
+      };
+
+      document.querySelectorAll("[data-modal]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          openModal(btn.getAttribute("data-modal"), btn);
+        });
+      });
+      fm.querySelectorAll("[data-modal-close]").forEach(function (b) {
+        b.addEventListener("click", function () { fm.close(); });
+      });
+      fm.addEventListener("click", function (e) { if (e.target === fm) fm.close(); });
+      fm.addEventListener("close", function () { if (mTrigger) { try { mTrigger.focus(); } catch (e) {} } });
+
+      mPanels.forEach(function (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var cfg = FORMS[form.getAttribute("data-form")];
+          var d = new FormData(form);
+          var lines = [];
+          d.forEach(function (v, k) {
+            if (v) lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v);
+          });
+          var href = "mailto:" + cfg.to +
+            "?subject=" + encodeURIComponent(cfg.subj(d)) +
+            "&body=" + encodeURIComponent(lines.join("\n"));
+          form.querySelector(".mform-done").hidden = false;
+          window.location.href = href;
+        });
       });
     }
 
