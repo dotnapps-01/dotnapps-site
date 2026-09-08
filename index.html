@@ -873,7 +873,12 @@
 
   /* on-screen jump control (touch / narrow) */
   .game-pad { display: none; }
-  @media (pointer: coarse), (max-width: 720px) {
+  /* touch: no mini-game (its tap control was the last custom tap
+     interaction on mobile). Desktop keeps it. */
+  @media (pointer: coarse) {
+    #play { display: none; }
+  }
+  @media (pointer: fine) and (max-width: 720px) {
     .game-pad { display: flex; justify-content: center; margin-top: .95rem; }
   }
   .game-pad-base {
@@ -1846,6 +1851,37 @@
   (function () {
     var root = document.documentElement;
     root.classList.add("js");
+
+    if (/[?&]debug/.test(location.search)) {
+      var box = document.createElement("div");
+      box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:2147483647;pointer-events:none;background:rgba(0,0,0,.88);color:#0f0;font:10px/1.25 ui-monospace,Menlo,monospace;padding:5px 7px;white-space:pre-wrap;max-height:34vh;overflow:hidden";
+      var L = [], put = function (s) { L.unshift((Date.now() % 100000) + " " + s); L = L.slice(0, 26); box.textContent = L.join("\n"); };
+      (document.body || root).appendChild(box);
+      var tg = function (el) {
+        if (!el || !el.tagName) return String(el);
+        var c = (el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className) || "";
+        return el.tagName + (c ? "." + String(c).trim().split(/\s+/).slice(0, 2).join(".") : "") + (el.id ? "#" + el.id : "");
+      };
+      var lastTouch = 0, lastTouchEl = "?", y = window.scrollY;
+      ["pointerdown", "touchstart"].forEach(function (t) {
+        document.addEventListener(t, function (e) {
+          lastTouch = Date.now(); lastTouchEl = tg(e.target);
+          put(t + " " + lastTouchEl + "  sel=" + (String(getSelection()).slice(0, 12) || "-"));
+        }, true);
+      });
+      document.addEventListener("click", function (e) { put("click " + tg(e.target) + " -> " + tg(e.target.closest("section,footer,nav"))); }, true);
+      document.addEventListener("focusin", function (e) { put("FOCUSIN " + tg(e.target)); }, true);
+      document.addEventListener("selectionchange", function () { var s = String(getSelection()); if (s) put("SELECTION '" + s.slice(0, 20) + "'"); });
+      addEventListener("hashchange", function () { put("HASHCHANGE " + location.hash); });
+      addEventListener("resize", function () { put("resize vh=" + innerHeight); });
+      addEventListener("scroll", function () {
+        var d = window.scrollY - y; y = window.scrollY;
+        if (Math.abs(d) < 3) return;
+        var since = Date.now() - lastTouch;
+        put("SCROLL " + (d > 0 ? "+" : "") + Math.round(d) + " y=" + Math.round(window.scrollY) + (since < 600 ? "  <= from tap on " + lastTouchEl + " (" + since + "ms)" : ""));
+      }, { passive: true });
+      put("debug ready");
+    }
     var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (RM) {
       root.classList.add("reduce-motion");
