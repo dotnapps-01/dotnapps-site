@@ -52,6 +52,27 @@
   }
   * { overflow-anchor: none; }
 
+  /* Touch: never start a text selection from a tap. A tap that lasts a beat
+     too long or drifts a pixel made iOS begin selecting the row's text — the
+     grey box — and then scroll to reveal the selection, which is what read as
+     "it redirected me somewhere else". Prose and form fields stay selectable. */
+  @media (hover: none) {
+    body {
+      -webkit-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+    }
+    p, .prose, .band-head p, .bio-body, .work-card p,
+    input, textarea, select, [contenteditable] {
+      -webkit-user-select: text; user-select: text;
+    }
+    .practice li, .practice li *, .origin-row, .origin-row *,
+    .faq-tab, summary, .app, .leader, .game, .game *, .nav, .nav * {
+      -webkit-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+    }
+  }
+  * { -webkit-tap-highlight-color: transparent; }
+
   .frame {
     max-width: 1280px;
     margin: 0 auto;
