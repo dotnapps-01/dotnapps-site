@@ -88,10 +88,12 @@
       var mPanels = fm.querySelectorAll(".mform");
       var mTrigger = null;
 
+      var mScrollY = 0;
       var openModal = function (key, trigger) {
         var cfg = FORMS[key];
         if (!cfg) return;
         mTrigger = trigger || null;
+        mScrollY = window.scrollY;
         mTitle.textContent = cfg.title;
         mSub.textContent = cfg.sub;
         mPanels.forEach(function (p) {
@@ -114,7 +116,13 @@
         b.addEventListener("click", function () { fm.close(); });
       });
       fm.addEventListener("click", function (e) { if (e.target === fm) fm.close(); });
-      fm.addEventListener("close", function () { if (mTrigger) { try { mTrigger.focus(); } catch (e) {} } });
+      fm.addEventListener("close", function () {
+        try { window.scrollTo({ top: mScrollY, left: 0, behavior: "instant" }); } catch (e) { window.scrollTo(0, mScrollY); }
+        if (mTrigger) {
+          try { mTrigger.focus({ preventScroll: true }); }
+          catch (e) { try { mTrigger.focus(); } catch (e2) {} }
+        }
+      });
 
       mPanels.forEach(function (form) {
         form.addEventListener("submit", function (e) {
@@ -142,16 +150,40 @@
       var bioAva = bioModal.querySelector("[data-bio-ava]");
       var bioBody = bioModal.querySelector("[data-bio-body]");
       var bioTrigger = null;
+      var bioScrollY = 0;
+      var docEl = document.documentElement;
+      /* Opening/closing the dialog moves focus, and the browser then scrolls
+         that focus into view — with html{scroll-behavior:smooth} that plays as
+         a page jump into another section. Pin the scroll position hard for a
+         short window around each transition, with smooth scrolling suspended. */
+      var pinScroll = function (y) {
+        var prev = docEl.style.scrollBehavior;
+        docEl.style.scrollBehavior = "auto";
+        var t0 = Date.now();
+        var tick = function () {
+          if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
+          if (Date.now() - t0 < 350) requestAnimationFrame(tick);
+          else docEl.style.scrollBehavior = prev;
+        };
+        window.scrollTo(0, y);
+        requestAnimationFrame(tick);
+        setTimeout(tick, 120);
+        setTimeout(function () { docEl.style.scrollBehavior = prev; }, 400);
+      };
       document.querySelectorAll(".origin-row[data-bio]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
           var src = document.querySelector('.bio-store [data-bio="' + btn.getAttribute("data-bio") + '"]');
           if (!src) return;
+          bioScrollY = window.scrollY;
           bioTrigger = btn;
           bioName.textContent = src.getAttribute("data-name") || "";
           bioRole.innerHTML = src.getAttribute("data-role") || "";
           bioAva.textContent = src.getAttribute("data-ava") || "";
           bioBody.innerHTML = src.innerHTML;
-          bioModal.showModal();
+          if (!bioModal.open) bioModal.showModal();
+          bioModal.scrollTop = 0;
+          pinScroll(bioScrollY);
         });
       });
       bioModal.querySelectorAll("[data-modal-close]").forEach(function (b) {
@@ -159,7 +191,11 @@
       });
       bioModal.addEventListener("click", function (e) { if (e.target === bioModal) bioModal.close(); });
       bioModal.addEventListener("close", function () {
-        if (bioTrigger) { try { bioTrigger.focus(); } catch (e) {} }
+        if (bioTrigger) {
+          try { bioTrigger.focus({ preventScroll: true }); }
+          catch (e) { try { bioTrigger.focus(); } catch (e2) {} }
+        }
+        pinScroll(bioScrollY);
       });
     }
 
