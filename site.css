@@ -27,7 +27,14 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  /* Smooth scrolling only for mouse/desktop. On touch it turns every
+     focus-into-view (tapping an accordion row, a <summary>, a menu link)
+     into an animated flight that reads as being redirected to another
+     section — keep those instant instead. */
+  html { scroll-behavior: auto; }
+  @media (hover: hover) and (pointer: fine) {
+    html { scroll-behavior: smooth; }
+  }
 
   body {
     margin: 0;

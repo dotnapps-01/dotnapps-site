@@ -54,6 +54,16 @@
       });
     }
 
+    /* touch: don't let a tap focus a toggle control — focusing scrolls it
+       into view and the page appears to jump elsewhere. Keeps keyboard focus
+       (Tab doesn't fire mousedown) and the native/JS click behaviour. */
+    if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
+      var noFocusScroll = function (e) { e.preventDefault(); };
+      document.querySelectorAll(".faq-group summary, .faq-tab").forEach(function (el) {
+        el.addEventListener("mousedown", noFocusScroll);
+      });
+    }
+
     /* brief form -> mailto */
     var bf = document.getElementById("brief-form");
     if (bf) {
@@ -275,6 +285,9 @@
         items[0].classList.add("is-open");
         items.forEach(function (li) {
           li.setAttribute("tabindex", "0");
+          /* a tap must not focus the row — focusing scrolls it into view,
+             which reads as the page jumping to another section */
+          li.addEventListener("mousedown", function (e) { e.preventDefault(); });
           var toggle = function () {
             var wasOpen = li.classList.contains("is-open");
             items.forEach(function (o) { o.classList.remove("is-open"); });
