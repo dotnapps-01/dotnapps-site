@@ -55,12 +55,16 @@
     }
 
     /* touch: don't let a tap focus a toggle control — focusing scrolls it
-       into view and the page appears to jump elsewhere. Keeps keyboard focus
-       (Tab doesn't fire mousedown) and the native/JS click behaviour. */
+       into view and the page appears to jump elsewhere. mousedown-preventDefault
+       blocks the focus; blur() on click is a backstop for engines that focus
+       on touchend anyway. Keyboard focus (Tab) is unaffected. */
     if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
-      var noFocusScroll = function (e) { e.preventDefault(); };
       document.querySelectorAll(".faq-group summary, .faq-tab").forEach(function (el) {
-        el.addEventListener("mousedown", noFocusScroll);
+        el.addEventListener("mousedown", function (e) { e.preventDefault(); });
+        el.addEventListener("click", function () {
+          var el2 = this;
+          setTimeout(function () { try { el2.blur(); } catch (e) {} }, 0);
+        });
       });
     }
 
@@ -284,18 +288,15 @@
         if (!items.length) return;
         items[0].classList.add("is-open");
         items.forEach(function (li) {
-          li.setAttribute("tabindex", "0");
-          /* a tap must not focus the row — focusing scrolls it into view,
-             which reads as the page jumping to another section */
-          li.addEventListener("mousedown", function (e) { e.preventDefault(); });
-          var toggle = function () {
+          /* NB: no tabindex here on purpose. Making the row focusable means a
+             tap focuses it and the browser scrolls it into view — on iOS that
+             was a big jump into the next section. A plain <li> with a click
+             listener toggles fine and never takes focus. */
+          li.style.cursor = "pointer";
+          li.addEventListener("click", function () {
             var wasOpen = li.classList.contains("is-open");
             items.forEach(function (o) { o.classList.remove("is-open"); });
             if (!wasOpen) li.classList.add("is-open");
-          };
-          li.addEventListener("click", toggle);
-          li.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
           });
         });
       });
