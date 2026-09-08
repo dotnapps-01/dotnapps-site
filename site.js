@@ -1,6 +1,30 @@
   (function () {
     var root = document.documentElement;
     root.classList.add("js");
+
+    /* ?debug=1 — on-screen event log to diagnose the tap-scroll report */
+    if (/[?&]debug/.test(location.search)) {
+      var dbg = document.createElement("div");
+      dbg.style.cssText = "position:fixed;left:6px;right:6px;bottom:6px;z-index:99999;background:#000;color:#3f3;font:11px/1.35 ui-monospace,Menlo,monospace;padding:8px 10px;border-radius:8px;max-height:42vh;overflow:auto;white-space:pre-wrap;box-shadow:0 0 0 1px #3f3";
+      var lines = [];
+      var dlog = function (s) {
+        lines.unshift((Date.now() % 100000) + "  " + s);
+        lines = lines.slice(0, 24);
+        dbg.textContent = lines.join("\n");
+      };
+      var addDbg = function () { (document.body || root).appendChild(dbg); dlog("debug on  y=" + Math.round(scrollY)); };
+      if (document.body) addDbg(); else addEventListener("DOMContentLoaded", addDbg);
+      var lastDbgY = scrollY;
+      addEventListener("scroll", function () {
+        var d = scrollY - lastDbgY; lastDbgY = scrollY;
+        if (Math.abs(d) > 3) dlog("scroll " + (d > 0 ? "+" : "") + Math.round(d) + "  -> y" + Math.round(scrollY));
+      }, { passive: true });
+      var tag = function (el) { return el ? (el.tagName + (el.className && el.className.toString ? "." + el.className.toString().trim().split(/\s+/)[0] : "")) : "?"; };
+      document.addEventListener("click", function (e) { dlog("click " + tag(e.target) + (e.target.closest ? " in " + tag(e.target.closest("section,footer,nav")) : "")); }, true);
+      document.addEventListener("focusin", function (e) { dlog("FOCUSIN " + tag(e.target)); }, true);
+      addEventListener("hashchange", function () { dlog("HASHCHANGE " + location.hash); });
+      addEventListener("resize", function () { dlog("resize  vh=" + innerHeight); });
+    }
     var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (RM) {
       root.classList.add("reduce-motion");
