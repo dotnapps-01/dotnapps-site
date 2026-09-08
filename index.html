@@ -92,6 +92,12 @@
 
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+  * { -webkit-tap-highlight-color: transparent; }
+  @media (hover: none) {
+    html { scroll-behavior: auto; }
+    .practice li, .practice li *, .game, .game *, .nav, .nav *,
+    .faq-tab, summary { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  }
 
   body {
     margin: 0;
@@ -565,11 +571,10 @@
     .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
     .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
   }
-  /* touch: tap to open, one at a time (JS marks .is-open; first item opens by default) */
+  /* touch: no tap-to-open accordion. Every description is shown and the rows
+     are plain text — a tap target on body text scrolls the page on iOS. */
   @media (hover: none) {
-    .practice li { cursor: pointer; }
-    .practice li.is-open .t, .practice li:focus-visible .t { color: var(--focus); }
-    .practice li.is-open .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+    .practice li .desc { max-height: none; opacity: 1; margin-top: .3rem; transition: none; overflow: visible; }
   }
 
   /* ---------- Process timeline ---------- */
@@ -2038,22 +2043,17 @@
       revealEls.forEach(function (el) { el.classList.add("in"); });
     }
 
-    /* practices on touch: single-open accordion, first item open by default */
-    if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
+    /* practices: hover-to-reveal on desktop only. On touch every description
+       is shown by CSS and the rows are inert — nothing to tap, nothing to
+       scroll the page. */
+    if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       document.querySelectorAll(".practice").forEach(function (card) {
         var items = [].slice.call(card.querySelectorAll("ul > li"));
-        if (!items.length) return;
-        items[0].classList.add("is-open");
         items.forEach(function (li) {
-          li.setAttribute("tabindex", "0");
-          var toggle = function () {
+          li.addEventListener("click", function () {
             var wasOpen = li.classList.contains("is-open");
             items.forEach(function (o) { o.classList.remove("is-open"); });
             if (!wasOpen) li.classList.add("is-open");
-          };
-          li.addEventListener("click", toggle);
-          li.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
           });
         });
       });
@@ -2361,9 +2361,12 @@
       stage.addEventListener("keydown", function (e) {
         if (e.key === " " || e.key === "Spacebar" || e.code === "Space" || e.key === "ArrowUp") onInput(e);
       });
+      var isCoarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      if (isCoarse) stage.removeAttribute("tabindex");
       stage.addEventListener("pointerdown", function (e) {
+        if (e && e.cancelable) e.preventDefault();
         onInput(e);
-        try { stage.focus({ preventScroll: true }); } catch (err) { stage.focus(); }
+        if (!isCoarse) { try { stage.focus({ preventScroll: true }); } catch (err) {} }
       });
       startBtn.addEventListener("click", function () { if (stateG !== "run") start(); });
 
