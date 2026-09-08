@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>About Dotnapps</title>
+<meta name="description" content="Dotnapps is a studio and a product company in one — the same team builds software for clients and builds Business OS, its own suite of business apps. Neither is a side project.">
+<link rel="canonical" href="https://www.dotnapps.com/about">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Dotnapps">
+<meta name="theme-color" content="#F5F5F7">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dotnapps">
+<meta property="og:title" content="About Dotnapps">
+<meta property="og:description" content="A studio and a product company in one. The same team builds for clients and builds Business OS — neither is a side project.">
+<meta property="og:url" content="https://www.dotnapps.com/about">
+<meta property="og:image" content="https://www.dotnapps.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dotnapps">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Dotnapps">
+<meta name="twitter:description" content="A studio and a product company in one. The same team builds for clients and builds Business OS.">
+<meta name="twitter:image" content="https://www.dotnapps.com/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.dotnapps.com/#org",
+      "name": "Dotnapps",
+      "url": "https://www.dotnapps.com/",
+      "logo": "https://www.dotnapps.com/icon-512.png",
+      "image": "https://www.dotnapps.com/og.png",
+      "slogan": "Unlock your digital potential with us.",
+      "description": "Product and engineering studio that designs and builds software for other companies, and runs Business OS, its own suite of business apps.",
+      "email": "hello@dotnapps.com",
+      "foundingDate": "2023",
+      "founder": [
+        { "@type": "Person", "name": "Vikas Varun", "jobTitle": "Founder & CEO", "alumniOf": { "@type": "CollegeOrUniversity", "name": "Sri Krishna Adithya College of Arts and Science" } },
+        { "@type": "Person", "name": "Bala Kirishnan", "jobTitle": "Co-Founder & Managing Director", "alumniOf": { "@type": "CollegeOrUniversity", "name": "Sri Krishna Adithya College of Arts and Science" } },
+        { "@type": "Person", "name": "Rajkumar", "jobTitle": "Co-Founder & CTO", "alumniOf": { "@type": "CollegeOrUniversity", "name": "Sri Krishna Adithya College of Arts and Science" } }
+      ],
+      "knowsAbout": ["Custom software development", "SaaS product development", "MVP development", "AI agents", "Web and mobile apps", "Product design", "Cloud and DevOps"]
+    },
+    {
+      "@type": "AboutPage",
+      "@id": "https://www.dotnapps.com/about#page",
+      "url": "https://www.dotnapps.com/about",
+      "name": "About Dotnapps",
+      "isPartOf": { "@id": "https://www.dotnapps.com/#website" },
+      "about": { "@id": "https://www.dotnapps.com/#org" }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/site.css?v=20260908c">
+<style>
+  .about-hero {
+    text-align: center; max-width: 47rem; margin: 0 auto;
+    padding: clamp(7rem, 13vw, 9.5rem) 0 clamp(2.25rem, 6vw, 3.25rem);
+  }
+  .about-hero h1 { font-size: clamp(2.2rem, 5.6vw, 3.6rem); margin: 1.1rem 0 0; text-wrap: balance; }
+  .about-hero .lead { margin: 1.35rem auto 0; font-size: clamp(1.02rem, 2.3vw, 1.18rem); color: var(--muted); max-width: 37rem; }
+  .about-meta { list-style: none; margin: 1.75rem auto 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+  .about-meta li { font-size: .78rem; font-weight: 550; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: .32rem .8rem; }
+
+  .prose { max-width: 40rem; margin: 0 auto; display: flex; flex-direction: column; gap: 1.15rem; }
+  .prose p { margin: 0; color: var(--muted); font-size: 1.03rem; }
+  .prose p strong { color: var(--text); font-weight: 600; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .split .card { border: 1px solid var(--hairline); border-radius: 16px; background: var(--sunken); padding: 1.55rem 1.6rem; }
+  .split .card h3 { margin: 0 0 .55rem; font-size: 1.05rem; letter-spacing: -.015em; }
+  .split .card p { margin: 0 0 .95rem; color: var(--muted); font-size: .93rem; }
+  .split .card a { font-weight: 600; font-size: .88rem; color: var(--focus); }
+  .split .card a:hover { text-decoration: underline; }
+  @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+
+  .leaders { display: grid; grid-template-columns: repeat(3, 1fr); gap: .9rem; }
+  .leader { border: 1px solid var(--hairline); border-radius: 16px; background: var(--sunken); padding: 1.5rem 1.5rem 1.6rem; }
+  .leader .ava { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .92rem; letter-spacing: 0; background: var(--text); color: var(--frame); margin-bottom: 1rem; }
+  .leader h3 { margin: 0 0 .1rem; font-size: 1.1rem; letter-spacing: -.02em; }
+  .leader .role { margin: 0 0 .75rem; font-size: .8rem; font-weight: 600; letter-spacing: .01em; color: var(--focus); }
+  .leader p { margin: 0; font-size: .88rem; color: var(--muted); }
+  @media (max-width: 720px) { .leaders { grid-template-columns: 1fr; } }
+
+  /* "Where it began" — a single credits panel, deliberately unlike the founder cards */
+  .origin { border: 1px solid var(--hairline); border-radius: 20px; background: var(--sunken); padding: clamp(.4rem, 1.2vw, .8rem) 0; overflow: hidden; }
+  .origin-lead { display: flex; flex-direction: column; gap: .28rem; padding: clamp(1.15rem, 3vw, 1.7rem) clamp(1.5rem, 4vw, 2.35rem) 1.35rem; border-bottom: 1px solid var(--hairline); }
+  .origin-lead .lbl { font-size: .64rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  .origin-lead .who { font-size: 1.15rem; font-weight: 650; letter-spacing: -.02em; }
+  .origin-lead .where { font-size: .9rem; color: var(--muted); }
+
+  .origin-row {
+    width: 100%; font: inherit; color: inherit; text-align: left; border: 0;
+    border-bottom: 1px solid var(--hairline); background: none; cursor: pointer;
+    display: grid; grid-template-columns: 44px minmax(12rem, 16rem) 1fr 18px;
+    align-items: start; gap: 1rem 1.5rem;
+    padding: 1.25rem clamp(1.5rem, 4vw, 2.35rem);
+    transition: background .15s ease;
+  }
+  .origin-row:last-child { border-bottom: 0; }
+  .origin-row:hover, .origin-row:focus-visible { background: color-mix(in srgb, var(--text) 4%, transparent); outline: none; }
+  .origin-row:focus-visible { box-shadow: inset 0 0 0 2px var(--focus); }
+  .origin-ava { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .82rem; background: var(--text); color: var(--frame); }
+  img.origin-ava { object-fit: cover; }
+  .origin-id { display: block; min-width: 0; }
+  .origin-id .nm { display: block; font-size: .98rem; font-weight: 600; letter-spacing: -.01em; }
+  .origin-id .rl { display: block; font-size: .76rem; font-weight: 600; color: var(--focus); margin-top: .18rem; }
+  .origin-note { display: block; margin: 0; font-size: .9rem; color: var(--muted); }
+  .origin-go { width: 18px; height: 18px; color: var(--faint); align-self: center; transition: transform .15s ease, color .15s ease; }
+  .origin-row:hover .origin-go, .origin-row:focus-visible .origin-go { color: var(--text); transform: translateX(3px); }
+  @media (max-width: 680px) {
+    .origin-row { grid-template-columns: 44px 1fr 18px; gap: .4rem .9rem; }
+    .origin-note { grid-column: 1 / -1; }
+  }
+
+  /* person bio popup — a plain fixed overlay (no <dialog>/showModal: on iOS
+     that moved focus and scrolled the page into another section) */
+  .bio-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; overscroll-behavior: none; }
+  .bio-modal[hidden] { display: none; }
+  .bio-modal-backdrop { position: absolute; inset: 0; touch-action: none; background: color-mix(in srgb, var(--text) 42%, transparent); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .bio-modal-card {
+    position: relative; z-index: 1;
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: min(calc(100dvh - 2rem), 44rem); overflow: auto; overscroll-behavior: contain;
+    background: var(--frame); color: var(--text);
+    border: 1px solid var(--hairline); border-radius: 20px; box-shadow: var(--shadow-card);
+    padding: 1.4rem 1.4rem 1.5rem;
+    animation: modalIn .24s cubic-bezier(.2, .7, .2, 1);
+  }
+  .bio-head { display: flex; align-items: center; gap: .85rem; }
+  .bio-ava { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--text); color: var(--frame); flex: none; overflow: hidden; }
+  .bio-ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .bio-role { margin: .18rem 0 0; font-size: .8rem; font-weight: 600; color: var(--focus); }
+  .bio-body { display: flex; flex-direction: column; gap: .8rem; }
+  .bio-body p { margin: 0; font-size: .95rem; color: var(--muted); line-height: 1.62; }
+  .bio-body .bio-meta { font-size: .8rem; color: var(--faint); }
+
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: .9rem; }
+  .principle { border: 1px solid var(--hairline); border-radius: 14px; background: var(--frame); padding: 1.3rem 1.35rem; transition: transform .2s ease, box-shadow .2s ease; }
+  .principle:hover { transform: translateY(-3px); box-shadow: var(--shadow-chip); }
+  .principle b { display: block; font-size: .95rem; letter-spacing: -.01em; margin-bottom: .4rem; }
+  .principle p { margin: 0; font-size: .86rem; color: var(--muted); }
+
+  .timeline-lite { max-width: 40rem; margin: 0 auto; padding: 0; }
+  .timeline-lite li { list-style: none; display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; padding: 1.05rem 0; border-top: 1px solid var(--hairline); }
+  .timeline-lite li:first-child { border-top: 0; }
+  .timeline-lite .when { font-weight: 700; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); padding-top: .12rem; }
+  .timeline-lite .what { margin: 0; font-size: .96rem; color: var(--muted); }
+  .timeline-lite .what strong { color: var(--text); font-weight: 600; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; max-width: 44rem; margin: 0 auto; }
+  .stats > div { text-align: center; border: 1px solid var(--hairline); border-radius: 14px; background: var(--sunken); padding: 1.35rem .6rem; }
+  .stats .n { font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+  .stats .l { font-size: .74rem; color: var(--muted); margin-top: .4rem; }
+  @media (max-width: 560px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="brand" href="/" aria-label="Dotnapps home">
+    <svg viewBox="26 27.4 48 45.1" class="logomark" aria-hidden="true"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>
+    <span class="brand-name">Dotnapps</span>
+  </a>
+  <div class="nav-links" id="navmenu">
+    <div class="menu-head">
+      <span class="brand" aria-hidden="true">
+        <svg viewBox="26 27.4 48 45.1" class="logomark"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>
+        <span>Dotnapps</span>
+      </span>
+      <button class="menu-close" type="button" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <a href="/#work">Work</a>
+    <a href="/#products">Products<span class="badge">NEW</span></a>
+    <a href="/#services">Services</a>
+    <a href="/#process">Process</a>
+    <a href="/#faq">FAQ</a>
+    <div class="nav-drop">
+      <button type="button" aria-expanded="false" aria-controls="navResources">Resources
+        <svg class="nav-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nav-drop-panel" id="navResources">
+        <div class="ndp-col">
+          <span class="ndp-h">Company</span>
+          <a href="/about" aria-current="page">About</a>
+          <a href="/#careers">Careers</a>
+          <a href="/#contact">Webinars</a>
+          <a href="/#work">Customer Stories</a>
+          <a href="/#faq">Help Center</a>
+        </div>
+        <div class="ndp-col">
+          <span class="ndp-h">Initiatives</span>
+          <a href="/#contact">Impact Program</a>
+          <a href="/#contact">For Students</a>
+          <a href="/#contact">Affiliate Program</a>
+          <a href="/#contact">Commercial Partnership</a>
+        </div>
+      </div>
+    </div>
+    <button class="menu-theme" type="button" data-theme-toggle aria-label="Switch colour theme"><span class="tl">Theme</span> <span class="tw" aria-hidden="true">&#9683;</span></button>
+    <a class="btn btn--solid nav-contact" href="/#contact" data-modal="contact">Contact</a>
+  </div>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menu">
+    <i></i><i></i><i></i>
+  </button>
+</nav>
+
+<div class="frame">
+
+  <header class="about-hero" id="top">
+    <span class="eyebrow-pill">About</span>
+    <h1 class="serif">We build software for other companies &mdash; and our own.</h1>
+    <p class="lead">Dotnapps is a studio and a product company in one. We design and ship digital products for clients, and we build and run Business&nbsp;OS, our own suite of business apps. The same team does both &mdash; that&rsquo;s the whole point.</p>
+    <ul class="about-meta">
+      <li>Founded 2023</li>
+      <li>Studio + product company</li>
+      <li>Client work &amp; Business&nbsp;OS</li>
+      <li>Remote, senior team</li>
+    </ul>
+  </header>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">How it fits together</span>
+      <h2 class="serif">A studio and a product company, run by one team.</h2>
+    </div>
+    <div class="prose reveal">
+      <p>Dotnapps is two things at once. We design and build software for other companies, and we build and run <strong>Business&nbsp;OS</strong>, our own suite of business apps. Neither is a side project.</p>
+      <p>The two halves feed each other. Client work brings us hard problems from a dozen industries at once. Business&nbsp;OS gives us a product we own, operate, and support at scale &mdash; with real customers and real uptime. The same engineers and designers move between both.</p>
+      <p>It also keeps us honest. Every data model, billing flow, and onboarding we ship for a client is the kind we&rsquo;d be willing to run ourselves for years &mdash; because on Business&nbsp;OS, we do.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">Two sides, one team</span>
+      <h2 class="serif">What we do</h2>
+    </div>
+    <div class="split reveal">
+      <div class="card">
+        <h3>For clients</h3>
+        <p>Custom software, SaaS products, MVPs, AI agents, and platform modernization &mdash; 24 services across five practices: Product &amp; Software, AI &amp; Automation, Design, Digital Transformation, and Technology &amp; Growth.</p>
+        <a href="/#services">See the services &rarr;</a>
+      </div>
+      <div class="card">
+        <h3>For ourselves</h3>
+        <p>Business&nbsp;OS: one account, one bill, one design system across every app. Dotnapps CRM and Invoice today; Projects, Helpdesk, Analytics, Payroll and more on the roadmap &mdash; sold à la carte or as the suite.</p>
+        <a href="/#products">Explore Business OS &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">Leadership</span>
+      <h2 class="serif">The people running it</h2>
+      <p>Dotnapps was started in 2023 by three co-founders in their final year at Sri&nbsp;Krishna Adithya College of Arts and Science.</p>
+    </div>
+    <div class="leaders stagger reveal">
+      <div class="leader">
+        <span class="ava" aria-hidden="true">VV</span>
+        <h3>Vikas Varun</h3>
+        <p class="role">Founder &amp; CEO</p>
+        <p>Sets the direction across client work and Business&nbsp;OS, and stays close to both.</p>
+      </div>
+      <div class="leader">
+        <span class="ava" aria-hidden="true">BK</span>
+        <h3>Bala Kirishnan</h3>
+        <p class="role">Co-Founder &amp; Managing Director</p>
+        <p>Runs delivery and operations &mdash; how engagements are scoped, staffed, and shipped.</p>
+      </div>
+      <div class="leader">
+        <span class="ava" aria-hidden="true">R</span>
+        <h3>Rajkumar</h3>
+        <p class="role">Co-Founder &amp; CTO</p>
+        <p>Owns the architecture and the engineering standards shared across every Dotnapps product.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">Where it began</span>
+      <h2 class="serif">Mentors who got us started</h2>
+    </div>
+    <div class="origin reveal">
+      <div class="origin-lead">
+        <span class="lbl">Inaugurated by</span>
+        <span class="who">Palaniammal Senniappan</span>
+        <span class="where">Principal, Sri&nbsp;Krishna Adithya College of Arts and Science</span>
+      </div>
+      <button type="button" class="origin-row" data-bio="girisan">
+        <img class="origin-ava" src="/team/girisan.jpg" alt="" width="44" height="44" loading="lazy">
+        <span class="origin-id">
+          <span class="nm">Dr. E. K. Girisan</span>
+          <span class="rl">Startup mentor &middot; Associate Professor, Computer Science</span>
+        </span>
+        <span class="origin-note">Mentored Dotnapps from the first idea and helped turn a final-year project into a company. Director of IQAC at the college.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="origin-row" data-bio="deepa">
+        <span class="origin-ava" aria-hidden="true">DM</span>
+        <span class="origin-id">
+          <span class="nm">Dr. Deepa M</span>
+          <span class="rl">Faculty guidance</span>
+        </span>
+        <span class="origin-note">Guided and encouraged the founders through the early days and kept the momentum up.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="origin-row" data-bio="abel">
+        <img class="origin-ava" src="/team/abel.jpg" alt="" width="44" height="44" loading="lazy">
+        <span class="origin-id">
+          <span class="nm">Dr. Abel Thangaraja</span>
+          <span class="rl">Assistant Professor, Sri&nbsp;Krishna Adithya College</span>
+        </span>
+        <span class="origin-note">Ph.D. in data modelling and database administration. Backed the founders early and pushed them to commit to building Dotnapps for real.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="bio-store" hidden>
+      <article data-bio="girisan" data-name="Dr. E. K. Girisan" data-role="Startup mentor &middot; Associate Professor of Computer Science" data-ava="EG" data-ava-img="/team/girisan.jpg">
+        <p>Associate Professor of Computer Science at Sri&nbsp;Krishna Adithya College of Arts and Science, with more than two decades of teaching behind him.</p>
+        <p>He also serves as Director of the college&rsquo;s Internal Quality Assurance Cell, Honorary Secretary of the Computer Society of India (Coimbatore), an Institution&rsquo;s Innovation Council Innovation Ambassador, and an IIT Spoken Tutorial Ambassador.</p>
+        <p>For Dotnapps he was the first mentor &mdash; he backed the idea while it was still a final-year project and helped the founders shape it into a company.</p>
+        <p class="bio-meta">Sri&nbsp;Krishna Adithya College of Arts and Science &middot; Coimbatore, Tamil Nadu</p>
+      </article>
+      <article data-bio="deepa" data-name="Dr. Deepa M" data-role="Faculty guidance" data-ava="DM">
+        <p>Faculty at Sri&nbsp;Krishna Adithya College of Arts and Science.</p>
+        <p>She guided and encouraged the founders through the earliest days and kept the momentum going when Dotnapps was still just an idea.</p>
+        <p class="bio-meta">Full profile details coming soon.</p>
+      </article>
+      <article data-bio="abel" data-name="Dr. Abel Thangaraja" data-role="Assistant Professor &middot; Sri&nbsp;Krishna Adithya College" data-ava="AT" data-ava-img="/team/abel.jpg">
+        <p>Assistant Professor at Sri&nbsp;Krishna Adithya College of Arts and Science, affiliated to Bharathiar University.</p>
+        <p>He holds a Ph.D. in data modelling / warehousing and database administration from Bharathiar University, and works across e-learning, curriculum development, research and academic administration.</p>
+        <p>He backed the founders early on and pushed them to commit fully to building Dotnapps.</p>
+        <p class="bio-meta">Sri&nbsp;Krishna Adithya College of Arts and Science &middot; Coimbatore, Tamil Nadu</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="bio-modal" id="bioModal" role="dialog" aria-modal="true" aria-labelledby="bioName" hidden>
+    <div class="bio-modal-backdrop" data-modal-close></div>
+    <div class="bio-modal-card">
+      <div class="modal-head">
+        <div class="bio-head">
+          <span class="bio-ava" data-bio-ava aria-hidden="true"></span>
+          <div>
+            <h3 id="bioName" data-bio-name></h3>
+            <p class="bio-role" data-bio-role></p>
+          </div>
+        </div>
+        <button class="modal-close" type="button" aria-label="Close" data-modal-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="bio-body" data-bio-body></div>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">How we work</span>
+      <h2 class="serif">Principles</h2>
+      <p>Six things we don&rsquo;t compromise on.</p>
+    </div>
+    <div class="principles stagger reveal">
+      <div class="principle"><b>Own the outcome</b><p>We judge a project by what it does in production, not by what we handed over.</p></div>
+      <div class="principle"><b>One team, both sides</b><p>The engineers on your project also build and run Business&nbsp;OS. There is no junior bench.</p></div>
+      <div class="principle"><b>Senior by default</b><p>Every project runs on people who have shipped before. Fewer handoffs, less translation loss.</p></div>
+      <div class="principle"><b>Boring tech on purpose</b><p>TypeScript, React, Postgres, one cloud. Predictable beats novel when someone has to maintain it.</p></div>
+      <div class="principle"><b>Design is a discipline</b><p>One monochrome system, no decorative noise. Constraints keep the product legible.</p></div>
+      <div class="principle"><b>Ship weekly</b><p>Something real in front of you every week. Momentum is a feature.</p></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">Where we are</span>
+      <h2 class="serif">Where we are today</h2>
+    </div>
+    <ul class="timeline-lite reveal">
+      <li><span class="when">2023</span><p class="what"><strong>Dotnapps founded</strong> by Vikas&nbsp;Varun, Bala&nbsp;Kirishnan and Rajkumar in their final year at Sri&nbsp;Krishna Adithya College of Arts and Science.</p></li>
+      <li><span class="when">Live</span><p class="what"><strong>Dotnapps CRM and Invoice</strong> in production with customers &mdash; integrated end to end: quotations, invoices, payments, signed webhooks.</p></li>
+      <li><span class="when">In build</span><p class="what"><strong>The next Business&nbsp;OS apps</strong> across sales, finance, operations and people.</p></li>
+      <li><span class="when">Now</span><p class="what"><strong>Taking on client engagements</strong> and growing the team behind both sides.</p></li>
+    </ul>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">By the numbers</span>
+      <h2 class="serif">The shape of it</h2>
+    </div>
+    <div class="stats reveal">
+      <div><div class="n">5</div><div class="l">practices</div></div>
+      <div><div class="n">24</div><div class="l">services</div></div>
+      <div><div class="n">2</div><div class="l">live products</div></div>
+      <div><div class="n">12</div><div class="l">apps mapped</div></div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <h2 class="serif reveal">Let&rsquo;s build something.</h2>
+    <p class="reveal">A project brief, a Business&nbsp;OS question, or a role you want &mdash; start here.</p>
+    <div class="cta-actions reveal">
+      <a class="btn btn--solid" href="/#contact" data-modal="contact">Start a project</a>
+      <a class="btn btn--ghost" href="/#careers" data-modal="careers">See open roles</a>
+    </div>
+  </section>
+
+  <dialog class="modal" id="formModal" aria-labelledby="modalTitle">
+    <div class="modal-inner">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle" data-modal-title></h3>
+          <p data-modal-sub></p>
+        </div>
+        <button class="modal-close" type="button" aria-label="Close" data-modal-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <form class="mform" data-form="contact" hidden>
+        <label class="full">Your name<input type="text" name="name" autocomplete="name" required></label>
+        <label class="full">Email<input type="email" name="email" autocomplete="email" required></label>
+        <label class="full">Message<textarea name="message" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Send</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the message ready to send.</p>
+      </form>
+
+      <form class="mform" data-form="careers" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Role
+          <select name="role"><option>Senior Engineer</option><option>Product Designer</option><option>Other</option></select>
+        </label>
+        <label class="full">Portfolio or LinkedIn<input type="url" name="link" placeholder="https://"></label>
+        <label class="full">Anything else<textarea name="note"></textarea></label>
+        <button class="btn btn--solid" type="submit">Send application</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the application ready to send.</p>
+      </form>
+
+      <form class="mform" data-form="businessos" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Work email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Company<input type="text" name="company" autocomplete="organization"></label>
+        <label class="full">Which apps, and what for?<textarea name="detail" placeholder="e.g. CRM + Invoice for a 12-person sales team" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Request access</button>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the request ready to send.</p>
+      </form>
+    </div>
+  </dialog>
+
+  <footer>
+    <div class="foot-lead">
+      <span class="foot-brand">
+        <svg viewBox="26 27.4 48 45.1" class="logomark" aria-hidden="true"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>
+        Dotnapps
+      </span>
+      <p class="foot-tag">Unlock your digital potential with us.</p>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <b>Products</b>
+        <a href="/#products">Business OS</a>
+      </div>
+      <div class="col">
+        <b>Services</b>
+        <a href="/#cat-a">Product &amp; Software</a>
+        <a href="/#cat-b">AI &amp; Automation</a>
+        <a href="/#cat-c">Design</a>
+        <a href="/#cat-d">Digital Transformation</a>
+        <a href="/#cat-e">Technology &amp; Growth</a>
+      </div>
+      <div class="col">
+        <b>Company</b>
+        <a href="/about">About</a>
+        <a href="/#work">Work</a>
+        <a href="/#process">How we work</a>
+        <a href="/#faq">FAQ</a>
+        <a href="/#careers" data-modal="careers">Careers</a>
+        <a href="/#contact" data-modal="contact">Contact</a>
+      </div>
+    </div>
+    <p class="copy">&copy; 2026 Dotnapps &middot; product &amp; engineering studio.</p>
+  </footer>
+</div>
+
+<script src="/site.js?v=20260908c"></script>
+</body>
+</html>
