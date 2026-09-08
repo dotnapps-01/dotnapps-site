@@ -151,51 +151,70 @@
       var bioBody = bioModal.querySelector("[data-bio-body]");
       var bioTrigger = null;
       var bioScrollY = 0;
-      var docEl = document.documentElement;
-      /* Opening/closing the dialog moves focus, and the browser then scrolls
-         that focus into view — with html{scroll-behavior:smooth} that plays as
-         a page jump into another section. Pin the scroll position hard for a
-         short window around each transition, with smooth scrolling suspended. */
-      var pinScroll = function (y) {
-        var prev = docEl.style.scrollBehavior;
-        docEl.style.scrollBehavior = "auto";
-        var t0 = Date.now();
-        var tick = function () {
-          if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
-          if (Date.now() - t0 < 350) requestAnimationFrame(tick);
-          else docEl.style.scrollBehavior = prev;
-        };
-        window.scrollTo(0, y);
-        requestAnimationFrame(tick);
-        setTimeout(tick, 120);
-        setTimeout(function () { docEl.style.scrollBehavior = prev; }, 400);
+      var bioLocked = false;
+      /* Freeze the page under the dialog. Focus moving into/out of the modal
+         makes the browser scroll that element into view (and iOS ignores
+         focus({preventScroll:true}) on older Safari) — which showed up as the
+         page jumping into another section, worst on the bottom row. Pinning the
+         body with position:fixed removes any background scroll entirely, then
+         we restore the exact offset on close. */
+      var lockBody = function () {
+        if (bioLocked) return;
+        bioScrollY = window.scrollY || window.pageYOffset || 0;
+        bioLocked = true;
+        var b = document.body.style;
+        b.position = "fixed";
+        b.top = -bioScrollY + "px";
+        b.left = "0";
+        b.right = "0";
+        b.width = "100%";
+      };
+      var unlockBody = function () {
+        if (!bioLocked) return;
+        bioLocked = false;
+        var b = document.body.style;
+        b.position = ""; b.top = ""; b.left = ""; b.right = ""; b.width = "";
+        /* must be instant — a smooth restore flashes the page to the top first */
+        try { window.scrollTo({ top: bioScrollY, left: 0, behavior: "instant" }); }
+        catch (e) { window.scrollTo(0, bioScrollY); }
       };
       document.querySelectorAll(".origin-row[data-bio]").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
           e.preventDefault();
           var src = document.querySelector('.bio-store [data-bio="' + btn.getAttribute("data-bio") + '"]');
           if (!src) return;
-          bioScrollY = window.scrollY;
           bioTrigger = btn;
           bioName.textContent = src.getAttribute("data-name") || "";
           bioRole.innerHTML = src.getAttribute("data-role") || "";
           bioAva.textContent = src.getAttribute("data-ava") || "";
           bioBody.innerHTML = src.innerHTML;
+          lockBody();
           if (!bioModal.open) bioModal.showModal();
           bioModal.scrollTop = 0;
-          pinScroll(bioScrollY);
         });
       });
-      bioModal.querySelectorAll("[data-modal-close]").forEach(function (b) {
-        b.addEventListener("click", function () { bioModal.close(); });
-      });
-      bioModal.addEventListener("click", function (e) { if (e.target === bioModal) bioModal.close(); });
-      bioModal.addEventListener("close", function () {
+      var releaseBio = function () {
+        /* return focus to the row while the body is still frozen so it can't
+           scroll, then unlock and restore the exact offset */
         if (bioTrigger) {
           try { bioTrigger.focus({ preventScroll: true }); }
           catch (e) { try { bioTrigger.focus(); } catch (e2) {} }
         }
-        pinScroll(bioScrollY);
+        unlockBody();
+      };
+      var closeBio = function () {
+        if (bioModal.open) bioModal.close();
+        releaseBio();
+      };
+      bioModal.querySelectorAll("[data-modal-close]").forEach(function (b) {
+        b.addEventListener("click", closeBio);
+      });
+      bioModal.addEventListener("click", function (e) { if (e.target === bioModal) closeBio(); });
+      /* safety nets for Esc / any native close path */
+      bioModal.addEventListener("cancel", releaseBio);
+      bioModal.addEventListener("close", releaseBio);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && bioLocked) releaseBio();
       });
     }
 
