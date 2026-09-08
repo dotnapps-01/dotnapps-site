@@ -5,7 +5,7 @@
     /* ?debug=1 — on-screen event log to diagnose the tap-scroll report */
     if (/[?&]debug/.test(location.search)) {
       var dbg = document.createElement("div");
-      dbg.style.cssText = "position:fixed;left:6px;right:6px;bottom:6px;z-index:99999;background:#000;color:#3f3;font:11px/1.35 ui-monospace,Menlo,monospace;padding:8px 10px;border-radius:8px;max-height:42vh;overflow:auto;white-space:pre-wrap;box-shadow:0 0 0 1px #3f3";
+      dbg.style.cssText = "position:fixed;left:6px;right:6px;bottom:6px;z-index:99999;pointer-events:none;background:#000;color:#3f3;font:10px/1.3 ui-monospace,Menlo,monospace;padding:6px 8px;border-radius:8px;max-height:20vh;overflow:hidden;white-space:pre-wrap;box-shadow:0 0 0 1px #3f3";
       var lines = [];
       var dlog = function (s) {
         lines.unshift((Date.now() % 100000) + "  " + s);
@@ -305,18 +305,12 @@
       revealEls.forEach(function (el) { el.classList.add("in"); });
     }
 
-    /* practices on touch: single-open accordion, first item open by default */
-    if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
+    /* practices: hover-to-reveal on desktop only. On touch the descriptions
+       are always visible (see CSS) — no tap handler, nothing to glitch. */
+    if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       document.querySelectorAll(".practice").forEach(function (card) {
         var items = [].slice.call(card.querySelectorAll("ul > li"));
-        if (!items.length) return;
-        items[0].classList.add("is-open");
         items.forEach(function (li) {
-          /* NB: no tabindex here on purpose. Making the row focusable means a
-             tap focuses it and the browser scrolls it into view — on iOS that
-             was a big jump into the next section. A plain <li> with a click
-             listener toggles fine and never takes focus. */
-          li.style.cursor = "pointer";
           li.addEventListener("click", function () {
             var wasOpen = li.classList.contains("is-open");
             items.forEach(function (o) { o.classList.remove("is-open"); });

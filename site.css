@@ -45,12 +45,7 @@
     line-height: 1.58;
     -webkit-font-smoothing: antialiased;
     padding: 0;
-    /* stop the browser from "correcting" scroll position when a section
-       above resizes (an accordion opening / closing) — that correction is
-       what threw the page to another section on tap, worse further down */
-    overflow-anchor: none;
   }
-  * { overflow-anchor: none; }
 
   /* Touch: never start a text selection from a tap. A tap that lasts a beat
      too long or drifts a pixel made iOS begin selecting the row's text — the
@@ -560,9 +555,14 @@
   }
   /* touch: tap to open, one at a time (JS marks .is-open; first item opens by default) */
   @media (hover: none) {
-    .practice li { cursor: pointer; }
-    .practice li.is-open .t, .practice li:focus-visible .t { color: var(--focus); }
-    .practice li.is-open .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+    /* No accordion on touch — every description is shown, nothing is tappable
+       here. A tap target on body text was the whole "grey box then it jumps"
+       bug (iOS starts selecting / the browser scrolls the row into view). */
+    .practice li { cursor: default; }
+    .practice li .desc {
+      max-height: none; opacity: 1; margin-top: .3rem;
+      transition: none; overflow: visible;
+    }
   }
 
   /* ---------- Process timeline ---------- */
