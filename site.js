@@ -173,8 +173,19 @@
       if (dropBtn) dropBtn.addEventListener("click", function (e) {
         if (window.matchMedia("(max-width: 820px)").matches) e.preventDefault();
       });
+      var onNavLinkActivate = function () {
+        /* kill transitions for a beat so the anchor-scroll this click triggers
+           can't animate the pill condensing (menu items sliding left); also
+           drop focus so :focus-within doesn't pin the mega-menu half-open */
+        nav.classList.add("nav-instant");
+        setTimeout(function () { nav.classList.remove("nav-instant"); }, 600);
+        if (document.activeElement && document.activeElement.blur) {
+          try { document.activeElement.blur(); } catch (e) {}
+        }
+        closeMenu();
+      };
       nav.querySelectorAll(".nav-links a").forEach(function (a) {
-        a.addEventListener("click", closeMenu);
+        a.addEventListener("click", onNavLinkActivate);
       });
       var menuClose = nav.querySelector(".menu-close");
       if (menuClose) menuClose.addEventListener("click", function (e) {

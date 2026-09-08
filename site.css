@@ -269,6 +269,21 @@
   }
   .nav-toggle:hover { background: var(--sunken); }
 
+  /* Desktop only: while a nav link is being activated, freeze the condense
+     machinery so the click's own page-scroll can't animate the pill
+     (menu items sliding left) and snap the mega-menu shut at once. */
+  @media (min-width: 821px) {
+    .nav.nav-instant,
+    .nav.nav-instant .nav-links,
+    .nav.nav-instant .nav-toggle,
+    .nav.nav-instant .nav-drop-panel {
+      transition: none !important;
+    }
+    .nav.nav-instant .nav-drop-panel {
+      opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
+    }
+  }
+
   /* ---------- Hero ---------- */
   .hero { position: relative; text-align: center; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); overflow: clip; }
 
