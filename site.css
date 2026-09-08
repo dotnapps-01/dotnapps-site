@@ -499,7 +499,13 @@
     .practice-head { margin-bottom: .7rem; }
     .practice li { padding: .48rem 0; }
   }
+  .practice li { touch-action: manipulation; }
   .practice:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  /* touch: no sticky :hover lift/reveal after a tap */
+  @media (hover: none) {
+    .practice:hover { transform: none; box-shadow: none; }
+    .practice:hover .practice-head .lt { color: var(--faint); }
+  }
   .practice-head { display: flex; align-items: baseline; gap: .6rem; margin-bottom: 1rem; }
   .practice-head .lt { font-weight: 700; font-size: 1.3rem; letter-spacing: -.03em; color: var(--faint); line-height: 1; transition: color .22s ease; }
   .practice:hover .practice-head .lt { color: var(--text); }
