@@ -902,6 +902,14 @@
       0 2px 5px color-mix(in srgb, var(--text) 10%, transparent);
   }
   .game-pad-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  /* the game controls must never start a text selection or a scroll gesture
+     on a tap — that was the "grey box then the page moves" on iOS */
+  .game-pad, .game-pad *, .game-bar, .game-bar *, .game-msg, .game-hint,
+  .game-stage, .game-stage * {
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+  }
+  .game-pad-btn, .game-pad-base, .game-stage { touch-action: none; }
   @media (max-width: 560px) { .game-level { display: none; } }
 
   /* ---------- Comparison ---------- */
@@ -2370,13 +2378,17 @@
       });
       startBtn.addEventListener("click", function () { if (stateG !== "run") start(); });
 
+      var swallow = function (e) { if (e && e.cancelable) e.preventDefault(); };
+      stage.addEventListener("touchstart", swallow, { passive: false });
       if (padBtn) {
         var padPress = function (e) {
           if (e && e.cancelable) e.preventDefault();
           padBtn.classList.add("is-pressed");
           onInput();
+          try { padBtn.blur(); } catch (err) {}
         };
         var padRelease = function () { padBtn.classList.remove("is-pressed"); };
+        padBtn.addEventListener("touchstart", swallow, { passive: false });
         padBtn.addEventListener("pointerdown", padPress);
         padBtn.addEventListener("pointerup", padRelease);
         padBtn.addEventListener("pointercancel", padRelease);
