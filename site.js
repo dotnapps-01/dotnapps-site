@@ -134,6 +134,35 @@
       });
     }
 
+    /* person bio modal (About page) */
+    var bioModal = document.getElementById("bioModal");
+    if (bioModal && typeof bioModal.showModal === "function") {
+      var bioName = bioModal.querySelector("[data-bio-name]");
+      var bioRole = bioModal.querySelector("[data-bio-role]");
+      var bioAva = bioModal.querySelector("[data-bio-ava]");
+      var bioBody = bioModal.querySelector("[data-bio-body]");
+      var bioTrigger = null;
+      document.querySelectorAll(".origin-row[data-bio]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var src = document.querySelector('.bio-store [data-bio="' + btn.getAttribute("data-bio") + '"]');
+          if (!src) return;
+          bioTrigger = btn;
+          bioName.textContent = src.getAttribute("data-name") || "";
+          bioRole.innerHTML = src.getAttribute("data-role") || "";
+          bioAva.textContent = src.getAttribute("data-ava") || "";
+          bioBody.innerHTML = src.innerHTML;
+          bioModal.showModal();
+        });
+      });
+      bioModal.querySelectorAll("[data-modal-close]").forEach(function (b) {
+        b.addEventListener("click", function () { bioModal.close(); });
+      });
+      bioModal.addEventListener("click", function (e) { if (e.target === bioModal) bioModal.close(); });
+      bioModal.addEventListener("close", function () {
+        if (bioTrigger) { try { bioTrigger.focus(); } catch (e) {} }
+      });
+    }
+
     /* nav condense — collapse on scroll-down, reveal on scroll-up */
     var nav = document.getElementById("nav");
     var lastY = window.scrollY;

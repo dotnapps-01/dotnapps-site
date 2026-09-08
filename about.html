@@ -99,22 +99,44 @@
   @media (max-width: 720px) { .leaders { grid-template-columns: 1fr; } }
 
   /* "Where it began" — a single credits panel, deliberately unlike the founder cards */
-  .origin { border: 1px solid var(--hairline); border-radius: 20px; background: var(--sunken); padding: clamp(1.5rem, 4vw, 2.35rem); }
-  .origin-lead { display: flex; flex-direction: column; gap: .28rem; padding-bottom: 1.35rem; border-bottom: 1px solid var(--hairline); }
+  .origin { border: 1px solid var(--hairline); border-radius: 20px; background: var(--sunken); padding: clamp(.4rem, 1.2vw, .8rem) 0; overflow: hidden; }
+  .origin-lead { display: flex; flex-direction: column; gap: .28rem; padding: clamp(1.15rem, 3vw, 1.7rem) clamp(1.5rem, 4vw, 2.35rem) 1.35rem; border-bottom: 1px solid var(--hairline); }
   .origin-lead .lbl { font-size: .64rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
   .origin-lead .who { font-size: 1.15rem; font-weight: 650; letter-spacing: -.02em; }
   .origin-lead .where { font-size: .9rem; color: var(--muted); }
-  .origin-row { display: grid; grid-template-columns: 44px minmax(12rem, 16rem) 1fr; align-items: start; gap: 1rem 1.5rem; padding: 1.3rem 0; border-bottom: 1px solid var(--hairline); }
-  .origin-row:last-child { border-bottom: 0; padding-bottom: .15rem; }
+
+  .origin-row {
+    width: 100%; font: inherit; color: inherit; text-align: left; border: 0;
+    border-bottom: 1px solid var(--hairline); background: none; cursor: pointer;
+    display: grid; grid-template-columns: 44px minmax(12rem, 16rem) 1fr 18px;
+    align-items: start; gap: 1rem 1.5rem;
+    padding: 1.25rem clamp(1.5rem, 4vw, 2.35rem);
+    transition: background .15s ease;
+  }
+  .origin-row:last-child { border-bottom: 0; }
+  .origin-row:hover, .origin-row:focus-visible { background: color-mix(in srgb, var(--text) 4%, transparent); outline: none; }
+  .origin-row:focus-visible { box-shadow: inset 0 0 0 2px var(--focus); }
   .origin-ava { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .82rem; background: var(--text); color: var(--frame); }
   img.origin-ava { object-fit: cover; }
-  .origin-id .nm { font-size: .98rem; font-weight: 600; letter-spacing: -.01em; }
-  .origin-id .rl { font-size: .76rem; font-weight: 600; color: var(--focus); margin-top: .18rem; }
-  .origin-note { margin: 0; font-size: .9rem; color: var(--muted); }
+  .origin-id { display: block; min-width: 0; }
+  .origin-id .nm { display: block; font-size: .98rem; font-weight: 600; letter-spacing: -.01em; }
+  .origin-id .rl { display: block; font-size: .76rem; font-weight: 600; color: var(--focus); margin-top: .18rem; }
+  .origin-note { display: block; margin: 0; font-size: .9rem; color: var(--muted); }
+  .origin-go { width: 18px; height: 18px; color: var(--faint); align-self: center; transition: transform .15s ease, color .15s ease; }
+  .origin-row:hover .origin-go, .origin-row:focus-visible .origin-go { color: var(--text); transform: translateX(3px); }
   @media (max-width: 680px) {
-    .origin-row { grid-template-columns: 44px 1fr; gap: .45rem .9rem; }
+    .origin-row { grid-template-columns: 44px 1fr 18px; gap: .4rem .9rem; }
     .origin-note { grid-column: 1 / -1; }
   }
+
+  /* person bio modal */
+  .bio-head { display: flex; align-items: center; gap: .85rem; }
+  .bio-ava { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--text); color: var(--frame); flex: none; overflow: hidden; }
+  img.bio-ava { object-fit: cover; }
+  .bio-role { margin: .18rem 0 0; font-size: .8rem; font-weight: 600; color: var(--focus); }
+  .bio-body { display: flex; flex-direction: column; gap: .8rem; }
+  .bio-body p { margin: 0; font-size: .95rem; color: var(--muted); line-height: 1.62; }
+  .bio-body .bio-meta { font-size: .8rem; color: var(--faint); }
 
   .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: .9rem; }
   .principle { border: 1px solid var(--hairline); border-radius: 14px; background: var(--frame); padding: 1.3rem 1.35rem; transition: transform .2s ease, box-shadow .2s ease; }
@@ -272,32 +294,73 @@
         <span class="who">Palaniammal Senniappan</span>
         <span class="where">Principal, Sri&nbsp;Krishna Adithya College of Arts and Science</span>
       </div>
-      <div class="origin-row">
+      <button type="button" class="origin-row" data-bio="girisan">
         <span class="origin-ava" aria-hidden="true">EG</span>
-        <div class="origin-id">
-          <div class="nm">Dr. E. K. Girisan</div>
-          <div class="rl">Startup mentor &middot; Associate Professor, Computer Science</div>
-        </div>
-        <p class="origin-note">Mentored Dotnapps from the first idea and helped turn a final-year project into a company. Director of IQAC at the college.</p>
-      </div>
-      <div class="origin-row">
+        <span class="origin-id">
+          <span class="nm">Dr. E. K. Girisan</span>
+          <span class="rl">Startup mentor &middot; Associate Professor, Computer Science</span>
+        </span>
+        <span class="origin-note">Mentored Dotnapps from the first idea and helped turn a final-year project into a company. Director of IQAC at the college.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="origin-row" data-bio="deepa">
         <span class="origin-ava" aria-hidden="true">DM</span>
-        <div class="origin-id">
-          <div class="nm">Dr. Deepa M</div>
-          <div class="rl">Faculty guidance</div>
-        </div>
-        <p class="origin-note">Guided and encouraged the founders through the early days and kept the momentum up.</p>
-      </div>
-      <div class="origin-row">
+        <span class="origin-id">
+          <span class="nm">Dr. Deepa M</span>
+          <span class="rl">Faculty guidance</span>
+        </span>
+        <span class="origin-note">Guided and encouraged the founders through the early days and kept the momentum up.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button type="button" class="origin-row" data-bio="abel">
         <span class="origin-ava" aria-hidden="true">AT</span>
-        <div class="origin-id">
-          <div class="nm">Dr. Abel Thangaraja</div>
-          <div class="rl">Assistant Professor, Sri&nbsp;Krishna Adithya College</div>
-        </div>
-        <p class="origin-note">Ph.D. in data modelling and database administration. Backed the founders early and pushed them to commit to building Dotnapps for real.</p>
-      </div>
+        <span class="origin-id">
+          <span class="nm">Dr. Abel Thangaraja</span>
+          <span class="rl">Assistant Professor, Sri&nbsp;Krishna Adithya College</span>
+        </span>
+        <span class="origin-note">Ph.D. in data modelling and database administration. Backed the founders early and pushed them to commit to building Dotnapps for real.</span>
+        <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="bio-store" hidden>
+      <article data-bio="girisan" data-name="Dr. E. K. Girisan" data-role="Startup mentor &middot; Associate Professor of Computer Science" data-ava="EG">
+        <p>Associate Professor of Computer Science at Sri&nbsp;Krishna Adithya College of Arts and Science, with more than two decades of teaching behind him.</p>
+        <p>He also serves as Director of the college&rsquo;s Internal Quality Assurance Cell, Honorary Secretary of the Computer Society of India (Coimbatore), an Institution&rsquo;s Innovation Council Innovation Ambassador, and an IIT Spoken Tutorial Ambassador.</p>
+        <p>For Dotnapps he was the first mentor &mdash; he backed the idea while it was still a final-year project and helped the founders shape it into a company.</p>
+        <p class="bio-meta">Sri&nbsp;Krishna Adithya College of Arts and Science &middot; Coimbatore, Tamil Nadu</p>
+      </article>
+      <article data-bio="deepa" data-name="Dr. Deepa M" data-role="Faculty guidance" data-ava="DM">
+        <p>Faculty at Sri&nbsp;Krishna Adithya College of Arts and Science.</p>
+        <p>She guided and encouraged the founders through the earliest days and kept the momentum going when Dotnapps was still just an idea.</p>
+        <p class="bio-meta">Full profile details coming soon.</p>
+      </article>
+      <article data-bio="abel" data-name="Dr. Abel Thangaraja" data-role="Assistant Professor &middot; Sri&nbsp;Krishna Adithya College" data-ava="AT">
+        <p>Assistant Professor at Sri&nbsp;Krishna Adithya College of Arts and Science, affiliated to Bharathiar University.</p>
+        <p>He holds a Ph.D. in data modelling / warehousing and database administration from Bharathiar University, and works across e-learning, curriculum development, research and academic administration.</p>
+        <p>He backed the founders early on and pushed them to commit fully to building Dotnapps.</p>
+        <p class="bio-meta">Sri&nbsp;Krishna Adithya College of Arts and Science &middot; Coimbatore, Tamil Nadu</p>
+      </article>
     </div>
   </section>
+
+  <dialog class="modal bio-modal" id="bioModal" aria-labelledby="bioName">
+    <div class="modal-inner">
+      <div class="modal-head">
+        <div class="bio-head">
+          <span class="bio-ava" data-bio-ava aria-hidden="true"></span>
+          <div>
+            <h3 id="bioName" data-bio-name></h3>
+            <p class="bio-role" data-bio-role></p>
+          </div>
+        </div>
+        <button class="modal-close" type="button" aria-label="Close" data-modal-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="bio-body" data-bio-body></div>
+    </div>
+  </dialog>
 
   <section class="band">
     <div class="band-head reveal">
