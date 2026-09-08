@@ -361,6 +361,7 @@
       var startBtn = gameWrap.querySelector("[data-start]");
       var padBtn = gameWrap.querySelector("[data-jump]");
       var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      if (coarse && stage) stage.removeAttribute("tabindex");
       var BEST_KEY = "dotnapps-site-runner-best";
       var W = 680, H = 180, GROUND = 150;
 
@@ -623,8 +624,11 @@
         if (e.key === " " || e.key === "Spacebar" || e.code === "Space" || e.key === "ArrowUp") onInput(e);
       });
       stage.addEventListener("pointerdown", function (e) {
+        if (e && e.cancelable) e.preventDefault();
         onInput(e);
-        try { stage.focus({ preventScroll: true }); } catch (err) { stage.focus(); }
+        /* only steal focus for keyboard play — on touch, focus() scrolls the
+           stage into view (iOS ignores preventScroll) and the page jumps */
+        if (!coarse) { try { stage.focus({ preventScroll: true }); } catch (err) {} }
       });
       startBtn.addEventListener("click", function () { if (stateG !== "run") start(); });
 
@@ -634,7 +638,10 @@
           padBtn.classList.add("is-pressed");
           onInput();
         };
-        var padRelease = function () { padBtn.classList.remove("is-pressed"); };
+        var padRelease = function () {
+          padBtn.classList.remove("is-pressed");
+          try { padBtn.blur(); } catch (e) {}
+        };
         padBtn.addEventListener("pointerdown", padPress);
         padBtn.addEventListener("pointerup", padRelease);
         padBtn.addEventListener("pointercancel", padRelease);

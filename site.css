@@ -840,6 +840,11 @@
     position: relative; border: 1px solid var(--hairline); border-radius: 16px;
     background: var(--sunken); overflow: hidden;
     -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    -webkit-user-select: none; user-select: none;
+  }
+  .game-pad-btn, .game [data-start] {
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    -webkit-user-select: none; user-select: none;
   }
   .game-stage:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   .game-stage canvas { display: block; width: 100%; height: auto; }
