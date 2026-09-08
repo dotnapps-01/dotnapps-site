@@ -44,7 +44,12 @@
       "slogan": "Unlock your digital potential with us.",
       "description": "Product and engineering studio that designs and builds software for other companies, and runs Business OS, its own suite of business apps.",
       "email": "hello@dotnapps.com",
-      "foundingDate": "2026",
+      "foundingDate": "2023",
+      "founder": [
+        { "@type": "Person", "name": "Vikas Varun", "jobTitle": "Founder & CEO" },
+        { "@type": "Person", "name": "Bala Kirishnan", "jobTitle": "Co-Founder & Managing Director" },
+        { "@type": "Person", "name": "Rajkumar", "jobTitle": "Co-Founder & CTO" }
+      ],
       "knowsAbout": ["Custom software development", "SaaS product development", "MVP development", "AI agents", "Web and mobile apps", "Product design", "Cloud and DevOps"]
     },
     {
@@ -84,6 +89,14 @@
   .split .card a { font-weight: 600; font-size: .88rem; color: var(--focus); }
   .split .card a:hover { text-decoration: underline; }
   @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+
+  .leaders { display: grid; grid-template-columns: repeat(3, 1fr); gap: .9rem; }
+  .leader { border: 1px solid var(--hairline); border-radius: 16px; background: var(--sunken); padding: 1.5rem 1.5rem 1.6rem; }
+  .leader .ava { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .92rem; letter-spacing: 0; background: var(--text); color: var(--frame); margin-bottom: 1rem; }
+  .leader h3 { margin: 0 0 .1rem; font-size: 1.1rem; letter-spacing: -.02em; }
+  .leader .role { margin: 0 0 .75rem; font-size: .8rem; font-weight: 600; letter-spacing: .01em; color: var(--focus); }
+  .leader p { margin: 0; font-size: .88rem; color: var(--muted); }
+  @media (max-width: 720px) { .leaders { grid-template-columns: 1fr; } }
 
   .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: .9rem; }
   .principle { border: 1px solid var(--hairline); border-radius: 14px; background: var(--frame); padding: 1.3rem 1.35rem; transition: transform .2s ease, box-shadow .2s ease; }
@@ -164,7 +177,7 @@
     <h1 class="serif">We build software for other companies &mdash; and our own.</h1>
     <p class="lead">Dotnapps is a studio and a product company in one. We design and ship digital products for clients, and we build and run Business&nbsp;OS, our own suite of business apps. The same team does both &mdash; that&rsquo;s the whole point.</p>
     <ul class="about-meta">
-      <li>Founded 2026</li>
+      <li>Founded 2023</li>
       <li>Studio + product company</li>
       <li>Client work &amp; Business&nbsp;OS</li>
       <li>Remote, senior team</li>
@@ -204,6 +217,34 @@
 
   <section class="band">
     <div class="band-head reveal">
+      <span class="eyebrow-pill">Leadership</span>
+      <h2 class="serif">The people running it</h2>
+      <p>Dotnapps was started in 2023 by three co-founders in their final year at Sri&nbsp;Krishna Adithya College of Arts and Science.</p>
+    </div>
+    <div class="leaders stagger reveal">
+      <div class="leader">
+        <span class="ava" aria-hidden="true">VV</span>
+        <h3>Vikas Varun</h3>
+        <p class="role">Founder &amp; CEO</p>
+        <p>Sets the direction across client work and Business&nbsp;OS, and stays close to both.</p>
+      </div>
+      <div class="leader">
+        <span class="ava" aria-hidden="true">BK</span>
+        <h3>Bala Kirishnan</h3>
+        <p class="role">Co-Founder &amp; Managing Director</p>
+        <p>Runs delivery and operations &mdash; how engagements are scoped, staffed, and shipped.</p>
+      </div>
+      <div class="leader">
+        <span class="ava" aria-hidden="true">R</span>
+        <h3>Rajkumar</h3>
+        <p class="role">Co-Founder &amp; CTO</p>
+        <p>Owns the architecture and the engineering standards shared across every Dotnapps product.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="band-head reveal">
       <span class="eyebrow-pill">How we work</span>
       <h2 class="serif">Principles</h2>
       <p>Six things we don&rsquo;t compromise on.</p>
@@ -224,7 +265,7 @@
       <h2 class="serif">Where we are today</h2>
     </div>
     <ul class="timeline-lite reveal">
-      <li><span class="when">2026</span><p class="what"><strong>Dotnapps founded</strong> as a studio and a product company in one.</p></li>
+      <li><span class="when">2023</span><p class="what"><strong>Dotnapps founded</strong> by Vikas&nbsp;Varun, Bala&nbsp;Kirishnan and Rajkumar in their final year at Sri&nbsp;Krishna Adithya College of Arts and Science.</p></li>
       <li><span class="when">Live</span><p class="what"><strong>Dotnapps CRM and Invoice</strong> in production with customers &mdash; integrated end to end: quotations, invoices, payments, signed webhooks.</p></li>
       <li><span class="when">In build</span><p class="what"><strong>The next Business&nbsp;OS apps</strong> across sales, finance, operations and people.</p></li>
       <li><span class="when">Now</span><p class="what"><strong>Taking on client engagements</strong> and growing the team behind both sides.</p></li>
