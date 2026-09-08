@@ -145,7 +145,7 @@
   }
   .bio-head { display: flex; align-items: center; gap: .85rem; }
   .bio-ava { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--text); color: var(--frame); flex: none; overflow: hidden; }
-  img.bio-ava { object-fit: cover; }
+  .bio-ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .bio-role { margin: .18rem 0 0; font-size: .8rem; font-weight: 600; color: var(--focus); }
   .bio-body { display: flex; flex-direction: column; gap: .8rem; }
   .bio-body p { margin: 0; font-size: .95rem; color: var(--muted); line-height: 1.62; }
@@ -308,7 +308,7 @@
         <span class="where">Principal, Sri&nbsp;Krishna Adithya College of Arts and Science</span>
       </div>
       <button type="button" class="origin-row" data-bio="girisan">
-        <span class="origin-ava" aria-hidden="true">EG</span>
+        <img class="origin-ava" src="/team/girisan.jpg" alt="" width="44" height="44" loading="lazy">
         <span class="origin-id">
           <span class="nm">Dr. E. K. Girisan</span>
           <span class="rl">Startup mentor &middot; Associate Professor, Computer Science</span>
@@ -326,7 +326,7 @@
         <svg class="origin-go" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button type="button" class="origin-row" data-bio="abel">
-        <span class="origin-ava" aria-hidden="true">AT</span>
+        <img class="origin-ava" src="/team/abel.jpg" alt="" width="44" height="44" loading="lazy">
         <span class="origin-id">
           <span class="nm">Dr. Abel Thangaraja</span>
           <span class="rl">Assistant Professor, Sri&nbsp;Krishna Adithya College</span>
@@ -337,7 +337,7 @@
     </div>
 
     <div class="bio-store" hidden>
-      <article data-bio="girisan" data-name="Dr. E. K. Girisan" data-role="Startup mentor &middot; Associate Professor of Computer Science" data-ava="EG">
+      <article data-bio="girisan" data-name="Dr. E. K. Girisan" data-role="Startup mentor &middot; Associate Professor of Computer Science" data-ava="EG" data-ava-img="/team/girisan.jpg">
         <p>Associate Professor of Computer Science at Sri&nbsp;Krishna Adithya College of Arts and Science, with more than two decades of teaching behind him.</p>
         <p>He also serves as Director of the college&rsquo;s Internal Quality Assurance Cell, Honorary Secretary of the Computer Society of India (Coimbatore), an Institution&rsquo;s Innovation Council Innovation Ambassador, and an IIT Spoken Tutorial Ambassador.</p>
         <p>For Dotnapps he was the first mentor &mdash; he backed the idea while it was still a final-year project and helped the founders shape it into a company.</p>
@@ -348,7 +348,7 @@
         <p>She guided and encouraged the founders through the earliest days and kept the momentum going when Dotnapps was still just an idea.</p>
         <p class="bio-meta">Full profile details coming soon.</p>
       </article>
-      <article data-bio="abel" data-name="Dr. Abel Thangaraja" data-role="Assistant Professor &middot; Sri&nbsp;Krishna Adithya College" data-ava="AT">
+      <article data-bio="abel" data-name="Dr. Abel Thangaraja" data-role="Assistant Professor &middot; Sri&nbsp;Krishna Adithya College" data-ava="AT" data-ava-img="/team/abel.jpg">
         <p>Assistant Professor at Sri&nbsp;Krishna Adithya College of Arts and Science, affiliated to Bharathiar University.</p>
         <p>He holds a Ph.D. in data modelling / warehousing and database administration from Bharathiar University, and works across e-learning, curriculum development, research and academic administration.</p>
         <p>He backed the founders early on and pushed them to commit fully to building Dotnapps.</p>

@@ -159,7 +159,15 @@
         if (!src) return;
         bioName.textContent = src.getAttribute("data-name") || "";
         bioRole.innerHTML = src.getAttribute("data-role") || "";
-        bioAva.textContent = src.getAttribute("data-ava") || "";
+        var avaImg = src.getAttribute("data-ava-img");
+        if (avaImg) {
+          bioAva.textContent = "";
+          var im = document.createElement("img");
+          im.src = avaImg; im.alt = "";
+          bioAva.appendChild(im);
+        } else {
+          bioAva.textContent = src.getAttribute("data-ava") || "";
+        }
         bioBody.innerHTML = src.innerHTML;
         if (bioCard) bioCard.scrollTop = 0;
         bioModal.hidden = false;
