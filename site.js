@@ -142,79 +142,37 @@
       });
     }
 
-    /* person bio modal (About page) */
+    /* person bio popup (About page) — a plain fixed overlay, toggled by
+       [hidden]. Deliberately NOT a <dialog>/showModal(): on iOS that moved
+       focus into the dialog and the browser scrolled the page to it, which
+       read as a jump into another section. This never touches scroll or
+       focus, so the page stays exactly where it was. */
     var bioModal = document.getElementById("bioModal");
-    if (bioModal && typeof bioModal.showModal === "function") {
+    if (bioModal) {
       var bioName = bioModal.querySelector("[data-bio-name]");
       var bioRole = bioModal.querySelector("[data-bio-role]");
       var bioAva = bioModal.querySelector("[data-bio-ava]");
       var bioBody = bioModal.querySelector("[data-bio-body]");
-      var bioTrigger = null;
-      var bioScrollY = 0;
-      var bioLocked = false;
-      /* Freeze the page under the dialog. Focus moving into/out of the modal
-         makes the browser scroll that element into view (and iOS ignores
-         focus({preventScroll:true}) on older Safari) — which showed up as the
-         page jumping into another section, worst on the bottom row. Pinning the
-         body with position:fixed removes any background scroll entirely, then
-         we restore the exact offset on close. */
-      var lockBody = function () {
-        if (bioLocked) return;
-        bioScrollY = window.scrollY || window.pageYOffset || 0;
-        bioLocked = true;
-        var b = document.body.style;
-        b.position = "fixed";
-        b.top = -bioScrollY + "px";
-        b.left = "0";
-        b.right = "0";
-        b.width = "100%";
+      var bioCard = bioModal.querySelector(".bio-modal-card");
+      var openBio = function (btn) {
+        var src = document.querySelector('.bio-store [data-bio="' + btn.getAttribute("data-bio") + '"]');
+        if (!src) return;
+        bioName.textContent = src.getAttribute("data-name") || "";
+        bioRole.innerHTML = src.getAttribute("data-role") || "";
+        bioAva.textContent = src.getAttribute("data-ava") || "";
+        bioBody.innerHTML = src.innerHTML;
+        if (bioCard) bioCard.scrollTop = 0;
+        bioModal.hidden = false;
       };
-      var unlockBody = function () {
-        if (!bioLocked) return;
-        bioLocked = false;
-        var b = document.body.style;
-        b.position = ""; b.top = ""; b.left = ""; b.right = ""; b.width = "";
-        /* must be instant — a smooth restore flashes the page to the top first */
-        try { window.scrollTo({ top: bioScrollY, left: 0, behavior: "instant" }); }
-        catch (e) { window.scrollTo(0, bioScrollY); }
-      };
+      var closeBio = function () { bioModal.hidden = true; };
       document.querySelectorAll(".origin-row[data-bio]").forEach(function (btn) {
-        btn.addEventListener("click", function (e) {
-          e.preventDefault();
-          var src = document.querySelector('.bio-store [data-bio="' + btn.getAttribute("data-bio") + '"]');
-          if (!src) return;
-          bioTrigger = btn;
-          bioName.textContent = src.getAttribute("data-name") || "";
-          bioRole.innerHTML = src.getAttribute("data-role") || "";
-          bioAva.textContent = src.getAttribute("data-ava") || "";
-          bioBody.innerHTML = src.innerHTML;
-          lockBody();
-          if (!bioModal.open) bioModal.showModal();
-          bioModal.scrollTop = 0;
-        });
+        btn.addEventListener("click", function (e) { e.preventDefault(); openBio(btn); });
       });
-      var releaseBio = function () {
-        /* return focus to the row while the body is still frozen so it can't
-           scroll, then unlock and restore the exact offset */
-        if (bioTrigger) {
-          try { bioTrigger.focus({ preventScroll: true }); }
-          catch (e) { try { bioTrigger.focus(); } catch (e2) {} }
-        }
-        unlockBody();
-      };
-      var closeBio = function () {
-        if (bioModal.open) bioModal.close();
-        releaseBio();
-      };
       bioModal.querySelectorAll("[data-modal-close]").forEach(function (b) {
         b.addEventListener("click", closeBio);
       });
-      bioModal.addEventListener("click", function (e) { if (e.target === bioModal) closeBio(); });
-      /* safety nets for Esc / any native close path */
-      bioModal.addEventListener("cancel", releaseBio);
-      bioModal.addEventListener("close", releaseBio);
       document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && bioLocked) releaseBio();
+        if (e.key === "Escape" && !bioModal.hidden) closeBio();
       });
     }
 

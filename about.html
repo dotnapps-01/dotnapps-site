@@ -129,7 +129,20 @@
     .origin-note { grid-column: 1 / -1; }
   }
 
-  /* person bio modal */
+  /* person bio popup — a plain fixed overlay (no <dialog>/showModal: on iOS
+     that moved focus and scrolled the page into another section) */
+  .bio-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; overscroll-behavior: none; }
+  .bio-modal[hidden] { display: none; }
+  .bio-modal-backdrop { position: absolute; inset: 0; touch-action: none; background: color-mix(in srgb, var(--text) 42%, transparent); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .bio-modal-card {
+    position: relative; z-index: 1;
+    width: min(30rem, calc(100vw - 2rem));
+    max-height: min(calc(100dvh - 2rem), 44rem); overflow: auto; overscroll-behavior: contain;
+    background: var(--frame); color: var(--text);
+    border: 1px solid var(--hairline); border-radius: 20px; box-shadow: var(--shadow-card);
+    padding: 1.4rem 1.4rem 1.5rem;
+    animation: modalIn .24s cubic-bezier(.2, .7, .2, 1);
+  }
   .bio-head { display: flex; align-items: center; gap: .85rem; }
   .bio-ava { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .9rem; background: var(--text); color: var(--frame); flex: none; overflow: hidden; }
   img.bio-ava { object-fit: cover; }
@@ -344,8 +357,9 @@
     </div>
   </section>
 
-  <dialog class="modal bio-modal" id="bioModal" aria-labelledby="bioName">
-    <div class="modal-inner">
+  <div class="bio-modal" id="bioModal" role="dialog" aria-modal="true" aria-labelledby="bioName" hidden>
+    <div class="bio-modal-backdrop" data-modal-close></div>
+    <div class="bio-modal-card">
       <div class="modal-head">
         <div class="bio-head">
           <span class="bio-ava" data-bio-ava aria-hidden="true"></span>
@@ -360,7 +374,7 @@
       </div>
       <div class="bio-body" data-bio-body></div>
     </div>
-  </dialog>
+  </div>
 
   <section class="band">
     <div class="band-head reveal">
