@@ -93,10 +93,29 @@
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   * { -webkit-tap-highlight-color: transparent; }
+
+  /* ---- Touch: make the page behave like a plain scrollable document. ----
+     A tap that drifts a pixel or lingers was starting a text selection / a
+     tap-highlight / an element focus, and the browser then scrolled that
+     into view — felt like the page "redirecting" to another section. On
+     touch: nothing is selectable or long-press-able by default, scrolling
+     is never animated, and only vertical panning is a gesture. Real reading
+     content is opted back into selection. */
   @media (hover: none) {
     html { scroll-behavior: auto; }
-    .practice li, .practice li *, .game, .game *, .nav, .nav *,
-    .faq-tab, summary { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    html, body { touch-action: pan-y; }
+    body {
+      -webkit-user-select: none; user-select: none;
+      -webkit-touch-callout: none;
+    }
+    p, li .t, .desc, h1, h2, h3, h4, blockquote, figcaption, code, pre,
+    td, th, input, textarea, select, [contenteditable] {
+      -webkit-user-select: text; user-select: text;
+    }
+    /* the horizontal scrollers still need to pan sideways */
+    .stack, .stack-track, .compare-scroll, .cmp-cards, [data-canvas] {
+      touch-action: pan-x pan-y;
+    }
   }
 
   body {
