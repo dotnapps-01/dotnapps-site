@@ -892,12 +892,7 @@
 
   /* on-screen jump control (touch / narrow) */
   .game-pad { display: none; }
-  /* touch: no mini-game (its tap control was the last custom tap
-     interaction on mobile). Desktop keeps it. */
-  @media (pointer: coarse) {
-    #play { display: none; }
-  }
-  @media (pointer: fine) and (max-width: 720px) {
+  @media (pointer: coarse), (max-width: 720px) {
     .game-pad { display: flex; justify-content: center; margin-top: .95rem; }
   }
   .game-pad-base {
