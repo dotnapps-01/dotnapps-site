@@ -535,15 +535,40 @@
     font-size: .8rem; color: var(--muted);
     transition: max-height .35s ease, opacity .28s ease, margin .3s ease;
   }
-  /* desktop: hover reveals the description */
-  @media (hover: hover) {
-    .practice li:hover .t, .practice li:focus-within .t { color: var(--focus); }
-    .practice li:hover .desc, .practice li:focus-within .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+  /* row title is a real <button> so it is a proper tap target (not selectable
+     body text) — it reads as plain text on desktop and gains a chevron on touch */
+  .practice li .t-btn {
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    width: 100%; margin: 0; padding: 0; border: 0; background: none;
+    font: inherit; color: inherit; text-align: left; cursor: default;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   }
-  /* touch: no tap-to-open accordion. Every description is shown and the rows
-     are plain text — a tap target on body text scrolls the page on iOS. */
-  @media (hover: none) {
-    .practice li .desc { max-height: none; opacity: 1; margin-top: .3rem; transition: none; overflow: visible; }
+  .practice li .t-btn * { -webkit-user-select: none; user-select: none; }
+  .practice li .t-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  .practice li .chev { width: 12px; height: 12px; flex: none; color: var(--faint); display: none; transition: transform .2s ease, color .2s ease; }
+  .hint-tap { display: none; }
+
+  /* desktop (mouse, wide): hover or keyboard focus reveals the description */
+  @media (hover: hover) and (min-width: 621px) {
+    .practice li:hover .t, .practice li:has(.t-btn:focus-visible) .t { color: var(--focus); }
+    .practice li:hover .desc, .practice li:has(.t-btn:focus-visible) .desc { max-height: 5rem; opacity: 1; margin-top: .35rem; }
+  }
+
+  /* touch / narrow: tap a service to drop its description down. Rows toggle
+     independently (no accordion), so opening one never shifts the row under
+     your finger. Height changes instantly — nothing animates the layout. */
+  @media (hover: none), (max-width: 620px) {
+    .hint-hover { display: none; } .hint-tap { display: inline; }
+    .practice li .t-btn { cursor: pointer; }
+    .practice li .chev { display: block; }
+    .practice li .desc {
+      max-height: 0; opacity: 0; margin-top: 0; overflow: hidden; visibility: hidden;
+      transition: opacity .18s ease;
+    }
+    .practice li.is-open .desc { max-height: none; opacity: 1; margin-top: .35rem; visibility: visible; }
+    .practice li.is-open .t { color: var(--focus); }
+    .practice li.is-open .chev { transform: rotate(180deg); color: var(--focus); }
   }
 
   /* ---------- Process timeline ---------- */
@@ -1370,57 +1395,57 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">What we do for clients</span>
       <h2 class="serif">Twenty-four services, five practices</h2>
-      <p>From a first MVP to a core-systems rebuild. Hover a service for the short version.</p>
+      <p>From a first MVP to a core-systems rebuild. <span class="hint-hover">Hover</span><span class="hint-tap">Tap</span> a service for the short version.</p>
     </div>
 
     <div class="practices stagger">
       <div class="practice" id="cat-a">
         <div class="practice-head"><span class="lt">A</span><h3>Product &amp; Software Development</h3><span class="ct">01&ndash;06</span></div>
         <ul>
-          <li><span class="n">01</span><div><span class="t">Custom Software Development</span><p class="desc">Systems built around one team's real workflow, not a template bent to fit.</p></div></li>
-          <li><span class="n">02</span><div><span class="t">SaaS Product Development</span><p class="desc">Idea to a multi-tenant product, with billing and onboarding in place.</p></div></li>
-          <li><span class="n">03</span><div><span class="t">MVP Development</span><p class="desc">The smallest thing you can put in front of users &mdash; shipped in weeks.</p></div></li>
-          <li><span class="n">04</span><div><span class="t">Web Application Development</span><p class="desc">Fast, scalable web apps on a modern front end and a solid API.</p></div></li>
-          <li><span class="n">05</span><div><span class="t">Mobile App Development</span><p class="desc">Native-feeling iOS and Android, from build to store release.</p></div></li>
-          <li><span class="n">06</span><div><span class="t">Enterprise Software Development</span><p class="desc">Roles, audit, integrations and scale, built in from day one.</p></div></li>
+          <li><span class="n">01</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Custom Software Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Systems built around one team's real workflow, not a template bent to fit.</p></div></li>
+          <li><span class="n">02</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">SaaS Product Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Idea to a multi-tenant product, with billing and onboarding in place.</p></div></li>
+          <li><span class="n">03</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">MVP Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">The smallest thing you can put in front of users &mdash; shipped in weeks.</p></div></li>
+          <li><span class="n">04</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Web Application Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Fast, scalable web apps on a modern front end and a solid API.</p></div></li>
+          <li><span class="n">05</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Mobile App Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Native-feeling iOS and Android, from build to store release.</p></div></li>
+          <li><span class="n">06</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Enterprise Software Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Roles, audit, integrations and scale, built in from day one.</p></div></li>
         </ul>
       </div>
       <div class="practice" id="cat-b">
         <div class="practice-head"><span class="lt">B</span><h3>AI &amp; Automation</h3><span class="ct">07&ndash;11</span></div>
         <ul>
-          <li><span class="n">07</span><div><span class="t">AI Product Development</span><p class="desc">Products where the model is the core of the experience, not a bolt-on.</p></div></li>
-          <li><span class="n">08</span><div><span class="t">AI Agent Development</span><p class="desc">Agents that do the work across sales, support and operations.</p></div></li>
-          <li><span class="n">09</span><div><span class="t">Business Process Automation</span><p class="desc">Retire the manual steps between the systems you already run.</p></div></li>
-          <li><span class="n">10</span><div><span class="t">AI Integration</span><p class="desc">Retrieval, drafting and classification inside existing software.</p></div></li>
-          <li><span class="n">11</span><div><span class="t">Chatbot Development</span><p class="desc">Chat that resolves, escalates and hands off cleanly.</p></div></li>
+          <li><span class="n">07</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">AI Product Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Products where the model is the core of the experience, not a bolt-on.</p></div></li>
+          <li><span class="n">08</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">AI Agent Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Agents that do the work across sales, support and operations.</p></div></li>
+          <li><span class="n">09</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Business Process Automation</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Retire the manual steps between the systems you already run.</p></div></li>
+          <li><span class="n">10</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">AI Integration</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Retrieval, drafting and classification inside existing software.</p></div></li>
+          <li><span class="n">11</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Chatbot Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Chat that resolves, escalates and hands off cleanly.</p></div></li>
         </ul>
       </div>
       <div class="practice" id="cat-c">
         <div class="practice-head"><span class="lt">C</span><h3>Design &amp; Digital Experience</h3><span class="ct">12&ndash;15</span></div>
         <ul>
-          <li><span class="n">12</span><div><span class="t">UI/UX Design</span><p class="desc">Interfaces people move through without thinking &mdash; researched and tested.</p></div></li>
-          <li><span class="n">13</span><div><span class="t">Product Design</span><p class="desc">Strategy and user flows through to shippable screens.</p></div></li>
-          <li><span class="n">14</span><div><span class="t">Website Design &amp; Development</span><p class="desc">Conversion-focused sites, designed and built in one pass.</p></div></li>
-          <li><span class="n">15</span><div><span class="t">Brand Identity for Digital Products</span><p class="desc">Names, marks and a design system a product can grow into.</p></div></li>
+          <li><span class="n">12</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">UI/UX Design</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Interfaces people move through without thinking &mdash; researched and tested.</p></div></li>
+          <li><span class="n">13</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Product Design</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Strategy and user flows through to shippable screens.</p></div></li>
+          <li><span class="n">14</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Website Design &amp; Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Conversion-focused sites, designed and built in one pass.</p></div></li>
+          <li><span class="n">15</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Brand Identity for Digital Products</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Names, marks and a design system a product can grow into.</p></div></li>
         </ul>
       </div>
       <div class="practice" id="cat-d">
         <div class="practice-head"><span class="lt">D</span><h3>Digital Transformation</h3><span class="ct">16&ndash;19</span></div>
         <ul>
-          <li><span class="n">16</span><div><span class="t">Business Digitalization</span><p class="desc">Paper, spreadsheets and tribal knowledge become systems of record.</p></div></li>
-          <li><span class="n">17</span><div><span class="t">Digital Transformation Consulting</span><p class="desc">Find the technology worth investing in, then sequence the roadmap.</p></div></li>
-          <li><span class="n">18</span><div><span class="t">Custom Business Systems</span><p class="desc">CRM, ERP, HRMS, inventory and booking, fit to your model.</p></div></li>
-          <li><span class="n">19</span><div><span class="t">System Integration</span><p class="desc">Make your tools, APIs and platforms behave as one stack.</p></div></li>
+          <li><span class="n">16</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Business Digitalization</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Paper, spreadsheets and tribal knowledge become systems of record.</p></div></li>
+          <li><span class="n">17</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Digital Transformation Consulting</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Find the technology worth investing in, then sequence the roadmap.</p></div></li>
+          <li><span class="n">18</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Custom Business Systems</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">CRM, ERP, HRMS, inventory and booking, fit to your model.</p></div></li>
+          <li><span class="n">19</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">System Integration</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Make your tools, APIs and platforms behave as one stack.</p></div></li>
         </ul>
       </div>
       <div class="practice" id="cat-e">
         <div class="practice-head"><span class="lt">E</span><h3>Technology &amp; Growth</h3><span class="ct">20&ndash;24</span></div>
         <ul>
-          <li><span class="n">20</span><div><span class="t">Cloud Application Development</span><p class="desc">Cloud-native apps that scale with load and cost what they should.</p></div></li>
-          <li><span class="n">21</span><div><span class="t">API Development &amp; Integration</span><p class="desc">Secure, documented APIs and reliable third-party connections.</p></div></li>
-          <li><span class="n">22</span><div><span class="t">Product Scaling &amp; Optimization</span><p class="desc">Tune an existing product for performance, growth and lower spend.</p></div></li>
-          <li><span class="n">23</span><div><span class="t">Technology Consulting</span><p class="desc">Architecture, stack and hiring guidance at a decision point.</p></div></li>
-          <li><span class="n">24</span><div><span class="t">Dedicated Development Team</span><p class="desc">An embedded squad &mdash; design, engineering, PM &mdash; that ships as yours.</p></div></li>
+          <li><span class="n">20</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Cloud Application Development</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Cloud-native apps that scale with load and cost what they should.</p></div></li>
+          <li><span class="n">21</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">API Development &amp; Integration</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Secure, documented APIs and reliable third-party connections.</p></div></li>
+          <li><span class="n">22</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Product Scaling &amp; Optimization</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Tune an existing product for performance, growth and lower spend.</p></div></li>
+          <li><span class="n">23</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Technology Consulting</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">Architecture, stack and hiring guidance at a decision point.</p></div></li>
+          <li><span class="n">24</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Dedicated Development Team</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">An embedded squad &mdash; design, engineering, PM &mdash; that ships as yours.</p></div></li>
         </ul>
       </div>
     </div>
@@ -1998,21 +2023,23 @@
       revealEls.forEach(function (el) { el.classList.add("in"); });
     }
 
-    /* practices: hover-to-reveal on desktop only. On touch every description
-       is shown by CSS and the rows are inert — nothing to tap, nothing to
-       scroll the page. */
-    if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
-      document.querySelectorAll(".practice").forEach(function (card) {
-        var items = [].slice.call(card.querySelectorAll("ul > li"));
-        items.forEach(function (li) {
-          li.addEventListener("click", function () {
-            var wasOpen = li.classList.contains("is-open");
-            items.forEach(function (o) { o.classList.remove("is-open"); });
-            if (!wasOpen) li.classList.add("is-open");
-          });
-        });
+    /* practices: on touch / narrow screens each service title is a button that
+       drops its description down. Independent toggles (no accordion) so nothing
+       above the tapped row ever changes height. On wide mouse screens the CSS
+       hover/focus reveal handles it and this does nothing. */
+    var tapMQ = window.matchMedia ? window.matchMedia("(hover: none), (max-width: 620px)") : null;
+    document.querySelectorAll(".practice li .t-btn").forEach(function (btn) {
+      var li = btn.closest("li");
+      /* a tap must never focus the button: focusing makes some browsers scroll
+         it into view, which read as the page jumping to another section */
+      btn.addEventListener("mousedown", function (e) { if (tapMQ && tapMQ.matches) e.preventDefault(); });
+      btn.addEventListener("click", function () {
+        if (!tapMQ || !tapMQ.matches) return;
+        var open = li.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        setTimeout(function () { try { btn.blur(); } catch (e) {} }, 0);
       });
-    }
+    });
 
     /* timeline activation + progress */
     var timeline = document.querySelector(".timeline");
