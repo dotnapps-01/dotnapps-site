@@ -1365,6 +1365,19 @@
     .hero-actions { justify-content: center; }
     .hero-caps { margin-left: auto; margin-right: auto; justify-content: center; }
     .hero-strip-label { text-align: center; }
+
+    /* give the laptop hero room to breathe: wider block so the chips fit one row,
+       roomier vertical rhythm, and keep the wave / grid art out of the text column */
+    .hero-inner { max-width: 64rem; }
+    .hero-inner > h1 { max-width: 46rem; margin-left: auto; margin-right: auto; }
+    .hero-inner > p { max-width: 40rem; margin-top: 1.75rem; }
+    .hero-actions { margin-top: 2.25rem; }
+    .hero-caps { max-width: 60rem; margin-top: 2.25rem; }
+    .hero-strip-label { margin-top: clamp(3rem, 6vw, 4.5rem); }
+    .hero-graph {
+      -webkit-mask-image: linear-gradient(90deg, #000 0, #000 12%, transparent 28%, transparent 72%, #000 88%, #000 100%);
+      mask-image: linear-gradient(90deg, #000 0, #000 12%, transparent 28%, transparent 72%, #000 88%, #000 100%);
+    }
   }
 </style>
 </head>
