@@ -1046,17 +1046,21 @@
   @media (max-width: 820px) {
     .nav { gap: 1rem; padding: calc(env(safe-area-inset-top, 0px) + 12px) calc(clamp(1.15rem, 5vw, 3.25rem) + .45rem) 10px; }
     .hero-inner, .hero-strip-label { padding-inline: .45rem; }
-    /* logo alone; a tap slides the name out (JS adds .is-named for a few seconds).
-       Only the bar's own brand — the menu card keeps its full header. */
+    /* logo + name are always visible; on load the name wipes out from the logo.
+       Only the bar's own brand — the menu card keeps its plain header. */
     .nav > .brand {
       gap: 0; padding: .45rem .5rem; margin-left: -.5rem;
       -webkit-tap-highlight-color: transparent;
     }
     .nav > .brand .brand-name {
-      max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; margin-left: 0;
-      transition: max-width .5s cubic-bezier(.2, .7, .2, 1), opacity .35s ease .05s, margin-left .5s cubic-bezier(.2, .7, .2, 1);
+      margin-left: .55rem; white-space: nowrap;
+      /* "backwards": hidden during the delay, and the clip is dropped once it has played */
+      animation: brandReveal .85s cubic-bezier(.2, .7, .2, 1) .25s backwards;
     }
-    .nav > .brand.is-named .brand-name { max-width: 9rem; opacity: 1; margin-left: .55rem; }
+    @keyframes brandReveal {
+      from { clip-path: inset(0 100% 0 0); opacity: 0; transform: translateX(-14px); }
+      to   { clip-path: inset(0 0 0 0);    opacity: 1; transform: none; }
+    }
     .nav .brand { font-size: 1.1rem; transition: opacity .2s ease; }
     .nav .brand svg { width: 23px; height: 23px; }
     .nav-toggle { display: inline-flex; margin-left: 0; width: 40px; height: 34px; gap: 4.5px; }
@@ -2177,22 +2181,6 @@
       /* desktop: a click-opened pill re-collapses when the pointer leaves it */
       nav.addEventListener("mouseleave", function () {
         if (nav.classList.contains("open") && window.matchMedia("(min-width: 821px)").matches) closeMenu();
-      });
-    }
-
-    /* mobile: the bar shows the logo alone. A tap slides the name out for a
-       moment; tapping again while it is out follows the link to the top. */
-    var navBrand = nav.querySelector(":scope > .brand");
-    if (navBrand && window.matchMedia) {
-      var brandMQ = window.matchMedia("(max-width: 820px)");
-      var brandTimer;
-      navBrand.addEventListener("mousedown", function (e) { if (brandMQ.matches) e.preventDefault(); });
-      navBrand.addEventListener("click", function (e) {
-        if (!brandMQ.matches || navBrand.classList.contains("is-named")) return;
-        e.preventDefault();
-        navBrand.classList.add("is-named");
-        clearTimeout(brandTimer);
-        brandTimer = setTimeout(function () { navBrand.classList.remove("is-named"); }, 2800);
       });
     }
 
