@@ -325,46 +325,94 @@
 
 
 
-  /* hero terminal: the studio's promise typed out, no handoffs */
-  .hero-os { display: none; }
+
+  /* hero deck: the five things we do, a stack of cards that shuffle forward one at a time */
+  .hero-deck { display: none; }
   @media (min-width: 1100px) {
-    .hero-os {
-      display: block; position: absolute; z-index: 1; right: 0; top: 10.5rem; width: clamp(24rem, calc(100% - 40vw - 2.5rem), 36rem); margin: 0; text-align: left;
-      border-radius: 24px; border: 1px solid var(--hairline);
-      box-shadow: 0 40px 80px -36px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .05);
-      user-select: none;
+    .hero-deck { display: block; position: absolute; z-index: 1; right: 0; top: 8.6rem; width: clamp(22rem, calc(100% - 40vw - 2.5rem), 36rem); user-select: none; }
+    .dk-stage { position: relative; height: 29rem; }
+    .dk-card {
+      position: absolute; left: 0; top: 5.6rem; width: calc(100% - 7.2rem); height: 23rem; padding: 2rem 2.1rem; box-sizing: border-box;
+      display: flex; flex-direction: column; border-radius: 26px; background: var(--frame); border: 1px solid var(--hairline);
+      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .05);
+      transform-origin: 50% 100%;
     }
-    .hero-os::before {   /* a second window peeking out behind, for depth */
-      content: ""; position: absolute; z-index: -1; inset: 0; transform: translate(18px, 20px); border-radius: inherit;
-      background: color-mix(in srgb, var(--sunken) 70%, var(--frame)); border: 1px solid var(--hairline); opacity: .9;
+    .dk-ic { width: 64px; height: 64px; border-radius: 19px; display: grid; place-items: center; background: var(--sunken); color: var(--ink); border: 1px solid var(--hairline); }
+    .dk-ic svg { width: 32px; height: 32px; }
+    .dk-card h3 { margin: 1.7rem 0 0; font-size: 2.6rem; font-weight: 600; letter-spacing: -.04em; line-height: 1; color: var(--ink); }
+    .dk-card p { margin: .8rem 0 0; font-size: 1.12rem; line-height: 1.5; color: var(--muted); max-width: 24rem; }
+    .dk-card ul { list-style: none; margin: auto 0 0; padding: 0; display: flex; gap: .45rem; flex-wrap: wrap; }
+    .dk-card li {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+      padding: .42rem .8rem; border-radius: 999px; border: 1px solid var(--border);
     }
-    .os-bar { display: flex; align-items: center; gap: .45rem; padding: 1rem 1.3rem; border-bottom: 1px solid var(--hairline); position: relative; background: var(--frame); border-radius: 23px 23px 0 0; }
-    .os-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--border); }
-    .os-bar b {
-      position: absolute; left: 50%; transform: translateX(-50%);
-      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .7rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
-    }
-    .os-term {
-      padding: 1.6rem 2rem 2.2rem; background: var(--frame); border-radius: 0 0 23px 23px; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 1.08rem; line-height: 2.1; color: var(--text);
-    }
-    .tl { margin: 0; width: var(--w); max-width: 100%; overflow: hidden; white-space: nowrap; border-right: 2px solid transparent; }
-    .tl span { display: block; }
-    .tl.cmd { color: var(--text); }
-    .tl.ok { color: var(--muted); }
-    .tl.ok span::first-letter { color: #34C759; }
-    .tl.t6 { color: var(--text); }
-    .js .tl { width: 0; animation-duration: 20s; animation-delay: -6s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; }
-    .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; } .js .t5 { animation-name: tl5; } .js .t6 { animation-name: tl6; } .js .t7 { animation-name: tl7; }
-    .js .t7 { border-right-color: currentColor; }
+    .hero .hero-inner > .hero-caps { max-width: 30rem; }
+    .dk-dots { display: flex; gap: .4rem; justify-content: flex-start; margin-top: .4rem; padding-left: .2rem; }
+    .dk-dots i { height: 8px; width: 8px; border-radius: 999px; background: var(--border); }
+    .dk0 { transform: translate(0px, 0px) scale(1.000); z-index: 5; } .dk1 { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; }
+    .dk1 { transform: translate(112px, -80px) scale(0.820); z-index: 1; } .dk2 { transform: translate(84px, -60px) scale(0.865); z-index: 2; } .dk3 { transform: translate(56px, -40px) scale(0.910); z-index: 3; } .dk4 { transform: translate(28px, -20px) scale(0.955); z-index: 4; }
+    .js .dk-card { animation: none 15s cubic-bezier(.6, 0, .2, 1) infinite; }
+    .js .dk0 { animation-name: dk0; } .js .dk1 { animation-name: dk1; } .js .dk2 { animation-name: dk2; } .js .dk3 { animation-name: dk3; } .js .dk4 { animation-name: dk4; }
+    .js .dk-dots i { animation: none 15s linear infinite; }
+    .js .dk-dots i:nth-child(1) { animation-name: dkd0; } .js .dk-dots i:nth-child(2) { animation-name: dkd1; } .js .dk-dots i:nth-child(3) { animation-name: dkd2; }
+    .js .dk-dots i:nth-child(4) { animation-name: dkd3; } .js .dk-dots i:nth-child(5) { animation-name: dkd4; }
   }
-  @keyframes tl1 { 0%, 4% { width: 0; } 12%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl2 { 0%, 15% { width: 0; } 25%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl3 { 0%, 28% { width: 0; } 34%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl4 { 0%, 37% { width: 0; } 45%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl5 { 0%, 48% { width: 0; } 54%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl6 { 0%, 57% { width: 0; } 68%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl7 { 0%, 72% { width: 0; } 74%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @media (prefers-reduced-motion: reduce) { .js .tl { animation: none !important; width: var(--w); } }
+  @keyframes dk0 {
+    0%, 15% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+    17% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
+    17.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
+    20%, 35% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+    40%, 55% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+    60%, 75% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+    80%, 95% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+    100% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+  }
+  @keyframes dk1 {
+    0%, 15% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+    20%, 35% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+    37% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
+    37.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
+    40%, 55% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+    60%, 75% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+    80%, 95% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+    100% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+  }
+  @keyframes dk2 {
+    0%, 15% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+    20%, 35% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+    40%, 55% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+    57% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
+    57.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
+    60%, 75% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+    80%, 95% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+    100% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+  }
+  @keyframes dk3 {
+    0%, 15% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+    20%, 35% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+    40%, 55% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+    60%, 75% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+    77% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
+    77.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
+    80%, 95% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+    100% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+  }
+  @keyframes dk4 {
+    0%, 15% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+    20%, 35% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
+    40%, 55% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
+    60%, 75% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
+    80%, 95% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
+    97% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
+    97.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
+    100% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
+  }
+  @keyframes dkd0 { 0%, 0% { background: var(--border); width: 8px; } 0%, 17% { background: var(--ink); width: 22px; } 19%, 100% { background: var(--border); width: 8px; } }
+  @keyframes dkd1 { 0%, 19% { background: var(--border); width: 8px; } 20%, 37% { background: var(--ink); width: 22px; } 39%, 100% { background: var(--border); width: 8px; } }
+  @keyframes dkd2 { 0%, 39% { background: var(--border); width: 8px; } 40%, 57% { background: var(--ink); width: 22px; } 59%, 100% { background: var(--border); width: 8px; } }
+  @keyframes dkd3 { 0%, 59% { background: var(--border); width: 8px; } 60%, 77% { background: var(--ink); width: 22px; } 79%, 100% { background: var(--border); width: 8px; } }
+  @keyframes dkd4 { 0%, 79% { background: var(--border); width: 8px; } 80%, 97% { background: var(--ink); width: 22px; } 99%, 100% { background: var(--border); width: 8px; } }
+  @media (prefers-reduced-motion: reduce) { .js .dk-card, .js .dk-dots i { animation: none !important; } }
 
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
   .hero-rings {
@@ -1785,18 +1833,41 @@
 
   <header class="hero" id="top">
     <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
-      <div class="hero-os" aria-hidden="true">
-        <div class="os-bar"><i></i><i></i><i></i><b>terminal</b></div>
-        <div class="os-term">
-          <p class="tl t1 cmd" style="--w:30ch"><span>$ dotnapps new "your idea"</span></p>
-          <p class="tl t2 ok" style="--w:28ch"><span>✓ scoped with a senior team</span></p>
-          <p class="tl t3 ok" style="--w:11ch"><span>✓ designed</span></p>
-          <p class="tl t4 ok" style="--w:21ch"><span>✓ built, no handoffs</span></p>
-          <p class="tl t5 ok" style="--w:10ch"><span>✓ shipped</span></p>
-          <p class="tl t6 ok" style="--w:26ch"><span>✓ live, and ready to scale</span></p>
-          <p class="tl t7 cmd" style="--w:2ch"><span>$</span></p>
-        </div>
+    <div class="hero-deck" aria-hidden="true">
+      <div class="dk-stage">
+        <article class="dk-card dk0">
+          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="20" height="14" rx="3"/><path d="M10 26h12M13 22v4M19 22v4"/></svg></span>
+          <h3>Product</h3>
+          <p>Scoping, roadmaps and MVPs that actually ship.</p>
+          <ul><li>MVPs</li><li>Roadmaps</li><li>Discovery</li></ul>
+        </article>
+        <article class="dk-card dk1">
+          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="14" r="7"/><rect x="14" y="14" width="12" height="12" rx="3"/></svg></span>
+          <h3>Design</h3>
+          <p>Interfaces people understand on the first tap.</p>
+          <ul><li>UX</li><li>UI</li><li>Design systems</li></ul>
+        </article>
+        <article class="dk-card dk2">
+          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10l-6 6 6 6M20 10l6 6-6 6M18 8l-4 16"/></svg></span>
+          <h3>Engineering</h3>
+          <p>Web, mobile and backend systems built to last.</p>
+          <ul><li>Web</li><li>Mobile</li><li>Backend</li></ul>
+        </article>
+        <article class="dk-card dk3">
+          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5l2.2 6.8L25 14l-6.8 2.2L16 23l-2.2-6.8L7 14l6.8-2.2z"/><path d="M25 22l.8 2.2L28 25l-2.2.8L25 28l-.8-2.2L22 25l2.2-.8z"/></svg></span>
+          <h3>AI</h3>
+          <p>Agents and automation wired into the way you work.</p>
+          <ul><li>Agents</li><li>Automation</li><li>RAG</li></ul>
+        </article>
+        <article class="dk-card dk4">
+          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 12a8 8 0 0 0-14-2M9 20a8 8 0 0 0 14 2"/><path d="M9 5v5h5M23 27v-5h-5"/></svg></span>
+          <h3>DevOps</h3>
+          <p>Cloud, CI/CD and monitoring that keep it live.</p>
+          <ul><li>Cloud</li><li>CI/CD</li><li>Monitoring</li></ul>
+        </article>
       </div>
+      <div class="dk-dots"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
