@@ -424,22 +424,22 @@
   .bos::before, .bos::after {
     content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 50%;
     width: min(46rem, 80%); aspect-ratio: 1; filter: blur(70px);
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--focus) 42%, transparent), transparent);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--text) 13%, transparent), transparent);
   }
   .bos::before { top: -28%; right: -16%; }
   .bos::after { bottom: -34%; left: -18%; }
   .bos-stage { position: relative; height: 35rem; user-select: none; -webkit-user-select: none; }
   .bos-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-  .bos-wire { fill: none; stroke: color-mix(in srgb, var(--focus) 34%, transparent); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+  .bos-wire { fill: none; stroke: color-mix(in srgb, var(--text) 22%, transparent); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
   .bos-pulse {
-    fill: none; stroke: var(--focus); stroke-width: 1.8; stroke-linecap: round; vector-effect: non-scaling-stroke;
+    fill: none; stroke: var(--text); stroke-width: 1.8; stroke-linecap: round; vector-effect: non-scaling-stroke;
     stroke-dasharray: 7 93; stroke-dashoffset: 7; opacity: .9;
     animation: bosFlow 4.2s linear infinite; animation-delay: calc(var(--i) * -.55s);
   }
   @keyframes bosFlow { to { stroke-dashoffset: -93; } }
   .bos-ports i {
     position: absolute; top: calc(var(--y) * 1%); width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%;
-    background: var(--frame); border: 1.5px solid var(--focus); pointer-events: none;
+    background: var(--frame); border: 1.5px solid var(--muted); pointer-events: none;
   }
   .bos-ports-l i { left: 33%; }
   .bos-ports-r i { left: 67%; }
@@ -448,15 +448,15 @@
     width: 34%; min-width: 17rem; max-height: 100%;
     display: flex; flex-direction: column; align-items: center; text-align: center; gap: .9rem;
     padding: 1.75rem 1.5rem 1.6rem; border-radius: 26px;
-    background: var(--raise); border: 1px solid color-mix(in srgb, var(--focus) 22%, var(--hairline));
-    box-shadow: 0 26px 60px -22px color-mix(in srgb, var(--focus) 38%, transparent), 0 2px 8px rgba(0, 0, 0, .04);
+    background: var(--raise); border: 1px solid var(--hairline);
+    box-shadow: 0 26px 60px -24px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .04);
   }
   .bos-tag {
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    font-size: .74rem; letter-spacing: .02em; color: var(--focus);
+    font-size: .74rem; letter-spacing: .02em; color: var(--text);
     padding: .3rem .75rem; border-radius: 999px;
-    background: color-mix(in srgb, var(--focus) 10%, var(--raise));
-    border: 1px solid color-mix(in srgb, var(--focus) 24%, transparent);
+    background: var(--sunken);
+    border: 1px solid var(--border);
   }
   .bos-card h3 { margin: 0; font-size: clamp(1.45rem, 2.3vw, 1.95rem); line-height: 1.12; text-wrap: balance; }
   .bos-card p { margin: 0; color: var(--muted); font-size: .94rem; line-height: 1.55; max-width: 30ch; }
@@ -467,15 +467,15 @@
     width: 3.5rem; aspect-ratio: 1; margin: -1.75rem 0 0 -1.75rem; border-radius: 50%;
     display: grid; place-items: center;
     background: var(--raise); border: 1px solid var(--hairline);
-    box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--focus) 35%, transparent), 0 1px 2px rgba(0, 0, 0, .05);
+    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, .22), 0 1px 2px rgba(0, 0, 0, .05);
     transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s ease;
   }
   .bn .app-mark { width: 2rem; }
-  .bn.is-live { border-color: color-mix(in srgb, var(--focus) 45%, var(--hairline)); }
+  .bn.is-live { border-color: var(--text); }
   .bn-nm { position: absolute; left: 50%; top: calc(100% + .35rem); transform: translateX(-50%); white-space: nowrap;
     font-size: .68rem; font-weight: 600; color: var(--muted); pointer-events: none; }
   @media (hover: hover) {
-    .bn:hover { transform: scale(1.1); box-shadow: 0 10px 24px -6px color-mix(in srgb, var(--focus) 50%, transparent); }
+    .bn:hover { transform: scale(1.1); box-shadow: 0 10px 24px -6px rgba(0, 0, 0, .32); }
   }
   .bos-legend {
     list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .5rem;
@@ -485,7 +485,7 @@
     margin-right: .4rem; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint);
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   }
-  .bos-legend .live b { color: var(--focus); }
+  .bos-legend .live b { color: var(--text); }
   @media (prefers-reduced-motion: reduce) { .bos-pulse { animation: none; opacity: 0; } }
 
   /* narrower than the wires can fan: card on top, apps in a grid below */
