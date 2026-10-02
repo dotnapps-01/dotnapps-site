@@ -1226,6 +1226,41 @@
     .js .vc-typing { display: none !important; }
     .js .nav-toggle i { transform: none !important; opacity: 1 !important; }
   }
+
+  /* ---------- Phone hero (reference: mono pill, big two-tone headline,
+     one row of pill buttons with arrows, mono caption) ---------- */
+  .hero-actions .arr { display: none; }
+  @media (max-width: 620px) {
+    .hero { padding-top: 5.6rem; }
+    .hero-tag {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      text-transform: uppercase; letter-spacing: .17em; font-size: .66rem; font-weight: 500;
+      padding: .6rem 1.05rem; margin-bottom: 1.7rem; color: var(--text);
+    }
+    .hero-tag .dot { display: none; }
+    .hero h1 { font-size: clamp(2.35rem, 10.4vw, 3rem); line-height: 1.02; letter-spacing: -.045em; }
+    .hero h1 em { color: inherit; font-weight: inherit; }
+    .hero h1 .h1-end { display: block; color: var(--muted); }
+    .hero-inner > p { font-size: 1.06rem; line-height: 1.68; margin-top: 1.5rem; }
+    .hero-actions { flex-wrap: nowrap; gap: .6rem; margin-top: 1.8rem; }
+    .hero-actions .btn {
+      flex: 1 1 auto; justify-content: center; gap: .5rem; white-space: nowrap;
+      padding: 1rem .9rem; font-size: .9rem; border-radius: 999px;
+    }
+    .hero-actions .arr { display: block; width: 15px; height: 15px; flex: none; }
+    .hero-caps { gap: 0; margin-top: 1.7rem; max-width: none; justify-content: flex-start;
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      text-transform: uppercase; letter-spacing: .15em; font-size: .68rem; line-height: 1.9; }
+    .hero-caps li {
+      background: none; border: 0; box-shadow: none; padding: 0; border-radius: 0;
+      font: inherit; letter-spacing: inherit; color: var(--muted);
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+    }
+    /* trailing dot (not leading) so a wrapped line never starts with one */
+    .hero-caps li:not(:last-child)::after { content: "\00b7"; margin: 0 .75em; color: var(--faint); }
+  }
+  @media (min-width: 621px) { .hide-s { display: inline; } }
+  @media (max-width: 620px) { .hide-s { display: none; } }
 </style>
 </head>
 <body>
@@ -1272,11 +1307,11 @@
     </svg>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
-      <h1 class="serif">Unlock your <em>digital potential</em> with us.</h1>
+      <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
       <p>Dotnapps designs and builds software for other companies &mdash; and runs Business&nbsp;OS, our own suite of business apps. The same team does both.</p>
       <div class="hero-actions">
-        <a class="btn btn--solid" href="#contact">Start a project</a>
-        <a class="btn btn--ghost" href="#products" data-modal="businessos">Explore Business OS</a>
+        <a class="btn btn--solid" href="#contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--ghost" href="#products" data-modal="businessos"><span class="hide-s">Explore </span>Business&nbsp;OS<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
       <ul class="hero-caps">
         <li>Custom software</li>
