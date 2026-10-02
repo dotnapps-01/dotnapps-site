@@ -564,38 +564,86 @@
     .practice li.is-open .chev { transform: rotate(180deg); color: var(--focus); }
   }
 
-  /* ---------- Process timeline ---------- */
-  .process-grid { display: grid; grid-template-columns: minmax(240px, 330px) 1fr; gap: clamp(1.5rem, 5vw, 3.5rem); }
-  .process-aside { position: sticky; top: 92px; align-self: start; display: flex; flex-direction: column; gap: 1rem; }
-  .process-aside h2 { font-size: clamp(1.9rem, 4.4vw, 2.7rem); margin: 0; text-wrap: balance; }
-  .process-aside p { margin: 0; color: var(--muted); max-width: 30ch; }
-
-  .timeline { position: relative; list-style: none; margin: 0; padding: 0; }
-  .timeline::before { content: ""; position: absolute; left: 23px; top: 26px; bottom: 26px; width: 2px; background: var(--border); }
+  /* ---------- Process timeline: centred spine, steps alternate sides ---------- */
+  .timeline { position: relative; isolation: isolate; list-style: none; margin: 0 auto; padding: 0; max-width: 62rem; }
+  .timeline::before, .timeline::after {
+    content: ""; position: absolute; left: 50%; width: 2px; margin-left: -1px; z-index: 1;
+    top: var(--sp-top, 3.4rem);
+  }
+  .timeline::before { bottom: var(--sp-bottom, 3.4rem); background: var(--hairline); }
   .timeline::after {
-    content: ""; position: absolute; left: 23px; top: 26px; width: 2px;
-    height: calc((100% - 52px) * var(--progress, 0));
-    background: var(--text); transition: height .18s linear;
+    height: calc((100% - var(--sp-top, 3.4rem) - var(--sp-bottom, 3.4rem)) * var(--progress, 0));
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--focus) 8%, transparent), var(--focus));
+    transition: height .18s linear;
   }
-  .tl-step { display: grid; grid-template-columns: 48px 1fr; gap: 1.2rem; padding: .85rem 0; }
+  .tl-step {
+    position: relative; display: grid; align-items: center;
+    grid-template-columns: 1fr 56px 1fr; grid-template-areas: "side node body";
+    column-gap: 1.1rem; padding: 1.55rem 2.2rem;
+  }
+  .tl-step:nth-child(even) { grid-template-areas: "body node side"; }
+  /* the highlight bar behind the step in focus */
+  .tl-step::before {
+    content: ""; position: absolute; inset: 0; border-radius: 30px; z-index: 0;
+    background: var(--sunken); opacity: 0; transition: opacity .45s ease;
+  }
+  .tl-step.active::before { opacity: 1; }
+  .tl-step > * { position: relative; z-index: 2; }
+
+  .tl-side { grid-area: side; display: flex; align-items: center; justify-content: flex-end; gap: .75rem; }
+  .tl-step:nth-child(even) .tl-side { flex-direction: row-reverse; }
   .tl-badge {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--frame); border: 1px solid var(--border);
-    display: grid; place-items: center; box-shadow: var(--shadow-chip);
-    z-index: 1; color: var(--faint);
-    transition: color .4s ease, border-color .4s ease, transform .4s ease;
+    width: 58px; height: 58px; border-radius: 19px; flex: none;
+    display: grid; place-items: center; color: var(--text);
+    background: linear-gradient(160deg, var(--raise), var(--sunken));
+    border: 1px solid var(--hairline); box-shadow: var(--shadow-chip);
+    transition: background .4s ease, color .4s ease, transform .4s ease;
   }
-  .tl-badge svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .tl-body {
-    border: 1px solid transparent; border-radius: 14px;
-    padding: .4rem .5rem; opacity: .42;
-    transition: opacity .45s ease, background .45s ease, border-color .45s ease, box-shadow .45s ease, padding .45s ease;
+  .tl-badge svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+  .tl-step.active .tl-badge { background: linear-gradient(160deg, color-mix(in srgb, var(--text) 78%, var(--frame)), var(--text)); color: var(--frame); transform: scale(1.05); }
+  .tl-num {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: .68rem; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums;
+    min-width: 30px; height: 30px; padding: 0 .45rem; border-radius: 999px;
+    display: grid; place-items: center; background: var(--sunken); border: 1px solid var(--hairline);
   }
-  .tl-body h3 { font-size: 1.12rem; font-weight: 650; letter-spacing: -.02em; margin: 0 0 .3rem; }
-  .tl-body p { margin: 0; font-size: .89rem; color: var(--muted); }
-  .tl-step.active .tl-body { opacity: 1; background: var(--frame); border-color: var(--hairline); box-shadow: var(--shadow-card); padding: 1.1rem 1.25rem; }
-  .tl-step.active .tl-badge { color: var(--text); border-color: var(--text); transform: scale(1.04); }
+  .tl-step.active .tl-num { background: var(--frame); color: var(--text); }
+
+  .tl-node {
+    grid-area: node; justify-self: center; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--frame); border: 1.5px solid var(--border);
+    transition: border-color .4s ease, box-shadow .4s ease, background .4s ease;
+  }
+  .tl-step.active .tl-node {
+    border-color: transparent;
+    background:
+      radial-gradient(circle, var(--text) 0 3.5px, var(--frame) 4px 5px, transparent 5.5px),
+      conic-gradient(from 20deg, #5ac8fa, #af52de, #ff2d55, #ff9f0a, #5ac8fa);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--focus) 12%, transparent);
+  }
+
+  .tl-body { grid-area: body; max-width: 22rem; opacity: .5; transition: opacity .45s ease; }
+  .tl-step:nth-child(even) .tl-body { justify-self: end; text-align: right; }
+  .tl-body h3 { font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; margin: 0 0 .35rem; }
+  .tl-body p { margin: 0; font-size: .9rem; line-height: 1.55; color: var(--muted); }
+  .tl-step.active .tl-body { opacity: 1; }
   .no-js .tl-body, .reduce-motion .tl-body { opacity: 1; }
+
+  /* phones + small tablets: spine on the left, everything reads downward */
+  @media (max-width: 860px) {
+    /* spine runs through the node column: .35rem padding + half of the 30px column */
+    .timeline::before, .timeline::after { left: calc(.35rem + 15px); }
+    .tl-step {
+      grid-template-columns: 30px 1fr; grid-template-areas: "node side" "node body" !important;
+      column-gap: .9rem; row-gap: .8rem; padding: 1.15rem 1rem 1.2rem .35rem; align-items: start;
+    }
+    .tl-step::before { border-radius: 24px; }
+    .tl-step .tl-node { align-self: start; margin-top: 1.1rem; }
+    .tl-side, .tl-step:nth-child(even) .tl-side { flex-direction: row; justify-content: flex-start; }
+    .tl-badge { width: 50px; height: 50px; border-radius: 16px; }
+    .tl-step:nth-child(even) .tl-body { justify-self: start; text-align: left; }
+    .tl-body { max-width: none; }
+  }
 
   /* ---------- Engagement ---------- */
   .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .8rem; }
@@ -1722,31 +1770,33 @@
 
   <!-- ===================== PROCESS ===================== -->
   <section class="band" id="process">
-    <div class="process-grid">
-      <div class="process-aside">
-        <span class="eyebrow-pill">Process</span>
-        <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
-        <p>Small teams, short cycles, and working software you can see every week.</p>
-      </div>
-      <ol class="timeline">
+    <div class="band-head reveal">
+      <span class="eyebrow-pill">Process</span>
+      <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
+      <p>Small teams, short cycles, and working software you can see every week.</p>
+    </div>
+    <ol class="timeline">
         <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M15 6a3 3 0 0 1 0 5M20 19c0-2.5-1.5-4-3.5-4.5"/></svg></span>
+          <div class="tl-side"><span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M15 6a3 3 0 0 1 0 5M20 19c0-2.5-1.5-4-3.5-4.5"/></svg></span><span class="tl-num">01</span></div>
+          <span class="tl-node" aria-hidden="true"></span>
           <div class="tl-body"><h3>Discovery</h3><p>Users, constraints, and what success actually looks like &mdash; agreed before anything is built.</p></div>
         </li>
         <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 10-10-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/><path d="M18 3l1 1"/></svg></span>
+          <div class="tl-side"><span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 10-10-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/><path d="M18 3l1 1"/></svg></span><span class="tl-num">02</span></div>
+          <span class="tl-node" aria-hidden="true"></span>
           <div class="tl-body"><h3>Design</h3><p>Flows first, then interface. We prototype the risky parts before a line of production code.</p></div>
         </li>
         <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg></span>
+          <div class="tl-side"><span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg></span><span class="tl-num">03</span></div>
+          <span class="tl-node" aria-hidden="true"></span>
           <div class="tl-body"><h3>Build</h3><p>Ship in slices. You see working software every week and steer as it takes shape.</p></div>
         </li>
         <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M20 7h-4M20 7v4"/></svg></span>
+          <div class="tl-side"><span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M20 7h-4M20 7v4"/></svg></span><span class="tl-num">04</span></div>
+          <span class="tl-node" aria-hidden="true"></span>
           <div class="tl-body"><h3>Scale</h3><p>Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p></div>
         </li>
-      </ol>
-    </div>
+    </ol>
   </section>
 
   <!-- ===================== ENGAGEMENT ===================== -->
@@ -2237,12 +2287,19 @@
       steps.forEach(function (st) { tio.observe(st); });
 
       var ticking = false;
+      var nodes = timeline.querySelectorAll(".tl-node");
       var updateProgress = function () {
         ticking = false;
-        var r = timeline.getBoundingClientRect();
-        var total = r.height - 52;
+        if (!nodes.length) return;
+        var tr = timeline.getBoundingClientRect();
+        var n0 = nodes[0].getBoundingClientRect(), nN = nodes[nodes.length - 1].getBoundingClientRect();
+        var top = n0.top + n0.height / 2 - tr.top;
+        var bottom = tr.bottom - (nN.top + nN.height / 2);
+        timeline.style.setProperty("--sp-top", top.toFixed(1) + "px");
+        timeline.style.setProperty("--sp-bottom", bottom.toFixed(1) + "px");
+        var total = tr.height - top - bottom;
         if (total <= 0) return;
-        var scrolled = Math.min(Math.max(window.innerHeight * 0.5 - r.top - 26, 0), total);
+        var scrolled = Math.min(Math.max(window.innerHeight * 0.5 - tr.top - top, 0), total);
         timeline.style.setProperty("--progress", (scrolled / total).toFixed(3));
       };
       var reqProgress = function () { if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); } };
