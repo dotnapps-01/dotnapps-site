@@ -130,6 +130,7 @@
   }
 
   .frame {
+    --fp: clamp(1.15rem, 5vw, 3.25rem);
     max-width: 1280px;
     margin: 0 auto;
     background-color: var(--frame);
@@ -315,10 +316,38 @@
   .menu-mail { display: none; }
 
   /* ---------- Hero ---------- */
-  .hero { position: relative; text-align: left; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); overflow: clip; }
+  .hero {
+    position: relative; text-align: left; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem);
+    /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
+    overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
+  }
+  /* blueprint paper: fine grid, a stronger cell every 8, and a + at each crossing */
+  .hero::before, .hero::after {
+    content: ""; position: absolute; z-index: 0; pointer-events: none; user-select: none;
+    inset: -3rem calc(-1 * var(--fp)) 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
+  }
+  .hero::before {
+    --cell: 6px; --major: 48px;
+    background-color: color-mix(in srgb, var(--text) 2.4%, var(--frame));
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to right, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px);
+    background-size: var(--major) var(--major), var(--major) var(--major), var(--cell) var(--cell), var(--cell) var(--cell);
+  }
+  .hero::after {
+    background: color-mix(in srgb, var(--text) 36%, transparent);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 .5h3M.5 0v3M45 .5h3M47.5 0v3M0 47.5h3M.5 45v3M45 47.5h3M47.5 45v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 .5h3M.5 0v3M45 .5h3M47.5 0v3M0 47.5h3M.5 45v3M45 47.5h3M47.5 45v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
+    -webkit-mask-size: 48px 48px; mask-size: 48px 48px;
+    -webkit-mask-repeat: repeat; mask-repeat: repeat;
+  }
 
   .hero-graph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-  .hero-graph .hg-grid line { stroke: var(--border); stroke-width: 1; opacity: .35; }
+  .hero-graph .hg-grid { display: none; }
   .hero-graph .hg-line { fill: none; stroke: var(--border); stroke-width: 2; opacity: .7; }
   .hero-graph .hg-line.accent { stroke: var(--focus); opacity: .28; }
   .js .hero-graph g { animation: hgscroll 30s linear infinite; will-change: transform; }
@@ -1319,7 +1348,7 @@
 
   /* Portrait phone */
   @media (max-width: 560px) {
-    .frame { padding: 12px 1.15rem 3rem; }
+    .frame { --fp: 1.15rem; padding: 12px 1.15rem 3rem; }
     .nav { padding-left: calc(1.15rem + .45rem); padding-right: calc(1.15rem + .45rem); }
     .hero { padding-top: 5.25rem; }
     h1 { font-size: clamp(2.2rem, 9.6vw, 2.75rem); }
@@ -1334,7 +1363,7 @@
 
   /* Small phone */
   @media (max-width: 380px) {
-    .frame { padding-left: .9rem; padding-right: .9rem; }
+    .frame { --fp: .9rem; padding-left: .9rem; padding-right: .9rem; }
     .nav { padding-left: calc(.9rem + .45rem); padding-right: calc(.9rem + .45rem); }
     h1 { font-size: 2.05rem; }
   }
@@ -1389,7 +1418,7 @@
      paragraphs, pill buttons with arrows, mono micro-labels. Phones only. */
   @media (max-width: 620px) {
     /* one shared left/right edge for the bar, hero and every section */
-    .frame { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .frame { --fp: 1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
     .nav { padding-left: 1.5rem; padding-right: 1.5rem; }
     .hero-inner, .hero-strip-label { padding-inline: 0; }
 
