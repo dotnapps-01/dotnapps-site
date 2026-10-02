@@ -617,20 +617,83 @@
   .model .who { margin-top: .8rem; font-size: .78rem; color: var(--faint); }
 
   /* ---------- Why (visual cards) ---------- */
-  .why-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .9rem; }
-  .why-card {
-    border: 1px solid var(--hairline); border-radius: 18px; background: var(--frame);
-    padding: 1.1rem 1.1rem 1.4rem; display: flex; flex-direction: column;
-    transition: transform .22s ease, box-shadow .22s ease;
+  /* ---------- Why: bento of soft grey tiles ---------- */
+  .why-head { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; margin: 0 0 clamp(1.75rem, 4vw, 2.6rem); }
+  .why-label { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .66rem; font-weight: 500; letter-spacing: .32em; text-transform: uppercase; color: var(--text); }
+  .why-head h2 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin: 0; line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; }
+  .why-head h2 .h2-end { display: block; color: var(--faint); }
+  .why-head p { margin: 0; color: var(--muted); max-width: 34rem; }
+
+  .why-bento { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr; gap: .75rem; }
+  .wb {
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+    min-height: 17rem; padding: 1.6rem 1.7rem; border-radius: 22px; background: var(--sunken);
   }
-  .why-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
-  .why-viz {
-    height: 132px; border-radius: 12px; background: var(--sunken);
-    border: 1px solid var(--hairline); margin-bottom: 1.1rem;
-    position: relative; overflow: hidden; display: grid; place-items: center;
+  .wb-a, .wb-d { grid-column: span 4; }
+  .wb-b, .wb-c { grid-column: span 2; }
+  .wb h3 { margin: 0; max-width: 20rem; font-size: clamp(1.1rem, 1.7vw, 1.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -.025em; }
+  .wb p { margin: .5rem 0 0; max-width: 27rem; font-size: .86rem; line-height: 1.55; color: var(--muted); }
+
+  /* A: two rows of app pills sliding in opposite directions; dark = live */
+  .wb-pills { margin: auto -1.7rem -.2rem; display: flex; flex-direction: column; gap: .6rem; padding-top: 1.4rem;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+  .wb-row { overflow: hidden; }
+  .wb-run { display: flex; width: max-content; }
+  .js .wb-run { animation: wbSlide 46s linear infinite; }
+  .js .wb-rev .wb-run { animation-direction: reverse; animation-duration: 54s; }
+  .wb-set { display: flex; gap: .6rem; padding-right: .6rem; }
+  @keyframes wbSlide { to { transform: translateX(-50%); } }
+  .wb-pill { padding: .5rem 1.05rem; border-radius: 999px; background: var(--frame); color: var(--text); font-size: .8rem; font-weight: 500; white-space: nowrap; }
+  .wb-pill.alt { background: color-mix(in srgb, var(--text) 8%, var(--sunken)); color: var(--muted); }
+  .wb-pill.live { background: var(--text); color: var(--frame); }
+
+  /* B: growth line */
+  .wb-b .viz-graph { margin-top: auto; width: 100%; height: 7.4rem; }
+
+  /* C: idea -> live, no one in between */
+  .wb-c { align-items: center; justify-content: space-between; text-align: center; }
+  .wb-c h3 { max-width: 12rem; }
+  .wb-flow { display: flex; flex-direction: column; align-items: center; }
+  .wb-dot { position: relative; width: 14px; height: 14px; border-radius: 50%; background: var(--text); }
+  .wb-dot-a { background: var(--focus); }
+  .js .wb-dot-a { animation: pulse 2.4s ease-in-out infinite; }
+  .wb-dot::after {
+    content: attr(data-l); position: absolute; left: 26px; top: 50%; transform: translateY(-50%);
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .6rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
   }
-  .why-card h3 { font-size: 1rem; font-weight: 650; letter-spacing: -.015em; margin: 0 0 .4rem; }
-  .why-card p { margin: 0; font-size: .87rem; color: var(--muted); }
+  .wb-line { position: relative; display: block; width: 0; height: 3.4rem; border-left: 1.5px dashed var(--faint); }
+  .wb-line::before {
+    content: ""; position: absolute; left: -4.75px; width: 7px; height: 7px;
+    border-top: 1.5px solid var(--faint); border-left: 1.5px solid var(--faint);
+  }
+  .wb-up::before { top: 0; transform: rotate(45deg); }
+  .wb-down::before { bottom: 0; transform: rotate(225deg); }
+
+  /* D: the pushback chat, bigger than the old thumbnail */
+  .wb-d .viz-chat { margin: auto 0 0 auto; width: min(100%, 25rem); padding-top: 1.2rem; }
+  .wb-d .viz-chat > span { font-size: .8rem; padding: .55rem .75rem; border-radius: 12px; }
+  .wb-d .vc-in { background: var(--frame); }
+
+  /* the logo badge sitting on the junction of the four tiles */
+  .why-badge {
+    position: absolute; z-index: 2; left: calc(66.667% + .125rem); top: 50%; transform: translate(-50%, -50%);
+    width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--text); box-shadow: 0 0 0 7px var(--frame), 0 10px 28px rgba(0, 0, 0, .18);
+  }
+  .why-badge svg { width: 30px; height: 30px; }
+  .why-badge .lg-fg { fill: var(--frame); }
+
+  @media (prefers-reduced-motion: reduce) { .js .wb-run, .js .wb-dot-a { animation: none; } }
+  @media (max-width: 860px) {
+    .why-bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
+    .wb-a, .wb-b, .wb-c, .wb-d { grid-column: auto; }
+    .wb { min-height: 0; padding: 1.4rem 1.35rem; }
+    .wb-pills { margin-left: -1.35rem; margin-right: -1.35rem; }
+    .wb-c { min-height: 16rem; }
+    .why-badge { display: none; }
+  }
+  @media (max-width: 620px) { .why-head h2 { font-size: clamp(2.2rem, 10vw, 2.8rem); } .why-head p { font-size: 1.04rem; line-height: 1.68; } }
 
   .viz-marks { display: flex; gap: .5rem; }
   .viz-marks span { width: 34px; aspect-ratio: 1; border-radius: 27%; display: grid; place-items: center; }
@@ -1210,7 +1273,6 @@
     .brief { margin-top: 1.5rem; }
     .brief .row { grid-template-columns: 1fr; }
     .careers { flex-direction: column; align-items: flex-start; }
-    .why-viz { height: 120px; }
   }
 
   /* Small phone */
@@ -1457,54 +1519,50 @@
 
   <!-- ===================== WHY ===================== -->
   <section class="why band" id="why">
-    <div class="band-head reveal">
-      <span class="eyebrow-pill">Why Dotnapps</span>
+    <div class="why-head reveal">
+      <span class="why-label">Why Dotnapps</span>
       <h2 class="serif">Discover why <span class="h2-end">we stand out</span></h2>
       <p>A studio that carries product risk of its own &mdash; and brings that instinct to client work.</p>
     </div>
-    <div class="why-cards stagger">
-      <div class="why-card">
-        <div class="why-viz">
-          <div class="viz-marks">
-            <span style="--ic:#007AFF"><svg viewBox="0 0 100 100"><polygon class="fg" points="24,26 62,26 76,40 56,54 56,74 44,74 44,54 24,40"/></svg></span>
-            <span style="--ic:#34C759"><svg viewBox="0 0 100 100"><polygon class="fg" points="28,20 62,20 76,34 76,80 28,80"/></svg></span>
-            <span style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="22" y="24" width="42" height="14"/><polygon class="fg" points="32,43 78,43 78,50 71,57 32,57"/><rect class="fg" x="26" y="62" width="34" height="14"/></svg></span>
-          </div>
-        </div>
+    <div class="why-bento reveal">
+      <div class="wb wb-a">
         <h3>We ship our own products</h3>
         <p>Business OS is live software with real customers, not a portfolio slide. Client work is built to that bar.</p>
+        <div class="wb-pills" aria-hidden="true"><div class="wb-row"><div class="wb-run"><div class="wb-set"><span class="wb-pill live">CRM</span><span class="wb-pill alt">Books</span><span class="wb-pill">Projects</span><span class="wb-pill live">Invoice</span><span class="wb-pill alt">Inventory</span><span class="wb-pill">Helpdesk</span><span class="wb-pill alt">Analytics</span></div><div class="wb-set"><span class="wb-pill live">CRM</span><span class="wb-pill alt">Books</span><span class="wb-pill">Projects</span><span class="wb-pill live">Invoice</span><span class="wb-pill alt">Inventory</span><span class="wb-pill">Helpdesk</span><span class="wb-pill alt">Analytics</span></div></div></div><div class="wb-row wb-rev"><div class="wb-run"><div class="wb-set"><span class="wb-pill alt">People</span><span class="wb-pill">Automation</span><span class="wb-pill live">CRM</span><span class="wb-pill alt">Identity</span><span class="wb-pill">Knowledge Base</span><span class="wb-pill live">Invoice</span><span class="wb-pill alt">Payroll</span></div><div class="wb-set"><span class="wb-pill alt">People</span><span class="wb-pill">Automation</span><span class="wb-pill live">CRM</span><span class="wb-pill alt">Identity</span><span class="wb-pill">Knowledge Base</span><span class="wb-pill live">Invoice</span><span class="wb-pill alt">Payroll</span></div></div></div></div>
       </div>
-      <div class="why-card">
-        <div class="why-viz">
-          <svg class="viz-graph" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <line class="vg-grid" x1="4" y1="36" x2="196" y2="36"/>
-            <line class="vg-grid" x1="4" y1="68" x2="196" y2="68"/>
-            <path class="vg-area" d="M6 84 L44 70 L82 76 L120 46 L158 33 L194 14 L194 96 L6 96 Z"/>
-            <path id="vgLine" class="vg-line" d="M6 84 L44 70 L82 76 L120 46 L158 33 L194 14"/>
-            <circle class="vg-pulse" cx="194" cy="14" r="5"/>
-            <circle class="vg-end" cx="194" cy="14" r="3.5"/>
-            <circle class="vg-dot" r="3.5" opacity="0">
-              <animateMotion dur="3.6s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.68;1">
-                <mpath href="#vgLine"/>
-              </animateMotion>
-              <animate attributeName="opacity" dur="3.6s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;0.12;0.6;0.72;1"/>
-            </circle>
-          </svg>
-        </div>
+      <div class="wb wb-b">
         <h3>Idea to scale, one team</h3>
-        <p>Product, design, engineering, AI, and DevOps under one roof. No handoffs between vendors.</p>
+        <p>Product, design, engineering, AI, and DevOps under one roof.</p>
+        <svg class="viz-graph" viewBox="0 0 200 100" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+          <line class="vg-grid" x1="4" y1="36" x2="196" y2="36"/>
+          <line class="vg-grid" x1="4" y1="68" x2="196" y2="68"/>
+          <path class="vg-area" d="M6 84 L44 70 L82 76 L120 46 L158 33 L194 14 L194 96 L6 96 Z"/>
+          <path id="vgLine" class="vg-line" d="M6 84 L44 70 L82 76 L120 46 L158 33 L194 14"/>
+          <circle class="vg-pulse" cx="194" cy="14" r="5"/>
+          <circle class="vg-end" cx="194" cy="14" r="3.5"/>
+          <circle class="vg-dot" r="3.5" opacity="0">
+            <animateMotion dur="3.6s" repeatCount="indefinite" rotate="0" calcMode="linear" keyPoints="0;1;1" keyTimes="0;0.68;1">
+              <mpath href="#vgLine"/>
+            </animateMotion>
+            <animate attributeName="opacity" dur="3.6s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;0.12;0.6;0.72;1"/>
+          </circle>
+        </svg>
       </div>
-      <div class="why-card">
-        <div class="why-viz">
-          <div class="viz-chat">
-            <span class="vc-in">Can we add nine more filters here?</span>
-            <span class="vc-typing"><i></i><i></i><i></i></span>
-            <span class="vc-out">Two cover 90% of use. The rest is scope that won't move your numbers.</span>
-          </div>
-        </div>
+      <div class="wb wb-c">
+        <div class="wb-flow" aria-hidden="true"><span class="wb-dot wb-dot-a" data-l="Idea"></span><i class="wb-line wb-up"></i></div>
+        <h3>No handoffs between vendors</h3>
+        <div class="wb-flow" aria-hidden="true"><i class="wb-line wb-down"></i><span class="wb-dot wb-dot-b" data-l="Live"></span></div>
+      </div>
+      <div class="wb wb-d">
         <h3>Senior, and opinionated</h3>
         <p>The people who scope your project build it &mdash; and push back when a feature isn't worth it.</p>
+        <div class="viz-chat" aria-hidden="true">
+          <span class="vc-in">Can we add nine more filters here?</span>
+          <span class="vc-typing"><i></i><i></i><i></i></span>
+          <span class="vc-out">Two cover 90% of use. The rest is scope that won't move your numbers.</span>
+        </div>
       </div>
+      <span class="why-badge" aria-hidden="true"><svg viewBox="26 27.4 48 45.1" class="logomark"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg></span>
     </div>
   </section>
 
