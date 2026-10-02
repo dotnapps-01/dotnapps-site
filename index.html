@@ -187,6 +187,44 @@
   .btn--ghost { background: var(--frame); border-color: var(--border); color: var(--text); }
   .btn--ghost:hover { background: var(--sunken); }
 
+  /* ---------- Top veil: progressive frosted glass ----------
+     A fixed band across the very top. Frosting is strongest at the top edge
+     and fades to nothing, so content scrolling up dissolves into blur under
+     the header instead of being cut off. Three blur layers with staggered
+     masks give a smooth ramp (a single blur would show a hard lower edge). */
+  .nav-veil {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 49; pointer-events: none;
+    height: calc(env(safe-area-inset-top, 0px) + 118px);
+  }
+  .nav-veil i { position: absolute; inset: 0; }
+  .nav-veil i:nth-child(1) {
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 58%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, transparent 58%);
+  }
+  .nav-veil i:nth-child(2) {
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 44%, transparent 80%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 44%, transparent 80%);
+  }
+  .nav-veil i:nth-child(3) {
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+  }
+  /* the tint: near-solid paper at the top easing out to clear */
+  .nav-veil::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--frame) 90%, transparent) 0%,
+      color-mix(in srgb, var(--frame) 72%, transparent) 34%,
+      color-mix(in srgb, var(--frame) 30%, transparent) 70%,
+      transparent 100%);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .nav-veil::before { background: linear-gradient(to bottom, var(--frame) 0%, color-mix(in srgb, var(--frame) 85%, transparent) 45%, transparent 100%); }
+  }
+
   /* ---------- Nav (wide frosted pill) ---------- */
   .nav {
     position: fixed;
@@ -1232,6 +1270,8 @@
 </style>
 </head>
 <body>
+
+<div class="nav-veil" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <nav class="nav" id="nav">
   <a class="brand" href="#top" aria-label="Dotnapps home">
