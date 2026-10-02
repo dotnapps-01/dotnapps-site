@@ -299,7 +299,7 @@
   .nav-toggle:hover { background: var(--sunken); }
 
   /* ---------- Hero ---------- */
-  .hero { position: relative; text-align: center; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); overflow: clip; }
+  .hero { position: relative; text-align: left; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); overflow: clip; }
 
   .hero-graph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
   .hero-graph .hg-grid line { stroke: var(--border); stroke-width: 1; opacity: .35; }
@@ -312,7 +312,7 @@
   @media (prefers-reduced-motion: reduce) { .js .hero-graph g { animation: none; } }
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
-  .hero-inner { position: relative; z-index: 3; max-width: 46rem; margin: 0 auto; }
+  .hero-inner { position: relative; z-index: 3; max-width: 46rem; margin: 0; }
   .hero-tag {
     display: inline-flex; align-items: center; gap: .45rem;
     font-size: .78rem; font-weight: 600; color: var(--muted);
@@ -326,16 +326,16 @@
   h1 { font-size: clamp(2.35rem, 5.8vw, 4rem); margin: 0; text-wrap: balance; }
   h1 em { font-style: normal; font-weight: 400; color: var(--muted); }
   .hero-inner > p {
-    margin: 1.5rem auto 0;
+    margin: 1.5rem 0 0;
     font-size: clamp(1.02rem, 2.3vw, 1.2rem);
     color: var(--muted); max-width: 34rem;
   }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.9rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: flex-start; margin-top: 1.9rem; }
   .hero-actions .btn { padding: .75rem 1.25rem; font-size: .94rem; }
 
   .hero-caps {
-    list-style: none; margin: 1.6rem auto 0; padding: 0;
-    display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; max-width: 42rem;
+    list-style: none; margin: 1.6rem 0 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-start; max-width: 42rem;
   }
   .hero-caps li {
     font-size: .78rem; font-weight: 550; color: var(--muted);
@@ -345,7 +345,7 @@
   .hero-strip-label {
     margin: clamp(2rem, 5vw, 3rem) 0 .9rem;
     font-size: .7rem; font-weight: 650; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--faint); text-align: center;
+    color: var(--faint); text-align: left;
   }
 
   @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
@@ -1041,7 +1041,8 @@
 
   /* Nav collapses to a menu when the link row no longer fits */
   @media (max-width: 820px) {
-    .nav { gap: 1rem; padding: calc(env(safe-area-inset-top, 0px) + 12px) 1.6rem 10px; }
+    .nav { gap: 1rem; padding: calc(env(safe-area-inset-top, 0px) + 12px) calc(clamp(1.15rem, 5vw, 3.25rem) + .45rem) 10px; }
+    .hero-inner, .hero-strip-label { padding-inline: .45rem; }
     /* logo alone; a tap slides the name out (JS adds .is-named for a few seconds).
        Only the bar's own brand — the menu card keeps its full header. */
     .nav > .brand {
@@ -1191,6 +1192,7 @@
   /* Portrait phone */
   @media (max-width: 560px) {
     .frame { padding: 12px 1.15rem 3rem; }
+    .nav { padding-left: calc(1.15rem + .45rem); padding-right: calc(1.15rem + .45rem); }
     .nav-links { top: 14px; }
     .hero { padding-top: 5.25rem; }
     h1 { font-size: clamp(1.95rem, 8.5vw, 2.45rem); }
@@ -1207,6 +1209,7 @@
   /* Small phone */
   @media (max-width: 380px) {
     .frame { padding-left: .9rem; padding-right: .9rem; }
+    .nav { padding-left: calc(.9rem + .45rem); padding-right: calc(.9rem + .45rem); }
     .nav-links { width: calc(100vw - 18px); }
     h1 { font-size: 1.8rem; }
   }
