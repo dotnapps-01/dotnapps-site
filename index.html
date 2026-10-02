@@ -322,47 +322,42 @@
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
 
-  .hero-os .app-mark {
-    width: 100%; height: 100%; border-radius: 23%; display: block;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--ic) 62%, #fff) 0%, var(--ic) 100%);
-    box-shadow:
-      inset 0 0 0 .5px rgba(0, 0, 0, .12),
-      inset 0 1px 0 rgba(255, 255, 255, .45),
-      0 1px 2px rgba(0, 0, 0, .14),
-      0 12px 22px -8px rgba(0, 0, 0, .38);
-  }
-  @supports (corner-shape: squircle) { .hero-os .app-mark { border-radius: 34%; corner-shape: squircle; } }
-  .hero-os .app-mark::before { background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 50%); }
-  .hero-os .app-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .hero-os .app-mark svg .fg { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2)); }
-  /* hero launcher: the Business OS app grid in a window, opening under the headline */
+  /* hero terminal: the studio's promise typed out, no handoffs */
   .hero-os { display: none; }
   @media (min-width: 861px) {
     .hero-os {
-      display: block; width: min(100%, 50rem); margin: 2.4rem auto 0; text-align: left;
-      border-radius: 20px; background: color-mix(in srgb, var(--frame) 78%, transparent); border: 1px solid var(--hairline);
+      display: block; width: min(100%, 38rem); margin: 2.2rem auto 0; text-align: left;
+      border-radius: 18px; background: color-mix(in srgb, var(--frame) 80%, transparent); border: 1px solid var(--hairline);
       backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .04);
-      -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%); mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
       user-select: none;
     }
-    .os-bar { display: flex; align-items: center; gap: .4rem; padding: .8rem 1rem; border-bottom: 1px solid var(--hairline); position: relative; }
+    .os-bar { display: flex; align-items: center; gap: .4rem; padding: .75rem 1rem; border-bottom: 1px solid var(--hairline); position: relative; }
     .os-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
     .os-bar b {
       position: absolute; left: 50%; transform: translateX(-50%);
       font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .64rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
     }
-    .os-grid { list-style: none; margin: 0; padding: 1.5rem 1.4rem 2.6rem; display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.5rem .6rem; }
-    .os-app { position: relative; display: flex; flex-direction: column; align-items: center; gap: .5rem; font-size: .72rem; font-weight: 500; color: var(--text); }
-    .os-app .app-mark { width: 3.6rem; aspect-ratio: 1; display: block; }
-    .os-app.is-live::after {
-      content: ""; position: absolute; top: -.25rem; left: calc(50% + 1.1rem); width: .75rem; height: .75rem; border-radius: 50%;
-      background: #34C759; box-shadow: 0 0 0 2.5px var(--frame);
+    .os-term {
+      padding: 1.15rem 1.4rem 2rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .86rem; line-height: 1.95; color: var(--text);
     }
-    .js .os-app { animation: osPop .6s cubic-bezier(.2, .9, .3, 1.2) backwards; animation-delay: calc(.5s + var(--i) * .07s); }
+    .tl { margin: 0; width: var(--w); max-width: 100%; overflow: hidden; white-space: nowrap; border-right: 2px solid transparent; }
+    .tl.cmd { color: var(--text); }
+    .tl.ok { color: var(--muted); }
+    .tl span { display: block; }
+    .tl.ok span::first-letter { color: #34C759; }
+    .tl.t4 { color: var(--text); }
+    .js .tl { width: 0; animation-duration: 14s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; border-right-color: transparent; }
+    .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; }
+    .js .t4 { border-right-color: currentColor; }
+    .js .t4::after { content: ""; }
   }
-  @keyframes osPop { from { opacity: 0; transform: translateY(10px) scale(.7); } }
-  @media (prefers-reduced-motion: reduce) { .js .os-app { animation: none; } }
+  @keyframes tl1 { 0%, 3% { width: 0; } 17%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl2 { 0%, 21% { width: 0; } 33%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl3 { 0%, 37% { width: 0; } 53%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl4 { 0%, 57% { width: 0; } 71%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @media (prefers-reduced-motion: reduce) { .js .tl { animation: none !important; width: var(--w); } }
 
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
   .hero-rings {
@@ -1714,21 +1709,13 @@
         <li>Cloud &amp; DevOps</li>
       </ul>
       <div class="hero-os" aria-hidden="true">
-        <div class="os-bar"><i></i><i></i><i></i><b>Business OS</b></div>
-        <ul class="os-grid">
-          <li class="os-app is-live" style="--i:0"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="36" r="15"/><path class="fg" d="M20 83c0-19 13-30 30-30s30 11 30 30z"/></svg></span><span>CRM</span></li>
-          <li class="os-app is-live" style="--i:1"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><path class="fg" d="M28 15h28l18 18v52H28z"/><path class="dk" d="M56 15v18h18z" opacity=".4"/><rect class="dk" x="37" y="46" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="56" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="66" width="17" height="4.500" rx="2.200" opacity=".55"/></svg></span><span>Invoice</span></li>
-          <li class="os-app" style="--i:2"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="16" y="20" width="21" height="26" rx="6"/><rect class="fg" x="16" y="52" width="21" height="28" rx="6"/><rect class="fg" x="40" y="20" width="21" height="38" rx="6"/><rect class="fg2" x="40" y="64" width="21" height="16" rx="6"/><rect class="fg" x="64" y="20" width="21" height="20" rx="6"/><rect class="fg" x="64" y="46" width="21" height="34" rx="6"/></svg></span><span>Projects</span></li>
-          <li class="os-app" style="--i:3"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><path class="fg" d="M50 17c19 0 34 12 34 28S69 73 50 73c-4 0-8-.6-11-1.700L24 82l4-14C20 63 16 55 16 45c0-16 15-28 34-28z"/><circle class="dk" cx="34" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="50" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="66" cy="45" r="4.600" opacity=".55"/></svg></span><span>Helpdesk</span></li>
-          <li class="os-app" style="--i:4"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><path class="fg" d="M47 31C39 25 28 23 17 26v46c11-2 22 0 30 6z"/><path class="fg" d="M53 31c8-6 19-8 30-5v46c-11-2-22 0-30 6z"/></svg></span><span>Books</span></li>
-          <li class="os-app" style="--i:5"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="15" width="52" height="70" rx="8"/><path class="dk" d="M56 15h12v28l-6-5-6 5z" opacity=".5"/><rect class="dk" x="33" y="56" width="32" height="4.500" rx="2.200" opacity=".5"/><rect class="dk" x="33" y="67" width="22" height="4.500" rx="2.200" opacity=".5"/></svg></span><span>Knowledge Base</span></li>
-          <li class="os-app" style="--i:6"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><path class="fg" d="M50 15l32 15-32 15-32-15z"/><path class="fg" opacity=".8" d="M18 35l29 13.500V84L18 70z"/><path class="fg" opacity=".55" d="M82 35L53 48.500V84l29-14z"/><path class="dk" opacity=".35" d="M37 22.500l32 15-6 2.800-32-15z"/></svg></span><span>Inventory</span></li>
-          <li class="os-app" style="--i:7"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg2" cx="27" cy="38" r="10"/><path class="fg2" d="M7 76c0-14 8-21 20-21s20 7 20 21z"/><circle class="fg" cx="62" cy="36" r="13"/><path class="fg" d="M33 84c0-19 12-29 29-29s29 10 29 29z"/></svg></span><span>People</span></li>
-          <li class="os-app" style="--i:8"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg2" x="17" y="52" width="19" height="30" rx="6"/><rect class="fg2" x="40" y="36" width="19" height="46" rx="6"/><rect class="fg" x="63" y="17" width="19" height="65" rx="6"/></svg></span><span>Analytics</span></li>
-          <li class="os-app" style="--i:9"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><path class="fg" d="M57 13L25 55h21l-5 32 34-44H53z"/></svg></span><span>Automation</span></li>
-          <li class="os-app" style="--i:10"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><path class="fg" d="M50 14l31 11v24c0 18-13 30-31 38-18-8-31-20-31-38V25z"/><path class="dks" stroke-width="7" d="M36 50l10 10 19-21"/></svg></span><span>Identity</span></li>
-          <li class="os-app" style="--i:11"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><rect class="fg" x="11" y="27" width="78" height="46" rx="10"/><circle class="dk" cx="50" cy="50" r="12" opacity=".5"/><circle class="dk" cx="24" cy="50" r="3.200" opacity=".5"/><circle class="dk" cx="76" cy="50" r="3.200" opacity=".5"/></svg></span><span>Payroll</span></li>
-        </ul>
+        <div class="os-bar"><i></i><i></i><i></i><b>terminal</b></div>
+        <div class="os-term">
+          <p class="tl t1 cmd" style="--w:30ch"><span>$ dotnapps new "your idea"</span></p>
+          <p class="tl t2 ok" style="--w:28ch"><span>✓ scoped with a senior team</span></p>
+          <p class="tl t3 ok" style="--w:33ch"><span>✓ designed and built, no handoffs</span></p>
+          <p class="tl t4 ok" style="--w:26ch"><span>✓ live, and ready to scale</span></p>
+        </div>
       </div>
     </div>
 
