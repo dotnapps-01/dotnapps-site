@@ -329,32 +329,23 @@
     mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
   }
   .hero::before {
-    --cell: 6px; --major: 48px;
-    background-color: color-mix(in srgb, var(--text) 2.4%, var(--frame));
+    --cell: 8px; --major: 64px;
+    background-color: color-mix(in srgb, var(--text) 1.2%, var(--frame));
     background-image:
-      linear-gradient(to right, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
-      linear-gradient(to right, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in srgb, var(--text) 4.5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 4.5%, transparent) 1px, transparent 1px),
+      linear-gradient(to right, color-mix(in srgb, var(--text) 2.2%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 2.2%, transparent) 1px, transparent 1px);
     background-size: var(--major) var(--major), var(--major) var(--major), var(--cell) var(--cell), var(--cell) var(--cell);
   }
   .hero::after {
-    background: color-mix(in srgb, var(--text) 36%, transparent);
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 .5h3M.5 0v3M45 .5h3M47.5 0v3M0 47.5h3M.5 45v3M45 47.5h3M47.5 45v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 .5h3M.5 0v3M45 .5h3M47.5 0v3M0 47.5h3M.5 45v3M45 47.5h3M47.5 45v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
-    -webkit-mask-size: 48px 48px; mask-size: 48px 48px;
+    background: color-mix(in srgb, var(--text) 22%, transparent);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M0 .5h3M.5 0v3M61 .5h3M63.5 0v3M0 63.5h3M.5 61v3M61 63.5h3M63.5 61v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M0 .5h3M.5 0v3M61 .5h3M63.5 0v3M0 63.5h3M.5 61v3M61 63.5h3M63.5 61v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
+    -webkit-mask-size: 64px 64px; mask-size: 64px 64px;
     -webkit-mask-repeat: repeat; mask-repeat: repeat;
   }
 
-  .hero-graph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-  .hero-graph .hg-grid { display: none; }
-  .hero-graph .hg-line { fill: none; stroke: var(--border); stroke-width: 2; opacity: .7; }
-  .hero-graph .hg-line.accent { stroke: var(--focus); opacity: .28; }
-  .js .hero-graph g { animation: hgscroll 30s linear infinite; will-change: transform; }
-  .js .hero-graph g.g2 { animation-duration: 19s; }
-  .js .hero-graph g.hg-grid { animation-duration: 46s; }
-  @keyframes hgscroll { to { transform: translateX(-1200px); } }
-  @media (prefers-reduced-motion: reduce) { .js .hero-graph g { animation: none; } }
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
   /* the block spans the frame so the (centred) buttons centre on the page;
@@ -1522,10 +1513,6 @@
     .hero-actions { margin-top: 2.25rem; }
     .hero-caps { max-width: 60rem; margin-top: 2.25rem; }
     .hero-strip-label { margin-top: clamp(3rem, 6vw, 4.5rem); }
-    .hero-graph {
-      -webkit-mask-image: linear-gradient(90deg, #000 0, #000 12%, transparent 28%, transparent 72%, #000 88%, #000 100%);
-      mask-image: linear-gradient(90deg, #000 0, #000 12%, transparent 28%, transparent 72%, #000 88%, #000 100%);
-    }
   }
 </style>
 </head>
@@ -1563,13 +1550,6 @@
 <div class="frame">
 
   <header class="hero" id="top">
-    <svg class="hero-graph" viewBox="0 0 2400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <g class="hg-grid">
-        <line x1="0" y1="0" x2="0" y2="500"/><line x1="200" y1="0" x2="200" y2="500"/><line x1="400" y1="0" x2="400" y2="500"/><line x1="600" y1="0" x2="600" y2="500"/><line x1="800" y1="0" x2="800" y2="500"/><line x1="1000" y1="0" x2="1000" y2="500"/><line x1="1200" y1="0" x2="1200" y2="500"/><line x1="1400" y1="0" x2="1400" y2="500"/><line x1="1600" y1="0" x2="1600" y2="500"/><line x1="1800" y1="0" x2="1800" y2="500"/><line x1="2000" y1="0" x2="2000" y2="500"/><line x1="2200" y1="0" x2="2200" y2="500"/><line x1="2400" y1="0" x2="2400" y2="500"/>
-      </g>
-      <g class="g1"><path class="hg-line" d="M0 300 C100 260 200 260 300 300 S500 340 600 300 C700 260 800 260 900 300 S1100 340 1200 300 C1300 260 1400 260 1500 300 S1700 340 1800 300 C1900 260 2000 260 2100 300 S2300 340 2400 300"/></g>
-      <g class="g2"><path class="hg-line accent" d="M0 244 C67 192 133 192 200 244 S333 296 400 244 C467 192 533 192 600 244 S733 296 800 244 C867 192 933 192 1000 244 S1133 296 1200 244 C1267 192 1333 192 1400 244 S1533 296 1600 244 C1667 192 1733 192 1800 244 S1933 296 2000 244 C2067 192 2133 192 2200 244 S2333 296 2400 244"/></g>
-    </svg>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
