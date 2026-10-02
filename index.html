@@ -784,26 +784,17 @@
   .wb-d .viz-chat > span { font-size: .8rem; padding: .55rem .75rem; border-radius: 12px; }
   .wb-d .vc-in { background: var(--frame); }
 
-  /* a quiet growth line drawing itself behind the chat */
+  /* a still, quiet grid behind the chat */
   .wb-d > h3, .wb-d > p, .wb-d > .viz-chat { position: relative; z-index: 1; }
-  .wb-trend { position: absolute; z-index: 0; left: 0; right: 0; bottom: 0; height: 78%; color: var(--text); pointer-events: none; user-select: none; }
-  .wb-trend svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .wb-trend .t-grid { fill: none; stroke: currentColor; stroke-opacity: .07; stroke-width: 1; stroke-dasharray: 3 5; vector-effect: non-scaling-stroke; }
-  .wb-trend .t-area { fill: url(#wbTrendFill); }
-  .wb-trend .t-line { fill: none; stroke: currentColor; stroke-opacity: .34; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; vector-effect: non-scaling-stroke; }
-  .wb-trend .t-dot {
-    position: absolute; left: 92%; top: 13.75%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%;
-    background: var(--text); box-shadow: 0 0 0 4px color-mix(in srgb, var(--text) 12%, transparent);
+  .wb-grid {
+    position: absolute; z-index: 0; inset: 0; pointer-events: none; user-select: none;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 7%, transparent) 1px, transparent 1px);
+    background-size: 28px 28px; background-position: -1px -1px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 18%, #000 75%);
+    mask-image: linear-gradient(to bottom, transparent 18%, #000 75%);
   }
-  .js .wb-trend { animation: tFade 10s ease-in-out infinite; }
-  .js .wb-trend .t-line { animation: tDraw 10s cubic-bezier(.4, 0, .2, 1) infinite; }
-  .js .wb-trend .t-area { animation: tArea 10s ease-out infinite; }
-  .js .wb-trend .t-dot { animation: tDot 10s ease-out infinite; }
-  @keyframes tFade { 0% { opacity: 0; } 6% { opacity: 1; } 86% { opacity: 1; } 100% { opacity: 0; } }
-  @keyframes tDraw { 0% { stroke-dashoffset: 1; } 48%, 100% { stroke-dashoffset: 0; } }
-  @keyframes tArea { 0%, 8% { opacity: 0; } 50%, 100% { opacity: 1; } }
-  @keyframes tDot { 0%, 46% { opacity: 0; transform: scale(.4); } 52% { opacity: 1; transform: scale(1.3); } 58%, 100% { opacity: 1; transform: scale(1); } }
-  @media (prefers-reduced-motion: reduce) { .js .wb-trend, .js .wb-trend * { animation: none !important; } .wb-trend .t-line { stroke-dasharray: none; } }
 
   /* the logo badge sitting on the junction of the four tiles */
   .why-badge {
@@ -1710,15 +1701,7 @@
         <div class="wb-flow" aria-hidden="true"><i class="wb-line wb-down"></i><span class="wb-dot wb-dot-b" data-l="Live"></span></div>
       </div>
       <div class="wb wb-d">
-        <div class="wb-trend" aria-hidden="true">
-          <svg viewBox="0 0 400 160" preserveAspectRatio="none">
-            <defs><linearGradient id="wbTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".12"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
-            <path class="t-grid" d="M0 40H400M0 80H400M0 120H400"/>
-            <path class="t-area" d="M0 140C30 138 50 128 80 124S120 126 150 108S200 96 230 80S290 70 320 48S352 30 368 22V160H0Z"/>
-            <path class="t-line" pathLength="1" d="M0 140C30 138 50 128 80 124S120 126 150 108S200 96 230 80S290 70 320 48S352 30 368 22"/>
-          </svg>
-          <i class="t-dot"></i>
-        </div>
+        <div class="wb-grid" aria-hidden="true"></div>
         <h3>Senior, and opinionated</h3>
         <p>The people who scope your project build it &mdash; and push back when a feature isn't worth it.</p>
         <div class="viz-chat" aria-hidden="true">
