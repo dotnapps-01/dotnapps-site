@@ -1082,6 +1082,9 @@
     .btn--ghost:hover { color: var(--frame); border-color: var(--text); background: color-mix(in srgb, var(--frame) 68%, transparent); }
   }
   .nav-contact.btn:hover { opacity: 1; }
+  /* hero buttons: true black in light mode */
+  .hero-actions .btn--solid { background: #000; color: #fff; }
+  :root[data-theme="dark"] .hero-actions .btn--solid { background: var(--text); color: var(--frame); }
   .magnetic .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), color .45s cubic-bezier(.7, 0, .2, 1), box-shadow .45s ease, border-color .45s ease; }
   @media (prefers-reduced-motion: reduce) { .btn::before { transition-duration: .01ms; } }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -1519,8 +1522,8 @@
     .hero-inner > p { font-size: 1.06rem; line-height: 1.6; margin-top: .85rem; }
     .hero-actions { flex-wrap: nowrap; gap: .6rem; margin-top: 1.4rem; }
     .hero-actions .btn {
-      flex: 1 1 auto; justify-content: center; gap: .5rem; white-space: nowrap;
-      padding: 1rem .9rem; font-size: .9rem; border-radius: 999px;
+      flex: 0 1 auto; justify-content: center; gap: .45rem; white-space: nowrap;
+      padding: .78rem 1.15rem; font-size: .86rem; border-radius: 999px;
     }
     .hero-actions .arr { display: block; width: 15px; height: 15px; flex: none; }
     .hero-caps { gap: 0; margin-top: 1.3rem; max-width: none; justify-content: flex-start;
@@ -1656,7 +1659,7 @@
     .hero-tag { font-size: .92rem; padding: .42rem 1.05rem; margin-bottom: 1.8rem; }
     .hero-inner > p { max-width: 46rem; font-size: 1.3rem; line-height: 1.6; margin-top: 1.4rem; }
     .hero-actions { margin-top: 2.1rem; gap: .85rem; }
-    .hero-actions .btn { padding: 1rem 1.8rem; font-size: 1.05rem; }
+    .hero-actions .btn { padding: .82rem 1.5rem; font-size: .98rem; }
     .hero-caps { max-width: 66rem; margin-top: 1.9rem; gap: .6rem; }
     .hero-caps li { font-size: .9rem; padding: .45rem 1.05rem; }
     .hero-strip-label { font-size: .78rem; margin-top: clamp(2.25rem, 4vw, 3.25rem); }
