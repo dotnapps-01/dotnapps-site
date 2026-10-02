@@ -1715,8 +1715,10 @@
       text-align: left; margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
       font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; letter-spacing: .14em; font-weight: 500;
     }
-    /* the ripple sits behind the empty right half */
-    .hero-rings i { left: 28%; width: clamp(560px, 62%, 980px); }
+    /* desktop ripple: minimal — a few faint rings on the left, well clear of the globe */
+    .hero-rings i { left: 17%; width: clamp(420px, 42%, 640px); border-color: color-mix(in srgb, currentColor 11%, transparent); background: none; }
+    .hero-rings i:nth-child(n+5) { display: none; }
+    .hero-rings::before { left: 17%; width: 46%; background: radial-gradient(closest-side, color-mix(in srgb, currentColor 3%, transparent), transparent); }
   }
 </style>
 </head>
