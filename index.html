@@ -3036,7 +3036,9 @@
     { n: "MVPs",      to: 0, v: ll(-8, -120), t: "The smallest thing worth shipping" },
     { n: "Data",      to: 4, v: ll(10, 170),  t: "Pipelines, analytics, reporting" }
   ];
-  var popText = ["Idea scoped", "Design signed off", "Built, no handoffs", "Launched", "Scaling up"], pop = null, lastReached = -2;
+  var popText = ["Idea scoped", "Design signed off", "Built, no handoffs", "Launched", "Scaling up"], pop = null, lastReached = -2, popN = 0;
+  var POP_ANG = [-90, 25, -155, -25, 155];             /* each pop lands on a different side of the globe */
+  function newPop(text, now) { pop = { t: now, text: text, ang: POP_ANG[popN++ % POP_ANG.length] * Math.PI / 180 }; }
   var W = 0, H = 0, cx = 0, cy = 0, R = 0, dpr = 1, ink = "29,29,31", bg = "#fff", raf = 0, running = false;
   var yaw = -0.35, pitch = 0.32, spin = 0.00016, base = 0.00016, tVel = base, tPitch = 0.32;
   var mx = -999, my = -999, last = 0, jt = 0, hover = -1, focus = null, waves = [], repel = false, touched = 0;
@@ -3132,7 +3134,7 @@
     /* journey: arcs + packet */
     var tt = jt % CYCLE, done = tt >= SEG * (stages.length - 1), seg = done ? stages.length - 2 : Math.floor(tt / SEG), prog = done ? 1 : (tt % SEG) / SEG;
     var reached = done ? stages.length - 1 : seg, s0, a, b, om, so, j, u, pr;
-    if (reached !== lastReached) { lastReached = reached; pop = { t: now, text: popText[reached] }; }
+    if (reached !== lastReached) { lastReached = reached; newPop(popText[reached], now); }
     for (s0 = 0; s0 < stages.length - 1; s0++) {
       a = stages[s0].v; b = stages[s0 + 1].v;
       om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))); so = Math.sin(om);
@@ -3228,10 +3230,13 @@
       else {
         var sc = pa < 380 ? 1 + 2.7 * Math.pow(pa / 380 - 1, 3) + 1.7 * Math.pow(pa / 380 - 1, 2) : 1, al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400;
         sc = pa < 380 ? 1 - Math.pow(1 - pa / 380, 3) * (1 + 0.9 * Math.cos(pa / 380 * 9)) : 1;
-        mono(12.5); var pw = ctx.measureText(pop.text).width + 46, py2 = cy - R - 30;
-        ctx.save(); ctx.translate(cx, py2); ctx.scale(Math.max(0.01, sc), Math.max(0.01, sc)); ctx.globalAlpha = Math.max(0, al);
+        mono(12.5); var pw = ctx.measureText(pop.text).width + 46, ca = Math.cos(pop.ang), sa = Math.sin(pop.ang);
+        var ppx = Math.max(pw / 2 + 8, Math.min(W - pw / 2 - 8, cx + ca * (R + 6))), ppy = Math.max(26, Math.min(H - 60, cy + sa * (R + 6)));
+        var tdx = cx - ppx, tdy = cy - ppy, tl = Math.hypot(tdx, tdy) || 1; tdx /= tl; tdy /= tl;
+        var te = Math.min(pw / 2 / (Math.abs(tdx) || 1e-6), 16 / (Math.abs(tdy) || 1e-6));
+        ctx.save(); ctx.translate(ppx, ppy); ctx.scale(Math.max(0.01, sc), Math.max(0.01, sc)); ctx.globalAlpha = Math.max(0, al);
         ctx.fillStyle = "rgb(" + ink + ")"; rrect(-pw / 2, -16, pw, 32, 16); ctx.fill();
-        ctx.beginPath(); ctx.moveTo(-6, 15); ctx.lineTo(0, 23); ctx.lineTo(6, 15); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(tdx * te - tdy * 6, tdy * te + tdx * 6); ctx.lineTo(tdx * (te + 9), tdy * (te + 9)); ctx.lineTo(tdx * te + tdy * 6, tdy * te - tdx * 6); ctx.closePath(); ctx.fill();
         ctx.fillStyle = "#34C759"; ctx.beginPath(); ctx.arc(-pw / 2 + 17, 0, 7, 0, 6.2832); ctx.fill();
         ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.8; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(-pw / 2 + 13.5, 0.5); ctx.lineTo(-pw / 2 + 16.2, 3.2); ctx.lineTo(-pw / 2 + 21, -2.5); ctx.stroke();
         ctx.fillStyle = bg; ctx.textBaseline = "middle"; ctx.fillText(pop.text, -pw / 2 + 31, 0.5);
@@ -3302,7 +3307,7 @@
     if (wasHold) { waves.push({ x: l.x, y: l.y, t: now }); return; }
     if (hover >= 0) {                                   /* click a pin: turn to it and jump the journey */
       var v = (hover >= 5 ? nodes2[hover - 5] : stages[hover]).v, tyaw = Math.atan2(-v[0], v[2]), z1 = -v[0] * Math.sin(tyaw) + v[2] * Math.cos(tyaw), tp = Math.atan2(v[1], z1);
-      focus = { yaw: tyaw, pitch: tp, until: now + 3600 }; if (hover < 5) { jt = hover * SEG + 5; pop = { t: now, text: popText[hover] }; lastReached = hover; } tVel = base;
+      focus = { yaw: tyaw, pitch: tp, until: now + 3600 }; if (hover < 5) { jt = hover * SEG + 5; newPop(popText[hover], now); lastReached = hover; } tVel = base;
     } else waves.push({ x: l.x, y: l.y, t: now });
   }
   cv.addEventListener("pointerup", up);
