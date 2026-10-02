@@ -321,30 +321,30 @@
     /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
-  /* blueprint paper: fine grid, a stronger cell every 8, and a + at each crossing */
-  .hero::before, .hero::after {
-    content: ""; position: absolute; z-index: 0; pointer-events: none; user-select: none;
-    inset: -3rem calc(-1 * var(--fp)) 0;
-    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
+  /* blueprint paper, kept minimal: faint 64px lines with a small + at each crossing, drifting slowly */
+  .hero-grid {
+    position: absolute; z-index: 0; inset: -3rem calc(-1 * var(--fp)) 0; overflow: hidden; pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 70%, transparent 100%);
   }
-  .hero::before {
-    --cell: 8px; --major: 64px;
-    background-color: color-mix(in srgb, var(--text) 1.2%, var(--frame));
+  .hero-grid b {
+    position: absolute; inset: -64px; will-change: transform;
+    animation: gridDrift 18s linear infinite;
+  }
+  .hero-grid b:first-child {
     background-image:
-      linear-gradient(to right, color-mix(in srgb, var(--text) 4.5%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--text) 4.5%, transparent) 1px, transparent 1px),
-      linear-gradient(to right, color-mix(in srgb, var(--text) 2.2%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--text) 2.2%, transparent) 1px, transparent 1px);
-    background-size: var(--major) var(--major), var(--major) var(--major), var(--cell) var(--cell), var(--cell) var(--cell);
+      linear-gradient(to right, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--text) 3.5%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
-  .hero::after {
-    background: color-mix(in srgb, var(--text) 22%, transparent);
+  .hero-grid b:last-child {
+    background: color-mix(in srgb, var(--text) 24%, transparent);
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M0 .5h3M.5 0v3M61 .5h3M63.5 0v3M0 63.5h3M.5 61v3M61 63.5h3M63.5 61v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M0 .5h3M.5 0v3M61 .5h3M63.5 0v3M0 63.5h3M.5 61v3M61 63.5h3M63.5 61v3' stroke='%23000' fill='none'/%3E%3C/svg%3E");
-    -webkit-mask-size: 64px 64px; mask-size: 64px 64px;
-    -webkit-mask-repeat: repeat; mask-repeat: repeat;
+    -webkit-mask-size: 64px 64px; mask-size: 64px 64px; -webkit-mask-repeat: repeat; mask-repeat: repeat;
   }
+  @keyframes gridDrift { to { transform: translate3d(64px, 64px, 0); } }
+  @media (prefers-reduced-motion: reduce) { .hero-grid b { animation: none; } }
 
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
@@ -1550,6 +1550,7 @@
 <div class="frame">
 
   <header class="hero" id="top">
+    <div class="hero-grid" aria-hidden="true"><b></b><b></b></div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
