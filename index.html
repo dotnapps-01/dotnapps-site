@@ -312,7 +312,10 @@
   @media (prefers-reduced-motion: reduce) { .js .hero-graph g { animation: none; } }
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
-  .hero-inner { position: relative; z-index: 3; max-width: 46rem; margin: 0; }
+  /* the block spans the frame so the (centred) buttons centre on the page;
+     the left-aligned text keeps its own measure */
+  .hero-inner { position: relative; z-index: 3; margin: 0; }
+  .hero-inner > h1 { max-width: 46rem; }
   .hero-tag {
     display: inline-flex; align-items: center; gap: .45rem;
     font-size: .78rem; font-weight: 600; color: var(--muted);
@@ -330,7 +333,7 @@
     font-size: clamp(1.02rem, 2.3vw, 1.2rem);
     color: var(--muted); max-width: 34rem;
   }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: flex-start; margin-top: 1.9rem; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: center; margin-top: 1.9rem; }
   .hero-actions .btn { padding: .75rem 1.25rem; font-size: .94rem; }
 
   .hero-caps {
@@ -1195,7 +1198,7 @@
     .nav { padding-left: calc(1.15rem + .45rem); padding-right: calc(1.15rem + .45rem); }
     .nav-links { top: 14px; }
     .hero { padding-top: 5.25rem; }
-    h1 { font-size: clamp(1.95rem, 8.5vw, 2.45rem); }
+    h1 { font-size: clamp(2.2rem, 9.6vw, 2.75rem); }
     .hero-inner > p { font-size: 1rem; }
     .band { padding-top: clamp(2.75rem, 11vw, 3.5rem); }
     .band-head { gap: .75rem; }
@@ -1211,7 +1214,7 @@
     .frame { padding-left: .9rem; padding-right: .9rem; }
     .nav { padding-left: calc(.9rem + .45rem); padding-right: calc(.9rem + .45rem); }
     .nav-links { width: calc(100vw - 18px); }
-    h1 { font-size: 1.8rem; }
+    h1 { font-size: 2.05rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
