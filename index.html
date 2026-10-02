@@ -321,14 +321,34 @@
     /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
-  /* hero halftone: a print-style dot screen — two slow lights drift through it and the dots swell where they pass */
-  .hero-halftone {
-    position: absolute; z-index: 0; top: -3rem; left: calc(-1 * var(--fp));
-    width: calc(100% + 2 * var(--fp)); height: calc(100% + 3rem);
-    color: var(--text); pointer-events: none; user-select: none;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 66%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 66%, transparent 100%);
+  /* hero grain: a soft monochrome gradient, slowly shifting, with fine film grain over it */
+  .hero-grain {
+    --g1: #DFDBD4; --g2: #D1D6DF; --g3: #E8E5E0; --hi: rgba(255, 255, 255, .95);
+    position: absolute; z-index: 0; inset: -3rem calc(-1 * var(--fp)) 0; overflow: hidden; pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0, #000 62%, transparent 100%);
   }
+  :root[data-theme="dark"] .hero-grain { --g1: #1E1C1A; --g2: #15181C; --g3: #181716; --hi: rgba(255, 255, 255, .06); }
+  .hero-grain::before {
+    content: ""; position: absolute; inset: -12%; will-change: transform;
+    background:
+      radial-gradient(58% 54% at 12% 16%, var(--g1), transparent 72%),
+      radial-gradient(54% 60% at 90% 80%, var(--g2), transparent 72%),
+      radial-gradient(44% 40% at 64% 8%, var(--hi), transparent 72%),
+      radial-gradient(42% 46% at 28% 90%, var(--g3), transparent 72%);
+    animation: grainShift 38s ease-in-out infinite alternate;
+  }
+  .hero-grain::after {
+    content: ""; position: absolute; inset: 0; opacity: .13; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 220px 220px;
+  }
+  :root[data-theme="dark"] .hero-grain::after { opacity: .08; mix-blend-mode: screen; filter: invert(1); }
+  @keyframes grainShift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(3%, 4%, 0) scale(1.08); }
+    100% { transform: translate3d(-4%, 2%, 0) scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-grain::before { animation: none; } }
 
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
@@ -1632,7 +1652,7 @@
 <div class="frame">
 
   <header class="hero" id="top">
-    <canvas class="hero-halftone" aria-hidden="true"></canvas>
+    <div class="hero-grain" aria-hidden="true"></div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
@@ -2812,70 +2832,6 @@
       wrap.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   })();
-</script>
-<script>
-/* hero halftone — dots sized by two slowly drifting soft lights */
-(function () {
-  var cv = document.querySelector(".hero-halftone");
-  if (!cv || !cv.getContext) return;
-  var ctx = cv.getContext("2d");
-  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var GAP = 15, RMAX = 3.4;
-  var W = 0, H = 0, ink = "29,29,31", raf = 0, running = false;
-
-  function readColor() {
-    var m = getComputedStyle(cv).color.match(/[\d.]+/g);
-    if (m && m.length >= 3) ink = m[0] + "," + m[1] + "," + m[2];
-    ctx.fillStyle = "rgba(" + ink + "," + (W < 620 ? ".1" : ".13") + ")";
-  }
-  function draw(t) {
-    ctx.clearRect(0, 0, W, H);
-    var small = W < 620, sig = small ? 105 : Math.max(150, W * 0.15), k = 1 / (2 * sig * sig), rmax = small ? 2.8 : RMAX;
-    var ax = W * (small ? 0.88 : 0.1) + W * 0.07 * Math.sin(t * 0.00018), ay = H * (small ? 0.3 : 0.34) + H * 0.16 * Math.cos(t * 0.00023);
-    var bx = W * (small ? 0.1 : 0.9) + W * 0.07 * Math.cos(t * 0.00021), by = H * 0.62 + H * 0.16 * Math.sin(t * 0.00016);
-    var cols = Math.ceil(W / GAP) + 1, rows = Math.ceil(H / GAP) + 1;
-    ctx.beginPath();
-    for (var j = 0; j < rows; j++) {
-      for (var i = 0; i < cols; i++) {
-        var x = i * GAP + (j % 2 ? GAP / 2 : 0), y = j * GAP;
-        var da = (x - ax) * (x - ax) + (y - ay) * (y - ay), db = (x - bx) * (x - bx) + (y - by) * (y - by);
-        var b = Math.exp(-da * k) + Math.exp(-db * k);
-        if (b > 1) b = 1;
-        var r = rmax * b * b * (3 - 2 * b);
-        if (r < 0.45) continue;
-        ctx.moveTo(x + r, y);
-        ctx.arc(x, y, r, 0, 6.2832);
-      }
-    }
-    ctx.fill();
-  }
-  function size() {
-    var r = cv.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    readColor();
-    draw(reduce ? 9000 : performance.now());
-  }
-  function frame(now) { draw(now); raf = requestAnimationFrame(frame); }
-  function start() { if (!running && !reduce && W) { running = true; raf = requestAnimationFrame(frame); } }
-  function stop() { running = false; cancelAnimationFrame(raf); }
-
-  size();
-  if ("ResizeObserver" in window) new ResizeObserver(size).observe(cv); else window.addEventListener("resize", size);
-  if (reduce) return;
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv);
-  } else start();
-  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
-  new MutationObserver(function () { readColor(); draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  if (window.matchMedia) {
-    var mq = matchMedia("(prefers-color-scheme: dark)");
-    if (mq.addEventListener) mq.addEventListener("change", function () { readColor(); });
-  }
-})();
 </script>
 </body>
 </html>
