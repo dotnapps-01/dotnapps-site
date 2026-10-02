@@ -1278,11 +1278,11 @@
       font-size: .66rem; font-weight: 500; padding: .6rem 1.05rem; color: var(--text);
     }
     .eyebrow-pill::before { display: none; }
-    .band-head h2, .process-aside h2, .cta h2 {
+    .band-head h2, .process-aside h2, .cta h2, .tst-copy h2 {
       font-size: clamp(2.1rem, 9.4vw, 2.7rem); line-height: 1.04; letter-spacing: -.045em; text-align: left;
     }
     .h2-end { display: block; color: var(--muted); }
-    .band-head p, .process-aside p { font-size: 1.04rem; line-height: 1.68; max-width: none; }
+    .band-head p, .process-aside p, .tst-copy p { font-size: 1.04rem; line-height: 1.68; max-width: none; }
 
     .process-aside { align-items: flex-start; }
     .game-msg { text-align: left; }
@@ -1310,6 +1310,51 @@
       font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; letter-spacing: .14em; font-weight: 500;
     }
   }
+
+  /* ---------- Testimonials: vertical, endlessly scrolling cards ---------- */
+  .tst { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .tst-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; text-align: left; }
+  .tst-copy h2 { font-size: clamp(2rem, 4.6vw, 3rem); margin: 0; text-wrap: balance; }
+  .tst-copy p { margin: 0; color: var(--muted); max-width: 30rem; }
+  .tst-viewport {
+    position: relative; height: 500px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+  }
+  .tst-track { display: flex; flex-direction: column; gap: 1rem; will-change: transform; }
+  .js .tst-track { animation: tstScroll 52s linear infinite; }
+  .tst-viewport:hover .tst-track { animation-play-state: paused; }
+  .tst-set { display: flex; flex-direction: column; gap: 1rem; }
+  /* two identical sets + a 1rem gap: one loop is exactly half the track plus half the gap */
+  @keyframes tstScroll { to { transform: translateY(calc(-50% - .5rem)); } }
+  .tst-card {
+    margin: 0; padding: 1.25rem; border-radius: 24px;
+    background: var(--sunken); border: 1px solid var(--hairline);
+    display: flex; flex-direction: column; gap: 1rem;
+    -webkit-user-select: none; user-select: none;
+  }
+  .tst-top { display: flex; align-items: center; gap: .8rem; }
+  .tst-ava {
+    width: 40px; height: 40px; flex: none; border-radius: 12px;
+    display: grid; place-items: center; background: var(--frame); color: var(--faint);
+    border: 1px solid var(--hairline);
+  }
+  .tst-ava svg { width: 22px; height: 22px; }
+  .tst-who { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+  .tst-who b { font-size: .92rem; font-weight: 600; color: var(--text); }
+  .tst-who span { font-size: .78rem; color: var(--muted); }
+  .tst-q { margin-left: auto; width: 20px; height: 20px; flex: none; color: var(--focus); }
+  .tst-card blockquote { margin: 0; font-size: .95rem; line-height: 1.62; color: var(--text); }
+  @media (prefers-reduced-motion: reduce) {
+    .js .tst-track { animation: none; }
+    .tst-viewport { overflow-y: auto; }
+    .tst-set[aria-hidden="true"] { display: none; }
+  }
+  @media (max-width: 860px) {
+    .tst { grid-template-columns: 1fr; gap: 1.6rem; }
+    .tst-viewport { height: 440px; }
+  }
+  @media (hover: none) { .tst-viewport { pointer-events: none; } }
 </style>
 </head>
 <body>
@@ -1631,6 +1676,24 @@
       </article>
     </div>
     <p class="work-note">Outcomes shown are illustrative &mdash; swap in real figures and named case studies as they clear.</p>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section class="band" id="testimonials">
+    <div class="tst reveal">
+      <div class="tst-copy">
+        <span class="eyebrow-pill">Testimonials</span>
+        <h2 class="serif">Trusted by teams <span class="h2-end">who ship with us</span></h2>
+        <p>What it is like to build with a studio that also runs its own product &mdash; straight from the people on the other side of the table.</p>
+      </div>
+      <div class="tst-viewport" aria-label="Client testimonials">
+        <div class="tst-track">
+          <div class="tst-set"><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>COO</b><span>Logistics operator</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;They replaced six spreadsheets with one platform and stayed on to run it. Dispatch finally has a single source of truth.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Head of Product</b><span>Fintech scale-up</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Eleven steps down to three, and compliance signed off without a single reopened check.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Founder</b><span>B2B SaaS</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;We had a working MVP in front of users in weeks, not quarters. The people who scoped it were the ones building it.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Support lead</b><span>B2B SaaS</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;The agent handles the routine tickets and hands off cleanly when it isn't sure. My team spends its day on the hard ones.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Clinical operations</b><span>Healthcare</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Fewer phone calls, clearer records. The audit trail alone was worth it.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>CTO</b><span>Retail &amp; e-commerce</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Honest estimates, and pushback when a feature wasn't worth building. That's rare from a vendor.&rdquo;</blockquote></figure></div>
+          <div class="tst-set" aria-hidden="true"><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>COO</b><span>Logistics operator</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;They replaced six spreadsheets with one platform and stayed on to run it. Dispatch finally has a single source of truth.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Head of Product</b><span>Fintech scale-up</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Eleven steps down to three, and compliance signed off without a single reopened check.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Founder</b><span>B2B SaaS</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;We had a working MVP in front of users in weeks, not quarters. The people who scoped it were the ones building it.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Support lead</b><span>B2B SaaS</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;The agent handles the routine tickets and hands off cleanly when it isn't sure. My team spends its day on the hard ones.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>Clinical operations</b><span>Healthcare</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Fewer phone calls, clearer records. The audit trail alone was worth it.&rdquo;</blockquote></figure><figure class="tst-card"><div class="tst-top"><span class="tst-ava"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.6" fill="currentColor"/><path d="M4.8 20c.5-3.8 3.3-6 7.2-6s6.7 2.2 7.2 6" fill="currentColor"/></svg></span><span class="tst-who"><b>CTO</b><span>Retail &amp; e-commerce</span></span><svg class="tst-q" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.2 5C6 6.1 4 8.8 4 12.3V19h6.5v-6.6H7.4c0-2 .9-3.4 2.9-4.2L9.2 5Zm9 0c-3.2 1.1-5.2 3.8-5.2 7.3V19h6.5v-6.6h-3.1c0-2 .9-3.4 2.9-4.2L18.2 5Z" fill="currentColor"/></svg></div><blockquote>&ldquo;Honest estimates, and pushback when a feature wasn't worth building. That's rare from a vendor.&rdquo;</blockquote></figure></div>
+        </div>
+      </div>
+    </div>
+    <p class="work-note">Quotes shown are illustrative &mdash; swap in real client quotes as they clear.</p>
   </section>
 
   <!-- ===================== PROCESS ===================== -->
