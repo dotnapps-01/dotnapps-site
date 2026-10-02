@@ -326,93 +326,15 @@
 
 
 
-  /* hero deck: the five things we do, a stack of cards that shuffle forward one at a time */
-  .hero-deck { display: none; }
+  /* hero globe: a sphere of dots that turns and tilts toward the cursor, with the idea-to-scale journey drawn over it — canvas, see script */
+  .hero-globe { display: none; }
   @media (min-width: 1100px) {
-    .hero-deck { display: block; position: absolute; z-index: 1; right: 0; top: 8.6rem; width: clamp(22rem, calc(100% - 40vw - 2.5rem), 36rem); user-select: none; }
-    .dk-stage { position: relative; height: 29rem; }
-    .dk-card {
-      position: absolute; left: 0; top: 5.6rem; width: calc(100% - 7.2rem); height: 23rem; padding: 2rem 2.1rem; box-sizing: border-box;
-      display: flex; flex-direction: column; border-radius: 26px; background: var(--frame); border: 1px solid var(--hairline);
-      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .05);
-      transform-origin: 50% 100%;
-    }
-    .dk-ic { width: 64px; height: 64px; border-radius: 19px; display: grid; place-items: center; background: var(--sunken); color: var(--ink); border: 1px solid var(--hairline); }
-    .dk-ic svg { width: 32px; height: 32px; }
-    .dk-card h3 { margin: 1.7rem 0 0; font-size: 2.6rem; font-weight: 600; letter-spacing: -.04em; line-height: 1; color: var(--ink); }
-    .dk-card p { margin: .8rem 0 0; font-size: 1.12rem; line-height: 1.5; color: var(--muted); max-width: 24rem; }
-    .dk-card ul { list-style: none; margin: auto 0 0; padding: 0; display: flex; gap: .45rem; flex-wrap: wrap; }
-    .dk-card li {
-      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-      padding: .42rem .8rem; border-radius: 999px; border: 1px solid var(--border);
+    .hero-globe {
+      display: block; position: absolute; z-index: 1; right: -1rem; top: 4.2rem; width: clamp(24rem, calc(100% - 30vw), 42rem); aspect-ratio: 1 / 1;
+      color: var(--text); pointer-events: none; user-select: none;
     }
     .hero .hero-inner > .hero-caps { max-width: 30rem; }
-    .dk-dots { display: flex; gap: .4rem; justify-content: flex-start; margin-top: .4rem; padding-left: .2rem; }
-    .dk-dots i { height: 8px; width: 8px; border-radius: 999px; background: var(--border); }
-    .dk0 { transform: translate(0px, 0px) scale(1.000); z-index: 5; } .dk1 { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; }
-    .dk1 { transform: translate(112px, -80px) scale(0.820); z-index: 1; } .dk2 { transform: translate(84px, -60px) scale(0.865); z-index: 2; } .dk3 { transform: translate(56px, -40px) scale(0.910); z-index: 3; } .dk4 { transform: translate(28px, -20px) scale(0.955); z-index: 4; }
-    .js .dk-card { animation: none 15s cubic-bezier(.6, 0, .2, 1) infinite; }
-    .js .dk0 { animation-name: dk0; } .js .dk1 { animation-name: dk1; } .js .dk2 { animation-name: dk2; } .js .dk3 { animation-name: dk3; } .js .dk4 { animation-name: dk4; }
-    .js .dk-dots i { animation: none 15s linear infinite; }
-    .js .dk-dots i:nth-child(1) { animation-name: dkd0; } .js .dk-dots i:nth-child(2) { animation-name: dkd1; } .js .dk-dots i:nth-child(3) { animation-name: dkd2; }
-    .js .dk-dots i:nth-child(4) { animation-name: dkd3; } .js .dk-dots i:nth-child(5) { animation-name: dkd4; }
   }
-  @keyframes dk0 {
-    0%, 15% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-    17% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
-    17.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
-    20%, 35% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-    40%, 55% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-    60%, 75% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-    80%, 95% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-    100% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-  }
-  @keyframes dk1 {
-    0%, 15% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-    20%, 35% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-    37% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
-    37.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
-    40%, 55% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-    60%, 75% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-    80%, 95% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-    100% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-  }
-  @keyframes dk2 {
-    0%, 15% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-    20%, 35% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-    40%, 55% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-    57% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
-    57.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
-    60%, 75% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-    80%, 95% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-    100% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-  }
-  @keyframes dk3 {
-    0%, 15% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-    20%, 35% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-    40%, 55% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-    60%, 75% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-    77% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
-    77.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
-    80%, 95% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-    100% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-  }
-  @keyframes dk4 {
-    0%, 15% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-    20%, 35% { transform: translate(84px, -60px) scale(0.865); z-index: 2; opacity: 1; filter: brightness(0.925); }
-    40%, 55% { transform: translate(56px, -40px) scale(0.910); z-index: 3; opacity: 1; filter: brightness(0.950); }
-    60%, 75% { transform: translate(28px, -20px) scale(0.955); z-index: 4; opacity: 1; filter: brightness(0.975); }
-    80%, 95% { transform: translate(0px, 0px) scale(1.000); z-index: 5; opacity: 1; filter: brightness(1.000); }
-    97% { transform: translate(-60%, -22px) scale(.96) rotate(-7deg); z-index: 6; opacity: 0; }
-    97.2% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 0; filter: brightness(0.900); }
-    100% { transform: translate(112px, -80px) scale(0.820); z-index: 1; opacity: 1; filter: brightness(0.900); }
-  }
-  @keyframes dkd0 { 0%, 0% { background: var(--border); width: 8px; } 0%, 17% { background: var(--ink); width: 22px; } 19%, 100% { background: var(--border); width: 8px; } }
-  @keyframes dkd1 { 0%, 19% { background: var(--border); width: 8px; } 20%, 37% { background: var(--ink); width: 22px; } 39%, 100% { background: var(--border); width: 8px; } }
-  @keyframes dkd2 { 0%, 39% { background: var(--border); width: 8px; } 40%, 57% { background: var(--ink); width: 22px; } 59%, 100% { background: var(--border); width: 8px; } }
-  @keyframes dkd3 { 0%, 59% { background: var(--border); width: 8px; } 60%, 77% { background: var(--ink); width: 22px; } 79%, 100% { background: var(--border); width: 8px; } }
-  @keyframes dkd4 { 0%, 79% { background: var(--border); width: 8px; } 80%, 97% { background: var(--ink); width: 22px; } 99%, 100% { background: var(--border); width: 8px; } }
-  @media (prefers-reduced-motion: reduce) { .js .dk-card, .js .dk-dots i { animation: none !important; } }
 
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
   .hero-rings {
@@ -1833,41 +1755,7 @@
 
   <header class="hero" id="top">
     <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
-    <div class="hero-deck" aria-hidden="true">
-      <div class="dk-stage">
-        <article class="dk-card dk0">
-          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="20" height="14" rx="3"/><path d="M10 26h12M13 22v4M19 22v4"/></svg></span>
-          <h3>Product</h3>
-          <p>Scoping, roadmaps and MVPs that actually ship.</p>
-          <ul><li>MVPs</li><li>Roadmaps</li><li>Discovery</li></ul>
-        </article>
-        <article class="dk-card dk1">
-          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="14" r="7"/><rect x="14" y="14" width="12" height="12" rx="3"/></svg></span>
-          <h3>Design</h3>
-          <p>Interfaces people understand on the first tap.</p>
-          <ul><li>UX</li><li>UI</li><li>Design systems</li></ul>
-        </article>
-        <article class="dk-card dk2">
-          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10l-6 6 6 6M20 10l6 6-6 6M18 8l-4 16"/></svg></span>
-          <h3>Engineering</h3>
-          <p>Web, mobile and backend systems built to last.</p>
-          <ul><li>Web</li><li>Mobile</li><li>Backend</li></ul>
-        </article>
-        <article class="dk-card dk3">
-          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 5l2.2 6.8L25 14l-6.8 2.2L16 23l-2.2-6.8L7 14l6.8-2.2z"/><path d="M25 22l.8 2.2L28 25l-2.2.8L25 28l-.8-2.2L22 25l2.2-.8z"/></svg></span>
-          <h3>AI</h3>
-          <p>Agents and automation wired into the way you work.</p>
-          <ul><li>Agents</li><li>Automation</li><li>RAG</li></ul>
-        </article>
-        <article class="dk-card dk4">
-          <span class="dk-ic"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 12a8 8 0 0 0-14-2M9 20a8 8 0 0 0 14 2"/><path d="M9 5v5h5M23 27v-5h-5"/></svg></span>
-          <h3>DevOps</h3>
-          <p>Cloud, CI/CD and monitoring that keep it live.</p>
-          <ul><li>Cloud</li><li>CI/CD</li><li>Monitoring</li></ul>
-        </article>
-      </div>
-      <div class="dk-dots"><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
+    <canvas class="hero-globe" aria-hidden="true"></canvas>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
@@ -3111,6 +2999,143 @@
     });
     b.addEventListener("touchcancel", function () { drag = false; reset(); });
   });
+})();
+</script>
+<script>
+/* hero globe — ~2000 dots on a sphere that rotates and leans toward the cursor; five pins (Idea → Scale) joined by arcs with a packet running along them */
+(function () {
+  var cv = document.querySelector(".hero-globe");
+  if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext("2d");
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var N = 2000, pts = [], i;
+  for (i = 0; i < N; i++) {                       /* fibonacci sphere */
+    var y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+    pts.push([Math.cos(th) * r, y, Math.sin(th) * r]);
+  }
+  function ll(lat, lon) { lat *= Math.PI / 180; lon *= Math.PI / 180; return [Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)]; }
+  var stages = [
+    { n: "Idea", v: ll(32, -70) }, { n: "Design", v: ll(14, -20) }, { n: "Build", v: ll(36, 28) },
+    { n: "Launch", v: ll(-4, 78) }, { n: "Scale", v: ll(-28, 130) }
+  ];
+  var W = 0, H = 0, cx = 0, cy = 0, R = 0, ink = "29,29,31", bg = "#fff", raf = 0, running = false;
+  var yaw = -0.35, pitch = 0.32, vel = 0.00016, tVel = 0.00016, tPitch = 0.32, mx = -999, my = -999, last = 0;
+  var SEG = 2600, HOLD = 1500, CYCLE = SEG * (stages.length - 1) + HOLD;
+
+  function colors() {
+    var m = getComputedStyle(cv).color.match(/[\d.]+/g);
+    if (m && m.length >= 3) ink = m[0] + "," + m[1] + "," + m[2];
+    var f = document.querySelector(".frame");
+    if (f) bg = getComputedStyle(f).backgroundColor || bg;
+  }
+  function rot(v) {
+    var cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    var x1 = v[0] * cyw + v[2] * syw, z1 = -v[0] * syw + v[2] * cyw;
+    return [x1, v[1] * cp - z1 * sp, v[1] * sp + z1 * cp];
+  }
+  function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  function pill(text, x, y, right, a, active) {
+    ctx.font = "600 12px ui-monospace, SF Mono, Menlo, Consolas, monospace";
+    var w = ctx.measureText(text).width + 20, h = 24, px = right ? x + 12 : x - 12 - w;
+    ctx.globalAlpha = a;
+    ctx.fillStyle = active ? "rgb(" + ink + ")" : bg;
+    ctx.strokeStyle = "rgba(" + ink + ",.22)";
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, y - h / 2, w, h, 11) : ctx.rect(px, y - h / 2, w, h);
+    ctx.fill(); if (!active) ctx.stroke();
+    ctx.fillStyle = active ? bg : "rgba(" + ink + ",.85)";
+    ctx.textBaseline = "middle"; ctx.fillText(text, px + 9, y + 0.5);
+    ctx.globalAlpha = 1;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    /* limb */
+    ctx.strokeStyle = "rgba(" + ink + ",.07)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
+    /* dots */
+    var far = [], mid = [], near = [], hot = [], k;
+    for (k = 0; k < N; k++) {
+      var p = rot(pts[k]), sx = cx + p[0] * R, sy = cy - p[1] * R, d = p[2];
+      var dm = Math.hypot(sx - mx, sy - my);
+      if (dm < 90 && d > -0.1) { hot.push([sx, sy, d, 1 - dm / 90]); continue; }
+      (d < 0 ? far : d < 0.5 ? mid : near).push(sx, sy);
+    }
+    function batch(arr, a, rad) {
+      ctx.fillStyle = "rgba(" + ink + "," + a + ")"; ctx.beginPath();
+      for (var q = 0; q < arr.length; q += 2) { ctx.moveTo(arr[q] + rad, arr[q + 1]); ctx.arc(arr[q], arr[q + 1], rad, 0, 6.2832); }
+      ctx.fill();
+    }
+    batch(far, 0.07, 0.9); batch(mid, 0.26, 1.2); batch(near, 0.5, 1.6);
+    hot.forEach(function (h) {
+      ctx.fillStyle = "rgba(" + ink + "," + (0.55 + 0.4 * h[3]) + ")";
+      ctx.beginPath(); ctx.arc(h[0], h[1], 1.6 + 2.6 * h[3] * h[3], 0, 6.2832); ctx.fill();
+    });
+    /* journey: arcs + packet */
+    var tt = t % CYCLE, seg = Math.min(stages.length - 2, Math.floor(tt / SEG)), prog = tt >= SEG * (stages.length - 1) ? 1 : (tt % SEG) / SEG;
+    var reached = tt >= SEG * (stages.length - 1) ? stages.length - 1 : seg;
+    var s0, s1, a, b, om, so, j, u, c, pr, e;
+    for (s0 = 0; s0 < stages.length - 1; s0++) {
+      a = stages[s0].v; b = stages[s0 + 1].v;
+      om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))); so = Math.sin(om);
+      var upto = s0 < seg || tt >= SEG * (stages.length - 1) ? 1 : s0 === seg ? ease(prog) : 0;
+      ctx.beginPath(); var pen = false, lx = 0, ly = 0, lz = 0;
+      for (j = 0; j <= 36; j++) {
+        u = j / 36; if (u > upto + 0.0001) break;
+        var wa = Math.sin((1 - u) * om) / so, wb = Math.sin(u * om) / so, lift = 1 + 0.2 * Math.sin(Math.PI * u);
+        pr = rot([(a[0] * wa + b[0] * wb) * lift, (a[1] * wa + b[1] * wb) * lift, (a[2] * wa + b[2] * wb) * lift]);
+        if (pr[2] > -0.05) { if (!pen) { ctx.moveTo(cx + pr[0] * R, cy - pr[1] * R); pen = true; } else ctx.lineTo(cx + pr[0] * R, cy - pr[1] * R); } else pen = false;
+        lx = cx + pr[0] * R; ly = cy - pr[1] * R; lz = pr[2];
+      }
+      ctx.strokeStyle = "rgba(" + ink + "," + (s0 === seg && tt < SEG * (stages.length - 1) ? 0.7 : 0.32) + ")"; ctx.lineWidth = 1.3; ctx.stroke();
+      if (s0 === seg && tt < SEG * (stages.length - 1) && lz > 0) {
+        ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(lx, ly, 3.4, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = "rgba(" + ink + ",.18)"; ctx.beginPath(); ctx.arc(lx, ly, 8, 0, 6.2832); ctx.fill();
+      }
+    }
+    /* pins + labels */
+    for (s0 = 0; s0 < stages.length; s0++) {
+      pr = rot(stages[s0].v);
+      if (pr[2] < 0.05) continue;
+      var px = cx + pr[0] * R, py = cy - pr[1] * R, vis = Math.min(1, (pr[2] - 0.05) / 0.3), on = s0 <= reached;
+      var ring = ((t / 1400) + s0 * 0.2) % 1;
+      ctx.strokeStyle = "rgba(" + ink + "," + (0.35 * (1 - ring) * vis) + ")"; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(px, py, 4 + ring * 14, 0, 6.2832); ctx.stroke();
+      ctx.globalAlpha = vis; ctx.fillStyle = on ? "rgb(" + ink + ")" : "rgba(" + ink + ",.45)";
+      ctx.beginPath(); ctx.arc(px, py, 4, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1;
+      pill(stages[s0].n, px, py, px < cx + R * 0.25, vis * (on ? 1 : 0.55), s0 === reached && tt < SEG * (stages.length - 1) + 900);
+    }
+  }
+  function step(now) {
+    var dt = Math.min(48, now - (last || now)); last = now;
+    vel += (tVel - vel) * 0.04; pitch += (tPitch - pitch) * 0.05; yaw += vel * dt;
+    draw(now);
+  }
+  function frame(now) { step(now); raf = requestAnimationFrame(frame); }
+  function size() {
+    var r = cv.getBoundingClientRect(); if (!r.width) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height; cx = W / 2; cy = H / 2; R = W * 0.4;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    colors(); draw(reduce ? SEG * 3.2 : performance.now());
+  }
+  var dpr = 1;
+  function start() { if (!running && !reduce && W) { running = true; last = 0; raf = requestAnimationFrame(frame); } }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+  var hero = document.querySelector(".hero");
+  window.addEventListener("pointermove", function (e) {
+    if (!W) return;
+    var r = cv.getBoundingClientRect(), hr = hero.getBoundingClientRect();
+    if (e.clientY < hr.top || e.clientY > hr.bottom) { mx = my = -999; tVel = 0.00016; tPitch = 0.32; return; }
+    mx = e.clientX - r.left; my = e.clientY - r.top;
+    var nx = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2), ny = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2);
+    tVel = 0.00016 + Math.max(-1, Math.min(1, nx)) * 0.0006; tPitch = 0.32 + Math.max(-1, Math.min(1, ny)) * 0.3;
+  }, { passive: true });
+  document.addEventListener("pointerleave", function () { mx = my = -999; tVel = 0.00016; tPitch = 0.32; });
+  size();
+  if ("ResizeObserver" in window) new ResizeObserver(size).observe(cv); else window.addEventListener("resize", size);
+  if (reduce) return;
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv); else start();
+  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+  new MutationObserver(function () { colors(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 })();
 </script>
 </body>
