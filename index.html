@@ -3026,6 +3026,17 @@
     { n: "Launch", v: ll(-4, 78),   t: "Shipped, and live" },
     { n: "Scale",  v: ll(-28, 130), t: "Ready to grow with you" }
   ];
+  var nodes2 = [
+    { n: "Web",       to: 2, v: ll(58, -35),  t: "Fast, responsive web apps" },
+    { n: "Mobile",    to: 3, v: ll(20, 110),  t: "iOS and Android apps" },
+    { n: "AI agents", to: 2, v: ll(-14, 40),  t: "Automation wired into your work" },
+    { n: "Cloud",     to: 4, v: ll(-52, 160), t: "Cloud and DevOps that keep it live" },
+    { n: "APIs",      to: 1, v: ll(-30, -30), t: "Backends the product runs on" },
+    { n: "SaaS",      to: 3, v: ll(48, 95),   t: "Subscription products, end to end" },
+    { n: "MVPs",      to: 0, v: ll(-8, -120), t: "The smallest thing worth shipping" },
+    { n: "Data",      to: 4, v: ll(10, 170),  t: "Pipelines, analytics, reporting" }
+  ];
+  var popText = ["Idea scoped", "Design signed off", "Built, no handoffs", "Launched", "Scaling up"], pop = null, lastReached = -2;
   var W = 0, H = 0, cx = 0, cy = 0, R = 0, dpr = 1, ink = "29,29,31", bg = "#fff", raf = 0, running = false;
   var yaw = -0.35, pitch = 0.32, spin = 0.00016, base = 0.00016, tVel = base, tPitch = 0.32;
   var mx = -999, my = -999, last = 0, jt = 0, hover = -1, focus = null, waves = [], repel = false, touched = 0;
@@ -3060,6 +3071,10 @@
     mono(12); ctx.fillText(text, px + 10, y + 0.5);
     if (sub) { mono(11, 500); ctx.fillStyle = active ? "rgba(255,255,255,.7)" : "rgba(" + ink + ",.55)"; ctx.fillText(sub, px + 10, y + 21); }
     ctx.globalAlpha = 1;
+  }
+  function slerp(a, b, u, lift) {
+    var om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))), so = Math.sin(om) || 1, wa = Math.sin((1 - u) * om) / so, wb = Math.sin(u * om) / so, l = 1 + lift * Math.sin(Math.PI * u);
+    return rot([(a[0] * wa + b[0] * wb) * l, (a[1] * wa + b[1] * wb) * l, (a[2] * wa + b[2] * wb) * l]);
   }
   function pinPos(k) { var p = rot(stages[k].v); return { x: cx + p[0] * R, y: cy - p[1] * R, z: p[2] }; }
 
@@ -3117,6 +3132,7 @@
     /* journey: arcs + packet */
     var tt = jt % CYCLE, done = tt >= SEG * (stages.length - 1), seg = done ? stages.length - 2 : Math.floor(tt / SEG), prog = done ? 1 : (tt % SEG) / SEG;
     var reached = done ? stages.length - 1 : seg, s0, a, b, om, so, j, u, pr;
+    if (reached !== lastReached) { lastReached = reached; pop = { t: now, text: popText[reached] }; }
     for (s0 = 0; s0 < stages.length - 1; s0++) {
       a = stages[s0].v; b = stages[s0 + 1].v;
       om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))); so = Math.sin(om);
@@ -3136,12 +3152,35 @@
       }
     }
 
+    /* the wider network: services hang off the journey on faint dashed links, with small packets running along them */
+    var n2, pk;
+    ctx.setLineDash([2, 4]); ctx.lineWidth = 1;
+    for (n2 = 0; n2 < nodes2.length; n2++) {
+      var nd = nodes2[n2], tg = stages[nd.to].v, pen2 = false, hl = (hover === 5 + n2 || hover === nd.to);
+      ctx.beginPath();
+      for (j = 0; j <= 24; j++) {
+        pr = slerp(nd.v, tg, j / 24, 0.12);
+        if (pr[2] > -0.05) { if (!pen2) { ctx.moveTo(cx + pr[0] * R, cy - pr[1] * R); pen2 = true; } else ctx.lineTo(cx + pr[0] * R, cy - pr[1] * R); } else pen2 = false;
+      }
+      ctx.strokeStyle = "rgba(" + ink + "," + (hl ? 0.55 : 0.2) + ")"; ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    for (n2 = 0; n2 < nodes2.length; n2++) {
+      nd = nodes2[n2]; pk = ((now / 2600) + n2 * 0.37) % 1;
+      pr = slerp(nd.v, stages[nd.to].v, pk, 0.12);
+      if (pr[2] > 0.05) { ctx.fillStyle = "rgba(" + ink + ",.55)"; ctx.beginPath(); ctx.arc(cx + pr[0] * R, cy - pr[1] * R, 1.8, 0, 6.2832); ctx.fill(); }
+    }
+
     /* pins, labels, hover story */
     var nh = -1, bestd = 22;
     for (s0 = 0; s0 < stages.length; s0++) {
       var pp = pinPos(s0);
       if (pp.z < 0.05) continue;
       var dm = Math.hypot(pp.x - mx, pp.y - my); if (dm < bestd) { bestd = dm; nh = s0; }
+    }
+    for (n2 = 0; n2 < nodes2.length; n2++) {
+      pr = rot(nodes2[n2].v); if (pr[2] < 0.1) continue;
+      var dm2 = Math.hypot(cx + pr[0] * R - mx, cy - pr[1] * R - my); if (dm2 < Math.min(bestd, 15)) { bestd = dm2; nh = 5 + n2; }
     }
     if (nh !== hover) { hover = nh; cv.style.cursor = drag.on ? "grabbing" : hover >= 0 ? "pointer" : "grab"; }
     for (s0 = 0; s0 < stages.length; s0++) {
@@ -3156,6 +3195,17 @@
       pill(stages[s0].n, px, py, px < cx + R * 0.25, vis * (on || hv ? 1 : 0.55), (s0 === reached && !done) || (done && s0 === stages.length - 1) || hv, hv ? stages[s0].t : null);
     }
 
+    for (n2 = 0; n2 < nodes2.length; n2++) {
+      nd = nodes2[n2]; pr = rot(nd.v);
+      if (pr[2] < 0.1) continue;
+      var qx = cx + pr[0] * R, qy = cy - pr[1] * R, qv = Math.min(1, (pr[2] - 0.1) / 0.3), qh = hover === 5 + n2;
+      ctx.globalAlpha = qv; ctx.fillStyle = "rgba(" + ink + "," + (qh ? 0.95 : 0.6) + ")";
+      ctx.beginPath(); ctx.arc(qx, qy, qh ? 4 : 2.6, 0, 6.2832); ctx.fill();
+      if (qh) pill(nd.n, qx, qy, qx < cx + R * 0.25, 1, true, nd.t);
+      else { mono(10, 500); ctx.fillStyle = "rgba(" + ink + ",.55)"; ctx.textBaseline = "middle"; ctx.fillText(nd.n, qx < cx + R * 0.25 ? qx + 7 : qx - 7 - ctx.measureText(nd.n).width, qy + 0.5); }
+      ctx.globalAlpha = 1;
+    }
+
     /* magnet cursor */
     if (live && (mx > 0 && mx < W && my > 0 && my < H)) {
       var pulse = 0.5 + 0.5 * Math.sin(now / 260);
@@ -3165,13 +3215,29 @@
     }
 
     /* current-stage caption + hint */
-    var cap = (hover >= 0 ? stages[hover] : stages[reached]), txt = cap.n + " — " + cap.t;
+    var cap = (hover >= 5 ? nodes2[hover - 5] : hover >= 0 ? stages[hover] : stages[reached]), txt = cap.n + " — " + cap.t;
     if (txt !== shownText) { shownText = txt; fade = 0; }
     fade = Math.min(1, fade + 0.06);
     mono(12); var cw = ctx.measureText(shownText).width + 28, cxp = cx - cw / 2, cyp = cy + R + 30;
     ctx.globalAlpha = 0.55 + 0.45 * fade; ctx.fillStyle = bg; ctx.strokeStyle = "rgba(" + ink + ",.2)";
     rrect(cxp, cyp - 13, cw, 26, 13); ctx.fill(); ctx.stroke();
     ctx.fillStyle = "rgba(" + ink + ",.9)"; ctx.textBaseline = "middle"; ctx.fillText(shownText, cxp + 14, cyp + 0.5); ctx.globalAlpha = 1;
+    if (pop) {                                           /* pop on top of the globe, springing in */
+      var pa = now - pop.t;
+      if (pa > 2900) pop = null;
+      else {
+        var sc = pa < 380 ? 1 + 2.7 * Math.pow(pa / 380 - 1, 3) + 1.7 * Math.pow(pa / 380 - 1, 2) : 1, al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400;
+        sc = pa < 380 ? 1 - Math.pow(1 - pa / 380, 3) * (1 + 0.9 * Math.cos(pa / 380 * 9)) : 1;
+        mono(12.5); var pw = ctx.measureText(pop.text).width + 46, py2 = cy - R - 30;
+        ctx.save(); ctx.translate(cx, py2); ctx.scale(Math.max(0.01, sc), Math.max(0.01, sc)); ctx.globalAlpha = Math.max(0, al);
+        ctx.fillStyle = "rgb(" + ink + ")"; rrect(-pw / 2, -16, pw, 32, 16); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(-6, 15); ctx.lineTo(0, 23); ctx.lineTo(6, 15); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#34C759"; ctx.beginPath(); ctx.arc(-pw / 2 + 17, 0, 7, 0, 6.2832); ctx.fill();
+        ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.8; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(-pw / 2 + 13.5, 0.5); ctx.lineTo(-pw / 2 + 16.2, 3.2); ctx.lineTo(-pw / 2 + 21, -2.5); ctx.stroke();
+        ctx.fillStyle = bg; ctx.textBaseline = "middle"; ctx.fillText(pop.text, -pw / 2 + 31, 0.5);
+        ctx.restore(); ctx.globalAlpha = 1;
+      }
+    }
     var hintA = Math.max(0, 1 - (touched ? (now - touched) / 2500 : 0));
     if (hintA > 0.02) {
       mono(10.5, 500); var ht = "MOVE TO ATTRACT  ·  HOLD TO REPEL  ·  CLICK FOR A PULSE  ·  DRAG TO SPIN", hw = ctx.measureText(ht).width;
@@ -3235,8 +3301,8 @@
     var l = local(e), now = performance.now(); touched = touched || now;
     if (wasHold) { waves.push({ x: l.x, y: l.y, t: now }); return; }
     if (hover >= 0) {                                   /* click a pin: turn to it and jump the journey */
-      var v = stages[hover].v, tyaw = Math.atan2(-v[0], v[2]), z1 = -v[0] * Math.sin(tyaw) + v[2] * Math.cos(tyaw), tp = Math.atan2(v[1], z1);
-      focus = { yaw: tyaw, pitch: tp, until: now + 3600 }; jt = hover * SEG + 5; tVel = base;
+      var v = (hover >= 5 ? nodes2[hover - 5] : stages[hover]).v, tyaw = Math.atan2(-v[0], v[2]), z1 = -v[0] * Math.sin(tyaw) + v[2] * Math.cos(tyaw), tp = Math.atan2(v[1], z1);
+      focus = { yaw: tyaw, pitch: tp, until: now + 3600 }; if (hover < 5) { jt = hover * SEG + 5; pop = { t: now, text: popText[hover] }; lastReached = hover; } tVel = base;
     } else waves.push({ x: l.x, y: l.y, t: now });
   }
   cv.addEventListener("pointerup", up);
