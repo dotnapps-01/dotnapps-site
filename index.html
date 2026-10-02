@@ -321,14 +321,33 @@
     /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
-  /* hero field: a quiet matrix of small squares (the logomark's blocks) with soft bands of light drifting across — drawn in JS */
-  .hero-field {
+  /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
+  .hero-rings {
     position: absolute; z-index: 0; top: -3rem; left: calc(-1 * var(--fp));
     width: calc(100% + 2 * var(--fp)); height: calc(100% + 3rem);
-    color: var(--text); pointer-events: none; user-select: none;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 68%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 68%, transparent 100%);
+    overflow: hidden; pointer-events: none; user-select: none; color: var(--text);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 70%, transparent 100%);
   }
+  .hero-rings::before {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, color-mix(in srgb, currentColor 5%, transparent), transparent);
+  }
+  .hero-rings i {
+    position: absolute; left: 50%; top: 50%; width: clamp(540px, 108%, 1000px); aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, currentColor 26%, transparent); border-radius: 23%;
+    background: linear-gradient(160deg, color-mix(in srgb, currentColor 4%, transparent), transparent 60%);
+    transform: translate(-50%, -50%) scale(.05) rotate(0deg); opacity: 0;
+    animation: ringOut 16s cubic-bezier(.3, .35, .25, 1) infinite; animation-delay: calc(var(--i) * -2.3s);
+  }
+  @supports (corner-shape: squircle) { .hero-rings i { border-radius: 34%; corner-shape: squircle; } }
+  @keyframes ringOut {
+    0%   { transform: translate(-50%, -50%) scale(.05) rotate(0deg);  opacity: 0; }
+    12%  { opacity: 1; }
+    70%  { opacity: .55; }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(28deg);   opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-rings i { animation: none; opacity: .5; transform: translate(-50%, -50%) scale(calc(.25 + var(--i) * .13)); } }
 
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
@@ -1632,7 +1651,7 @@
 <div class="frame">
 
   <header class="hero" id="top">
-    <canvas class="hero-field" aria-hidden="true"></canvas>
+    <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
@@ -2812,63 +2831,6 @@
       wrap.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   })();
-</script>
-<script>
-/* hero field — small squares in a matrix, two slow bands of light sweeping through them */
-(function () {
-  var cv = document.querySelector(".hero-field");
-  if (!cv || !cv.getContext) return;
-  var ctx = cv.getContext("2d");
-  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var GAP = 26, PERIOD = 1200, BAND = 170;
-  var W = 0, H = 0, col = "29,29,31", raf = 0, running = false;
-
-  function readColor() {
-    var m = getComputedStyle(cv).color.match(/[\d.]+/g);
-    if (m && m.length >= 3) col = m[0] + "," + m[1] + "," + m[2];
-  }
-  function bump(x, y, t, dx, dy, speed, phase) {
-    var ph = (((x * dx + y * dy) - t * speed + phase) % PERIOD + PERIOD) % PERIOD;
-    var k = (ph - PERIOD / 2) / BAND;
-    return Math.exp(-k * k);
-  }
-  function draw(t) {
-    ctx.clearRect(0, 0, W, H);
-    var cols = Math.ceil(W / GAP) + 1, rows = Math.ceil(H / GAP) + 1;
-    for (var j = 0; j < rows; j++) {
-      for (var i = 0; i < cols; i++) {
-        var x = i * GAP + GAP / 2, y = j * GAP + GAP / 2;
-        var k = Math.max(bump(x, y, t, .82, .57, .045, 0), .8 * bump(x, y, t, -.55, .83, .03, 500));
-        var a = .07 + .2 * k, s = 1.5 + 2.4 * k;
-        ctx.fillStyle = "rgba(" + col + "," + a.toFixed(3) + ")";
-        ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      }
-    }
-  }
-  function size() {
-    var r = cv.getBoundingClientRect();
-    if (!r.width || !r.height) return;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    readColor();
-    draw(reduce ? 2600 : performance.now());
-  }
-  function frame(now) { draw(now); raf = requestAnimationFrame(frame); }
-  function start() { if (!running && !reduce && W) { running = true; raf = requestAnimationFrame(frame); } }
-  function stop() { running = false; cancelAnimationFrame(raf); }
-
-  size();
-  if ("ResizeObserver" in window) new ResizeObserver(size).observe(cv); else window.addEventListener("resize", size);
-  if (reduce) return;
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv);
-  } else start();
-  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
-  new MutationObserver(function () { readColor(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener && matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColor);
-})();
 </script>
 </body>
 </html>
