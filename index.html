@@ -1082,6 +1082,9 @@
     .btn--ghost:hover { color: var(--frame); border-color: var(--text); background: color-mix(in srgb, var(--frame) 68%, transparent); }
   }
   .nav-contact.btn:hover { opacity: 1; }
+  /* text inverts exactly where the fill has passed: white text blended with "difference" over the black/white fill (set up by the script below) */
+  .btx .btn, .btx .btn:hover, .btx .btn.is-swipe, .btx .btn.is-past, .btx .btn:focus-visible, .btx .hero-actions .btn--solid, .btx .hero-actions .btn--solid:hover { color: #fff !important; }
+  .btx .btn .bt { display: inline-flex; align-items: center; justify-content: inherit; gap: inherit; mix-blend-mode: difference; }
   /* hero buttons: true black in light mode */
   .hero-actions .btn--solid { background: #000; color: #fff; }
   :root[data-theme="dark"] .hero-actions .btn--solid { background: var(--text); color: var(--frame); }
@@ -2881,6 +2884,18 @@
       wrap.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   })();
+</script>
+<script>
+/* swipe buttons, text layer — wrap each button's content so its colour can blend with the fill */
+(function () {
+  document.querySelectorAll(".btn").forEach(function (b) {
+    if (b.querySelector(":scope > .bt")) return;
+    var w = document.createElement("span"); w.className = "bt";
+    while (b.firstChild) w.appendChild(b.firstChild);
+    b.appendChild(w);
+  });
+  document.documentElement.classList.add("btx");
+})();
 </script>
 <script>
 /* swipe buttons — touching a button starts the wipe at once and it keeps filling while you hold; slide your finger and the fill follows it;
