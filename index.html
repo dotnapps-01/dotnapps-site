@@ -1355,6 +1355,17 @@
     .tst-viewport { height: 440px; }
   }
   @media (hover: none) { .tst-viewport { pointer-events: none; } }
+
+  /* ---------- Laptop / tablet hero: centred (phones keep the left-aligned reference layout) ---------- */
+  @media (min-width: 621px) {
+    .hero { text-align: center; }
+    .hero-inner { max-width: 46rem; margin: 0 auto; }
+    .hero-inner > h1 { max-width: none; }
+    .hero-inner > p { margin-left: auto; margin-right: auto; }
+    .hero-actions { justify-content: center; }
+    .hero-caps { margin-left: auto; margin-right: auto; justify-content: center; }
+    .hero-strip-label { text-align: center; }
+  }
 </style>
 </head>
 <body>
