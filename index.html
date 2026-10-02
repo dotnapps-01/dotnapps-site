@@ -329,36 +329,41 @@
   .hero-os { display: none; }
   @media (min-width: 1100px) {
     .hero-os {
-      display: block; position: absolute; z-index: 1; right: 0; top: 9.4rem; width: clamp(22rem, calc(100% - 40vw - 2.5rem), 33rem); margin: 0; text-align: left;
-      border-radius: 22px; background: color-mix(in srgb, var(--frame) 80%, transparent); border: 1px solid var(--hairline);
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .04);
+      display: block; position: absolute; z-index: 1; right: 0; top: 10.5rem; width: clamp(24rem, calc(100% - 40vw - 2.5rem), 36rem); margin: 0; text-align: left;
+      border-radius: 24px; border: 1px solid var(--hairline);
+      box-shadow: 0 40px 80px -36px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .05);
       user-select: none;
     }
-    .os-bar { display: flex; align-items: center; gap: .4rem; padding: .9rem 1.15rem; border-bottom: 1px solid var(--hairline); position: relative; }
+    .hero-os::before {   /* a second window peeking out behind, for depth */
+      content: ""; position: absolute; z-index: -1; inset: 0; transform: translate(18px, 20px); border-radius: inherit;
+      background: color-mix(in srgb, var(--sunken) 70%, var(--frame)); border: 1px solid var(--hairline); opacity: .9;
+    }
+    .os-bar { display: flex; align-items: center; gap: .45rem; padding: 1rem 1.3rem; border-bottom: 1px solid var(--hairline); position: relative; background: var(--frame); border-radius: 23px 23px 0 0; }
     .os-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--border); }
     .os-bar b {
       position: absolute; left: 50%; transform: translateX(-50%);
-      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .64rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .7rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
     }
     .os-term {
-      padding: 1.5rem 1.8rem 2rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .98rem; line-height: 2; color: var(--text);
+      padding: 1.6rem 2rem 2.2rem; background: var(--frame); border-radius: 0 0 23px 23px; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 1.08rem; line-height: 2.1; color: var(--text);
     }
     .tl { margin: 0; width: var(--w); max-width: 100%; overflow: hidden; white-space: nowrap; border-right: 2px solid transparent; }
+    .tl span { display: block; }
     .tl.cmd { color: var(--text); }
     .tl.ok { color: var(--muted); }
-    .tl span { display: block; }
     .tl.ok span::first-letter { color: #34C759; }
-    .tl.t4 { color: var(--text); }
-    .js .tl { width: 0; animation-duration: 14s; animation-delay: -4s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; border-right-color: transparent; }
-    .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; }
-    .js .t4 { border-right-color: currentColor; }
-    .js .t4::after { content: ""; }
+    .tl.t6 { color: var(--text); }
+    .js .tl { width: 0; animation-duration: 20s; animation-delay: -6s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; }
+    .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; } .js .t5 { animation-name: tl5; } .js .t6 { animation-name: tl6; } .js .t7 { animation-name: tl7; }
+    .js .t7 { border-right-color: currentColor; }
   }
-  @keyframes tl1 { 0%, 3% { width: 0; } 17%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl2 { 0%, 21% { width: 0; } 33%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl3 { 0%, 37% { width: 0; } 53%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
-  @keyframes tl4 { 0%, 57% { width: 0; } 71%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl1 { 0%, 4% { width: 0; } 12%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl2 { 0%, 15% { width: 0; } 25%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl3 { 0%, 28% { width: 0; } 34%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl4 { 0%, 37% { width: 0; } 45%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl5 { 0%, 48% { width: 0; } 54%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl6 { 0%, 57% { width: 0; } 68%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl7 { 0%, 72% { width: 0; } 74%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
   @media (prefers-reduced-motion: reduce) { .js .tl { animation: none !important; width: var(--w); } }
 
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
@@ -1785,8 +1790,11 @@
         <div class="os-term">
           <p class="tl t1 cmd" style="--w:30ch"><span>$ dotnapps new "your idea"</span></p>
           <p class="tl t2 ok" style="--w:28ch"><span>✓ scoped with a senior team</span></p>
-          <p class="tl t3 ok" style="--w:33ch"><span>✓ designed and built, no handoffs</span></p>
-          <p class="tl t4 ok" style="--w:26ch"><span>✓ live, and ready to scale</span></p>
+          <p class="tl t3 ok" style="--w:11ch"><span>✓ designed</span></p>
+          <p class="tl t4 ok" style="--w:21ch"><span>✓ built, no handoffs</span></p>
+          <p class="tl t5 ok" style="--w:10ch"><span>✓ shipped</span></p>
+          <p class="tl t6 ok" style="--w:26ch"><span>✓ live, and ready to scale</span></p>
+          <p class="tl t7 cmd" style="--w:2ch"><span>$</span></p>
         </div>
       </div>
     <div class="hero-inner">
