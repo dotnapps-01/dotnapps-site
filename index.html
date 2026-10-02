@@ -1056,29 +1056,33 @@
       var(--shadow-chip);
   }
 
-  /* ---------- Swipe buttons: on hover, press or a touch swipe, a fill wipes across and the button inverts ---------- */
+  /* ---------- Swipe buttons: a fill wipes across and the button inverts — on hover, on a tap, or following your finger as you swipe ---------- */
   .btn {
-    position: relative; overflow: hidden; isolation: isolate; touch-action: manipulation;
-    transition: color .5s cubic-bezier(.7, 0, .2, 1), box-shadow .5s ease, border-color .5s ease;
+    position: relative; overflow: hidden; isolation: isolate; touch-action: pan-y; -webkit-user-select: none; user-select: none;
+    transition: color .45s cubic-bezier(.7, 0, .2, 1), box-shadow .45s ease, border-color .45s ease;
   }
   .btn::before {
     content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit; pointer-events: none;
-    transform: scaleX(0); transform-origin: right center;
+    transform: scaleX(var(--p, 0)); transform-origin: var(--o, right) center;
     transition: transform .55s cubic-bezier(.7, 0, .2, 1);
   }
   .btn--solid { box-shadow: inset 0 0 0 1px transparent; }
   .btn--solid::before { background: var(--frame); }
   .btn--ghost::before { background: var(--text); }
-  .btn.is-swipe::before, .btn:focus-visible::before, .btn:active::before { transform: scaleX(1); transform-origin: left center; }
-  .btn--solid.is-swipe, .btn--solid:focus-visible, .btn--solid:active { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
-  .btn--ghost.is-swipe, .btn--ghost:focus-visible, .btn--ghost:active { color: var(--frame); border-color: var(--text); }
+  /* dragging: the fill is glued to the finger, no easing */
+  .btn.is-drag, .btn.is-drag::before { transition: none; }
+  .btn.is-drag { transition: color .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .btn.is-swipe { --p: 1; --o: left; }
+  .btn:focus-visible { --p: 1; --o: left; }
+  .btn--solid.is-swipe, .btn--solid.is-past, .btn--solid:focus-visible { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
+  .btn--ghost.is-swipe, .btn--ghost.is-past, .btn--ghost:focus-visible { color: var(--frame); border-color: var(--text); }
   @media (hover: hover) {
-    .btn:hover::before { transform: scaleX(1); transform-origin: left center; }
+    .btn:hover { --p: 1; --o: left; }
     .btn--solid:hover { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
     .btn--ghost:hover { color: var(--frame); border-color: var(--text); background: color-mix(in srgb, var(--frame) 68%, transparent); }
   }
   .nav-contact.btn:hover { opacity: 1; }
-  .magnetic .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), color .5s cubic-bezier(.7, 0, .2, 1), box-shadow .5s ease, border-color .5s ease; }
+  .magnetic .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), color .45s cubic-bezier(.7, 0, .2, 1), box-shadow .45s ease, border-color .45s ease; }
   @media (prefers-reduced-motion: reduce) { .btn::before { transition-duration: .01ms; } }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .eyebrow-pill, .hero-tag, .hero-caps li, .btn--ghost, .ind, .faq-tab.is-active {
@@ -2876,24 +2880,47 @@
   })();
 </script>
 <script>
-/* swipe buttons — a touch plays the wipe at once; a horizontal swipe across a button wipes it and fires its action */
+/* swipe buttons — the fill follows your finger across the button; let go past halfway (or flick) and it completes and fires the action,
+   otherwise it springs back. A plain tap wipes the whole way and fires as usual. */
 (function () {
   if (!("ontouchstart" in window)) return;
   document.querySelectorAll(".btn").forEach(function (b) {
-    var sx = 0, sy = 0, swiped = false, t = 0;
-    function on() { clearTimeout(t); b.classList.add("is-swipe"); }
-    function off(d) { clearTimeout(t); t = setTimeout(function () { b.classList.remove("is-swipe"); }, d); }
+    var sx = 0, sy = 0, w = 1, p = 0, t0 = 0, drag = false, timer = 0;
+    function reset() { b.classList.remove("is-drag", "is-past", "is-swipe"); b.style.removeProperty("--p"); b.style.removeProperty("--o"); }
     b.addEventListener("touchstart", function (e) {
-      var p = e.touches[0]; sx = p.clientX; sy = p.clientY; swiped = false; on();
+      clearTimeout(timer); reset();
+      var t = e.touches[0]; sx = t.clientX; sy = t.clientY; w = b.offsetWidth || 1; p = 0; drag = false; t0 = Date.now();
     }, { passive: true });
     b.addEventListener("touchmove", function (e) {
-      var p = e.touches[0], dx = p.clientX - sx, dy = p.clientY - sy;
-      if (!swiped && Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.4) swiped = true;
+      var t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+      if (!drag) {
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) { drag = true; b.classList.add("is-drag"); }
+        else return;
+      }
+      p = Math.min(1, Math.abs(dx) / (w * 0.85));
+      b.style.setProperty("--o", dx >= 0 ? "left" : "right");
+      b.style.setProperty("--p", p.toFixed(3));
+      b.classList.toggle("is-past", p > 0.5);
     }, { passive: true });
     b.addEventListener("touchend", function (e) {
-      if (swiped) { e.preventDefault(); off(650); b.click(); } else off(550);
+      if (drag) {
+        e.preventDefault();
+        var fast = (Date.now() - t0) < 280 && p > 0.25;
+        b.classList.remove("is-drag");
+        if (p > 0.5 || fast) {
+          b.style.removeProperty("--p"); b.classList.add("is-swipe", "is-past");
+          b.click();
+          timer = setTimeout(reset, 700);
+        } else {
+          reset();
+        }
+      } else {
+        b.style.setProperty("--o", "left"); b.classList.add("is-swipe");
+        timer = setTimeout(reset, 650);
+      }
+      drag = false;
     });
-    b.addEventListener("touchcancel", function () { off(200); });
+    b.addEventListener("touchcancel", function () { drag = false; reset(); });
   });
 })();
 </script>
