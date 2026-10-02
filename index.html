@@ -1055,6 +1055,31 @@
       inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent),
       var(--shadow-chip);
   }
+
+  /* ---------- Swipe buttons: on hover, press or a touch swipe, a fill wipes across and the button inverts ---------- */
+  .btn {
+    position: relative; overflow: hidden; isolation: isolate; touch-action: manipulation;
+    transition: color .5s cubic-bezier(.7, 0, .2, 1), box-shadow .5s ease, border-color .5s ease;
+  }
+  .btn::before {
+    content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit; pointer-events: none;
+    transform: scaleX(0); transform-origin: right center;
+    transition: transform .55s cubic-bezier(.7, 0, .2, 1);
+  }
+  .btn--solid { box-shadow: inset 0 0 0 1px transparent; }
+  .btn--solid::before { background: var(--frame); }
+  .btn--ghost::before { background: var(--text); }
+  .btn.is-swipe::before, .btn:focus-visible::before, .btn:active::before { transform: scaleX(1); transform-origin: left center; }
+  .btn--solid.is-swipe, .btn--solid:focus-visible, .btn--solid:active { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
+  .btn--ghost.is-swipe, .btn--ghost:focus-visible, .btn--ghost:active { color: var(--frame); border-color: var(--text); }
+  @media (hover: hover) {
+    .btn:hover::before { transform: scaleX(1); transform-origin: left center; }
+    .btn--solid:hover { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
+    .btn--ghost:hover { color: var(--frame); border-color: var(--text); background: color-mix(in srgb, var(--frame) 68%, transparent); }
+  }
+  .nav-contact.btn:hover { opacity: 1; }
+  .magnetic .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), color .5s cubic-bezier(.7, 0, .2, 1), box-shadow .5s ease, border-color .5s ease; }
+  @media (prefers-reduced-motion: reduce) { .btn::before { transition-duration: .01ms; } }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .eyebrow-pill, .hero-tag, .hero-caps li, .btn--ghost, .ind, .faq-tab.is-active {
       background: var(--frame);
@@ -2849,6 +2874,28 @@
       wrap.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   })();
+</script>
+<script>
+/* swipe buttons — a touch plays the wipe at once; a horizontal swipe across a button wipes it and fires its action */
+(function () {
+  if (!("ontouchstart" in window)) return;
+  document.querySelectorAll(".btn").forEach(function (b) {
+    var sx = 0, sy = 0, swiped = false, t = 0;
+    function on() { clearTimeout(t); b.classList.add("is-swipe"); }
+    function off(d) { clearTimeout(t); t = setTimeout(function () { b.classList.remove("is-swipe"); }, d); }
+    b.addEventListener("touchstart", function (e) {
+      var p = e.touches[0]; sx = p.clientX; sy = p.clientY; swiped = false; on();
+    }, { passive: true });
+    b.addEventListener("touchmove", function (e) {
+      var p = e.touches[0], dx = p.clientX - sx, dy = p.clientY - sy;
+      if (!swiped && Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.4) swiped = true;
+    }, { passive: true });
+    b.addEventListener("touchend", function (e) {
+      if (swiped) { e.preventDefault(); off(650); b.click(); } else off(550);
+    });
+    b.addEventListener("touchcancel", function () { off(200); });
+  });
+})();
 </script>
 </body>
 </html>
