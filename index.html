@@ -348,7 +348,7 @@
     .tl span { display: block; }
     .tl.ok span::first-letter { color: #34C759; }
     .tl.t4 { color: var(--text); }
-    .js .tl { width: 0; animation-duration: 14s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; border-right-color: transparent; }
+    .js .tl { width: 0; animation-duration: 14s; animation-delay: -4s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; border-right-color: transparent; }
     .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; }
     .js .t4 { border-right-color: currentColor; }
     .js .t4::after { content: ""; }
@@ -358,6 +358,30 @@
   @keyframes tl3 { 0%, 37% { width: 0; } 53%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
   @keyframes tl4 { 0%, 57% { width: 0; } 71%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
   @media (prefers-reduced-motion: reduce) { .js .tl { animation: none !important; width: var(--w); } }
+
+  /* hero sides: services on the left, the stack on the right — fills the margins on wide screens */
+  .hero-side { display: none; }
+  @media (min-width: 1280px) {
+    .hero-side { display: block; position: absolute; z-index: 1; top: 9.6rem; width: 10.5rem; }
+    .hs-l { left: 0; padding-left: 1rem; border-left: 1px solid var(--border); text-align: left; }
+    .hs-r { right: 0; padding-right: 1rem; border-right: 1px solid var(--border); text-align: right; }
+    .hero-side b, .hero-side li {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; text-transform: uppercase; letter-spacing: .13em;
+    }
+    .hero-side b { display: block; margin-bottom: 1.1rem; font-size: .62rem; font-weight: 500; color: var(--faint); }
+    .hero-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .8rem; }
+    .hero-side li { position: relative; font-size: .7rem; font-weight: 500; color: var(--muted); line-height: 1.3; }
+    .hs-l li::before, .hs-r li::after {
+      content: ""; display: inline-block; width: 5px; height: 5px; background: var(--text); opacity: .55; vertical-align: .08em;
+    }
+    .hs-l li::before { margin-right: .65rem; }
+    .hs-r li::after { margin-left: .65rem; }
+    .js .hero-side li { animation: sideIn .7s cubic-bezier(.2, .8, .2, 1) backwards; animation-delay: calc(.4s + var(--i) * .08s); }
+    .hero .hero-inner > .hero-caps { display: none; }
+    .hero-os { margin-top: 2rem; }
+  }
+  @keyframes sideIn { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .js .hero-side li { animation: none; } }
 
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
   .hero-rings {
@@ -1691,6 +1715,8 @@
 
   <header class="hero" id="top">
     <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
+    <aside class="hero-side hs-l" aria-label="What we build"><b>What we build</b><ul><li style="--i:0">Custom software</li><li style="--i:1">SaaS products</li><li style="--i:2">MVPs</li><li style="--i:3">AI agents</li><li style="--i:4">Web &amp; mobile</li><li style="--i:5">Product design</li><li style="--i:6">Cloud &amp; DevOps</li></ul></aside>
+    <aside class="hero-side hs-r" aria-label="What we build with"><b>What we build with</b><ul><li style="--i:0">TypeScript</li><li style="--i:1">React</li><li style="--i:2">Next.js</li><li style="--i:3">Node</li><li style="--i:4">PostgreSQL</li><li style="--i:5">Prisma</li><li style="--i:6">React Native</li></ul></aside>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
