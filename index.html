@@ -321,32 +321,30 @@
     /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
-  /* hero wireframes: a product's screens sketch themselves in the margins — the studio's work, drawn as it is built */
-  .hero-wire { position: absolute; z-index: 0; inset: 0; pointer-events: none; user-select: none; color: var(--text); }
-  .hero-wire .p { position: absolute; height: auto; overflow: visible; }
-  .hero-wire .w { stroke: currentColor; stroke-opacity: .2; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; }
-  .hero-wire .f { fill: currentColor; fill-opacity: .07; stroke: none; }
-  .w-a { left: max(1rem, 2.5%); top: 22%; width: 250px; }
-  .w-b { right: max(1.5rem, 3.5%); top: 13%; width: 150px; }
-  .w-c { right: 2.5%; bottom: 17%; width: 180px; }
-  .w-d { left: 3%; bottom: 25%; width: 150px; }
-  @media (max-width: 1279px) { .w-a, .w-c, .w-d { display: none; } .w-b { width: 120px; } }
-  @media (max-width: 620px) { .w-b { width: 118px; right: -2.9rem; top: 26%; } }
-
-  .js .hero-wire .p { animation: wFade 15s ease-in-out infinite, wFloat 10s ease-in-out infinite; animation-delay: var(--ph), var(--ph); }
-  .js .hero-wire .w { animation-duration: 15s; animation-timing-function: cubic-bezier(.4, 0, .2, 1); animation-iteration-count: infinite; animation-delay: var(--ph); }
-  .js .hero-wire .d0 { animation-name: wd0; } .js .hero-wire .d1 { animation-name: wd1; } .js .hero-wire .d2 { animation-name: wd2; }
-  .js .hero-wire .d3 { animation-name: wd3; } .js .hero-wire .d4 { animation-name: wd4; }
-  .js .hero-wire .f { animation: wFill 15s ease-out infinite; animation-delay: var(--ph); }
-  @keyframes wFade { 0% { opacity: 0; } 4% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
-  @keyframes wFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  @keyframes wd0 { 0%, 3%  { stroke-dashoffset: 1; } 26%, 100% { stroke-dashoffset: 0; } }
-  @keyframes wd1 { 0%, 8%  { stroke-dashoffset: 1; } 31%, 100% { stroke-dashoffset: 0; } }
-  @keyframes wd2 { 0%, 13% { stroke-dashoffset: 1; } 36%, 100% { stroke-dashoffset: 0; } }
-  @keyframes wd3 { 0%, 18% { stroke-dashoffset: 1; } 41%, 100% { stroke-dashoffset: 0; } }
-  @keyframes wd4 { 0%, 23% { stroke-dashoffset: 1; } 46%, 100% { stroke-dashoffset: 0; } }
-  @keyframes wFill { 0%, 40% { opacity: 0; } 54%, 100% { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .js .hero-wire .p, .js .hero-wire .w, .js .hero-wire .f { animation: none !important; } .hero-wire .w { stroke-dasharray: none; } }
+  /* hero glow: the Business OS app colours as one soft, slow-moving bloom — no lines, nothing hard */
+  .hero-glow {
+    position: absolute; z-index: 0; inset: -3rem calc(-1 * var(--fp)) 0; overflow: hidden; pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+  }
+  .hero-glow i {
+    position: absolute; width: max(340px, 42vw); aspect-ratio: 1; border-radius: 50%; opacity: .27;
+    background: radial-gradient(closest-side, var(--c), transparent 72%);
+    filter: blur(46px); will-change: transform;
+    animation: glowDrift 22s ease-in-out infinite alternate;
+  }
+  .hero-glow i:nth-child(1) { --c: #FF9500; left: -8%; top: 4%; }
+  .hero-glow i:nth-child(2) { --c: #FF2D55; right: -10%; top: -6%; animation-duration: 27s; animation-delay: -9s; }
+  .hero-glow i:nth-child(3) { --c: #AF52DE; right: -2%; bottom: 0%; animation-duration: 25s; animation-delay: -4s; }
+  .hero-glow i:nth-child(4) { --c: #00C7BE; left: 2%; bottom: -6%; animation-duration: 30s; animation-delay: -14s; }
+  :root[data-theme="dark"] .hero-glow i { opacity: .2; }
+  @keyframes glowDrift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(5%, 7%, 0) scale(1.12); }
+    100% { transform: translate3d(-6%, 3%, 0) scale(.94); }
+  }
+  @media (max-width: 620px) { .hero-glow i { width: 360px; filter: blur(38px); opacity: .28; } }
+  @media (prefers-reduced-motion: reduce) { .hero-glow i { animation: none; } }
 
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
@@ -1650,12 +1648,7 @@
 <div class="frame">
 
   <header class="hero" id="top">
-    <div class="hero-wire" aria-hidden="true">
-      <svg class="p w-a" viewBox="0 0 360 250" style="--ph:0s" fill="none"><path class="w d0" pathLength="1" d="M15 1H345A14 14 0 0 1 359 15V235A14 14 0 0 1 345 249H15A14 14 0 0 1 1 235V15A14 14 0 0 1 15 1Z"/><path class="w d1" pathLength="1" d="M1 34H359"/><path class="w d1" pathLength="1" d="M15 18A3 3 0 1 1 21 18A3 3 0 1 1 15 18Z"/><path class="w d1" pathLength="1" d="M29 18A3 3 0 1 1 35 18A3 3 0 1 1 29 18Z"/><path class="w d1" pathLength="1" d="M43 18A3 3 0 1 1 49 18A3 3 0 1 1 43 18Z"/><path class="w d1" pathLength="1" d="M92 34V249"/><path class="w d2" pathLength="1" d="M16 58H70"/><path class="w d2" pathLength="1" d="M16 76H62"/><path class="w d3" pathLength="1" d="M16 94H66"/><path class="w d2" pathLength="1" d="M116 50H172A8 8 0 0 1 180 58V86A8 8 0 0 1 172 94H116A8 8 0 0 1 108 86V58A8 8 0 0 1 116 50Z"/><path class="w d2" pathLength="1" d="M198 50H254A8 8 0 0 1 262 58V86A8 8 0 0 1 254 94H198A8 8 0 0 1 190 86V58A8 8 0 0 1 198 50Z"/><path class="w d2" pathLength="1" d="M280 50H336A8 8 0 0 1 344 58V86A8 8 0 0 1 336 94H280A8 8 0 0 1 272 86V58A8 8 0 0 1 280 50Z"/><path class="w d3" pathLength="1" d="M116 106H336A8 8 0 0 1 344 114V224A8 8 0 0 1 336 232H116A8 8 0 0 1 108 224V114A8 8 0 0 1 116 106Z"/><path class="f" d="M127 164H139A3 3 0 0 1 142 167V221A3 3 0 0 1 139 224H127A3 3 0 0 1 124 221V167A3 3 0 0 1 127 164Z"/><path class="f" d="M155 140H167A3 3 0 0 1 170 143V221A3 3 0 0 1 167 224H155A3 3 0 0 1 152 221V143A3 3 0 0 1 155 140Z"/><path class="f" d="M183 154H195A3 3 0 0 1 198 157V221A3 3 0 0 1 195 224H183A3 3 0 0 1 180 221V157A3 3 0 0 1 183 154Z"/><path class="f" d="M211 124H223A3 3 0 0 1 226 127V221A3 3 0 0 1 223 224H211A3 3 0 0 1 208 221V127A3 3 0 0 1 211 124Z"/><path class="f" d="M239 146H251A3 3 0 0 1 254 149V221A3 3 0 0 1 251 224H239A3 3 0 0 1 236 221V149A3 3 0 0 1 239 146Z"/><path class="f" d="M267 112H279A3 3 0 0 1 282 115V221A3 3 0 0 1 279 224H267A3 3 0 0 1 264 221V115A3 3 0 0 1 267 112Z"/><path class="w d4" pathLength="1" d="M124 158L152 140L180 148L208 122L236 134L264 112L292 96"/><path class="f" d="M123 60H157A3 3 0 0 1 160 63V63A3 3 0 0 1 157 66H123A3 3 0 0 1 120 63V63A3 3 0 0 1 123 60Z"/><path class="f" d="M205 60H239A3 3 0 0 1 242 63V63A3 3 0 0 1 239 66H205A3 3 0 0 1 202 63V63A3 3 0 0 1 205 60Z"/><path class="f" d="M287 60H321A3 3 0 0 1 324 63V63A3 3 0 0 1 321 66H287A3 3 0 0 1 284 63V63A3 3 0 0 1 287 60Z"/><path class="f" d="M123 74H141A3 3 0 0 1 144 77V81A3 3 0 0 1 141 84H123A3 3 0 0 1 120 81V77A3 3 0 0 1 123 74Z"/><path class="f" d="M205 74H229A3 3 0 0 1 232 77V81A3 3 0 0 1 229 84H205A3 3 0 0 1 202 81V77A3 3 0 0 1 205 74Z"/><path class="f" d="M287 74H301A3 3 0 0 1 304 77V81A3 3 0 0 1 301 84H287A3 3 0 0 1 284 81V77A3 3 0 0 1 287 74Z"/></svg>
-      <svg class="p w-b" viewBox="0 0 150 300" style="--ph:-4s" fill="none"><path class="w d0" pathLength="1" d="M27 1H123A26 26 0 0 1 149 27V273A26 26 0 0 1 123 299H27A26 26 0 0 1 1 273V27A26 26 0 0 1 27 1Z"/><path class="w d1" pathLength="1" d="M55 15H95"/><path class="w d1" pathLength="1" d="M22 44A8 8 0 1 1 38 44A8 8 0 1 1 22 44Z"/><path class="w d2" pathLength="1" d="M46 40H110"/><path class="w d2" pathLength="1" d="M46 50H90"/><path class="w d2" pathLength="1" d="M24 70H126A10 10 0 0 1 136 80V130A10 10 0 0 1 126 140H24A10 10 0 0 1 14 130V80A10 10 0 0 1 24 70Z"/><path class="w d3" pathLength="1" d="M21 166A7 7 0 1 1 35 166A7 7 0 1 1 21 166Z"/><path class="w d3" pathLength="1" d="M44 163H110"/><path class="w d4" pathLength="1" d="M44 172H92"/><path class="w d3" pathLength="1" d="M21 196A7 7 0 1 1 35 196A7 7 0 1 1 21 196Z"/><path class="w d3" pathLength="1" d="M44 193H110"/><path class="w d4" pathLength="1" d="M44 202H92"/><path class="w d3" pathLength="1" d="M21 226A7 7 0 1 1 35 226A7 7 0 1 1 21 226Z"/><path class="w d3" pathLength="1" d="M44 223H110"/><path class="w d4" pathLength="1" d="M44 232H92"/><path class="w d4" pathLength="1" d="M1 262H149"/><path class="w d4" pathLength="1" d="M34 281A4 4 0 1 1 42 281A4 4 0 1 1 34 281Z"/><path class="w d4" pathLength="1" d="M71 281A4 4 0 1 1 79 281A4 4 0 1 1 71 281Z"/><path class="w d4" pathLength="1" d="M108 281A4 4 0 1 1 116 281A4 4 0 1 1 108 281Z"/><path class="f" d="M28 84H80A4 4 0 0 1 84 88V88A4 4 0 0 1 80 92H28A4 4 0 0 1 24 88V88A4 4 0 0 1 28 84Z"/><path class="f" d="M27 100H113A3 3 0 0 1 116 103V103A3 3 0 0 1 113 106H27A3 3 0 0 1 24 103V103A3 3 0 0 1 27 100Z"/><path class="f" d="M30 114H58A6 6 0 0 1 64 120V120A6 6 0 0 1 58 126H30A6 6 0 0 1 24 120V120A6 6 0 0 1 30 114Z"/><path class="f" d="M21 166A7 7 0 1 1 35 166A7 7 0 1 1 21 166Z"/></svg>
-      <svg class="p w-c" viewBox="0 0 220 130" style="--ph:-8s" fill="none"><path class="w d1" pathLength="1" d="M13 1H207A12 12 0 0 1 219 13V117A12 12 0 0 1 207 129H13A12 12 0 0 1 1 117V13A12 12 0 0 1 13 1Z"/><path class="w d2" pathLength="1" d="M16 20H70"/><path class="w d2" pathLength="1" d="M16 34H48"/><path class="w d3" pathLength="1" d="M16 100L52 84L84 92L120 66L156 74L196 40"/><path class="f" d="M16 100L52 84L84 92L120 66L156 74L196 40V114H16Z"/><path class="f" d="M160 14H194A10 10 0 0 1 204 24V24A10 10 0 0 1 194 34H160A10 10 0 0 1 150 24V24A10 10 0 0 1 160 14Z"/><path class="f" d="M191 40A5 5 0 1 1 201 40A5 5 0 1 1 191 40Z"/></svg>
-      <svg class="p w-d" viewBox="0 0 200 90" style="--ph:-2s" fill="none"><path class="w d1" pathLength="1" d="M13 1H33A12 12 0 0 1 45 13V13A12 12 0 0 1 33 25H13A12 12 0 0 1 1 13V13A12 12 0 0 1 13 1Z"/><path class="w d1" pathLength="1" d="M25 13A8 8 0 1 1 41 13A8 8 0 1 1 25 13Z"/><path class="w d2" pathLength="1" d="M67 3H77A5 5 0 0 1 82 8V18A5 5 0 0 1 77 23H67A5 5 0 0 1 62 18V8A5 5 0 0 1 67 3Z"/><path class="w d2" pathLength="1" d="M67 13L71 17L78 9"/><path class="w d3" pathLength="1" d="M110 1H186A12 12 0 0 1 198 13V13A12 12 0 0 1 186 25H110A12 12 0 0 1 98 13V13A12 12 0 0 1 110 1Z"/><path class="w d3" pathLength="1" d="M107 13A5 5 0 1 1 117 13A5 5 0 1 1 107 13Z"/><path class="w d3" pathLength="1" d="M2 62A12 12 0 1 1 26 62A12 12 0 1 1 2 62Z"/><path class="w d3" pathLength="1" d="M20 62A12 12 0 1 1 44 62A12 12 0 1 1 20 62Z"/><path class="w d3" pathLength="1" d="M38 62A12 12 0 1 1 62 62A12 12 0 1 1 38 62Z"/><path class="w d4" pathLength="1" d="M72 58H150"/><path class="w d4" pathLength="1" d="M72 68H124"/><path class="f" d="M25 13A8 8 0 1 1 41 13A8 8 0 1 1 25 13Z"/><path class="f" d="M2 62A12 12 0 1 1 26 62A12 12 0 1 1 2 62Z"/><path class="f" d="M68 5H76A4 4 0 0 1 80 9V17A4 4 0 0 1 76 21H68A4 4 0 0 1 64 17V9A4 4 0 0 1 68 5Z"/></svg>
-    </div>
+    <div class="hero-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
