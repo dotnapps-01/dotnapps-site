@@ -325,6 +325,42 @@
 
 
 
+  /* hero terminal: the studio's promise typed out, no handoffs */
+  .hero-os { display: none; }
+  @media (min-width: 1100px) {
+    .hero-os {
+      display: block; position: absolute; z-index: 1; right: 0; top: 9.6rem; width: clamp(20rem, 34%, 27rem); margin: 0; text-align: left;
+      border-radius: 18px; background: color-mix(in srgb, var(--frame) 80%, transparent); border: 1px solid var(--hairline);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 30px 70px -34px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .04);
+      user-select: none;
+    }
+    .os-bar { display: flex; align-items: center; gap: .4rem; padding: .75rem 1rem; border-bottom: 1px solid var(--hairline); position: relative; }
+    .os-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+    .os-bar b {
+      position: absolute; left: 50%; transform: translateX(-50%);
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .64rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+    }
+    .os-term {
+      padding: 1.15rem 1.4rem 1.5rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .8rem; line-height: 1.95; color: var(--text);
+    }
+    .tl { margin: 0; width: var(--w); max-width: 100%; overflow: hidden; white-space: nowrap; border-right: 2px solid transparent; }
+    .tl.cmd { color: var(--text); }
+    .tl.ok { color: var(--muted); }
+    .tl span { display: block; }
+    .tl.ok span::first-letter { color: #34C759; }
+    .tl.t4 { color: var(--text); }
+    .js .tl { width: 0; animation-duration: 14s; animation-delay: -4s; animation-timing-function: steps(30, end); animation-iteration-count: infinite; border-right-color: transparent; }
+    .js .t1 { animation-name: tl1; } .js .t2 { animation-name: tl2; } .js .t3 { animation-name: tl3; } .js .t4 { animation-name: tl4; }
+    .js .t4 { border-right-color: currentColor; }
+    .js .t4::after { content: ""; }
+  }
+  @keyframes tl1 { 0%, 3% { width: 0; } 17%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl2 { 0%, 21% { width: 0; } 33%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl3 { 0%, 37% { width: 0; } 53%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @keyframes tl4 { 0%, 57% { width: 0; } 71%, 90% { width: var(--w); } 95%, 100% { width: 0; } }
+  @media (prefers-reduced-motion: reduce) { .js .tl { animation: none !important; width: var(--w); } }
+
   /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
   .hero-rings {
     position: absolute; z-index: 0; top: -3rem; left: calc(-1 * var(--fp));
@@ -1744,6 +1780,15 @@
 
   <header class="hero" id="top">
     <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
+      <div class="hero-os" aria-hidden="true">
+        <div class="os-bar"><i></i><i></i><i></i><b>terminal</b></div>
+        <div class="os-term">
+          <p class="tl t1 cmd" style="--w:30ch"><span>$ dotnapps new "your idea"</span></p>
+          <p class="tl t2 ok" style="--w:28ch"><span>✓ scoped with a senior team</span></p>
+          <p class="tl t3 ok" style="--w:33ch"><span>✓ designed and built, no handoffs</span></p>
+          <p class="tl t4 ok" style="--w:26ch"><span>✓ live, and ready to scale</span></p>
+        </div>
+      </div>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
