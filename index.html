@@ -2880,24 +2880,31 @@
   })();
 </script>
 <script>
-/* swipe buttons — the fill follows your finger across the button; let go past halfway (or flick) and it completes and fires the action,
-   otherwise it springs back. A plain tap wipes the whole way and fires as usual. */
+/* swipe buttons — touching a button starts the wipe at once and it keeps filling while you hold; slide your finger and the fill follows it;
+   let go and the button's action fires (a swipe must pass halfway, or be a quick flick, to count). */
 (function () {
   if (!("ontouchstart" in window)) return;
   document.querySelectorAll(".btn").forEach(function (b) {
-    var sx = 0, sy = 0, w = 1, p = 0, t0 = 0, drag = false, timer = 0;
+    var sx = 0, sy = 0, w = 1, base = 0, p = 0, t0 = 0, drag = false, timer = 0;
     function reset() { b.classList.remove("is-drag", "is-past", "is-swipe"); b.style.removeProperty("--p"); b.style.removeProperty("--o"); }
+    function current() {
+      var m = getComputedStyle(b, "::before").transform.match(/matrix\(([-\d.]+)/);
+      return m ? Math.min(1, Math.max(0, parseFloat(m[1]))) : 0;
+    }
     b.addEventListener("touchstart", function (e) {
       clearTimeout(timer); reset();
-      var t = e.touches[0]; sx = t.clientX; sy = t.clientY; w = b.offsetWidth || 1; p = 0; drag = false; t0 = Date.now();
+      var t = e.touches[0]; sx = t.clientX; sy = t.clientY; w = b.offsetWidth || 1; p = 0; base = 0; drag = false; t0 = Date.now();
+      b.style.setProperty("--o", "left"); b.classList.add("is-swipe");   /* holding: fills over time */
     }, { passive: true });
     b.addEventListener("touchmove", function (e) {
       var t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
       if (!drag) {
-        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) { drag = true; b.classList.add("is-drag"); }
-        else return;
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          drag = true; base = current();                                  /* take over from wherever the hold-fill has got to */
+          b.style.setProperty("--p", base.toFixed(3)); b.classList.remove("is-swipe"); b.classList.add("is-drag");
+        } else return;
       }
-      p = Math.min(1, Math.abs(dx) / (w * 0.85));
+      p = Math.min(1, Math.max(base, Math.abs(dx) / (w * 0.85)));
       b.style.setProperty("--o", dx >= 0 ? "left" : "right");
       b.style.setProperty("--p", p.toFixed(3));
       b.classList.toggle("is-past", p > 0.5);
@@ -2915,8 +2922,7 @@
           reset();
         }
       } else {
-        b.style.setProperty("--o", "left"); b.classList.add("is-swipe");
-        timer = setTimeout(reset, 650);
+        timer = setTimeout(reset, 700);                                    /* tap / hold: the fill finishes, the native click fires */
       }
       drag = false;
     });
