@@ -192,6 +192,7 @@
      and fades to nothing, so content scrolling up dissolves into blur under
      the header instead of being cut off. Three blur layers with staggered
      masks give a smooth ramp (a single blur would show a hard lower edge). */
+  html { overflow-x: hidden; }
   html.menu-open { overflow: hidden; }
   .nav-veil {
     position: fixed; top: 0; left: 0; right: 0; z-index: 49; pointer-events: none;
@@ -282,7 +283,7 @@
 
   .nav-toggle {
     display: none; position: relative; z-index: 3; flex: none;
-    align-items: center; gap: .75rem; height: 42px; padding: 0 .3rem 0 1.05rem;
+    align-items: center; gap: .6rem; height: 38px; padding: 0 .25rem 0 .9rem;
     border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
     background: color-mix(in srgb, var(--frame) 70%, transparent);
     -webkit-tap-highlight-color: transparent;
@@ -291,20 +292,20 @@
   .nt-label {
     display: block; height: 1.1em; line-height: 1.1; overflow: hidden;
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text);
+    font-size: .66rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text);
   }
   .nt-label > span { display: block; height: 1.1em; transition: transform .55s cubic-bezier(.7, 0, .2, 1); }
   .nav.open .nt-label > span { transform: translateY(-100%); }
-  .nt-icon { position: relative; width: 34px; height: 34px; border-radius: 50%; background: var(--text); flex: none; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
+  .nt-icon { position: relative; width: 30px; height: 30px; border-radius: 50%; background: var(--text); flex: none; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
   .nt-icon b {
-    position: absolute; left: 50%; top: 50%; height: 1.8px; border-radius: 2px; background: var(--frame);
+    position: absolute; left: 50%; top: 50%; height: 1.6px; border-radius: 2px; background: var(--frame);
     transition: transform .6s cubic-bezier(.7, 0, .2, 1), width .45s cubic-bezier(.7, 0, .2, 1);
   }
-  .nt-icon b:nth-child(1) { width: 14px; transform: translate(-50%, calc(-50% - 3.2px)) rotate(0deg); }
-  .nt-icon b:nth-child(2) { width: 8px; transform: translate(calc(-50% + 3px), calc(-50% + 3.2px)) rotate(0deg); }
-  @media (hover: hover) { .nav-toggle:hover .nt-icon b:nth-child(2) { width: 14px; transform: translate(-50%, calc(-50% + 3.2px)) rotate(0deg); } }
+  .nt-icon b:nth-child(1) { width: 12px; transform: translate(-50%, calc(-50% - 3px)) rotate(0deg); }
+  .nt-icon b:nth-child(2) { width: 7px; transform: translate(calc(-50% + 2.5px), calc(-50% + 3px)) rotate(0deg); }
+  @media (hover: hover) { .nav-toggle:hover .nt-icon b:nth-child(2) { width: 12px; transform: translate(-50%, calc(-50% + 3px)) rotate(0deg); } }
   .nav.open .nt-icon { transform: rotate(90deg); }
-  .nav.open .nt-icon b:nth-child(1), .nav.open .nt-icon b:nth-child(2) { width: 15px; }
+  .nav.open .nt-icon b:nth-child(1), .nav.open .nt-icon b:nth-child(2) { width: 13px; }
   .nav.open .nt-icon b:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
   .nav.open .nt-icon b:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
 
@@ -1188,7 +1189,7 @@
       width: auto; max-width: none; margin: 0; overflow-y: auto; overscroll-behavior: contain;
       flex-direction: column; align-items: stretch; gap: 0;
       padding: calc(env(safe-area-inset-top, 0px) + 6.4rem) calc(clamp(1.15rem, 5vw, 3.25rem) + .45rem) calc(env(safe-area-inset-bottom, 0px) + 1.6rem);
-      background: var(--frame);
+      background: radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--text) 7%, transparent), transparent 60%), var(--frame);
       clip-path: circle(0px at var(--ox, calc(100% - 3.5rem)) var(--oy, 2.6rem));
       visibility: hidden; pointer-events: none;
       transition: clip-path .75s cubic-bezier(.7, 0, .2, 1), visibility 0s linear .75s;
@@ -1196,11 +1197,6 @@
     .nav.open .nav-links {
       clip-path: circle(150vmax at var(--ox, calc(100% - 3.5rem)) var(--oy, 2.6rem));
       visibility: visible; pointer-events: auto; transition-delay: 0s;
-    }
-    .nav-links::before {
-      content: ""; position: absolute; right: -30vmax; bottom: -30vmax; width: 70vmax; aspect-ratio: 1; border-radius: 50%;
-      background: radial-gradient(closest-side, color-mix(in srgb, var(--text) 7%, transparent), transparent);
-      pointer-events: none; z-index: -1;
     }
     .menu-head { display: none; }
 
