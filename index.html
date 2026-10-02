@@ -68,6 +68,7 @@
     --sunken: #F5F5F7;
     --raise: #FFFFFF;
     --text: #1D1D1F;
+    --ink: #000000;   /* true black: logo, menu and black buttons */
     --muted: #6E6E73;
     --faint: #A1A1A6;
     --hairline: rgba(0, 0, 0, .055);
@@ -83,7 +84,7 @@
   /* Light is the default regardless of OS setting; dark is opt-in via the toggle. */
   :root[data-theme="dark"] {
     --canvas: #000000; --frame: #000000; --sunken: #1D1D1F; --raise: #1D1D1F;
-    --text: #F5F5F7; --muted: #86868B; --faint: #6E6E73;
+    --text: #F5F5F7; --ink: #F5F5F7; --muted: #86868B; --faint: #6E6E73;
     --hairline: rgba(255, 255, 255, .08); --border: #424245; --ring: rgba(255, 255, 255, .06);
     --focus: #2997FF; --glow: rgba(41, 151, 255, .12);
     --shadow-nav: 0 4px 20px rgba(0, 0, 0, .5); --shadow-frame: none;
@@ -183,7 +184,7 @@
     align-items: center;
     gap: .45rem;
   }
-  .btn--solid { background: var(--text); color: var(--frame); }
+  .btn--solid { background: var(--ink); color: var(--frame); }
   .btn--solid:hover { opacity: .88; }
   .btn--ghost { background: var(--frame); border-color: var(--border); color: var(--text); }
   .btn--ghost:hover { background: var(--sunken); }
@@ -242,7 +243,7 @@
     .nav-links { background: color-mix(in srgb, var(--frame) 97%, transparent) !important; }
   }
 
-  .brand { display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.06rem; letter-spacing: -.02em; flex: none; color: var(--text); }
+  .brand { display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.06rem; letter-spacing: -.02em; flex: none; color: var(--ink); }
   .brand svg { width: 23px; height: 23px; display: block; }
 
   .nav-links {
@@ -251,7 +252,7 @@
     transition: max-width .44s cubic-bezier(.2,.7,.2,1), opacity .24s ease;
   }
   .nav-links a {
-    font: inherit; color: var(--text); font-size: .95rem; font-weight: 600; letter-spacing: -.01em;
+    font: inherit; color: var(--ink); font-size: .95rem; font-weight: 600; letter-spacing: -.01em;
     white-space: nowrap; text-decoration: none;
     padding: .55rem .85rem; border-radius: 999px;
     display: inline-flex; align-items: center; gap: .35rem;
@@ -275,7 +276,7 @@
 
   .nav-contact.btn {
     flex: none; margin-left: .5rem;
-    background: var(--text); color: var(--frame);
+    background: var(--ink); color: var(--frame);
     border: 0; box-shadow: none;
     font-weight: 600; font-size: .92rem;
     padding: .6rem 1.25rem; border-radius: 999px;
@@ -293,11 +294,11 @@
   .nt-label {
     display: block; height: 1.1em; line-height: 1.1; overflow: hidden;
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    font-size: .66rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text);
+    font-size: .66rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
   }
   .nt-label > span { display: block; height: 1.1em; transition: transform .55s cubic-bezier(.7, 0, .2, 1); }
   .nav.open .nt-label > span { transform: translateY(-100%); }
-  .nt-icon { position: relative; width: 30px; height: 30px; border-radius: 50%; background: var(--text); flex: none; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
+  .nt-icon { position: relative; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); flex: none; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
   .nt-icon b {
     position: absolute; left: 50%; top: 50%; height: 1.6px; border-radius: 2px; background: var(--frame);
     transition: transform .6s cubic-bezier(.7, 0, .2, 1), width .45s cubic-bezier(.7, 0, .2, 1);
@@ -438,7 +439,7 @@
 
   /* ---------- Products ---------- */
   .logomark { display: block; }
-  .lg-fg { fill: var(--text); }
+  .lg-fg { fill: var(--ink); }
   /* Business OS app icons — Apple-style depth */
   .app-mark, .viz-marks span {
     position: relative; overflow: hidden;
@@ -822,7 +823,7 @@
   .why-badge {
     position: absolute; z-index: 2; left: calc(66.667% + .125rem); top: 50%; transform: translate(-50%, -50%);
     width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center;
-    background: var(--text); box-shadow: 0 0 0 7px var(--frame), 0 10px 28px rgba(0, 0, 0, .18);
+    background: var(--ink); box-shadow: 0 0 0 7px var(--frame), 0 10px 28px rgba(0, 0, 0, .18);
   }
   .why-badge svg { width: 30px; height: 30px; }
   .why-badge .lg-fg { fill: var(--frame); }
@@ -1068,26 +1069,23 @@
   }
   .btn--solid { box-shadow: inset 0 0 0 1px transparent; }
   .btn--solid::before { background: var(--frame); }
-  .btn--ghost::before { background: var(--text); }
+  .btn--ghost::before { background: var(--ink); }
   /* dragging: the fill is glued to the finger, no easing */
   .btn.is-drag, .btn.is-drag::before { transition: none; }
   .btn.is-drag { transition: color .2s ease, box-shadow .2s ease, border-color .2s ease; }
   .btn.is-swipe { --p: 1; --o: left; }
   .btn:focus-visible { --p: 1; --o: left; }
-  .btn--solid.is-swipe, .btn--solid.is-past, .btn--solid:focus-visible { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
-  .btn--ghost.is-swipe, .btn--ghost.is-past, .btn--ghost:focus-visible { color: var(--frame); border-color: var(--text); }
+  .btn--solid.is-swipe, .btn--solid.is-past, .btn--solid:focus-visible { color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); opacity: 1; }
+  .btn--ghost.is-swipe, .btn--ghost.is-past, .btn--ghost:focus-visible { color: var(--frame); border-color: var(--ink); }
   @media (hover: hover) {
     .btn:hover { --p: 1; --o: left; }
-    .btn--solid:hover { color: var(--text); box-shadow: inset 0 0 0 1px var(--text); opacity: 1; }
-    .btn--ghost:hover { color: var(--frame); border-color: var(--text); background: color-mix(in srgb, var(--frame) 68%, transparent); }
+    .btn--solid:hover { color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); opacity: 1; }
+    .btn--ghost:hover { color: var(--frame); border-color: var(--ink); background: color-mix(in srgb, var(--frame) 68%, transparent); }
   }
   .nav-contact.btn:hover { opacity: 1; }
   /* text inverts exactly where the fill has passed: white text blended with "difference" over the black/white fill (set up by the script below) */
   .btx .btn, .btx .btn:hover, .btx .btn.is-swipe, .btx .btn.is-past, .btx .btn:focus-visible, .btx .hero-actions .btn--solid, .btx .hero-actions .btn--solid:hover { color: #fff !important; }
   .btx .btn .bt { display: inline-flex; align-items: center; justify-content: inherit; gap: inherit; mix-blend-mode: difference; }
-  /* hero buttons: true black in light mode */
-  .hero-actions .btn--solid { background: #000; color: #fff; }
-  :root[data-theme="dark"] .hero-actions .btn--solid { background: var(--text); color: var(--frame); }
   .magnetic .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), color .45s cubic-bezier(.7, 0, .2, 1), box-shadow .45s ease, border-color .45s ease; }
   @media (prefers-reduced-motion: reduce) { .btn::before { transition-duration: .01ms; } }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -1104,8 +1102,8 @@
   .game-stat b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
   .game-btn {
     margin-left: auto; font: inherit; font-size: .78rem; font-weight: 600;
-    color: var(--frame); background: var(--text);
-    border: 1px solid var(--text); border-radius: 999px;
+    color: var(--frame); background: var(--ink);
+    border: 1px solid var(--ink); border-radius: 999px;
     padding: .45rem 1.15rem; cursor: pointer;
     transition: transform .2s ease, opacity .2s ease;
   }
@@ -1372,7 +1370,7 @@
     .nav-links a {
       position: relative; width: 100%; padding: .55rem 0 .6rem; border-radius: 0; gap: 1rem;
       display: flex; align-items: flex-start; justify-content: flex-start; white-space: nowrap;
-      font-size: clamp(2.1rem, 9.5vw, 3rem); font-weight: 600; letter-spacing: -.04em; line-height: 1.05; color: var(--text);
+      font-size: clamp(2.1rem, 9.5vw, 3rem); font-weight: 600; letter-spacing: -.04em; line-height: 1.05; color: var(--ink);
     }
     .nav-links a:hover, .nav-links a:focus-visible { background: transparent; color: var(--text); }
     .nav-links a::after {
@@ -1412,7 +1410,7 @@
     .menu-theme .tw { font-size: 1.2rem; }
     .nav-contact.btn {
       width: 100%; justify-content: center; margin: 0; padding: 1.05rem 1rem; font-size: 1rem; border-radius: 999px;
-      background: var(--text); color: var(--frame); border: 0; box-shadow: none; display: inline-flex;
+      background: var(--ink); color: var(--frame); border: 0; box-shadow: none; display: inline-flex;
       font-weight: 600; letter-spacing: -.01em;
     }
     .nav-contact.btn::after { display: none; }
