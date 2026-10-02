@@ -321,33 +321,14 @@
     /* the blueprint grid bleeds to the frame edges and up under the nav; clip there instead of at the hero box */
     overflow: visible; clip-path: inset(-3rem calc(-1 * var(--fp)) 0 calc(-1 * var(--fp)));
   }
-  /* hero rings: app-icon squircles ripple outward from the centre, slowly turning as they fade — like potential unlocking */
-  .hero-rings {
+  /* hero ridge: stacked fine lines that swell like a slow signal; each line hides the ones behind it — drawn in JS */
+  .hero-ridge {
     position: absolute; z-index: 0; top: -3rem; left: calc(-1 * var(--fp));
     width: calc(100% + 2 * var(--fp)); height: calc(100% + 3rem);
-    overflow: hidden; pointer-events: none; user-select: none; color: var(--text);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 70%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 70%, transparent 100%);
+    color: var(--text); pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 22%, #000 62%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, transparent 22%, #000 62%, #000 100%);
   }
-  .hero-rings::before {
-    content: ""; position: absolute; left: 50%; top: 50%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%);
-    background: radial-gradient(closest-side, color-mix(in srgb, currentColor 5%, transparent), transparent);
-  }
-  .hero-rings i {
-    position: absolute; left: 50%; top: 50%; width: clamp(540px, 108%, 1000px); aspect-ratio: 1;
-    border: 1px solid color-mix(in srgb, currentColor 26%, transparent); border-radius: 23%;
-    background: linear-gradient(160deg, color-mix(in srgb, currentColor 4%, transparent), transparent 60%);
-    transform: translate(-50%, -50%) scale(.05) rotate(0deg); opacity: 0;
-    animation: ringOut 16s cubic-bezier(.3, .35, .25, 1) infinite; animation-delay: calc(var(--i) * -2.3s);
-  }
-  @supports (corner-shape: squircle) { .hero-rings i { border-radius: 34%; corner-shape: squircle; } }
-  @keyframes ringOut {
-    0%   { transform: translate(-50%, -50%) scale(.05) rotate(0deg);  opacity: 0; }
-    12%  { opacity: 1; }
-    70%  { opacity: .55; }
-    100% { transform: translate(-50%, -50%) scale(1) rotate(28deg);   opacity: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) { .hero-rings i { animation: none; opacity: .5; transform: translate(-50%, -50%) scale(calc(.25 + var(--i) * .13)); } }
 
   .hero > .hero-inner, .hero > .hero-strip-label, .hero > .stack { position: relative; z-index: 1; }
 
@@ -1651,7 +1632,7 @@
 <div class="frame">
 
   <header class="hero" id="top">
-    <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
+    <canvas class="hero-ridge" aria-hidden="true"></canvas>
     <div class="hero-inner">
       <span class="hero-tag"><span class="dot"></span> Studio &amp; product company</span>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
@@ -2831,6 +2812,73 @@
       wrap.addEventListener("mouseleave", function () { btn.style.transform = ""; });
     });
   })();
+</script>
+<script>
+/* hero ridge — fine stacked lines that undulate slowly, each one hiding those behind it */
+(function () {
+  var cv = document.querySelector(".hero-ridge");
+  if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext("2d");
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var LINES = 24, STEP = 8;
+  var W = 0, H = 0, ink = "29,29,31", bg = "#fff", raf = 0, running = false;
+
+  function readColors() {
+    var m = getComputedStyle(cv).color.match(/[\d.]+/g);
+    if (m && m.length >= 3) ink = m[0] + "," + m[1] + "," + m[2];
+    var f = document.querySelector(".frame");
+    if (f) bg = getComputedStyle(f).backgroundColor || bg;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    var top = H * 0.42, span = H * 0.54, gap = span / LINES;
+    ctx.lineWidth = 1;
+    for (var i = 0; i < LINES; i++) {
+      var depth = i / (LINES - 1);               /* 0 = back, 1 = front */
+      var base = top + i * gap;
+      var amp = 8 + depth * 30;
+      ctx.beginPath();
+      for (var x = -STEP; x <= W + STEP; x += STEP) {
+        var u = x / W, env = Math.pow(Math.sin(Math.PI * Math.min(Math.max(u, 0), 1)), 1.4);
+        var y = base - env * amp * (
+          Math.sin(x * 0.012 + t * 0.00055 + i * 0.32) +
+          0.55 * Math.sin(x * 0.027 - t * 0.0008 + i * 0.7) +
+          0.3 * Math.sin(x * 0.006 + t * 0.0003));
+        if (x === -STEP) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = "rgba(" + ink + "," + (0.07 + depth * 0.2).toFixed(3) + ")";
+      ctx.stroke();
+      ctx.lineTo(W + STEP, H + 2); ctx.lineTo(-STEP, H + 2); ctx.closePath();
+      ctx.fillStyle = bg; ctx.fill();
+    }
+  }
+  function size() {
+    var r = cv.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    readColors();
+    draw(reduce ? 4000 : performance.now());
+  }
+  function frame(now) { draw(now); raf = requestAnimationFrame(frame); }
+  function start() { if (!running && !reduce && W) { running = true; raf = requestAnimationFrame(frame); } }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  size();
+  if ("ResizeObserver" in window) new ResizeObserver(size).observe(cv); else window.addEventListener("resize", size);
+  if (reduce) return;
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv);
+  } else start();
+  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+  new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (window.matchMedia) {
+    var mq = matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", readColors);
+  }
+})();
 </script>
 </body>
 </html>
