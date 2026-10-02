@@ -1229,7 +1229,7 @@
 
   /* ---------- Phone hero (reference: mono pill, big two-tone headline,
      one row of pill buttons with arrows, mono caption) ---------- */
-  .hero-actions .arr { display: none; }
+  .btn .arr { display: none; }
   @media (max-width: 620px) {
     .hero { padding-top: 5.6rem; }
     .hero-tag {
@@ -1261,6 +1261,55 @@
   }
   @media (min-width: 621px) { .hide-s { display: inline; } }
   @media (max-width: 620px) { .hide-s { display: none; } }
+
+  /* ---------- Phone design system (sitewide, same language as the hero) ----------
+     left-aligned sections, mono pills, big tight two-tone headings, roomy
+     paragraphs, pill buttons with arrows, mono micro-labels. Phones only. */
+  @media (max-width: 620px) {
+    /* one shared left/right edge for the bar, hero and every section */
+    .frame { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .nav { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero-inner, .hero-strip-label { padding-inline: 0; }
+
+    /* section header */
+    .band-head { text-align: left; align-items: flex-start; max-width: none; gap: 1.05rem; margin: 0 0 1.9rem; }
+    .eyebrow-pill {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; text-transform: uppercase; letter-spacing: .17em;
+      font-size: .66rem; font-weight: 500; padding: .6rem 1.05rem; color: var(--text);
+    }
+    .eyebrow-pill::before { display: none; }
+    .band-head h2, .process-aside h2, .cta h2 {
+      font-size: clamp(2.1rem, 9.4vw, 2.7rem); line-height: 1.04; letter-spacing: -.045em; text-align: left;
+    }
+    .h2-end { display: block; color: var(--muted); }
+    .band-head p, .process-aside p { font-size: 1.04rem; line-height: 1.68; max-width: none; }
+
+    .process-aside { align-items: flex-start; }
+    .game-msg { text-align: left; }
+
+    /* buttons: pills with arrows */
+    .btn { border-radius: 999px; padding: .95rem 1.35rem; font-size: .92rem; gap: .5rem; }
+    .btn .arr { display: block; width: 15px; height: 15px; flex: none; }
+
+    /* Business OS block — left, not centred */
+    .product, .product-note { text-align: left; }
+    .product-top { align-items: flex-start; }
+    .product-top p { margin-left: 0; margin-right: 0; }
+    .app { align-items: flex-start; text-align: left; padding: 1.05rem .95rem .95rem; }
+
+    /* CTA / careers / notes */
+    .cta { text-align: left; }
+    .cta p { margin-left: 0; margin-right: 0; max-width: none; font-size: 1.04rem; line-height: 1.68; }
+    .cta-actions { justify-content: flex-start; }
+    .work-note { text-align: left; margin-left: 0; }
+    .magnetic { display: block; }
+    .magnetic .btn { width: 100%; justify-content: center; }
+
+    /* mono micro-labels */
+    .work-tag, .practice-head .ct, .app .st, .hero-strip-label, footer .col b, .compare tbody th {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; letter-spacing: .14em; font-weight: 500;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1337,7 +1386,7 @@
   <section class="why band" id="why">
     <div class="band-head reveal">
       <span class="eyebrow-pill">Why Dotnapps</span>
-      <h2 class="serif">Discover why we stand out</h2>
+      <h2 class="serif">Discover why <span class="h2-end">we stand out</span></h2>
       <p>A studio that carries product risk of its own &mdash; and brings that instinct to client work.</p>
     </div>
     <div class="why-cards stagger">
@@ -1390,7 +1439,7 @@
   <section class="band" id="products">
     <div class="band-head reveal">
       <span class="eyebrow-pill">Our products</span>
-      <h2 class="serif">Software we build for ourselves</h2>
+      <h2 class="serif">Software we build <span class="h2-end">for ourselves</span></h2>
       <p>We don't only work on client roadmaps. Business OS is a product we own, run, and sell &mdash; and the bar we hold every engagement to.</p>
     </div>
 
@@ -1428,7 +1477,7 @@
   <section class="band" id="services">
     <div class="band-head reveal">
       <span class="eyebrow-pill">What we do for clients</span>
-      <h2 class="serif">Twenty-four services, five practices</h2>
+      <h2 class="serif">Twenty-four services, <span class="h2-end">five practices</span></h2>
       <p>From a first MVP to a core-systems rebuild. <span class="hint-hover">Hover</span><span class="hint-tap">Tap</span> a service for the short version.</p>
     </div>
 
@@ -1520,7 +1569,7 @@
   <section class="band" id="industries">
     <div class="band-head reveal">
       <span class="eyebrow-pill">Industries</span>
-      <h2 class="serif">Where we've done the work</h2>
+      <h2 class="serif">Where we've <span class="h2-end">done the work</span></h2>
       <p>Domain knowledge matters. These are the sectors we've shipped in and can move fast in.</p>
     </div>
     <div class="ind-grid stagger">
@@ -1539,7 +1588,7 @@
   <section class="band" id="work">
     <div class="band-head reveal">
       <span class="eyebrow-pill">Selected work</span>
-      <h2 class="serif">Shipped, not just designed</h2>
+      <h2 class="serif">Shipped, <span class="h2-end">not just designed</span></h2>
       <p>A sample of recent builds. Some client work is under NDA, so a few of these are anonymised.</p>
     </div>
     <div class="work-grid stagger">
@@ -1589,7 +1638,7 @@
     <div class="process-grid">
       <div class="process-aside">
         <span class="eyebrow-pill">Process</span>
-        <h2 class="serif">How the work flows, start to scale</h2>
+        <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
         <p>Small teams, short cycles, and working software you can see every week.</p>
       </div>
       <ol class="timeline">
@@ -1617,7 +1666,7 @@
   <section class="band" id="engage">
     <div class="band-head reveal">
       <span class="eyebrow-pill">Ways to work with us</span>
-      <h2 class="serif">Three engagement models</h2>
+      <h2 class="serif">Three <span class="h2-end">engagement models</span></h2>
     </div>
     <div class="models stagger">
       <div class="model">
@@ -1642,7 +1691,7 @@
   <section class="band" id="compare">
     <div class="band-head reveal">
       <span class="eyebrow-pill">How we compare</span>
-      <h2 class="serif">Studio, freelancer, or a new hire</h2>
+      <h2 class="serif">Studio, freelancer, <span class="h2-end">or a new hire</span></h2>
       <p>The honest version of when a studio is the right call &mdash; and when it isn't.</p>
     </div>
     <div class="compare reveal">
@@ -1668,7 +1717,7 @@
   <section class="band" id="faq">
     <div class="band-head reveal">
       <span class="eyebrow-pill">FAQ</span>
-      <h2 class="serif">We have the <span class="mark-hl">answers</span></h2>
+      <h2 class="serif">We have the <span class="h2-end"><span class="mark-hl">answers</span></span></h2>
       <p>Straight answers on how we scope, price, work, and hand over.</p>
     </div>
 
@@ -1713,12 +1762,12 @@
       <h3>We're building the team</h3>
       <p>Open roles for senior engineers and product designers who like shipping.</p>
     </div>
-    <a class="btn btn--ghost" href="mailto:careers@dotnapps.com" data-modal="careers">See open roles</a>
+    <a class="btn btn--ghost" href="mailto:careers@dotnapps.com" data-modal="careers">See open roles<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </section>
 
   <!-- ===================== CONTACT ===================== -->
   <section class="cta" id="contact">
-    <h2 class="serif reveal">Have something to build?</h2>
+    <h2 class="serif reveal">Have something <span class="h2-end">to build?</span></h2>
     <p class="reveal">Send a short brief. You get a real response &mdash; an approach, a rough shape, a timeline &mdash; not a sales sequence.</p>
     <form class="brief reveal" id="brief-form">
       <div class="row">
@@ -1739,7 +1788,7 @@
           </select>
         </label>
       </div>
-      <div class="full magnetic"><button class="btn btn--solid" type="submit">Send brief</button></div>
+      <div class="full magnetic"><button class="btn btn--solid" type="submit">Send brief<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       <p class="brief-done" id="brief-done" hidden>Thanks &mdash; your email client should open with the brief ready to send. Prefer to write us directly? <a href="mailto:hello@dotnapps.com">hello@dotnapps.com</a></p>
     </form>
   </section>
