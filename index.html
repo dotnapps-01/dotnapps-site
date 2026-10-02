@@ -714,19 +714,62 @@
   .wb-c h3 { max-width: 12rem; }
   .wb-flow { display: flex; flex-direction: column; align-items: center; }
   .wb-dot { position: relative; width: 14px; height: 14px; border-radius: 50%; background: var(--text); }
-  .wb-dot-a { background: var(--focus); }
-  .js .wb-dot-a { animation: pulse 2.4s ease-in-out infinite; }
+  .wb-dot::before {
+    content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--text); opacity: 0; pointer-events: none;
+  }
   .wb-dot::after {
     content: attr(data-l); position: absolute; left: 26px; top: 50%; transform: translateY(-50%);
     font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .6rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
   }
-  .wb-line { position: relative; display: block; width: 0; height: 3.4rem; border-left: 1.5px dashed var(--faint); }
+  /* the idea travels down through "us" and lands live: dashes march, a packet runs each line, the two ends answer */
+  .wb-line {
+    position: relative; display: block; width: 1.5px; height: 3.4rem;
+    background: repeating-linear-gradient(to bottom, var(--faint) 0 5px, transparent 5px 9px);
+    background-size: 1.5px 9px;
+  }
   .wb-line::before {
-    content: ""; position: absolute; left: -4.75px; width: 7px; height: 7px;
+    content: ""; position: absolute; left: -2.75px; bottom: -1px; width: 7px; height: 7px; transform: rotate(225deg);
     border-top: 1.5px solid var(--faint); border-left: 1.5px solid var(--faint);
   }
-  .wb-up::before { top: 0; transform: rotate(45deg); }
-  .wb-down::before { bottom: 0; transform: rotate(225deg); }
+  .wb-line::after {
+    content: ""; position: absolute; left: -2.25px; top: 0; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text); opacity: 0;
+  }
+  .js .wb-line { animation: wbMarch 1.3s linear infinite; }
+  .js .wb-up::after { animation: wbPacketA 6s cubic-bezier(.45, 0, .55, 1) infinite; }
+  .js .wb-down::after { animation: wbPacketB 6s cubic-bezier(.45, 0, .55, 1) infinite; }
+  .js .wb-dot-a::before { animation: wbRing 6s ease-out infinite; }
+  .js .wb-dot-b::before { animation: wbRing 6s ease-out infinite 4.7s; }
+  .js .wb-dot-b { animation: wbLand 6s ease-out infinite; }
+  .js .wb-dot-b::after { animation: wbLabel 6s ease-out infinite; }
+  @keyframes wbMarch { to { background-position: 0 9px; } }
+  @keyframes wbPacketA {
+    0%, 4%  { top: -3px; opacity: 0; }
+    8%      { opacity: 1; }
+    36%     { top: calc(100% - 3px); opacity: 1; }
+    40%, 100% { top: calc(100% - 3px); opacity: 0; }
+  }
+  @keyframes wbPacketB {
+    0%, 42% { top: -3px; opacity: 0; }
+    46%     { opacity: 1; }
+    74%     { top: calc(100% - 3px); opacity: 1; }
+    78%, 100% { top: calc(100% - 3px); opacity: 0; }
+  }
+  @keyframes wbRing {
+    0%      { transform: scale(1); opacity: 0; }
+    2%      { opacity: .7; }
+    14%, 100% { transform: scale(3.2); opacity: 0; }
+  }
+  @keyframes wbLand {
+    0%, 74% { transform: scale(1); }
+    80%     { transform: scale(1.5); }
+    90%, 100% { transform: scale(1); }
+  }
+  @keyframes wbLabel {
+    0%, 74% { color: var(--muted); }
+    80%, 92% { color: var(--text); }
+    100%    { color: var(--muted); }
+  }
 
   /* D: the pushback chat, bigger than the old thumbnail */
   .wb-d .viz-chat { margin: auto 0 0 auto; width: min(100%, 25rem); padding-top: 1.2rem; }
@@ -742,7 +785,7 @@
   .why-badge svg { width: 30px; height: 30px; }
   .why-badge .lg-fg { fill: var(--frame); }
 
-  @media (prefers-reduced-motion: reduce) { .js .wb-run, .js .wb-dot-a { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .js .wb-run, .js .wb-line, .js .wb-line::after, .js .wb-dot, .js .wb-dot::before, .js .wb-dot::after { animation: none !important; } }
   @media (max-width: 860px) {
     .why-bento { grid-template-columns: 1fr; grid-auto-rows: auto; }
     .wb-a, .wb-b, .wb-c, .wb-d { grid-column: auto; }
