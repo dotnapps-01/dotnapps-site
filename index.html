@@ -415,6 +415,10 @@
     background: linear-gradient(180deg, rgba(255, 255, 255, .3) 0%, rgba(255, 255, 255, .06) 40%, transparent 58%);
   }
   .app-mark svg .fg, .viz-marks span svg .fg { fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .22)); }
+  .app-mark svg .fg2 { fill: rgba(255, 255, 255, .5); }
+  .app-mark svg .dk { fill: rgba(0, 0, 0, .26); }
+  .app-mark svg .dkl { fill: rgba(0, 0, 0, .26); stroke: rgba(0, 0, 0, .26); stroke-width: 8.500; stroke-linecap: round; }
+  .app-mark svg .fgs { fill: none; stroke: #fff; stroke-linecap: round; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .22)); }
   /* ---------- Business OS — one card, apps wired in from both sides ---------- */
   .bos {
     position: relative; overflow: hidden; isolation: isolate;
@@ -428,7 +432,7 @@
   }
   .bos::before { top: -28%; right: -16%; }
   .bos::after { bottom: -34%; left: -18%; }
-  .bos-stage { position: relative; height: 35rem; user-select: none; -webkit-user-select: none; }
+  .bos-stage { position: relative; height: 37rem; user-select: none; -webkit-user-select: none; }
   .bos-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   .bos-wire { fill: none; stroke: color-mix(in srgb, var(--text) 22%, transparent); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
   .bos-pulse {
@@ -464,19 +468,30 @@
   .bos-nodes { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
   .bn {
     position: absolute; z-index: 3; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
-    width: 3.5rem; aspect-ratio: 1; margin: -1.75rem 0 0 -1.75rem; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--raise); border: 1px solid var(--hairline);
-    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, .22), 0 1px 2px rgba(0, 0, 0, .05);
-    transition: transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s ease;
+    width: 4.25rem; aspect-ratio: 1; margin: -2.125rem 0 0 -2.125rem; border-radius: 50%;
+    transition: transform .25s cubic-bezier(.2, .7, .2, 1);
   }
-  .bn .app-mark { width: 2rem; }
-  .bn.is-live { border-color: var(--text); }
-  .bn-nm { position: absolute; left: 50%; top: calc(100% + .35rem); transform: translateX(-50%); white-space: nowrap;
-    font-size: .68rem; font-weight: 600; color: var(--muted); pointer-events: none; }
-  @media (hover: hover) {
-    .bn:hover { transform: scale(1.1); box-shadow: 0 10px 24px -6px rgba(0, 0, 0, .32); }
+  .bn .app-mark {
+    width: 100%; height: 100%; border-radius: 50%; display: block;
+    box-shadow:
+      0 0 0 3px var(--raise),
+      0 0 0 4px var(--hairline),
+      inset 0 1.5px 2px rgba(255, 255, 255, .55),
+      inset 0 -3px 5px rgba(0, 0, 0, .2),
+      0 10px 22px -6px rgba(0, 0, 0, .35);
   }
+  .bn .app-mark::before { background: radial-gradient(120% 70% at 50% -10%, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 60%); }
+  .bn .app-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bn.is-live::after {
+    content: ""; position: absolute; right: 1px; top: 1px; width: .8rem; height: .8rem; border-radius: 50%;
+    background: #34C759; box-shadow: 0 0 0 2.5px var(--raise); z-index: 2;
+  }
+  .bn-nm {
+    position: absolute; left: 50%; top: calc(100% + .5rem); transform: translateX(-50%); white-space: nowrap;
+    font-size: .68rem; font-weight: 600; color: var(--text); pointer-events: none;
+    padding: .18rem .55rem; border-radius: 8px; background: var(--raise); border: 1px solid var(--hairline);
+  }
+  @media (hover: hover) { .bn:hover { transform: scale(1.08); } }
   .bos-legend {
     list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .5rem;
   }
@@ -494,9 +509,9 @@
     .bos-lines, .bos-ports { display: none; }
     .bos-card { position: relative; left: auto; top: auto; transform: none; width: 100%; min-width: 0; max-height: none; }
     .bos-card p { max-width: 34ch; }
-    .bos-nodes { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.3rem .5rem; padding: .25rem 0 1.1rem; }
-    .bn { position: relative; left: auto; top: auto; margin: 0 auto; width: 3.6rem; }
-    .bn-nm { top: calc(100% + .4rem); font-size: .66rem; white-space: normal; text-align: center; width: 5.2rem; line-height: 1.2; }
+    .bos-nodes { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3.2rem .5rem; padding: .25rem 0 1.6rem; }
+    .bn { position: relative; left: auto; top: auto; margin: 0 auto; width: 4rem; }
+    .bn-nm { top: calc(100% + .5rem); font-size: .64rem; white-space: normal; text-align: center; width: 5.2rem; line-height: 1.2; padding: .15rem .3rem; }
   }
   @media (max-width: 560px) { .bos-legend { flex-direction: column; align-items: stretch; gap: .4rem; } .bos-legend li { border-radius: 14px; font-size: .78rem; line-height: 1.4; } }
   @media (max-width: 420px) { .bos-nodes { grid-template-columns: repeat(3, 1fr); } }
@@ -1601,18 +1616,18 @@
           <a class="btn btn--solid" href="#contact" data-modal="businessos">Request access<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
         <ul class="bos-nodes" aria-label="Business OS apps">
-          <li class="bn is-live" style="--x:8;--y:10" data-tip="CRM · Live"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><polygon class="fg" points="24,26 62,26 76,40 56,54 56,74 44,74 44,54 24,40"/></svg></span><span class="bn-nm">CRM</span></li>
-          <li class="bn" style="--x:17;--y:26" data-tip="Projects · Next"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="22" y="24" width="42" height="14"/><polygon class="fg" points="32,43 78,43 78,50 71,57 32,57"/><rect class="fg" x="26" y="62" width="34" height="14"/></svg></span><span class="bn-nm">Projects</span></li>
-          <li class="bn" style="--x:8;--y:42" data-tip="Books · Planned"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><path class="fg" d="M48 32C40 27 30 25 22 27C21 27 20 28 20 29V68C20 69 21 70 22 70C30 68 40 70 48 75Z"/><path class="fg" d="M52 32C60 27 70 25 78 27C79 27 80 28 80 29V68C80 69 79 70 78 70C70 68 60 70 52 75Z"/></svg></span><span class="bn-nm">Books</span></li>
-          <li class="bn" style="--x:17;--y:58" data-tip="Inventory · Later"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="42" width="52" height="38"/><polygon class="fg" points="24,42 50,42 37,24"/><polygon class="fg" points="50,42 76,42 63,24"/></svg></span><span class="bn-nm">Inventory</span></li>
-          <li class="bn" style="--x:8;--y:74" data-tip="Analytics · Planned"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="52" width="14" height="26"/><rect class="fg" x="43" y="40" width="14" height="38"/><polygon class="fg" points="62,32 68,26 76,26 76,78 62,78"/></svg></span><span class="bn-nm">Analytics</span></li>
-          <li class="bn" style="--x:17;--y:90" data-tip="Identity · Next"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><polygon class="fg" points="28,24 72,24 72,50 50,78 28,50"/></svg></span><span class="bn-nm">Identity</span></li>
-          <li class="bn is-live" style="--x:92;--y:10" data-tip="Invoice · Live"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><polygon class="fg" points="28,20 62,20 76,34 76,80 28,80"/></svg></span><span class="bn-nm">Invoice</span></li>
-          <li class="bn" style="--x:83;--y:26" data-tip="Helpdesk · Planned"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><polygon class="fg" points="24,22 78,22 78,60 44,60 28,76 31,60 24,60"/></svg></span><span class="bn-nm">Helpdesk</span></li>
-          <li class="bn" style="--x:92;--y:42" data-tip="Knowledge Base · Planned"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><rect class="fg" x="36" y="20" width="38" height="46"/><polygon fill="rgba(0,0,0,.18)" points="22,28 68,28 68,84 22,84"/><polygon class="fg" points="26,32 54,32 66,44 66,80 26,80"/></svg></span><span class="bn-nm">Knowledge Base</span></li>
-          <li class="bn" style="--x:83;--y:58" data-tip="People · Later"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="32" r="12"/><polygon class="fg" points="28,80 33,56 43,49 57,49 67,56 72,80"/></svg></span><span class="bn-nm">People</span></li>
-          <li class="bn" style="--x:92;--y:74" data-tip="Automation · Planned"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><polygon class="fg" points="56,20 32,54 47,54 43,80 70,44 54,44 60,20"/></svg></span><span class="bn-nm">Automation</span></li>
-          <li class="bn" style="--x:83;--y:90" data-tip="Payroll · Later"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><rect class="fg" x="15" y="29" width="70" height="42" rx="9"/><circle cx="50" cy="50" r="10.5" fill="rgba(0,0,0,.24)"/><rect x="24" y="47" width="7" height="6" rx="2" fill="rgba(0,0,0,.24)"/><rect x="69" y="47" width="7" height="6" rx="2" fill="rgba(0,0,0,.24)"/></svg></span><span class="bn-nm">Payroll</span></li>
+          <li class="bn is-live" style="--x:8;--y:10" data-tip="CRM · Live"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><rect class="fg" x="19" y="27" width="62" height="46" rx="8"/><circle class="dk" cx="37" cy="44" r="7"/><path class="dk" d="M25 63c0-8 5-12 12-12s12 4 12 12z"/><rect class="dk" x="55" y="38" width="19" height="4.5" rx="2.2"/><rect class="dk" x="55" y="47" width="14" height="3.5" rx="1.7" opacity=".6"/><rect class="dk" x="55" y="55" width="17" height="3.5" rx="1.7" opacity=".6"/><circle class="fg2" cx="72" cy="27" r="7"/><circle class="fg" cx="72" cy="27" r="3.2"/></svg></span><span class="bn-nm">CRM</span></li>
+          <li class="bn" style="--x:17;--y:26" data-tip="Projects · Next"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg2" x="17" y="21" width="20" height="58" rx="5"/><rect class="fg2" x="40" y="21" width="20" height="58" rx="5"/><rect class="fg2" x="63" y="21" width="20" height="58" rx="5"/><rect class="fg" x="20" y="26" width="14" height="13" rx="3"/><rect class="fg" x="20" y="42" width="14" height="9" rx="3"/><rect class="fg" x="43" y="26" width="14" height="9" rx="3"/><rect class="fg" x="43" y="38" width="14" height="17" rx="3"/><rect class="fg" x="66" y="26" width="14" height="18" rx="3"/><rect class="fg" x="66" y="47" width="14" height="8" rx="3"/><rect class="dk" x="22.5" y="29.5" width="9" height="2.4" rx="1.2"/><rect class="dk" x="45.5" y="41.5" width="9" height="2.4" rx="1.2"/><rect class="dk" x="68.5" y="29.5" width="9" height="2.4" rx="1.2"/></svg></span><span class="bn-nm">Projects</span></li>
+          <li class="bn" style="--x:8;--y:42" data-tip="Books · Planned"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><path class="fg" d="M50 29C41 24 30 23 19 26v46c11-3 22-2 31 4z"/><path class="fg" d="M50 29c9-5 20-6 31-3v46c-11-3-22-2-31 4z"/><path class="dk" opacity=".5" d="M49 29h2v47h-2z"/><rect class="dk" x="25" y="35" width="19" height="3" rx="1.5" opacity=".7"/><rect class="dk" x="25" y="43" width="19" height="3" rx="1.5" opacity=".7"/><rect class="dk" x="25" y="51" width="13" height="3" rx="1.5" opacity=".7"/><circle class="dk" cx="68" cy="62" r="13"/><circle class="fg" cx="68" cy="62" r="10.5"/><circle class="dk" cx="68" cy="62" r="6" opacity=".6"/><rect class="fg" x="66.5" y="58" width="3" height="8" rx="1.5"/></svg></span><span class="bn-nm">Books</span></li>
+          <li class="bn" style="--x:17;--y:58" data-tip="Inventory · Later"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><path class="fg" d="M50 18l30 14-30 14-30-14z"/><path class="fg" opacity=".82" d="M20 36l28 13v32L20 68z"/><path class="fg" opacity=".58" d="M80 36L52 49v32l28-13z"/><path class="dk" opacity=".5" d="M38 23.500l30 14-7 3.200-30-14z"/><rect class="dk" x="25" y="56" width="12" height="3" rx="1.5" opacity=".7" transform="skewY(25) translate(0 -14)"/><path class="dk" opacity=".75" d="M60 62l14-6.500v10L60 72z"/><path class="fg" d="M63 63.500l8-3.800v1.600l-8 3.800z"/></svg></span><span class="bn-nm">Inventory</span></li>
+          <li class="bn" style="--x:8;--y:74" data-tip="Analytics · Planned"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg2" x="20" y="54" width="12" height="25" rx="3"/><rect class="fg2" x="37" y="44" width="12" height="35" rx="3"/><rect class="fg2" x="54" y="50" width="12" height="29" rx="3"/><rect class="fg" x="71" y="36" width="12" height="43" rx="3"/><path class="fgs" stroke-width="3.2" stroke-linejoin="round" d="M22 44l17-12 17 7 20-20"/><circle class="fg" cx="22" cy="44" r="3.8"/><circle class="fg" cx="39" cy="32" r="3.8"/><circle class="fg" cx="56" cy="39" r="3.8"/><circle class="fg" cx="76" cy="19" r="4.6"/><rect class="fg2" x="16" y="82" width="70" height="2.800" rx="1.400"/></svg></span><span class="bn-nm">Analytics</span></li>
+          <li class="bn" style="--x:17;--y:90" data-tip="Identity · Next"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><path class="fg" d="M50 15l28 10v24c0 17-11 28-28 36-17-8-28-19-28-36V25z"/><path class="dk" opacity=".35" d="M50 22l21 7.500V49c0 13-8 22-21 29-13-7-21-16-21-29V29.500z"/><circle class="fg" cx="50" cy="43" r="8"/><path class="fg" d="M46 49h8l3 17H43z"/></svg></span><span class="bn-nm">Identity</span></li>
+          <li class="bn is-live" style="--x:92;--y:10" data-tip="Invoice · Live"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><path class="fg" d="M28 17h30l18 18v47H28z"/><path class="dk" opacity=".55" d="M58 17v18h18z"/><rect class="dk" x="35" y="29" width="14" height="4" rx="2"/><rect class="dk" x="35" y="42" width="30" height="3" rx="1.5" opacity=".7"/><rect class="dk" x="35" y="50" width="30" height="3" rx="1.5" opacity=".7"/><rect class="dk" x="35" y="58" width="22" height="3" rx="1.5" opacity=".7"/><rect class="dk" x="35" y="68" width="30" height="8" rx="3"/><rect class="fg" x="40" y="70.5" width="12" height="3" rx="1.5"/></svg></span><span class="bn-nm">Invoice</span></li>
+          <li class="bn" style="--x:83;--y:26" data-tip="Helpdesk · Planned"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><path class="fgs" stroke-width="6" d="M27 56V49a23 23 0 0 1 46 0v7"/><rect class="fg" x="19" y="51" width="12" height="21" rx="6"/><rect class="fg" x="69" y="51" width="12" height="21" rx="6"/><path class="fgs" stroke-width="4" d="M75 69c0 10-8 14-21 14"/><rect class="fg" x="44" y="78" width="14" height="9" rx="4.5"/><circle class="fg2" cx="50" cy="48" r="9"/><path class="fgs" stroke-width="3" d="M46 48l3 3 6-6"/></svg></span><span class="bn-nm">Helpdesk</span></li>
+          <li class="bn" style="--x:92;--y:42" data-tip="Knowledge Base · Planned"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><rect class="fg2" x="30" y="17" width="46" height="60" rx="6"/><rect class="fg" x="22" y="23" width="46" height="60" rx="6"/><path class="dk" d="M56 23v20l5-4 5 4V23z"/><rect class="dk" x="29" y="31" width="20" height="5" rx="2.5"/><rect class="dk" x="29" y="42" width="22" height="3" rx="1.5" opacity=".6"/><rect class="dk" x="29" y="50" width="30" height="3" rx="1.5" opacity=".6"/><circle class="dkl" cx="57" cy="64" r="10"/><circle class="fgs" stroke-width="4.5" cx="57" cy="64" r="9"/><path class="dkl" d="M64 71l10 10"/><path class="fgs" stroke-width="4.5" d="M64 71l10 10"/></svg></span><span class="bn-nm">Knowledge Base</span></li>
+          <li class="bn" style="--x:83;--y:58" data-tip="People · Later"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg2" cx="24" cy="40" r="8"/><path class="fg2" d="M8 72c0-12 7-18 16-18s16 6 16 18z"/><circle class="fg2" cx="76" cy="40" r="8"/><path class="fg2" d="M60 72c0-12 7-18 16-18s16 6 16 18z"/><circle class="fg" cx="50" cy="35" r="12"/><path class="fg" d="M28 80c0-17 9-26 22-26s22 9 22 26z"/><path class="dk" opacity=".5" d="M44 58l6 8 6-8z"/></svg></span><span class="bn-nm">People</span></li>
+          <li class="bn" style="--x:92;--y:74" data-tip="Automation · Planned"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><path class="fgs" stroke-width="3.4" d="M29 29l13 13M29 71l13-13M71 50H62"/><circle class="fg" cx="24" cy="24" r="8"/><circle class="dk" cx="24" cy="24" r="3.200"/><circle class="fg" cx="24" cy="76" r="8"/><circle class="dk" cx="24" cy="76" r="3.200"/><circle class="fg" cx="80" cy="50" r="8"/><circle class="dk" cx="80" cy="50" r="3.200"/><circle class="fg" cx="50" cy="50" r="17"/><path class="dk" d="M54 36L42 53h8l-3 12 13-18h-8z"/></svg></span><span class="bn-nm">Automation</span></li>
+          <li class="bn" style="--x:83;--y:90" data-tip="Payroll · Later"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><rect class="fg" x="12" y="28" width="64" height="40" rx="8"/><circle class="dk" cx="44" cy="48" r="11"/><circle class="fg" cx="44" cy="48" r="8"/><rect class="dk" x="42.500" y="42" width="3" height="12" rx="1.500"/><circle class="dk" cx="21" cy="37" r="2.600"/><circle class="dk" cx="67" cy="59" r="2.600"/><circle class="dk" cx="72" cy="66" r="15"/><circle class="fg" cx="72" cy="66" r="12.500"/><circle class="dk" cx="72" cy="66" r="7.500" opacity=".35"/><rect class="dk" x="70.500" y="60.500" width="3" height="11" rx="1.500"/></svg></span><span class="bn-nm">Payroll</span></li>
         </ul>
       </div>
       <ul class="bos-legend">
