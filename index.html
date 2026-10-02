@@ -194,7 +194,7 @@
      masks give a smooth ramp (a single blur would show a hard lower edge). */
   .nav-veil {
     position: fixed; top: 0; left: 0; right: 0; z-index: 49; pointer-events: none;
-    height: calc(env(safe-area-inset-top, 0px) + 118px);
+    height: calc(env(safe-area-inset-top, 0px) + 100px);
   }
   .nav-veil i { position: absolute; inset: 0; }
   .nav-veil i:nth-child(1) {
@@ -225,72 +225,25 @@
     .nav-veil::before { background: linear-gradient(to bottom, var(--frame) 0%, color-mix(in srgb, var(--frame) 85%, transparent) 45%, transparent 100%); }
   }
 
-  /* ---------- Nav (wide frosted pill) ---------- */
+  /* ---------- Nav (plain bar, sits on the frosted veil) ---------- */
   .nav {
-    position: fixed;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    width: auto;
-    max-width: calc(100vw - 24px);
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
-    padding: .55rem .6rem .55rem 1.2rem;
-    border: 1px solid color-mix(in srgb, var(--frame) 55%, transparent);
-    border-radius: 46px;
-    background: color-mix(in srgb, var(--frame) 56%, transparent);
-    backdrop-filter: blur(42px) saturate(200%);
-    -webkit-backdrop-filter: blur(42px) saturate(200%);
-    box-shadow:
-      0 12px 36px -10px rgba(0, 0, 0, .16),
-      0 3px 12px rgba(0, 0, 0, .06),
-      inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--text) 4%, transparent);
-    transition: gap .32s ease, padding .32s ease, border-radius .32s ease, box-shadow .25s ease;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+    /* line the brand and links up with the page frame (max 1280px + its padding) */
+    padding: calc(env(safe-area-inset-top, 0px) + 14px)
+             max(clamp(1.15rem, 5vw, 3.25rem), calc(50% - 640px + clamp(1.15rem, 5vw, 3.25rem)))
+             12px;
+    background: none; border: 0; box-shadow: none;
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .nav { background: color-mix(in srgb, var(--frame) 96%, transparent); }
     .nav-links { background: color-mix(in srgb, var(--frame) 97%, transparent) !important; }
-  }
-  .nav.scrolled {
-    box-shadow:
-      0 14px 38px -10px rgba(0, 0, 0, .18), 0 3px 12px rgba(0, 0, 0, .07),
-      inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, var(--text) 4%, transparent);
-  }
-
-  /* Desktop: collapse to a compact pill once the page is scrolled */
-  @media (min-width: 821px) {
-    .nav.scrolled {
-      gap: .5rem;
-      padding: .55rem .55rem .55rem 1.1rem;
-      border-radius: 999px;
-    }
-    .nav.scrolled .nav-links {
-      max-width: 0; opacity: 0; overflow: hidden; pointer-events: none;
-    }
-    .nav.scrolled .nav-toggle { display: inline-flex; max-width: 42px; opacity: 1; }
-    .nav.scrolled:hover .nav-links,
-    .nav.scrolled:focus-within .nav-links,
-    .nav.scrolled.open .nav-links,
-    .nav.scrolled.show-menu .nav-links {
-      max-width: 780px; opacity: 1; pointer-events: auto;
-    }
-    .nav.scrolled:hover .nav-toggle,
-    .nav.scrolled:focus-within .nav-toggle,
-    .nav.scrolled.open .nav-toggle,
-    .nav.scrolled.show-menu .nav-toggle {
-      max-width: 0; opacity: 0; margin: 0; overflow: hidden; pointer-events: none;
-    }
   }
 
   .brand { display: flex; align-items: center; gap: .55rem; font-weight: 700; font-size: 1.06rem; letter-spacing: -.02em; flex: none; color: var(--text); }
   .brand svg { width: 23px; height: 23px; display: block; }
 
   .nav-links {
-    display: flex; align-items: center; gap: .15rem;
+    display: flex; align-items: center; gap: .15rem; margin-left: auto;
     max-width: 780px; opacity: 1; overflow: hidden;
     transition: max-width .44s cubic-bezier(.2,.7,.2,1), opacity .24s ease;
   }
@@ -319,13 +272,12 @@
 
   .nav-contact.btn {
     flex: none; margin-left: .5rem;
-    background: var(--frame); color: var(--text);
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .07);
-    font-weight: 700; font-size: .92rem;
-    padding: .62rem 1.35rem; border-radius: 999px;
+    background: var(--text); color: var(--frame);
+    border: 0; box-shadow: none;
+    font-weight: 600; font-size: .92rem;
+    padding: .6rem 1.25rem; border-radius: 999px;
   }
-  .nav-contact.btn:hover { background: var(--sunken); opacity: 1; }
+  .nav-contact.btn:hover { opacity: .86; }
 
   .nav-toggle {
     display: none;
@@ -1089,22 +1041,14 @@
 
   /* Nav collapses to a menu when the link row no longer fits */
   @media (max-width: 820px) {
-    .nav {
-      top: 16px;
-      width: auto; max-width: calc(100vw - 2rem);
-      gap: 1.4rem; padding: .68rem 1rem .68rem 1.45rem; border-radius: 999px;
-      transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
-    }
+    .nav { gap: 1rem; padding: calc(env(safe-area-inset-top, 0px) + 12px) 1.15rem 10px; }
     .nav .brand { font-size: 1.1rem; transition: opacity .2s ease; }
     .nav .brand svg { width: 23px; height: 23px; }
     .nav-toggle { display: inline-flex; margin-left: 0; width: 40px; height: 34px; gap: 4.5px; }
     .nav-toggle i { width: 6px; height: 6px; }
 
-    /* menu open: the pill steps aside and the card takes over */
-    .nav.open {
-      background: transparent; border-color: transparent; box-shadow: none;
-      backdrop-filter: none; -webkit-backdrop-filter: none; pointer-events: none;
-    }
+    /* menu open: the card takes over */
+    .nav.open { pointer-events: none; }
     .nav.open > .brand, .nav.open > .nav-toggle { opacity: 0; pointer-events: none; }
 
     .nav-links {
@@ -1175,7 +1119,7 @@
     .nav-contact.btn {
       width: 100%; justify-content: center; margin: .7rem 0 0;
       padding: .95rem 1rem; font-size: 1rem; border-radius: 999px;
-      background: var(--frame); border: 1px solid var(--border); box-shadow: none;
+      background: var(--frame); color: var(--text); border: 1px solid var(--border); box-shadow: none;
     }
     .hero { padding-top: 6.25rem; }
   }
@@ -1236,7 +1180,6 @@
   /* Portrait phone */
   @media (max-width: 560px) {
     .frame { padding: 12px 1.15rem 3rem; }
-    .nav { top: 14px; }
     .nav-links { top: 14px; }
     .hero { padding-top: 5.25rem; }
     h1 { font-size: clamp(1.95rem, 8.5vw, 2.45rem); }
@@ -1253,7 +1196,6 @@
   /* Small phone */
   @media (max-width: 380px) {
     .frame { padding-left: .9rem; padding-right: .9rem; }
-    .nav { max-width: calc(100vw - 18px); }
     .nav-links { width: calc(100vw - 18px); }
     h1 { font-size: 1.8rem; }
   }
