@@ -192,6 +192,7 @@
      and fades to nothing, so content scrolling up dissolves into blur under
      the header instead of being cut off. Three blur layers with staggered
      masks give a smooth ramp (a single blur would show a hard lower edge). */
+  html.menu-open { overflow: hidden; }
   .nav-veil {
     position: fixed; top: 0; left: 0; right: 0; z-index: 49; pointer-events: none;
     height: calc(env(safe-area-inset-top, 0px) + 100px);
@@ -280,23 +281,37 @@
   .nav-contact.btn:hover { opacity: .86; }
 
   .nav-toggle {
-    display: none;
-    align-items: center; justify-content: center; gap: 4px;
-    width: 42px; height: 36px; flex: none;
-    max-width: 42px; opacity: 1;
-    border: 0; border-radius: 999px; background: transparent; cursor: pointer;
-    transition: max-width .3s ease, opacity .18s ease, margin .3s ease;
+    display: none; position: relative; z-index: 3; flex: none;
+    align-items: center; gap: .75rem; height: 42px; padding: 0 .3rem 0 1.05rem;
+    border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+    background: color-mix(in srgb, var(--frame) 70%, transparent);
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color .3s ease, background .3s ease;
   }
-  .nav-toggle i { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
-  .js .nav-toggle i { animation: navDots 1.4s ease-in-out infinite both; }
-  .js .nav-toggle i:nth-child(1) { animation-delay: -.32s; }
-  .js .nav-toggle i:nth-child(2) { animation-delay: -.16s; }
-  .js .nav-toggle:hover i { animation-duration: .9s; }
-  @keyframes navDots {
-    0%, 75%, 100% { transform: scale(.5); opacity: .3; }
-    35% { transform: scale(1); opacity: 1; }
+  .nt-label {
+    display: block; height: 1.1em; line-height: 1.1; overflow: hidden;
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: .72rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text);
   }
-  .nav-toggle:hover { background: var(--sunken); }
+  .nt-label > span { display: block; height: 1.1em; transition: transform .55s cubic-bezier(.7, 0, .2, 1); }
+  .nav.open .nt-label > span { transform: translateY(-100%); }
+  .nt-icon { position: relative; width: 34px; height: 34px; border-radius: 50%; background: var(--text); flex: none; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
+  .nt-icon b {
+    position: absolute; left: 50%; top: 50%; height: 1.8px; border-radius: 2px; background: var(--frame);
+    transition: transform .6s cubic-bezier(.7, 0, .2, 1), width .45s cubic-bezier(.7, 0, .2, 1);
+  }
+  .nt-icon b:nth-child(1) { width: 14px; transform: translate(-50%, calc(-50% - 3.2px)) rotate(0deg); }
+  .nt-icon b:nth-child(2) { width: 8px; transform: translate(calc(-50% + 3px), calc(-50% + 3.2px)) rotate(0deg); }
+  @media (hover: hover) { .nav-toggle:hover .nt-icon b:nth-child(2) { width: 14px; transform: translate(-50%, calc(-50% + 3.2px)) rotate(0deg); } }
+  .nav.open .nt-icon { transform: rotate(90deg); }
+  .nav.open .nt-icon b:nth-child(1), .nav.open .nt-icon b:nth-child(2) { width: 15px; }
+  .nav.open .nt-icon b:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
+  .nav.open .nt-icon b:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
+
+  .mi, .ma { display: none; }
+  .ml, .mt { display: inline-flex; align-items: center; gap: .35rem; }
+  .menu-foot { display: contents; }
+  .menu-mail { display: none; }
 
   /* ---------- Hero ---------- */
   .hero { position: relative; text-align: left; padding: clamp(5.5rem, 9vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem); overflow: clip; }
@@ -1164,82 +1179,81 @@
     }
     .nav .brand { font-size: 1.1rem; transition: opacity .2s ease; }
     .nav .brand svg { width: 23px; height: 23px; }
-    .nav-toggle { display: inline-flex; margin-left: 0; width: 40px; height: 34px; gap: 4.5px; }
-    .nav-toggle i { width: 6px; height: 6px; }
+    .nav-toggle { display: inline-flex; margin-left: 0; }
+    .nav > .brand { position: relative; z-index: 3; }
 
-    /* menu open: the card takes over */
-    .nav.open { pointer-events: none; }
-    .nav.open > .brand, .nav.open > .nav-toggle { opacity: 0; pointer-events: none; }
-
+    /* full-screen menu: a circle grows from the button, links rise out of masks one by one */
     .nav-links {
-      display: flex; position: fixed;
-      top: 24px; left: 50%;
-      transform: translateX(-50%) translateY(-8px) scale(.97);
-      transform-origin: top center;
-      width: min(340px, calc(100vw - 2.5rem)); max-width: none;
-      max-height: calc(100svh - 2.5rem); overflow-y: auto; overscroll-behavior: contain;
-      -webkit-overflow-scrolling: touch;
-      opacity: 0; visibility: hidden; pointer-events: none;
+      display: flex; position: fixed; inset: 0; z-index: 1;
+      width: auto; max-width: none; margin: 0; overflow-y: auto; overscroll-behavior: contain;
       flex-direction: column; align-items: stretch; gap: 0;
-      margin: 0; padding: 1rem 1.1rem 1.2rem;
-      background: color-mix(in srgb, var(--frame) 72%, transparent);
-      backdrop-filter: blur(30px) saturate(185%);
-      -webkit-backdrop-filter: blur(30px) saturate(185%);
-      border: 1px solid color-mix(in srgb, var(--frame) 60%, transparent);
-      border-radius: 30px;
-      box-shadow:
-        0 28px 70px -18px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .12),
-        inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
-      /* own compositing layer so iOS repaints the scrolled content over the blur */
-      will-change: transform;
-      transition: opacity .22s ease, transform .26s cubic-bezier(.2,.7,.2,1), visibility .26s;
+      padding: calc(env(safe-area-inset-top, 0px) + 6.4rem) calc(clamp(1.15rem, 5vw, 3.25rem) + .45rem) calc(env(safe-area-inset-bottom, 0px) + 1.6rem);
+      background: var(--frame);
+      clip-path: circle(0px at var(--ox, calc(100% - 3.5rem)) var(--oy, 2.6rem));
+      visibility: hidden; pointer-events: none;
+      transition: clip-path .75s cubic-bezier(.7, 0, .2, 1), visibility 0s linear .75s;
     }
     .nav.open .nav-links {
-      opacity: 1; visibility: visible; pointer-events: auto;
-      transform: translateX(-50%) translateY(0) scale(1) translateZ(0);
+      clip-path: circle(150vmax at var(--ox, calc(100% - 3.5rem)) var(--oy, 2.6rem));
+      visibility: visible; pointer-events: auto; transition-delay: 0s;
     }
+    .nav-links::before {
+      content: ""; position: absolute; right: -30vmax; bottom: -30vmax; width: 70vmax; aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--text) 7%, transparent), transparent);
+      pointer-events: none; z-index: -1;
+    }
+    .menu-head { display: none; }
 
-    .menu-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .1rem .3rem .7rem;
+    .nav-links a {
+      position: relative; width: 100%; padding: .55rem 0 .6rem; border-radius: 0; gap: 1rem;
+      display: flex; align-items: flex-start; justify-content: flex-start; white-space: nowrap;
+      font-size: clamp(2.5rem, 12vw, 3.6rem); font-weight: 600; letter-spacing: -.045em; line-height: 1.05; color: var(--text);
     }
-    .menu-head .brand {
-      display: flex; align-items: center; gap: .5rem;
-      font-weight: 700; font-size: 1.05rem; letter-spacing: -.02em; color: var(--text);
+    .nav-links a:hover, .nav-links a:focus-visible { background: transparent; color: var(--text); }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--hairline);
+      transform: scaleX(0); transform-origin: left; transition: transform .6s cubic-bezier(.7, 0, .2, 1);
     }
-    .menu-head .brand svg { width: 21px; height: 21px; display: block; }
-    .menu-close {
-      border: 0; background: none; cursor: pointer; color: var(--text);
-      width: 34px; height: 34px; margin-right: -.35rem;
-      display: grid; place-items: center; border-radius: 999px;
-      transition: background .16s ease;
+    .nav.open .nav-links a::after { transform: scaleX(1); transition-delay: calc(.35s + var(--i, 0) * .06s); }
+    .mi {
+      display: block; width: 1.9rem; flex: none; margin-top: .85rem;
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      font-size: .68rem; font-weight: 500; letter-spacing: .14em; line-height: 1; color: var(--faint); font-style: normal;
     }
-    .menu-close:hover { background: var(--sunken); }
-    .menu-close svg { width: 16px; height: 16px; display: block; }
+    .ml { display: block; overflow: hidden; padding: .06em 0 .1em; }
+    .mt { display: inline-flex; align-items: flex-start; gap: .35rem; transform: translateY(115%); transition: transform .5s cubic-bezier(.7, 0, .2, 1); }
+    .nav.open .mt { transform: none; transition: transform .85s cubic-bezier(.2, .8, .2, 1) calc(.3s + var(--i, 0) * .07s); }
+    .nav-links a .badge { font-size: .55rem; margin: .5rem 0 0 .1rem; letter-spacing: .08em; }
+    .ma {
+      display: block; width: 1.5rem; height: 1.5rem; margin: .95rem 0 0 auto; color: var(--text); flex: none;
+      opacity: 0; transform: translateX(-10px); transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;
+    }
+    .nav.open .ma { opacity: .35; transform: none; transition-delay: calc(.55s + var(--i, 0) * .07s); }
+    @media (hover: hover) { .nav-links a:hover .ma { opacity: 1; transform: translateX(4px); transition-delay: 0s; } }
 
-    .nav-links a, .menu-theme {
-      font-size: 1.4rem; font-weight: 500; letter-spacing: -.02em;
-      padding: .58rem .3rem; border-radius: 0;
-      width: 100%; justify-content: flex-start; white-space: normal;
-      color: var(--text);
+    .menu-foot {
+      display: flex; flex-direction: column; gap: .8rem; margin-top: auto; padding-top: 2rem;
+      opacity: 0; transform: translateY(18px); transition: opacity .3s ease, transform .3s ease;
     }
-    .nav-links a:hover, .nav-links a:focus-visible { background: transparent; color: var(--muted); }
-    .nav-links a .badge { font-size: .5rem; margin-left: .1rem; }
-
+    .nav.open .menu-foot { opacity: 1; transform: none; transition: opacity .6s ease .6s, transform .7s cubic-bezier(.2, .8, .2, 1) .6s; }
     .menu-theme {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-top: .4rem; padding-top: .85rem;
-      border-top: 1px solid var(--hairline);
-      font-size: .95rem; font-weight: 600; color: var(--muted);
+      display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0; padding: .9rem 0 0;
+      border-top: 1px solid var(--hairline); border-radius: 0;
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      font-size: .74rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
     }
     .menu-theme:hover { background: transparent; color: var(--text); }
     .menu-theme .tl { display: inline; }
-    .menu-theme .tw { font-size: 1.05rem; }
-
+    .menu-theme .tw { font-size: 1.2rem; }
     .nav-contact.btn {
-      width: 100%; justify-content: center; margin: .7rem 0 0;
-      padding: .95rem 1rem; font-size: 1rem; border-radius: 999px;
-      background: var(--frame); color: var(--text); border: 1px solid var(--border); box-shadow: none;
+      width: 100%; justify-content: center; margin: 0; padding: 1.05rem 1rem; font-size: 1rem; border-radius: 999px;
+      background: var(--text); color: var(--frame); border: 0; box-shadow: none; display: inline-flex;
+      font-weight: 600; letter-spacing: -.01em;
+    }
+    .nav-contact.btn::after { display: none; }
+    .menu-mail {
+      display: block; text-align: center; color: var(--faint);
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .72rem; letter-spacing: .08em;
     }
     .hero { padding-top: 6.25rem; }
   }
@@ -1301,7 +1315,6 @@
   @media (max-width: 560px) {
     .frame { padding: 12px 1.15rem 3rem; }
     .nav { padding-left: calc(1.15rem + .45rem); padding-right: calc(1.15rem + .45rem); }
-    .nav-links { top: 14px; }
     .hero { padding-top: 5.25rem; }
     h1 { font-size: clamp(2.2rem, 9.6vw, 2.75rem); }
     .hero-inner > p { font-size: 1rem; }
@@ -1317,7 +1330,6 @@
   @media (max-width: 380px) {
     .frame { padding-left: .9rem; padding-right: .9rem; }
     .nav { padding-left: calc(.9rem + .45rem); padding-right: calc(.9rem + .45rem); }
-    .nav-links { width: calc(100vw - 18px); }
     h1 { font-size: 2.05rem; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -1328,7 +1340,6 @@
     .stack-track { transform: none !important; }
     .js .vc-in, .js .vc-out { opacity: 1 !important; transform: none !important; }
     .js .vc-typing { display: none !important; }
-    .js .nav-toggle i { transform: none !important; opacity: 1 !important; }
   }
 
   /* ---------- Phone hero (reference: mono pill, big two-tone headline,
@@ -1493,24 +1504,23 @@
   </a>
   <div class="nav-links" id="navmenu">
     <div class="menu-head">
-      <span class="brand" aria-hidden="true">
-        <svg viewBox="26 27.4 48 45.1" class="logomark"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>
-        <span>Dotnapps</span>
-      </span>
-      <button class="menu-close" type="button" aria-label="Close menu">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-      </button>
+      <span class="brand" aria-hidden="true"><span>Dotnapps</span></span>
+      <button class="menu-close" type="button" aria-label="Close menu"></button>
     </div>
-    <a href="#work">Work</a>
-    <a href="#products">Products<span class="badge">NEW</span></a>
-    <a href="#services">Services</a>
-    <a href="#process">Process</a>
-    <a href="#faq">FAQ</a>
-    <button class="menu-theme" type="button" data-theme-toggle aria-label="Switch colour theme"><span class="tl">Theme</span> <span class="tw" aria-hidden="true">&#9683;</span></button>
-    <a class="btn btn--solid nav-contact" href="#contact" data-modal="contact">Contact</a>
+    <a href="#work" style="--i:0"><i class="mi" aria-hidden="true">01</i><span class="ml"><span class="mt">Work</span></span><svg class="ma" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#products" style="--i:1"><i class="mi" aria-hidden="true">02</i><span class="ml"><span class="mt">Products<span class="badge">NEW</span></span></span><svg class="ma" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#services" style="--i:2"><i class="mi" aria-hidden="true">03</i><span class="ml"><span class="mt">Services</span></span><svg class="ma" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#process" style="--i:3"><i class="mi" aria-hidden="true">04</i><span class="ml"><span class="mt">Process</span></span><svg class="ma" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#faq" style="--i:4"><i class="mi" aria-hidden="true">05</i><span class="ml"><span class="mt">FAQ</span></span><svg class="ma" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <div class="menu-foot">
+      <button class="menu-theme" type="button" data-theme-toggle aria-label="Switch colour theme"><span class="tl">Theme</span> <span class="tw" aria-hidden="true">&#9683;</span></button>
+      <a class="btn btn--solid nav-contact" href="#contact" data-modal="contact">Contact</a>
+      <span class="menu-mail">hello@dotnapps.com</span>
+    </div>
   </div>
   <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navmenu" aria-label="Menu">
-    <i></i><i></i><i></i>
+    <span class="nt-label" aria-hidden="true"><span>Menu</span><span>Close</span></span>
+    <span class="nt-icon" aria-hidden="true"><b></b><b></b></span>
   </button>
 </nav>
 
@@ -2254,13 +2264,19 @@
     /* mobile menu */
     var navToggle = document.querySelector(".nav-toggle");
     if (navToggle) {
+      var root = document.documentElement;
       var closeMenu = function () {
         nav.classList.remove("open");
+        root.classList.remove("menu-open");
         navToggle.setAttribute("aria-expanded", "false");
       };
       navToggle.addEventListener("click", function (e) {
         e.stopPropagation();
+        var r = navToggle.getBoundingClientRect();
+        nav.style.setProperty("--ox", (r.left + r.width / 2) + "px");
+        nav.style.setProperty("--oy", (r.top + r.height / 2) + "px");
         var open = nav.classList.toggle("open");
+        root.classList.toggle("menu-open", open);
         navToggle.setAttribute("aria-expanded", open ? "true" : "false");
       });
       nav.querySelectorAll(".nav-links a").forEach(function (a) {
@@ -2271,14 +2287,10 @@
         e.stopPropagation();
         closeMenu();
       });
-      document.addEventListener("click", function (e) {
-        if (nav.classList.contains("open") && !nav.contains(e.target)) closeMenu();
-      });
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && nav.classList.contains("open")) closeMenu();
       });
-      /* desktop: a click-opened pill re-collapses when the pointer leaves it */
-      nav.addEventListener("mouseleave", function () {
+      window.addEventListener("resize", function () {
         if (nav.classList.contains("open") && window.matchMedia("(min-width: 821px)").matches) closeMenu();
       });
     }
