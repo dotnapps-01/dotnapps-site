@@ -1672,6 +1672,41 @@
     .hero-strip-label { font-size: .78rem; margin-top: clamp(2.25rem, 4vw, 3.25rem); }
     .stack-track span { font-size: 1.08rem; padding: 0 2rem; }
   }
+
+  /* ---------- Desktop hero = the phone hero, scaled up: left-aligned, mono pill, three-line two-tone headline, pill buttons with arrows, mono caption ---------- */
+  @media (min-width: 621px) {
+    .hero { text-align: left; }
+    .hero .hero-inner { max-width: none; margin: 0; }
+    .hero .hero-tag {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      text-transform: uppercase; letter-spacing: .17em; font-size: .72rem; font-weight: 500;
+      padding: .62rem 1.15rem; margin-bottom: 1.9rem; color: var(--text);
+    }
+    .hero .hero-tag .dot { display: none; }
+    .hero .hero-inner > h1 { max-width: none; margin: 0; line-height: 1.02; letter-spacing: -.045em; }
+    .hero h1 em { display: block; color: inherit; font-weight: inherit; }
+    .hero h1 .h1-end { display: block; color: var(--muted); }
+    .hero .hero-inner > p { margin: 1.3rem 0 0; max-width: 38rem; line-height: 1.6; }
+    .hero .hero-actions { justify-content: flex-start; flex-wrap: nowrap; gap: .7rem; margin-top: 1.9rem; }
+    .hero .hero-actions .btn { flex: 0 1 auto; border-radius: 999px; gap: .5rem; white-space: nowrap; }
+    .hero .hero-actions .arr { display: block; width: 16px; height: 16px; flex: none; }
+    .hero .hero-caps {
+      justify-content: flex-start; margin: 1.9rem 0 0; max-width: 46rem; gap: 0;
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      text-transform: uppercase; letter-spacing: .15em; font-size: .72rem; line-height: 2;
+    }
+    .hero .hero-caps li {
+      background: none; border: 0; box-shadow: none; padding: 0; border-radius: 0;
+      font: inherit; letter-spacing: inherit; color: var(--muted); -webkit-backdrop-filter: none; backdrop-filter: none;
+    }
+    .hero .hero-caps li:not(:last-child)::after { content: "\00b7"; margin: 0 .8em; color: var(--faint); }
+    .hero .hero-strip-label {
+      text-align: left; margin-top: clamp(2.5rem, 4.5vw, 3.75rem);
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; letter-spacing: .14em; font-weight: 500;
+    }
+    /* the ripple sits behind the empty right half */
+    .hero-rings i { left: 72%; width: clamp(560px, 62%, 980px); }
+  }
 </style>
 </head>
 <body>
