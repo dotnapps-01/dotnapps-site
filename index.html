@@ -3239,44 +3239,37 @@
       if (pa > 2900) { pop = null; lastNodePop = now; }
       else {
         var pt = popPoint();
-        if (pt) {                                        /* a milestone flag planted on the point: the pole rises, the flag unfurls and ripples */
-          var al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400, poleP = Math.min(1, pa / 260), uf = pa < 260 ? 0 : Math.min(1, (pa - 260) / 460);
-          uf = uf === 0 ? 0 : 1 + 2.1 * Math.pow(uf - 1, 3) + 1.1 * Math.pow(uf - 1, 2);
-          poleP = 1 - Math.pow(1 - poleP, 3);
-          mono(12.5); var tw2 = ctx.measureText(pop.text).width, fw = tw2 + 50, fh = 30, ph = 56 * poleP, fy = pt.y - ph;
-          var left = pt.x + 1 + fw > W - 6, fx = left ? pt.x - 1 - fw : pt.x + 1, dir = left ? -1 : 1;
+        if (pt) {                                        /* a drafting-style annotation: leader line draws out of the point, the label types itself in, mono caps */
+          var al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400, tg2 = pop.target;
+          var main = pop.text.toUpperCase(), tag = tg2.s != null ? "STAGE 0" + (tg2.s + 1) + " / 05" : "SERVICE LINK";
+          try { ctx.letterSpacing = "1.4px"; } catch (e1) {}
+          mono(12.5); var mw = ctx.measureText(main).width; mono(9.5, 500); var tgw = ctx.measureText(tag).width;
+          var L = Math.max(mw, tgw) + 18, sx = pt.x + 34 + L > W - 6 ? -1 : 1, sy = pt.y < 70 ? -1 : 1;
+          var ex = pt.x + sx * 30, ey = pt.y - sy * 30, endx = ex + sx * L;
+          var d1 = Math.min(1, pa / 190), d2 = pa < 190 ? 0 : Math.min(1, (pa - 190) / 260);
+          d1 = 1 - Math.pow(1 - d1, 2); d2 = 1 - Math.pow(1 - d2, 3);
           ctx.globalAlpha = Math.max(0, al);
-          ctx.strokeStyle = "rgb(" + ink + ")"; ctx.lineWidth = 1.6; ctx.lineCap = "round";
-          ctx.beginPath(); ctx.moveTo(pt.x, pt.y); ctx.lineTo(pt.x, fy - 3); ctx.stroke();
+          /* ping + point */
           ctx.strokeStyle = "rgba(" + ink + "," + (0.45 * (1 - (pa % 900) / 900)) + ")"; ctx.lineWidth = 1.2;
           ctx.beginPath(); ctx.arc(pt.x, pt.y, 5 + (pa % 900) / 900 * 16, 0, 6.2832); ctx.stroke();
           ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.8, 0, 6.2832); ctx.fill();
-          if (uf > 0.02) {
-            var vis = Math.max(0.02, Math.min(1.08, uf)), cw2 = fw * vis, ph2 = now / 170, i2;
-            ctx.save();
-            ctx.beginPath();                              /* wavy flag with a swallow-tail end */
-            var steps = 14, amp = 2.2;
-            for (i2 = 0; i2 <= steps; i2++) {
-              var fxp = i2 / steps * cw2, wy = Math.sin(ph2 + i2 * 0.55) * amp * (i2 / steps);
-              var X = left ? pt.x - 1 - fxp : pt.x + 1 + fxp;
-              if (i2 === 0) ctx.moveTo(X, fy - 3 + wy); else ctx.lineTo(X, fy - 3 + wy);
-            }
-            var tipX = left ? pt.x - 1 - cw2 + 9 : pt.x + 1 + cw2 - 9, endW = Math.sin(ph2 + steps * 0.55) * amp;
-            ctx.lineTo(left ? pt.x - 1 - cw2 : pt.x + 1 + cw2, fy - 3 + fh + endW);
-            ctx.lineTo(tipX, fy - 3 + fh / 2 + endW);
-            ctx.lineTo(left ? pt.x - 1 - cw2 : pt.x + 1 + cw2, fy - 3 + endW);
-            for (i2 = steps; i2 >= 0; i2--) {
-              var fxq = i2 / steps * cw2, wy2 = Math.sin(ph2 + i2 * 0.55) * amp * (i2 / steps);
-              var X2 = left ? pt.x - 1 - fxq : pt.x + 1 + fxq;
-              ctx.lineTo(X2, fy - 3 + fh + wy2);
-            }
-            ctx.closePath(); ctx.fillStyle = "rgb(" + ink + ")"; ctx.fill(); ctx.clip();
-            var ty = fy - 3 + fh / 2 + 0.5, bx = fx;
-            ctx.fillStyle = "#34C759"; ctx.beginPath(); ctx.arc(bx + 17, ty - 0.5, 7, 0, 6.2832); ctx.fill();
-            ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(bx + 13.5, ty); ctx.lineTo(bx + 16.2, ty + 2.7); ctx.lineTo(bx + 21, ty - 3); ctx.stroke();
-            ctx.fillStyle = bg; ctx.textBaseline = "middle"; mono(12.5); ctx.fillText(pop.text, bx + 31, ty);
-            ctx.restore();
+          /* label plate, then the leader on top */
+          if (d2 > 0.05) {
+            var chars = Math.max(0, Math.min(main.length, Math.floor((pa - 320) / 30))), shown2 = main.slice(0, chars);
+            var plx = sx > 0 ? ex + 2 : endx - 2, plw = L + 2, ply = ey - 38;
+            ctx.fillStyle = bg; ctx.globalAlpha = Math.max(0, al) * 0.88; rrect(plx, ply, plw, 36, 4); ctx.fill(); ctx.globalAlpha = Math.max(0, al);
+            ctx.textBaseline = "alphabetic";
+            mono(9.5, 500); ctx.fillStyle = "rgba(" + ink + ",.5)"; ctx.fillText(tag, (sx > 0 ? ex + 8 : endx + 8), ey - 25);
+            mono(12.5); ctx.fillStyle = "rgb(" + ink + ")"; ctx.fillText(shown2, (sx > 0 ? ex + 8 : endx + 8), ey - 9);
+            if (chars < main.length || (pa % 600) < 340) { var cw3 = ctx.measureText(shown2).width; ctx.fillRect((sx > 0 ? ex + 8 : endx + 8) + cw3 + 2, ey - 19, 6, 11); }
           }
+          ctx.strokeStyle = "rgb(" + ink + ")"; ctx.lineWidth = 1.3; ctx.lineCap = "butt"; ctx.lineJoin = "miter";
+          ctx.beginPath(); ctx.moveTo(pt.x, pt.y);
+          ctx.lineTo(pt.x + (ex - pt.x) * d1, pt.y + (ey - pt.y) * d1);
+          if (d2 > 0) ctx.lineTo(ex + (endx - ex) * d2, ey);
+          ctx.stroke();
+          if (d2 >= 1) { ctx.fillStyle = "rgb(" + ink + ")"; ctx.fillRect(endx - 2.5, ey - 2.5, 5, 5); }
+          try { ctx.letterSpacing = "0px"; } catch (e2) {}
           ctx.globalAlpha = 1;
         }
       }
