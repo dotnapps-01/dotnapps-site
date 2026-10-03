@@ -3239,24 +3239,45 @@
       if (pa > 2900) { pop = null; lastNodePop = now; }
       else {
         var pt = popPoint();
-        if (pt) {
-          var sc = pa < 380 ? 1 - Math.pow(1 - pa / 380, 3) * (1 + 0.9 * Math.cos(pa / 380 * 9)) : 1, al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400;
-          mono(12.5); var pw = ctx.measureText(pop.text).width + 46;
-          var dxo = pt.x - cx, dyo = pt.y - cy, dl = Math.hypot(dxo, dyo);
-          if (dl < R * 0.4) { dxo = 0.7; dyo = -0.7; dl = 1; }
-          var ppx = Math.max(pw / 2 + 8, Math.min(W - pw / 2 - 8, pt.x + dxo / dl * 62)), ppy = Math.max(24, Math.min(H - 70, pt.y + dyo / dl * 62));
-          var tdx = pt.x - ppx, tdy = pt.y - ppy, tl = Math.hypot(tdx, tdy) || 1; tdx /= tl; tdy /= tl;
-          var te = Math.min(pw / 2 / (Math.abs(tdx) || 1e-6), 16 / (Math.abs(tdy) || 1e-6));
-          ctx.globalAlpha = Math.max(0, al) * Math.min(1, sc);
-          ctx.strokeStyle = "rgb(" + ink + ")"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(ppx + tdx * te, ppy + tdy * te); ctx.lineTo(pt.x, pt.y); ctx.stroke();
-          ctx.strokeStyle = "rgba(" + ink + "," + (0.5 * (1 - (pa % 900) / 900)) + ")"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 5 + (pa % 900) / 900 * 16, 0, 6.2832); ctx.stroke();
-          ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.6, 0, 6.2832); ctx.fill();
-          ctx.save(); ctx.translate(ppx, ppy); ctx.scale(Math.max(0.01, sc), Math.max(0.01, sc)); ctx.globalAlpha = Math.max(0, al);
-          ctx.fillStyle = "rgb(" + ink + ")"; rrect(-pw / 2, -16, pw, 32, 16); ctx.fill();
-          ctx.fillStyle = "#34C759"; ctx.beginPath(); ctx.arc(-pw / 2 + 17, 0, 7, 0, 6.2832); ctx.fill();
-          ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.8; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(-pw / 2 + 13.5, 0.5); ctx.lineTo(-pw / 2 + 16.2, 3.2); ctx.lineTo(-pw / 2 + 21, -2.5); ctx.stroke();
-          ctx.fillStyle = bg; ctx.textBaseline = "middle"; ctx.fillText(pop.text, -pw / 2 + 31, 0.5);
-          ctx.restore(); ctx.globalAlpha = 1;
+        if (pt) {                                        /* a milestone flag planted on the point: the pole rises, the flag unfurls and ripples */
+          var al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400, poleP = Math.min(1, pa / 260), uf = pa < 260 ? 0 : Math.min(1, (pa - 260) / 460);
+          uf = uf === 0 ? 0 : 1 + 2.1 * Math.pow(uf - 1, 3) + 1.1 * Math.pow(uf - 1, 2);
+          poleP = 1 - Math.pow(1 - poleP, 3);
+          mono(12.5); var tw2 = ctx.measureText(pop.text).width, fw = tw2 + 50, fh = 30, ph = 56 * poleP, fy = pt.y - ph;
+          var left = pt.x + 1 + fw > W - 6, fx = left ? pt.x - 1 - fw : pt.x + 1, dir = left ? -1 : 1;
+          ctx.globalAlpha = Math.max(0, al);
+          ctx.strokeStyle = "rgb(" + ink + ")"; ctx.lineWidth = 1.6; ctx.lineCap = "round";
+          ctx.beginPath(); ctx.moveTo(pt.x, pt.y); ctx.lineTo(pt.x, fy - 3); ctx.stroke();
+          ctx.strokeStyle = "rgba(" + ink + "," + (0.45 * (1 - (pa % 900) / 900)) + ")"; ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.arc(pt.x, pt.y, 5 + (pa % 900) / 900 * 16, 0, 6.2832); ctx.stroke();
+          ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.8, 0, 6.2832); ctx.fill();
+          if (uf > 0.02) {
+            var vis = Math.max(0.02, Math.min(1.08, uf)), cw2 = fw * vis, ph2 = now / 170, i2;
+            ctx.save();
+            ctx.beginPath();                              /* wavy flag with a swallow-tail end */
+            var steps = 14, amp = 2.2;
+            for (i2 = 0; i2 <= steps; i2++) {
+              var fxp = i2 / steps * cw2, wy = Math.sin(ph2 + i2 * 0.55) * amp * (i2 / steps);
+              var X = left ? pt.x - 1 - fxp : pt.x + 1 + fxp;
+              if (i2 === 0) ctx.moveTo(X, fy - 3 + wy); else ctx.lineTo(X, fy - 3 + wy);
+            }
+            var tipX = left ? pt.x - 1 - cw2 + 9 : pt.x + 1 + cw2 - 9, endW = Math.sin(ph2 + steps * 0.55) * amp;
+            ctx.lineTo(left ? pt.x - 1 - cw2 : pt.x + 1 + cw2, fy - 3 + fh + endW);
+            ctx.lineTo(tipX, fy - 3 + fh / 2 + endW);
+            ctx.lineTo(left ? pt.x - 1 - cw2 : pt.x + 1 + cw2, fy - 3 + endW);
+            for (i2 = steps; i2 >= 0; i2--) {
+              var fxq = i2 / steps * cw2, wy2 = Math.sin(ph2 + i2 * 0.55) * amp * (i2 / steps);
+              var X2 = left ? pt.x - 1 - fxq : pt.x + 1 + fxq;
+              ctx.lineTo(X2, fy - 3 + fh + wy2);
+            }
+            ctx.closePath(); ctx.fillStyle = "rgb(" + ink + ")"; ctx.fill(); ctx.clip();
+            var ty = fy - 3 + fh / 2 + 0.5, bx = fx;
+            ctx.fillStyle = "#34C759"; ctx.beginPath(); ctx.arc(bx + 17, ty - 0.5, 7, 0, 6.2832); ctx.fill();
+            ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.beginPath(); ctx.moveTo(bx + 13.5, ty); ctx.lineTo(bx + 16.2, ty + 2.7); ctx.lineTo(bx + 21, ty - 3); ctx.stroke();
+            ctx.fillStyle = bg; ctx.textBaseline = "middle"; mono(12.5); ctx.fillText(pop.text, bx + 31, ty);
+            ctx.restore();
+          }
+          ctx.globalAlpha = 1;
         }
       }
     }
