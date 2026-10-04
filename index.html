@@ -195,6 +195,13 @@
      the header instead of being cut off. Three blur layers with staggered
      masks give a smooth ramp (a single blur would show a hard lower edge). */
   html { overflow-x: hidden; }
+  /* iPhone Safari widens the layout (and nudges everything off-centre) if anything pokes past the edge; lock the page to the screen width on small screens */
+  @media (max-width: 900px) {
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body { position: relative; width: 100%; }
+    html { touch-action: pan-y pinch-zoom; }
+    .hero-actions { flex-wrap: wrap; row-gap: .6rem; }
+  }
   html.menu-open { overflow: hidden; }
   .nav-veil {
     position: fixed; top: 0; left: 0; right: 0; z-index: 49; pointer-events: none;
