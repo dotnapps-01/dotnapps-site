@@ -476,59 +476,54 @@
   .app-mark svg .dkl { fill: rgba(0, 0, 0, .26); stroke: rgba(0, 0, 0, .26); stroke-width: 8.500; stroke-linecap: round; }
   .app-mark svg .dks { fill: none; stroke: rgba(0, 0, 0, .3); stroke-linecap: round; stroke-linejoin: round; }
   .app-mark svg .fgs { fill: none; stroke: #fff; stroke-linecap: round; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .22)); }
-  /* ---------- Business OS — one card, apps wired in from both sides ---------- */
-  .bos {
-    position: relative; overflow: hidden; isolation: isolate;
-    border: 1px solid var(--hairline); border-radius: 28px; background: var(--sunken);
-    padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
+  /* ---------- Business OS — a system map: one core, twelve modules on circuit traces, annotated like a drawing ---------- */
+  .bsys { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+  .bsys-copy { text-align: left; display: flex; flex-direction: column; align-items: flex-start; }
+  .bsys-tag {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; text-transform: uppercase; letter-spacing: .17em; font-size: .68rem; font-weight: 500;
+    padding: .56rem 1.05rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); color: var(--ink);
+    background: color-mix(in srgb, var(--frame) 68%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent), 0 1px 3px rgba(0, 0, 0, .04);
   }
-  .bos::before, .bos::after {
-    content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 50%;
-    width: min(46rem, 80%); aspect-ratio: 1; filter: blur(70px);
-    background: radial-gradient(closest-side, color-mix(in srgb, var(--text) 13%, transparent), transparent);
+  .bsys-copy h2 { margin: 1.4rem 0 0; font-size: clamp(2.5rem, 4.4vw, 3.9rem); line-height: 1.02; letter-spacing: -.045em; color: var(--ink); text-wrap: balance; }
+  .bsys-copy .h2-end { display: block; color: var(--muted); }
+  .bsys-copy > p { margin: 1.2rem 0 0; max-width: 31rem; font-size: 1.05rem; line-height: 1.62; color: var(--muted); }
+  .bsys-actions { margin-top: 1.7rem; }
+  .bsys-facts { list-style: none; margin: 2rem 0 0; padding: 0; width: 100%; max-width: 27rem; border-top: 1px solid var(--hairline); }
+  .bsys-facts li { display: flex; align-items: baseline; gap: 1rem; padding: .8rem 0; border-bottom: 1px solid var(--hairline); }
+  .bsys-facts b { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 1.15rem; font-weight: 500; color: var(--ink); min-width: 2.2rem; }
+  .bsys-facts span { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+  .bsys-key { list-style: none; margin: 1.3rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+  .bsys-key li { display: flex; align-items: center; gap: .55rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .bsys-key i { width: 26px; height: 0; border-top: 1.5px solid var(--ink); }
+  .bsys-key .k-next { border-top-style: dashed; } .bsys-key .k-planned { border-top-style: dotted; opacity: .7; } .bsys-key .k-later { border-top-style: dotted; opacity: .4; }
+
+  .bsys-board { position: relative; width: 100%; max-width: 38rem; margin-left: auto; aspect-ratio: 1 / 1; border-radius: 30px; border: 1px solid var(--hairline); }
+  .bsys-board::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background-color: color-mix(in srgb, var(--sunken) 55%, var(--frame));
+    background-image: radial-gradient(color-mix(in srgb, var(--text) 16%, transparent) 1px, transparent 1.4px); background-size: 22px 22px; background-position: 11px 11px;
+    -webkit-mask-image: radial-gradient(closest-side, #000 55%, rgba(0, 0, 0, .35)); mask-image: radial-gradient(closest-side, #000 55%, rgba(0, 0, 0, .35));
   }
-  .bos::before { top: -28%; right: -16%; }
-  .bos::after { bottom: -34%; left: -18%; }
-  .bos-stage { position: relative; height: 37rem; user-select: none; -webkit-user-select: none; }
-  .bos-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-  .bos-wire { fill: none; stroke: color-mix(in srgb, var(--text) 22%, transparent); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
-  .bos-pulse {
-    fill: none; stroke: var(--text); stroke-width: 1.8; stroke-linecap: round; vector-effect: non-scaling-stroke;
-    stroke-dasharray: 7 93; stroke-dashoffset: 7; opacity: .9;
-    animation: bosFlow 4.2s linear infinite; animation-delay: calc(var(--i) * -.55s);
+  .bsys-wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .bsys-wires .wire { fill: none; stroke: var(--ink); stroke-width: 1.3; vector-effect: non-scaling-stroke; stroke-linejoin: round; transition: stroke-opacity .3s ease, stroke-width .3s ease; }
+  .bsys-wires .wire.live { stroke-opacity: .85; stroke-dasharray: 7 7; animation: wireFlow 1.1s linear infinite; }
+  .bsys-wires .wire.next { stroke-opacity: .6; stroke-dasharray: 5 5; }
+  .bsys-wires .wire.planned { stroke-opacity: .32; stroke-dasharray: 1.5 5; stroke-linecap: round; }
+  .bsys-wires .wire.later { stroke-opacity: .2; stroke-dasharray: 1.5 5; stroke-linecap: round; }
+  .bsys-wires .wire.on { stroke-opacity: 1; stroke-width: 2; }
+  @keyframes wireFlow { to { stroke-dashoffset: -14; } }
+  .bsys-core { position: absolute; left: 50%; top: 50%; width: 16%; aspect-ratio: 1; transform: translate(-50%, -50%); z-index: 2; }
+  .bsys-core span { position: absolute; inset: 0; border-radius: 28%; background: var(--ink); display: grid; place-items: center; box-shadow: 0 18px 36px -14px rgba(0, 0, 0, .5); }
+  .bsys-core svg { width: 44%; height: 44%; } .bsys-core .lg-fg { fill: var(--frame); }
+  .bsys-core::before, .bsys-core::after { content: ""; position: absolute; inset: 0; border-radius: 28%; border: 1px solid var(--ink); opacity: 0; animation: coreRing 3.2s ease-out infinite; }
+  .bsys-core::after { animation-delay: 1.6s; }
+  @keyframes coreRing { 0% { transform: scale(1); opacity: .35; } 100% { transform: scale(1.9); opacity: 0; } }
+  .mods { position: absolute; inset: 0; }
+  .mod {
+    position: absolute; z-index: 3; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); width: 3.7rem; aspect-ratio: 1; margin: -1.85rem 0 0 -1.85rem; padding: 0; border: 0; background: none;
+    cursor: pointer; font: inherit; transition: transform .3s cubic-bezier(.2, .8, .2, 1);
   }
-  @keyframes bosFlow { to { stroke-dashoffset: -93; } }
-  .bos-ports i {
-    position: absolute; top: calc(var(--y) * 1%); width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%;
-    background: var(--frame); border: 1.5px solid var(--muted); pointer-events: none;
-  }
-  .bos-ports-l i { left: 33%; }
-  .bos-ports-r i { left: 67%; }
-  .bos-card {
-    position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 34%; min-width: 17rem; max-height: 100%;
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: .9rem;
-    padding: 1.75rem 1.5rem 1.6rem; border-radius: 26px;
-    background: var(--raise); border: 1px solid var(--hairline);
-    box-shadow: 0 26px 60px -24px rgba(0, 0, 0, .28), 0 2px 8px rgba(0, 0, 0, .04);
-  }
-  .bos-tag {
-    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    font-size: .74rem; letter-spacing: .02em; color: var(--text);
-    padding: .3rem .75rem; border-radius: 999px;
-    background: var(--sunken);
-    border: 1px solid var(--border);
-  }
-  .bos-card h3 { margin: 0; font-size: clamp(1.45rem, 2.3vw, 1.95rem); line-height: 1.12; text-wrap: balance; }
-  .bos-card p { margin: 0; color: var(--muted); font-size: .94rem; line-height: 1.55; max-width: 30ch; }
-  .bos-card .btn { margin-top: .3rem; }
-  .bos-nodes { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-  .bn {
-    position: absolute; z-index: 3; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
-    width: 4.25rem; aspect-ratio: 1; margin: -2.125rem 0 0 -2.125rem;
-    transition: transform .25s cubic-bezier(.2, .7, .2, 1);
-  }
-  .bn .app-mark {
+  .mod .app-mark {
     width: 100%; height: 100%; border-radius: 23%; display: block;
     background: linear-gradient(180deg, color-mix(in srgb, var(--ic) 62%, #fff) 0%, var(--ic) 100%);
     box-shadow:
@@ -537,43 +532,46 @@
       0 1px 2px rgba(0, 0, 0, .14),
       0 12px 22px -8px rgba(0, 0, 0, .38);
   }
-  @supports (corner-shape: squircle) { .bn .app-mark { border-radius: 34%; corner-shape: squircle; } }
-  .bn .app-mark::before { background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 50%); }
-  .bn .app-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .bn .app-mark svg .fg { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2)); }
-  .bn.is-live::after {
-    content: ""; position: absolute; right: -.3rem; top: -.3rem; width: .85rem; height: .85rem; border-radius: 50%;
-    background: #34C759; box-shadow: 0 0 0 2.5px var(--raise); z-index: 2;
+  @supports (corner-shape: squircle) { .mod .app-mark { border-radius: 34%; corner-shape: squircle; } }
+  .mod .app-mark::before { background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 50%); }
+  .mod .app-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mod .app-mark svg .fg { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2)); }
+  .mod .nm {
+    position: absolute; left: 50%; top: calc(100% + .45rem); transform: translateX(-50%); white-space: nowrap; pointer-events: none;
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .58rem; letter-spacing: .13em; text-transform: uppercase; color: var(--muted);
   }
-  .bn-nm {
-    position: absolute; left: 50%; top: calc(100% + .45rem); transform: translateX(-50%); white-space: nowrap;
-    font-size: .72rem; font-weight: 500; letter-spacing: -.005em; color: var(--text); pointer-events: none;
-    text-shadow: 0 0 6px var(--sunken), 0 0 2px var(--sunken);
+  .mod.live::after { content: ""; position: absolute; inset: -5px; border-radius: 34%; border: 1.5px solid var(--ink); opacity: .5; animation: modPulse 2.4s ease-out infinite; pointer-events: none; }
+  @keyframes modPulse { 0% { transform: scale(.94); opacity: .55; } 100% { transform: scale(1.3); opacity: 0; } }
+  .mod.on, .mod:focus-visible { transform: scale(1.12) translateY(-2px); outline: none; }
+  .mod:not(.on):not(:hover) .app-mark { filter: saturate(.92); }
+  @media (hover: hover) { .mod:hover { transform: scale(1.12) translateY(-2px); } }
+  .bsys-note {
+    position: absolute; z-index: 5; left: calc(var(--nx, 50) * 1%); top: calc(var(--ny, 50) * 1%); width: max-content; max-width: 12.5rem; pointer-events: none;
+    transform: translate(var(--tx, -50%), var(--ty, calc(-100% - 3.2rem)));
+    padding: .65rem .85rem .7rem; border-radius: 10px; background: var(--frame); border: 1px solid var(--ink); box-shadow: 0 16px 34px -16px rgba(0, 0, 0, .35);
+    opacity: 0; transition: opacity .25s ease, left .45s cubic-bezier(.2, .8, .2, 1), top .45s cubic-bezier(.2, .8, .2, 1);
   }
-  @media (hover: hover) { .bn:hover { transform: scale(1.08); } }
-  .bos-legend {
-    list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem .5rem;
-  }
-  .bos-legend li { font-size: .8rem; color: var(--muted); padding: .35rem .75rem; border-radius: 999px; background: var(--raise); border: 1px solid var(--hairline); }
-  .bos-legend b {
-    margin-right: .4rem; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint);
-    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-  }
-  .bos-legend .live b { color: var(--text); }
-  @media (prefers-reduced-motion: reduce) { .bos-pulse { animation: none; opacity: 0; } }
+  .bsys-note.show { opacity: 1; }
+  .bsys-note small { display: block; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .bsys-note b { display: block; margin-top: .25rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .86rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .bsys-note span { display: block; margin-top: .2rem; font-size: .8rem; line-height: 1.35; color: var(--muted); }
+  .bsys-note::after { content: ""; position: absolute; left: var(--ax, 50%); top: 100%; width: 1px; height: 2.1rem; background: var(--ink); }
+  .bsys-note.below::after { top: auto; bottom: 100%; }
+  .bsys-note.side-r::after, .bsys-note.side-l::after { top: 50%; width: 2.1rem; height: 1px; }
+  .bsys-note.side-r::after { left: -2.1rem; } .bsys-note.side-l::after { left: 100%; }
+  @media (prefers-reduced-motion: reduce) { .bsys-wires .wire.live, .mod.live::after, .bsys-core::before, .bsys-core::after { animation: none; } .bsys-note { transition: none; } }
 
-  /* narrower than the wires can fan: card on top, apps in a grid below */
   @media (max-width: 860px) {
-    .bos-stage { height: auto; display: flex; flex-direction: column; gap: 1.5rem; }
-    .bos-lines, .bos-ports { display: none; }
-    .bos-card { position: relative; left: auto; top: auto; transform: none; width: 100%; min-width: 0; max-height: none; }
-    .bos-card p { max-width: 34ch; }
-    .bos-nodes { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3.2rem .5rem; padding: .25rem 0 1.6rem; }
-    .bn { position: relative; left: auto; top: auto; margin: 0 auto; width: 4rem; }
-    .bn-nm { top: calc(100% + .5rem); font-size: .64rem; white-space: normal; text-align: center; width: 5.2rem; line-height: 1.2; }
+    .bsys { grid-template-columns: 1fr; gap: 2rem; }
+    .bsys-board { margin: 0; aspect-ratio: auto; padding: 1.6rem 1rem 1.2rem; max-width: none; }
+    .bsys-wires, .bsys-core { display: none; }
+    .mods { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.7rem .4rem; position: relative; z-index: 1; }
+    .mod { position: relative; left: auto; top: auto; margin: 0 auto; width: 3.5rem; }
+    .mod .nm { white-space: normal; text-align: center; width: 4.4rem; font-size: .54rem; }
+    .bsys-note { position: relative; left: auto; top: auto; transform: none; width: auto; max-width: none; margin-top: 2.2rem; }
+    .bsys-note::after { display: none; }
   }
-  @media (max-width: 560px) { .bos-legend { flex-direction: column; align-items: stretch; gap: .4rem; } .bos-legend li { border-radius: 14px; font-size: .78rem; line-height: 1.4; } }
-  @media (max-width: 420px) { .bos-nodes { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 420px) { .mods { grid-template-columns: repeat(3, 1fr); } }
 
   .product-note { margin: 1.5rem 0 0; font-size: .88rem; color: var(--muted); }
 
@@ -1841,46 +1839,31 @@
 
   <!-- ===================== PRODUCTS ===================== -->
   <section class="band" id="products">
-    <div class="band-head reveal">
-      <span class="eyebrow-pill">Our products</span>
-      <h2 class="serif">Software we build <span class="h2-end">for ourselves</span></h2>
-      <p>We don't only work on client roadmaps. Business OS is a product we own, run, and sell &mdash; and the bar we hold every engagement to.</p>
-    </div>
-
-    <div class="bos reveal">
-      <div class="bos-stage">
-        <svg class="bos-lines" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"><path class="bos-wire" d="M80 56C205 56 205 205 330 205"/><path class="bos-wire" d="M170 145.6C250 145.6 250 235 330 235"/><path class="bos-wire" d="M80 235.2C205 235.2 205 265 330 265"/><path class="bos-wire" d="M170 324.8C250 324.8 250 295 330 295"/><path class="bos-wire" d="M80 414.4C205 414.4 205 325 330 325"/><path class="bos-wire" d="M170 504C250 504 250 355 330 355"/><path class="bos-wire" d="M670 205C795 205 795 56 920 56"/><path class="bos-wire" d="M670 235C750 235 750 145.6 830 145.6"/><path class="bos-wire" d="M670 265C795 265 795 235.2 920 235.2"/><path class="bos-wire" d="M670 295C750 295 750 324.8 830 324.8"/><path class="bos-wire" d="M670 325C795 325 795 414.4 920 414.4"/><path class="bos-wire" d="M670 355C750 355 750 504 830 504"/><path class="bos-pulse" style="--i:0" pathLength="100" d="M80 56C205 56 205 205 330 205"/><path class="bos-pulse" style="--i:1" pathLength="100" d="M170 145.6C250 145.6 250 235 330 235"/><path class="bos-pulse" style="--i:2" pathLength="100" d="M80 235.2C205 235.2 205 265 330 265"/><path class="bos-pulse" style="--i:3" pathLength="100" d="M170 324.8C250 324.8 250 295 330 295"/><path class="bos-pulse" style="--i:4" pathLength="100" d="M80 414.4C205 414.4 205 325 330 325"/><path class="bos-pulse" style="--i:5" pathLength="100" d="M170 504C250 504 250 355 330 355"/><path class="bos-pulse" style="--i:6" pathLength="100" d="M670 205C795 205 795 56 920 56"/><path class="bos-pulse" style="--i:7" pathLength="100" d="M670 235C750 235 750 145.6 830 145.6"/><path class="bos-pulse" style="--i:8" pathLength="100" d="M670 265C795 265 795 235.2 920 235.2"/><path class="bos-pulse" style="--i:9" pathLength="100" d="M670 295C750 295 750 324.8 830 324.8"/><path class="bos-pulse" style="--i:10" pathLength="100" d="M670 325C795 325 795 414.4 920 414.4"/><path class="bos-pulse" style="--i:11" pathLength="100" d="M670 355C750 355 750 504 830 504"/></svg>
-        <span class="bos-ports bos-ports-l" aria-hidden="true"><i style="--y:36.61"></i><i style="--y:41.96"></i><i style="--y:47.32"></i><i style="--y:52.68"></i><i style="--y:58.04"></i><i style="--y:63.39"></i></span>
-        <span class="bos-ports bos-ports-r" aria-hidden="true"><i style="--y:36.61"></i><i style="--y:41.96"></i><i style="--y:47.32"></i><i style="--y:52.68"></i><i style="--y:58.04"></i><i style="--y:63.39"></i></span>
-        <div class="bos-card">
-          <span class="bos-tag">{business&nbsp;os}</span>
-          <h3 class="serif">One platform for every business app</h3>
-          <p>One account, one bill, one design system. CRM and Invoice are live; ten more are mapped.</p>
+    <div class="bsys reveal">
+      <div class="bsys-copy">
+        <span class="bsys-tag">Business OS</span>
+        <h2 class="serif">One platform <span class="h2-end">for every business app.</span></h2>
+        <p>We don't only work on client roadmaps. Business OS is a product we own, run, and sell &mdash; one account, one bill, one design system, and the bar we hold every engagement to.</p>
+        <div class="bsys-actions">
           <a class="btn btn--solid" href="#contact" data-modal="businessos">Request access<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
-        <ul class="bos-nodes" aria-label="Business OS apps">
-          <li class="bn is-live" style="--x:8;--y:10" data-tip="CRM · Live"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="36" r="15"/><path class="fg" d="M20 83c0-19 13-30 30-30s30 11 30 30z"/></svg></span><span class="bn-nm">CRM</span></li>
-          <li class="bn" style="--x:17;--y:26" data-tip="Projects · Next"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="16" y="20" width="21" height="26" rx="6"/><rect class="fg" x="16" y="52" width="21" height="28" rx="6"/><rect class="fg" x="40" y="20" width="21" height="38" rx="6"/><rect class="fg2" x="40" y="64" width="21" height="16" rx="6"/><rect class="fg" x="64" y="20" width="21" height="20" rx="6"/><rect class="fg" x="64" y="46" width="21" height="34" rx="6"/></svg></span><span class="bn-nm">Projects</span></li>
-          <li class="bn" style="--x:8;--y:42" data-tip="Books · Planned"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><path class="fg" d="M47 31C39 25 28 23 17 26v46c11-2 22 0 30 6z"/><path class="fg" d="M53 31c8-6 19-8 30-5v46c-11-2-22 0-30 6z"/></svg></span><span class="bn-nm">Books</span></li>
-          <li class="bn" style="--x:17;--y:58" data-tip="Inventory · Later"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><path class="fg" d="M50 15l32 15-32 15-32-15z"/><path class="fg" opacity=".8" d="M18 35l29 13.500V84L18 70z"/><path class="fg" opacity=".55" d="M82 35L53 48.500V84l29-14z"/><path class="dk" opacity=".35" d="M37 22.500l32 15-6 2.800-32-15z"/></svg></span><span class="bn-nm">Inventory</span></li>
-          <li class="bn" style="--x:8;--y:74" data-tip="Analytics · Planned"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg2" x="17" y="52" width="19" height="30" rx="6"/><rect class="fg2" x="40" y="36" width="19" height="46" rx="6"/><rect class="fg" x="63" y="17" width="19" height="65" rx="6"/></svg></span><span class="bn-nm">Analytics</span></li>
-          <li class="bn" style="--x:17;--y:90" data-tip="Identity · Next"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><path class="fg" d="M50 14l31 11v24c0 18-13 30-31 38-18-8-31-20-31-38V25z"/><path class="dks" stroke-width="7" d="M36 50l10 10 19-21"/></svg></span><span class="bn-nm">Identity</span></li>
-          <li class="bn is-live" style="--x:92;--y:10" data-tip="Invoice · Live"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><path class="fg" d="M28 15h28l18 18v52H28z"/><path class="dk" d="M56 15v18h18z" opacity=".4"/><rect class="dk" x="37" y="46" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="56" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="66" width="17" height="4.500" rx="2.200" opacity=".55"/></svg></span><span class="bn-nm">Invoice</span></li>
-          <li class="bn" style="--x:83;--y:26" data-tip="Helpdesk · Planned"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><path class="fg" d="M50 17c19 0 34 12 34 28S69 73 50 73c-4 0-8-.6-11-1.700L24 82l4-14C20 63 16 55 16 45c0-16 15-28 34-28z"/><circle class="dk" cx="34" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="50" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="66" cy="45" r="4.600" opacity=".55"/></svg></span><span class="bn-nm">Helpdesk</span></li>
-          <li class="bn" style="--x:92;--y:42" data-tip="Knowledge Base · Planned"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="15" width="52" height="70" rx="8"/><path class="dk" d="M56 15h12v28l-6-5-6 5z" opacity=".5"/><rect class="dk" x="33" y="56" width="32" height="4.500" rx="2.200" opacity=".5"/><rect class="dk" x="33" y="67" width="22" height="4.500" rx="2.200" opacity=".5"/></svg></span><span class="bn-nm">Knowledge Base</span></li>
-          <li class="bn" style="--x:83;--y:58" data-tip="People · Later"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg2" cx="27" cy="38" r="10"/><path class="fg2" d="M7 76c0-14 8-21 20-21s20 7 20 21z"/><circle class="fg" cx="62" cy="36" r="13"/><path class="fg" d="M33 84c0-19 12-29 29-29s29 10 29 29z"/></svg></span><span class="bn-nm">People</span></li>
-          <li class="bn" style="--x:92;--y:74" data-tip="Automation · Planned"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><path class="fg" d="M57 13L25 55h21l-5 32 34-44H53z"/></svg></span><span class="bn-nm">Automation</span></li>
-          <li class="bn" style="--x:83;--y:90" data-tip="Payroll · Later"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><rect class="fg" x="11" y="27" width="78" height="46" rx="10"/><circle class="dk" cx="50" cy="50" r="12" opacity=".5"/><circle class="dk" cx="24" cy="50" r="3.200" opacity=".5"/><circle class="dk" cx="76" cy="50" r="3.200" opacity=".5"/></svg></span><span class="bn-nm">Payroll</span></li>
+        <ul class="bsys-facts">
+          <li><b>12</b><span>modules mapped</span></li>
+          <li><b>02</b><span>live today: CRM, Invoice</span></li>
+          <li><b>01</b><span>account, bill and design system</span></li>
+        </ul>
+        <ul class="bsys-key" aria-label="Link styles">
+          <li><i class="k-live"></i>Live</li><li><i class="k-next"></i>Next</li><li><i class="k-planned"></i>Planned</li><li><i class="k-later"></i>Later</li>
         </ul>
       </div>
-      <ul class="bos-legend">
-        <li class="live"><b>Live</b> CRM, Invoice</li>
-        <li><b>Next</b> Projects, Identity</li>
-        <li><b>Planned</b> Helpdesk, Books, Knowledge Base, Analytics, Automation</li>
-        <li><b>Later</b> Inventory, People, Payroll</li>
-      </ul>
-      <p class="product-note">Want a product like this for your business? That's what the services below are for.</p>
+      <div class="bsys-board" aria-label="Business OS module map">
+        <svg class="bsys-wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="wire live" data-i="0" d="M42 44H36V22H17.5"/><path class="wire next" data-i="1" d="M42 48H31V41H17.5"/><path class="wire planned" data-i="2" d="M42 52H31V59H17.5"/><path class="wire later" data-i="3" d="M42 56H36V78H17.5"/><path class="wire live" data-i="4" d="M58 44H64V22H82.5"/><path class="wire planned" data-i="5" d="M58 48H69V41H82.5"/><path class="wire planned" data-i="6" d="M58 52H69V59H82.5"/><path class="wire later" data-i="7" d="M58 56H64V78H82.5"/><path class="wire planned" data-i="8" d="M47 42V24H40V16.5"/><path class="wire planned" data-i="9" d="M53 42V24H60V16.5"/><path class="wire next" data-i="10" d="M47 58V76H40V83.5"/><path class="wire later" data-i="11" d="M53 58V76H60V83.5"/></svg>
+        <div class="bsys-core" aria-hidden="true"><span><svg viewBox="26 27.4 48 45.1" class="logomark" aria-hidden="true"><path class="lg-fg" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg></span></div>
+        <div class="mods"><button class="mod live" type="button" data-i="0" data-s="Live" data-d="Leads, contacts and the sales pipeline" data-n="CRM" style="--x:11;--y:22"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="36" r="15"/><path class="fg" d="M20 83c0-19 13-30 30-30s30 11 30 30z"/></svg></span><span class="nm">CRM</span></button><button class="mod next" type="button" data-i="1" data-s="Next" data-d="Tasks, timelines and delivery" data-n="Projects" style="--x:11;--y:41"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="16" y="20" width="21" height="26" rx="6"/><rect class="fg" x="16" y="52" width="21" height="28" rx="6"/><rect class="fg" x="40" y="20" width="21" height="38" rx="6"/><rect class="fg2" x="40" y="64" width="21" height="16" rx="6"/><rect class="fg" x="64" y="20" width="21" height="20" rx="6"/><rect class="fg" x="64" y="46" width="21" height="34" rx="6"/></svg></span><span class="nm">Projects</span></button><button class="mod planned" type="button" data-i="2" data-s="Planned" data-d="Accounting and the ledger" data-n="Books" style="--x:11;--y:59"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><path class="fg" d="M47 31C39 25 28 23 17 26v46c11-2 22 0 30 6z"/><path class="fg" d="M53 31c8-6 19-8 30-5v46c-11-2-22 0-30 6z"/></svg></span><span class="nm">Books</span></button><button class="mod later" type="button" data-i="3" data-s="Later" data-d="Stock, orders and suppliers" data-n="Inventory" style="--x:11;--y:78"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><path class="fg" d="M50 15l32 15-32 15-32-15z"/><path class="fg" opacity=".8" d="M18 35l29 13.500V84L18 70z"/><path class="fg" opacity=".55" d="M82 35L53 48.500V84l29-14z"/><path class="dk" opacity=".35" d="M37 22.500l32 15-6 2.800-32-15z"/></svg></span><span class="nm">Inventory</span></button><button class="mod live" type="button" data-i="4" data-s="Live" data-d="Quotes, invoices and payments" data-n="Invoice" style="--x:89;--y:22"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><path class="fg" d="M28 15h28l18 18v52H28z"/><path class="dk" d="M56 15v18h18z" opacity=".4"/><rect class="dk" x="37" y="46" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="56" width="28" height="4.500" rx="2.200" opacity=".55"/><rect class="dk" x="37" y="66" width="17" height="4.500" rx="2.200" opacity=".55"/></svg></span><span class="nm">Invoice</span></button><button class="mod planned" type="button" data-i="5" data-s="Planned" data-d="Tickets and customer support" data-n="Helpdesk" style="--x:89;--y:41"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><path class="fg" d="M50 17c19 0 34 12 34 28S69 73 50 73c-4 0-8-.6-11-1.700L24 82l4-14C20 63 16 55 16 45c0-16 15-28 34-28z"/><circle class="dk" cx="34" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="50" cy="45" r="4.600" opacity=".55"/><circle class="dk" cx="66" cy="45" r="4.600" opacity=".55"/></svg></span><span class="nm">Helpdesk</span></button><button class="mod planned" type="button" data-i="6" data-s="Planned" data-d="Docs, answers and the wiki" data-n="Knowledge Base" style="--x:89;--y:59"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="15" width="52" height="70" rx="8"/><path class="dk" d="M56 15h12v28l-6-5-6 5z" opacity=".5"/><rect class="dk" x="33" y="56" width="32" height="4.500" rx="2.200" opacity=".5"/><rect class="dk" x="33" y="67" width="22" height="4.500" rx="2.200" opacity=".5"/></svg></span><span class="nm">Knowledge Base</span></button><button class="mod later" type="button" data-i="7" data-s="Later" data-d="Teams, roles and time off" data-n="People" style="--x:89;--y:78"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg2" cx="27" cy="38" r="10"/><path class="fg2" d="M7 76c0-14 8-21 20-21s20 7 20 21z"/><circle class="fg" cx="62" cy="36" r="13"/><path class="fg" d="M33 84c0-19 12-29 29-29s29 10 29 29z"/></svg></span><span class="nm">People</span></button><button class="mod planned" type="button" data-i="8" data-s="Planned" data-d="Reports and live dashboards" data-n="Analytics" style="--x:40;--y:10"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg2" x="17" y="52" width="19" height="30" rx="6"/><rect class="fg2" x="40" y="36" width="19" height="46" rx="6"/><rect class="fg" x="63" y="17" width="19" height="65" rx="6"/></svg></span><span class="nm">Analytics</span></button><button class="mod planned" type="button" data-i="9" data-s="Planned" data-d="Workflows that run themselves" data-n="Automation" style="--x:60;--y:10"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><path class="fg" d="M57 13L25 55h21l-5 32 34-44H53z"/></svg></span><span class="nm">Automation</span></button><button class="mod next" type="button" data-i="10" data-s="Next" data-d="Sign-in, roles and access" data-n="Identity" style="--x:40;--y:90"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><path class="fg" d="M50 14l31 11v24c0 18-13 30-31 38-18-8-31-20-31-38V25z"/><path class="dks" stroke-width="7" d="M36 50l10 10 19-21"/></svg></span><span class="nm">Identity</span></button><button class="mod later" type="button" data-i="11" data-s="Later" data-d="Pay runs and payslips" data-n="Payroll" style="--x:60;--y:90"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><rect class="fg" x="11" y="27" width="78" height="46" rx="10"/><circle class="dk" cx="50" cy="50" r="12" opacity=".5"/><circle class="dk" cx="24" cy="50" r="3.200" opacity=".5"/><circle class="dk" cx="76" cy="50" r="3.200" opacity=".5"/></svg></span><span class="nm">Payroll</span></button></div>
+        <div class="bsys-note" role="status" aria-live="polite"><small></small><b></b><span></span></div>
+      </div>
     </div>
+    <p class="product-note">Want a product like this for your business? That's what the services below are for.</p>
   </section>
 
   <!-- ===================== SERVICES ===================== -->
@@ -3351,6 +3334,41 @@
   if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv); else start();
   document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
   new MutationObserver(function () { colors(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+})();
+</script>
+<script>
+/* Business OS system map — hover, focus or tap a module to annotate it; left alone, it walks through the modules by itself */
+(function () {
+  var board = document.querySelector(".bsys-board");
+  if (!board) return;
+  var mods = [].slice.call(board.querySelectorAll(".mod")), wires = [].slice.call(board.querySelectorAll(".wire")), note = board.querySelector(".bsys-note");
+  var tag = note.querySelector("small"), nm = note.querySelector("b"), ds = note.querySelector("span");
+  var cur = -1, auto = true, timer = 0, visible = true, orderAuto = [0, 4, 8, 1, 5, 9, 2, 6, 10, 3, 7, 11], step = 0;
+  function sel(i) {
+    cur = i;
+    mods.forEach(function (m, k) { m.classList.toggle("on", k === i); });
+    wires.forEach(function (w, k) { w.classList.toggle("on", k === i); });
+    var m = mods[i], x = parseFloat(m.style.getPropertyValue("--x")), y = parseFloat(m.style.getPropertyValue("--y"));
+    tag.textContent = m.dataset.s + "  ·  MODULE " + (i < 9 ? "0" : "") + (i + 1);
+    nm.textContent = m.dataset.n; ds.textContent = m.dataset.d;
+    note.style.setProperty("--nx", x); note.style.setProperty("--ny", y);
+    var side = x < 30 ? "r" : x > 70 ? "l" : "", below = !side && y < 50;
+    note.classList.toggle("below", below); note.classList.toggle("side-r", side === "r"); note.classList.toggle("side-l", side === "l");
+    if (side) { note.style.setProperty("--tx", side === "r" ? "2.9rem" : "calc(-100% - 2.9rem)"); note.style.setProperty("--ty", "-50%"); }
+    else { note.style.setProperty("--tx", "-50%"); note.style.setProperty("--ty", below ? "3.2rem" : "calc(-100% - 3.2rem)"); note.style.setProperty("--ax", "50%"); }
+    note.classList.add("show");
+  }
+  mods.forEach(function (m, i) {
+    m.addEventListener("mouseenter", function () { auto = false; sel(i); });
+    m.addEventListener("focus", function () { auto = false; sel(i); });
+    m.addEventListener("click", function () { auto = false; sel(i); });
+  });
+  board.addEventListener("mouseleave", function () { auto = true; });
+  function tick() { if (auto && visible) { sel(orderAuto[step++ % orderAuto.length]); } }
+  sel(0);
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  timer = setInterval(tick, 3000);
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(board);
 })();
 </script>
 </body>
