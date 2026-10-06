@@ -497,7 +497,7 @@
   .bsys-actions { margin-top: 1.8rem; }
   .bsys-caps { margin: 1.9rem 0 0; font-family: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
   .bsys-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
-  .bbox { width: 100%; max-width: 40rem; margin-left: auto; border: 1px solid color-mix(in srgb, var(--ink) 11%, transparent); border-radius: 22px; background: var(--frame); padding: 1.4rem 1.5rem 1.3rem; }
+  .bbox { width: 100%; max-width: 40rem; margin-left: auto; border: 1px solid color-mix(in srgb, var(--ink) 11%, transparent); border-radius: 12px; background: var(--frame); padding: 1.4rem 1.5rem 1.3rem; }
   .bb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 1.1rem; border-bottom: 1px solid color-mix(in srgb, var(--ink) 7%, transparent); }
   .bb-head small, .bb-head b, .bb-cap { font-family: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-transform: uppercase; }
   .bb-head small { font-size: .62rem; letter-spacing: .16em; color: var(--muted); }
@@ -529,7 +529,7 @@
   .practice {
     grid-column: span 2;
     display: flex; flex-direction: column;
-    border: 1px solid var(--hairline); border-radius: 16px;
+    border: 1px solid var(--hairline); border-radius: 10px;
     padding: 1.35rem 1.4rem 1.4rem; background: var(--frame);
     transition: transform .22s ease, box-shadow .22s ease;
   }
@@ -612,7 +612,7 @@
   .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .8rem; }
   .model {
     position: relative; overflow: hidden;
-    border: 1px solid var(--hairline); border-radius: 14px;
+    border: 1px solid var(--hairline); border-radius: 10px;
     padding: 1.3rem 1.35rem; background: var(--frame);
     transition: transform .2s ease, box-shadow .2s ease;
   }
@@ -638,7 +638,7 @@
   .why-bento { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 1fr; gap: .75rem; }
   .wb {
     position: relative; overflow: hidden; display: flex; flex-direction: column;
-    min-height: 17rem; padding: 1.6rem 1.7rem; border-radius: 22px; background: var(--sunken);
+    min-height: 17rem; padding: 1.6rem 1.7rem; border-radius: 12px; background: var(--sunken);
   }
   .wb-a, .wb-d { grid-column: span 4; }
   .wb-b, .wb-c { grid-column: span 2; }
@@ -885,7 +885,7 @@
   .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .9rem; }
   @media (max-width: 720px) { .work-grid { grid-template-columns: 1fr; } }
   .work-card {
-    border: 1px solid var(--hairline); border-radius: 18px; background: var(--frame);
+    border: 1px solid var(--hairline); border-radius: 12px; background: var(--frame);
     padding: 1.4rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: .55rem;
     transition: transform .22s ease, box-shadow .22s ease;
   }
@@ -1046,7 +1046,7 @@
   .game-btn:hover { transform: translateY(-1px); }
   .game-btn:disabled { opacity: .45; cursor: default; transform: none; }
   .game-stage {
-    position: relative; border: 1px solid var(--hairline); border-radius: 16px;
+    position: relative; border: 1px solid var(--hairline); border-radius: 10px;
     background: var(--sunken); overflow: hidden;
     -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   }
@@ -1110,7 +1110,7 @@
   @media (max-width: 560px) { .game-level { display: none; } }
 
   /* ---------- Comparison ---------- */
-  .compare { border: 1px solid var(--hairline); border-radius: 18px; overflow: hidden; }
+  .compare { border: 1px solid var(--hairline); border-radius: 12px; overflow: hidden; }
   .compare-wrap { overflow-x: auto; }
   .compare table { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 560px; }
   .compare th, .compare td { padding: .9rem 1.05rem; text-align: left; border-bottom: 1px solid var(--hairline); vertical-align: top; }
@@ -1128,7 +1128,7 @@
   }
   .faq-shell {
     display: grid; grid-template-columns: 1fr; gap: .6rem;
-    border: 1px solid var(--hairline); border-radius: 20px;
+    border: 1px solid var(--hairline); border-radius: 12px;
     background: var(--sunken); padding: .6rem;
   }
   .js .faq-shell { grid-template-columns: 240px 1fr; }
@@ -1143,7 +1143,7 @@
   }
   .faq-tab:hover { color: var(--text); }
   .faq-tab.is-active { background: var(--frame); color: var(--text); box-shadow: var(--shadow-chip); }
-  .faq-panels { background: var(--frame); border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
+  .faq-panels { background: var(--frame); border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; }
   .faq-group { display: block; }
   .js .faq-group { display: none; }
   .js .faq-group.is-active { display: block; }
@@ -1167,7 +1167,7 @@
   /* ---------- Careers ---------- */
   .careers {
     margin-top: clamp(3rem, 7vw, 4.5rem);
-    border: 1px solid var(--hairline); border-radius: 18px; background: var(--sunken);
+    border: 1px solid var(--hairline); border-radius: 12px; background: var(--sunken);
     padding: clamp(1.5rem, 4vw, 2.25rem);
     display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;
   }
@@ -1194,7 +1194,7 @@
     border: 1px solid var(--hairline); padding: 0; margin: auto;
     width: min(30rem, calc(100vw - 2rem)); max-width: none;
     max-height: min(calc(100dvh - 2rem), 44rem); overflow: auto;
-    border-radius: 20px; background: var(--frame); color: var(--text);
+    border-radius: 12px; background: var(--frame); color: var(--text);
     box-shadow: var(--shadow-card);
     overscroll-behavior: contain;
   }
@@ -1370,7 +1370,7 @@
     .compare thead { display: none; }
 
     .compare tbody tr {
-      border: 1px solid var(--hairline); border-radius: 14px;
+      border: 1px solid var(--hairline); border-radius: 10px;
       background: var(--frame); padding: .95rem 1rem 1.05rem; margin-bottom: .7rem;
     }
     .compare tbody tr:last-child { margin-bottom: 0; }
@@ -1539,7 +1539,7 @@
   /* two identical sets + a 1rem gap: one loop is exactly half the track plus half the gap */
   @keyframes tstScroll { to { transform: translateY(calc(-50% - .5rem)); } }
   .tst-card {
-    margin: 0; padding: 1.25rem; border-radius: 24px;
+    margin: 0; padding: 1.25rem; border-radius: 12px;
     background: var(--sunken); border: 1px solid var(--hairline);
     display: flex; flex-direction: column; gap: 1rem;
     -webkit-user-select: none; user-select: none;
@@ -1752,7 +1752,7 @@
   .stats b { font-size: clamp(2rem, 3vw, 2.7rem); font-weight: 500; letter-spacing: -.04em; line-height: 1; color: var(--ink); }
 
   /* cards: 28px radius, hairline, white */
-  .practice, .work-card, .model, .tst-card, .wb, .bbox, .careers, .game-stage, .faq-shell, .compare { border-radius: 28px; }
+  .practice, .work-card, .model, .tst-card, .wb, .bbox, .careers, .game-stage, .faq-shell, .compare { border-radius: 12px; }
   .practice, .work-card, .model, .tst-card, .wb, .careers { background: var(--frame); border: 1px solid var(--card-line); box-shadow: none; }
   .bbox { border-color: var(--card-line); }
   .practice:hover, .work-card:hover, .model:hover { border-color: color-mix(in srgb, var(--ink) 22%, transparent); }
@@ -1803,7 +1803,7 @@
   .ps-card {
     position: sticky; top: calc(92px + var(--i) * 18px);
     min-height: clamp(210px, 32vh, 290px); padding: clamp(1.4rem, 3.4vw, 2.4rem);
-    border-radius: 32px; background: var(--frame); border: 1px solid var(--card-line);
+    border-radius: 12px; background: var(--frame); border: 1px solid var(--card-line);
     box-shadow: 0 -14px 28px -20px color-mix(in srgb, var(--ink) 30%, transparent);
     display: grid; grid-template-columns: clamp(4.5rem, 12vw, 9rem) minmax(0, 1fr); column-gap: clamp(1rem, 3vw, 2.4rem); align-content: space-between; align-items: start;
   }
@@ -1818,11 +1818,14 @@
   .ps-card.is-last .ps-body p { color: color-mix(in srgb, var(--frame) 68%, transparent); }
   .ps-cta { margin-top: .2rem; }
   @media (max-width: 720px) {
-    .ps-card { top: calc(76px + var(--i) * 14px); grid-template-columns: 1fr; row-gap: 1.2rem; border-radius: 26px; min-height: 220px; }
+    .ps-card { top: calc(76px + var(--i) * 14px); grid-template-columns: 1fr; row-gap: 1.2rem; border-radius: 12px; min-height: 220px; }
     .ps-num { align-self: start; }
   }
 
 
+  /* section headings: smaller than the hero; boxier minimal corners */
+  body h2.serif { font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1.06; letter-spacing: -.04em; }
+  @media (max-width: 620px) { body h2.serif { font-size: clamp(1.85rem, 7.8vw, 2.15rem); } }
 </style>
 </head>
 <body>
