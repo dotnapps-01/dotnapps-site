@@ -1777,10 +1777,10 @@
   .bh-actions { margin-top: 1.6rem; }
   .bh-caps { margin: 1.5rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); line-height: 1.8; }
   .bh-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
-  .band-head > p, .why-head > p, .tst-copy > p, .process-aside > p { max-width: 26rem; }
+  .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps), .tst-copy > p:not(.bh-caps), .process-aside > p:not(.bh-caps) { max-width: 26rem; }
   .band-head, .why-head { gap: 0; }
   .band-head > h2, .why-head > h2 { margin-top: 1.4rem; }
-  .band-head > p, .why-head > p { margin-top: 1.2rem; }
+  .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps) { margin-top: 1.2rem; }
   .cta .eyebrow-pill { margin-bottom: 1.4rem; display: inline-flex; }
   .cta .bh-caps { margin-bottom: 0; }
   @media (min-width: 621px) {
@@ -1792,6 +1792,28 @@
   @media (max-width: 620px) {
     .band-head h2, .process-aside h2, .cta h2, .tst-copy h2, .why-head h2 { font-size: clamp(2.3rem, 10.2vw, 2.9rem); }
     .bh-caps { font-size: .64rem; letter-spacing: .13em; }
+  }
+
+  /* ---------- Section openings = the hero, to the pixel: same pill, headline scale, line, button and caption sizes at every breakpoint ---------- */
+  .band-head > .eyebrow-pill, .why-head > .eyebrow-pill, .process-aside > .eyebrow-pill, .tst-copy > .eyebrow-pill, .cta > .eyebrow-pill, .bsys-tag { font-size: .66rem; padding: .6rem 1.05rem; letter-spacing: .17em; margin: 0; }
+  .band-head > h2, .why-head > h2, .process-aside > h2, .tst-copy > h2, .cta > h2, .bsys-copy > h2 { font-size: clamp(2.35rem, 10.4vw, 3rem); line-height: 1.02; letter-spacing: -.045em; margin: 1.7rem 0 0; padding: 0; text-wrap: auto; color: var(--ink); text-align: left; }
+  .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps), .process-aside > p:not(.bh-caps), .tst-copy > p:not(.bh-caps), .cta > p:not(.bh-caps), .bsys-copy > p:not(.bsys-caps) { font-size: 1.06rem; line-height: 1.6; margin: .85rem 0 0; max-width: 34rem; text-align: left; }
+  .bh-actions, .bsys-actions { margin: 1.4rem 0 0; }
+  .bh-actions .btn, .bsys-actions .btn { padding: .78rem 1.15rem; font-size: .86rem; gap: .45rem; }
+  p.bh-caps, p.bsys-caps { margin: 1.3rem 0 0; font-size: .68rem; letter-spacing: .15em; line-height: 1.9; }
+  .band-head, .why-head { gap: 0; }
+  @media (min-width: 621px) {
+    .band-head > .eyebrow-pill, .why-head > .eyebrow-pill, .process-aside > .eyebrow-pill, .tst-copy > .eyebrow-pill, .cta > .eyebrow-pill, .bsys-tag { font-size: .68rem; padding: .56rem 1.05rem; }
+    .band-head > h2, .why-head > h2, .process-aside > h2, .tst-copy > h2, .cta > h2, .bsys-copy > h2 { font-size: clamp(2.8rem, 5.7vw, 4.9rem); margin-top: 1.6rem; }
+    .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps), .process-aside > p:not(.bh-caps), .tst-copy > p:not(.bh-caps), .cta > p:not(.bh-caps), .bsys-copy > p:not(.bsys-caps) { font-size: clamp(1.02rem, 2.3vw, 1.2rem); margin-top: 1.1rem; }
+    .bh-actions, .bsys-actions { margin-top: 1.7rem; }
+    .bh-actions .btn, .bsys-actions .btn { padding: .75rem 1.25rem; font-size: .94rem; gap: .5rem; }
+    p.bh-caps, p.bsys-caps { margin-top: 1.9rem; line-height: 2; }
+  }
+  @media (min-width: 1100px) {
+    .band-head > h2, .why-head > h2, .process-aside > h2, .tst-copy > h2, .cta > h2, .bsys-copy > h2 { font-size: clamp(3.9rem, 5vw, 5.3rem); }
+    .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps), .process-aside > p:not(.bh-caps), .tst-copy > p:not(.bh-caps), .cta > p:not(.bh-caps), .bsys-copy > p:not(.bsys-caps) { font-size: 1.12rem; margin-top: 1.2rem; }
+    .bh-actions .btn, .bsys-actions .btn { padding: .72rem 1.3rem; font-size: .9rem; }
   }
 </style>
 </head>
@@ -1862,7 +1884,7 @@
   <!-- ===================== WHY ===================== -->
   <section class="why band" id="why">
     <div class="why-head reveal">
-      <span class="why-label">Why Dotnapps</span>
+      <span class="eyebrow-pill">Why Dotnapps</span>
       <h2 class="serif">Discover why <span class="h2-end">we stand out</span></h2>
       <p>A studio that carries product risk of its own.</p>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
