@@ -1826,6 +1826,45 @@
   /* section headings: smaller than the hero; boxier minimal corners */
   body h2.serif { font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1.06; letter-spacing: -.04em; }
   @media (max-width: 620px) { body h2.serif { font-size: clamp(1.85rem, 7.8vw, 2.15rem); } }
+  /* ---------- Services: sticky index + scrolling list ---------- */
+  .sx { display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 4vw, 2.5rem); align-items: start; }
+  .sx-index { display: none; }
+  .sx .practices { display: block; }
+  .sx .practice {
+    display: block; grid-column: auto; max-width: none; margin: 0; padding: 0 0 clamp(1.8rem, 4vw, 2.8rem);
+    background: none; border: 0; border-radius: 0; box-shadow: none; transform: none; scroll-margin-top: 104px;
+  }
+  .sx .practice:hover { transform: none; box-shadow: none; border: 0; }
+  .sx .practice + .practice { padding-top: clamp(1.4rem, 3vw, 2rem); border-top: 1px solid var(--hairline); }
+  .sx .practice-head { margin-bottom: .6rem; align-items: baseline; }
+  .sx .practice-head h3 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-weight: 500; letter-spacing: -.03em; }
+  .sx .practice-head .ct { white-space: nowrap; flex: none; }
+  .sx .practice-head .lt { font-size: 1rem; font-weight: 500; color: var(--faint); }
+  .sx .practice li { grid-template-columns: 2.4rem 1fr; padding: .85rem 0; }
+  .sx .practice li .t { font-size: 1rem; font-weight: 500; }
+  @media (min-width: 821px) {
+    .sx { grid-template-columns: 230px minmax(0, 1fr); }
+    .sx-index { display: flex; flex-direction: column; position: sticky; top: 100px; border-top: 1px solid var(--hairline); }
+    .sx-index a {
+      display: grid; grid-template-columns: 1.7rem 1fr auto; align-items: baseline; gap: .4rem;
+      padding: .85rem 0; border-bottom: 1px solid var(--hairline); color: var(--faint); text-decoration: none; position: relative;
+      transition: color .3s ease, padding-left .3s ease;
+    }
+    .sx-index .l { font-weight: 500; font-size: .9rem; }
+    .sx-index .nm { font-size: .94rem; letter-spacing: -.01em; }
+    .sx-index .c { font: 400 .62rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .08em; }
+    .sx-index a:hover { color: var(--text); }
+    .sx-index a.is-cur { color: var(--text); padding-left: .9rem; }
+    .sx-index a.is-cur .nm { font-weight: 600; }
+    .sx-index a::before { content: ""; position: absolute; left: 0; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--ink); transform: scale(0); transition: transform .3s ease; }
+    .sx-index a.is-cur::before { transform: scale(1); }
+    .sx .practice li .desc, .sx .practice li:hover .desc { max-height: none; opacity: 1; visibility: visible; margin-top: .3rem; }
+    .sx .practice li .t, .sx .practice li:hover .t { color: var(--text); }
+    .sx .practice li .chev { display: none; }
+    .sx .practice li .t-btn { cursor: default; }
+  }
+  @media (prefers-reduced-motion: reduce) { .sx-index a, .sx-index a::before { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -1975,10 +2014,18 @@
       <h2 class="serif">Twenty-four services, <span class="h2-end">five practices</span></h2>
       <p>From a first <b>MVP</b> to a core-systems <b>rebuild</b>.</p>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-      <div class="stats"><div><small>Services</small><b>24</b></div><div><small>Practices</small><b>05</b></div><div><small><span class="hint-hover">Hover</span><span class="hint-tap">Tap</span> a service</small><b>+</b></div></div>
+      <div class="stats"><div><small>Services</small><b>24</b></div><div><small>Practices</small><b>05</b></div><div><small>Index</small><b>A&ndash;E</b></div></div>
       <div class="sec-fig" aria-hidden="true"><i></i><small>FIG. 04 / THE FIVE PRACTICES</small></div>
     </div>
 
+    <div class="sx">
+    <nav class="sx-index" aria-label="The five practices">
+      <a href="#cat-a" class="is-cur"><span class="l">A</span><span class="nm">Product &amp; Software</span><span class="c">01&ndash;06</span></a>
+      <a href="#cat-b"><span class="l">B</span><span class="nm">AI &amp; Automation</span><span class="c">07&ndash;11</span></a>
+      <a href="#cat-c"><span class="l">C</span><span class="nm">Design &amp; Experience</span><span class="c">12&ndash;15</span></a>
+      <a href="#cat-d"><span class="l">D</span><span class="nm">Transformation</span><span class="c">16&ndash;19</span></a>
+      <a href="#cat-e"><span class="l">E</span><span class="nm">Technology &amp; Growth</span><span class="c">20&ndash;24</span></a>
+    </nav>
     <div class="practices stagger">
       <div class="practice" id="cat-a">
         <div class="practice-head"><span class="lt">A</span><h3>Product &amp; Software Development</h3><span class="ct">01&ndash;06</span></div>
@@ -2029,6 +2076,7 @@
           <li><span class="n">24</span><div><button type="button" class="t-btn" aria-expanded="false"><span class="t">Dedicated Development Team</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p class="desc">An embedded squad &mdash; design, engineering, PM &mdash; that ships as yours.</p></div></li>
         </ul>
       </div>
+    </div>
     </div>
   </section>
 
@@ -2648,6 +2696,23 @@
         setTimeout(function () { try { btn.blur(); } catch (e) {} }, 0);
       });
     });
+
+    /* services: index highlights the practice in view */
+    var sxLinks = [].slice.call(document.querySelectorAll(".sx-index a"));
+    if (sxLinks.length) {
+      var sxSecs = sxLinks.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+      var sxTick = false;
+      var sxPick = function () {
+        sxTick = false;
+        var line = window.innerHeight * 0.38, cur = 0;
+        sxSecs.forEach(function (sec, i) { if (sec && sec.getBoundingClientRect().top <= line) cur = i; });
+        sxLinks.forEach(function (a, i) { a.classList.toggle("is-cur", i === cur); });
+      };
+      var sxReq = function () { if (!sxTick) { sxTick = true; requestAnimationFrame(sxPick); } };
+      window.addEventListener("scroll", sxReq, { passive: true });
+      window.addEventListener("resize", sxReq);
+      sxPick();
+    }
 
     /* "Ship it" endless-runner mini-game */
     var gameWrap = document.querySelector("[data-game]");
