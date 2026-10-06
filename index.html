@@ -1820,6 +1820,12 @@
     .nav-contact.btn { position: absolute; right: var(--navpad); top: calc(env(safe-area-inset-top, 0px) + 12px); margin: 0; padding: .85rem 1.5rem; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 500; }
     .menu-theme { position: absolute; right: calc(var(--navpad) + 9rem); top: calc(env(safe-area-inset-top, 0px) + 17px); }
   }
+  /* testimonials: themes list fills the copy column */
+  .tst-themes { list-style: none; margin: .4rem 0 .2rem; padding: 0; width: 100%; max-width: 30rem; border-top: 1px solid var(--hairline); }
+  .tst-themes li { display: grid; grid-template-columns: 2.2rem 1fr; column-gap: .6rem; row-gap: .15rem; padding: .95rem 0; border-bottom: 1px solid var(--hairline); }
+  .tst-themes span { grid-row: 1 / span 2; font: 400 .68rem/1.9 "Space Mono", ui-monospace, monospace; letter-spacing: .1em; color: var(--faint); }
+  .tst-themes b { font-size: .98rem; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+  .tst-themes em { font-style: normal; font-size: .86rem; line-height: 1.5; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -2135,6 +2141,12 @@
       <div class="tst-copy">
         <h2 class="serif">Trusted by teams <span class="h2-end">who ship with us</span></h2>
         <p>From the people on the other side of the table.</p>
+        <ul class="tst-themes" aria-label="What clients mention most">
+          <li><span>01</span><b>One team, start to finish</b><em>The people who scope it build it.</em></li>
+          <li><span>02</span><b>Honest estimates</b><em>Straight answers, and pushback when it&rsquo;s not worth building.</em></li>
+          <li><span>03</span><b>Clean handoffs</b><em>Clear records, clear audit trails, no loose ends.</em></li>
+        </ul>
+        <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       </div>
       <div class="tst-viewport" aria-label="Client testimonials">
         <div class="tst-track">
