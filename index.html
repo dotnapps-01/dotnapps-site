@@ -604,37 +604,9 @@
   }
 
   /* ---------- Process timeline ---------- */
-  .process-grid { display: grid; grid-template-columns: minmax(240px, 330px) 1fr; gap: clamp(1.5rem, 5vw, 3.5rem); }
   .process-aside { position: sticky; top: 92px; align-self: start; display: flex; flex-direction: column; gap: 1rem; }
   .process-aside h2 { font-size: clamp(1.9rem, 4.4vw, 2.7rem); margin: 0; text-wrap: balance; }
   .process-aside p { margin: 0; color: var(--muted); max-width: 30ch; }
-
-  .timeline { position: relative; list-style: none; margin: 0; padding: 0; }
-  .timeline::before { content: ""; position: absolute; left: 23px; top: 26px; bottom: 26px; width: 2px; background: var(--border); }
-  .timeline::after {
-    content: ""; position: absolute; left: 23px; top: 26px; width: 2px;
-    height: calc((100% - 52px) * var(--progress, 0));
-    background: var(--text); transition: height .18s linear;
-  }
-  .tl-step { display: grid; grid-template-columns: 48px 1fr; gap: 1.2rem; padding: .85rem 0; }
-  .tl-badge {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--frame); border: 1px solid var(--border);
-    display: grid; place-items: center; box-shadow: var(--shadow-chip);
-    z-index: 1; color: var(--faint);
-    transition: color .4s ease, border-color .4s ease, transform .4s ease;
-  }
-  .tl-badge svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .tl-body {
-    border: 1px solid transparent; border-radius: 14px;
-    padding: .4rem .5rem; opacity: .42;
-    transition: opacity .45s ease, background .45s ease, border-color .45s ease, box-shadow .45s ease, padding .45s ease;
-  }
-  .tl-body h3 { font-size: 1.12rem; font-weight: 650; letter-spacing: -.02em; margin: 0 0 .3rem; }
-  .tl-body p { margin: 0; font-size: .89rem; color: var(--muted); }
-  .tl-step.active .tl-body { opacity: 1; background: var(--frame); border-color: var(--hairline); box-shadow: var(--shadow-card); padding: 1.1rem 1.25rem; }
-  .tl-step.active .tl-badge { color: var(--text); border-color: var(--text); transform: scale(1.04); }
-  .no-js .tl-body, .reduce-motion .tl-body { opacity: 1; }
 
   /* ---------- Engagement ---------- */
   .models { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .8rem; }
@@ -1267,7 +1239,6 @@
   }
 
   @media (max-width: 860px) {
-    .process-grid { grid-template-columns: 1fr; gap: 1.75rem; }
     .process-aside { position: static; }
   }
 
@@ -1464,7 +1435,6 @@
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     .js .reveal, .js .stagger > * { opacity: 1 !important; transform: none !important; }
     @media (max-width: 820px) { .nav > .brand .brand-name { animation: none !important; max-width: 9rem; margin-left: .55rem; opacity: 1; } }
-    .tl-body { opacity: 1 !important; }
     .stack-track { transform: none !important; }
     .js .vc-in, .js .vc-out { opacity: 1 !important; transform: none !important; }
     .js .vc-typing { display: none !important; }
@@ -1826,6 +1796,69 @@
   .tst-themes span { grid-row: 1 / span 2; font: 400 .68rem/1.9 "Space Mono", ui-monospace, monospace; letter-spacing: .1em; color: var(--faint); }
   .tst-themes b { font-size: .98rem; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
   .tst-themes em { font-style: normal; font-size: .86rem; line-height: 1.5; color: var(--muted); }
+  /* ---------- Process: zig-zag timeline ---------- */
+  .pz { display: flex; flex-direction: column; align-items: center; gap: clamp(2rem, 5vw, 3.2rem); }
+  .band .pz-head { position: static; align-self: center; align-items: center; text-align: center; max-width: 52rem; }
+  .band .pz-head h2, .band .pz-head p { text-align: center; margin-left: auto; margin-right: auto; }
+  .band .pz-head > p:not(.bh-caps) { max-width: 30rem; }
+  .pz-list { list-style: none; margin: 0; padding: 0; width: 100%; max-width: 980px; position: relative; display: flex; flex-direction: column; gap: .4rem; --pz-h: 0px; }
+  .pz-list::before, .pz-list::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; margin-left: -.5px; pointer-events: none; }
+  .pz-list::before { bottom: 0; background: var(--hairline); -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); }
+  .pz-list::after { height: var(--pz-h); background: linear-gradient(transparent, var(--ink) 40%); transition: height .5s cubic-bezier(.22,.7,.2,1); }
+  .pz-step {
+    position: relative; display: grid; align-items: center; outline: none;
+    grid-template-columns: 1fr 44px 1fr; grid-template-areas: "ico node txt";
+    column-gap: clamp(.6rem, 2vw, 1.4rem);
+    padding: 1.35rem clamp(1rem, 4vw, 3rem); border-radius: 40px; cursor: default;
+    background: transparent; transition: background .45s ease;
+  }
+  .pz-step.is-on { background: var(--sunken); }
+  .pz-step:focus-visible { box-shadow: 0 0 0 2px var(--focus); }
+  .pz-ico { grid-area: ico; display: flex; align-items: center; justify-content: flex-end; gap: .6rem; }
+  .pz-txt { grid-area: txt; text-align: left; }
+  .pz-step.is-flip { grid-template-areas: "txt node ico"; }
+  .pz-step.is-flip .pz-ico { flex-direction: row-reverse; justify-content: flex-end; }
+  .pz-step.is-flip .pz-txt { text-align: right; }
+  .pz-tile {
+    width: 56px; height: 56px; border-radius: 18px; flex: none; display: grid; place-items: center;
+    background: var(--frame); color: var(--ink); border: 1px solid var(--hairline);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 8%, transparent), 0 8px 16px -8px color-mix(in srgb, var(--ink) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--frame) 90%, transparent);
+    transition: background .45s ease, color .45s ease, border-color .45s ease, transform .45s cubic-bezier(.22,.7,.2,1);
+  }
+  .pz-tile svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .pz-tile svg .f { fill: currentColor; stroke: none; }
+  .pz-step.is-on .pz-tile { background: var(--ink); color: var(--frame); border-color: var(--ink); transform: scale(1.04); box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--ink) 55%, transparent), inset 0 1px 0 color-mix(in srgb, var(--frame) 28%, transparent); }
+  .pz-num {
+    min-width: 28px; height: 28px; padding: 0 .4rem; border-radius: 10px; display: grid; place-items: center;
+    background: var(--sunken); color: var(--muted); border: 1px solid var(--hairline);
+    font: 400 .66rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .06em;
+    transition: background .45s ease, color .45s ease;
+  }
+  .pz-step.is-on .pz-num { background: var(--frame); color: var(--text); }
+  .pz-node {
+    grid-area: node; justify-self: center; width: 18px; height: 18px; border-radius: 50%; position: relative; z-index: 1;
+    background: var(--frame); border: 1px solid var(--border);
+    transition: border-color .4s ease, box-shadow .4s ease;
+  }
+  .pz-node::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--ink); transform: scale(0); transition: transform .4s cubic-bezier(.22,.7,.2,1); }
+  .pz-step.is-on .pz-node { border-color: var(--ink); box-shadow: 0 0 0 6px var(--hl); }
+  .pz-step.is-on .pz-node::after { transform: scale(1); }
+  .pz-txt h3 { margin: 0 0 .3rem; font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; color: var(--text); }
+  .pz-txt p { margin: 0; font-size: .86rem; line-height: 1.55; color: var(--muted); max-width: 22rem; }
+  .pz-step.is-flip .pz-txt p { margin-left: auto; }
+  .pz-cta { margin-top: .4rem; justify-content: center; }
+  @media (max-width: 720px) {
+    .pz-list::before, .pz-list::after { left: 22px; margin-left: 0; }
+    .pz-step, .pz-step.is-flip { grid-template-columns: 44px 1fr; grid-template-areas: "node ico" "node txt"; row-gap: .8rem; align-items: start; padding: 1.1rem 1rem 1.1rem 0; border-radius: 28px; }
+    .pz-step .pz-node { align-self: center; grid-row: 1 / span 2; align-self: start; margin-top: 20px; }
+    .pz-ico, .pz-step.is-flip .pz-ico { flex-direction: row; justify-content: flex-start; padding-left: .4rem; }
+    .pz-txt, .pz-step.is-flip .pz-txt { text-align: left; padding-left: .4rem; }
+    .pz-step.is-flip .pz-txt p { margin-left: 0; }
+    .pz-tile { width: 48px; height: 48px; border-radius: 16px; }
+    .pz-step.is-on { background: var(--sunken); }
+  }
+  @media (prefers-reduced-motion: reduce) { .pz-step, .pz-tile, .pz-num, .pz-node, .pz-node::after, .pz-list::after { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -2160,31 +2193,34 @@
   <!-- ===================== PROCESS ===================== -->
   <section class="band" id="process">
     <div class="sec-row reveal"><span><i></i>SEC. 09 / PROCESS</span><span class="r">[ 4 STEPS ]</span></div>
-    <div class="process-grid">
-      <div class="process-aside">
+    <div class="pz">
+      <div class="process-aside pz-head">
         <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
         <p>Small teams, short cycles, and working software you can see every week.</p>
-        <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-        <p class="bh-caps">Small teams<i>&middot;</i>Short cycles<i>&middot;</i>Seen every week</p>
       </div>
-      <ol class="timeline">
-        <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M15 6a3 3 0 0 1 0 5M20 19c0-2.5-1.5-4-3.5-4.5"/></svg></span>
-          <div class="tl-body"><h3>Discovery</h3><p>Users, constraints, and what success actually looks like &mdash; agreed before anything is built.</p></div>
+      <ol class="pz-list" data-pz>
+        <li class="pz-step is-on" tabindex="0">
+          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.2"/><path d="M20 20l-4.4-4.4"/></svg></span><span class="pz-num">01</span></div>
+          <span class="pz-node" aria-hidden="true"></span>
+          <div class="pz-txt"><h3>Discovery</h3><p>Users, constraints, and what success actually looks like &mdash; agreed before anything is built.</p></div>
         </li>
-        <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4-1 10-10-3-3L5 16l-1 4z"/><path d="M14 6l3 3"/><path d="M18 3l1 1"/></svg></span>
-          <div class="tl-body"><h3>Design</h3><p>Flows first, then interface. We prototype the risky parts before a line of production code.</p></div>
+        <li class="pz-step is-flip" tabindex="0">
+          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.2"/><circle cx="6.5" cy="6.5" r="2" class="f"/><circle cx="17.5" cy="6.5" r="2" class="f"/><circle cx="6.5" cy="17.5" r="2" class="f"/><circle cx="17.5" cy="17.5" r="2" class="f"/></svg></span><span class="pz-num">02</span></div>
+          <span class="pz-node" aria-hidden="true"></span>
+          <div class="pz-txt"><h3>Design</h3><p>Flows first, then interface. We prototype the risky parts before a line of production code.</p></div>
         </li>
-        <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg></span>
-          <div class="tl-body"><h3>Build</h3><p>Ship in slices. You see working software every week and steer as it takes shape.</p></div>
+        <li class="pz-step" tabindex="0">
+          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="pz-num">03</span></div>
+          <span class="pz-node" aria-hidden="true"></span>
+          <div class="pz-txt"><h3>Build</h3><p>Ship in slices. You see working software every week and steer as it takes shape.</p></div>
         </li>
-        <li class="tl-step">
-          <span class="tl-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l6-6 4 4 6-8"/><path d="M20 7h-4M20 7v4"/></svg></span>
-          <div class="tl-body"><h3>Scale</h3><p>Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p></div>
+        <li class="pz-step is-flip" tabindex="0">
+          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span><span class="pz-num">04</span></div>
+          <span class="pz-node" aria-hidden="true"></span>
+          <div class="pz-txt"><h3>Scale</h3><p>Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p></div>
         </li>
       </ol>
+      <div class="bh-actions pz-cta"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
   </section>
 
@@ -2662,30 +2698,40 @@
       });
     });
 
-    /* timeline activation + progress */
-    var timeline = document.querySelector(".timeline");
-    var steps = document.querySelectorAll(".tl-step");
-    if (timeline && !RM && "IntersectionObserver" in window) {
-      var tio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { en.target.classList.toggle("active", en.isIntersecting); });
-      }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
-      steps.forEach(function (st) { tio.observe(st); });
-
-      var ticking = false;
-      var updateProgress = function () {
-        ticking = false;
-        var r = timeline.getBoundingClientRect();
-        var total = r.height - 52;
-        if (total <= 0) return;
-        var scrolled = Math.min(Math.max(window.innerHeight * 0.5 - r.top - 26, 0), total);
-        timeline.style.setProperty("--progress", (scrolled / total).toFixed(3));
+    /* process timeline: active step follows the viewport centre */
+    var pz = document.querySelector("[data-pz]");
+    if (pz) {
+      var pzSteps = [].slice.call(pz.querySelectorAll(".pz-step"));
+      var pzOn = null;
+      var pzSet = function (st) {
+        if (st === pzOn) return;
+        pzOn = st;
+        pzSteps.forEach(function (x) { x.classList.toggle("is-on", x === st); });
+        var n = st.querySelector(".pz-node");
+        var h = n.getBoundingClientRect().top + n.offsetHeight / 2 - pz.getBoundingClientRect().top;
+        pz.style.setProperty("--pz-h", Math.max(h, 0) + "px");
       };
-      var reqProgress = function () { if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); } };
-      updateProgress();
-      window.addEventListener("scroll", reqProgress, { passive: true });
-      window.addEventListener("resize", reqProgress);
-    } else if (timeline) {
-      steps.forEach(function (st) { st.classList.add("active"); });
+      pzSet(pzSteps[0]);
+      var pzTick = false;
+      var pzPick = function () {
+        pzTick = false;
+        var r = pz.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) return;
+        var mid = window.innerHeight * 0.5, best = null, bd = 1e9;
+        pzSteps.forEach(function (st) {
+          var b = st.getBoundingClientRect(), d = Math.abs(b.top + b.height / 2 - mid);
+          if (d < bd) { bd = d; best = st; }
+        });
+        if (best) pzSet(best);
+      };
+      var pzReq = function () { if (!pzTick) { pzTick = true; requestAnimationFrame(pzPick); } };
+      window.addEventListener("scroll", pzReq, { passive: true });
+      window.addEventListener("resize", function () { pzOn = null; pzReq(); });
+      pzSteps.forEach(function (st) {
+        st.addEventListener("mouseenter", function () { pzSet(st); });
+        st.addEventListener("focus", function () { pzSet(st); });
+        st.addEventListener("click", function () { pzSet(st); });
+      });
     }
 
     /* "Ship it" endless-runner mini-game */
