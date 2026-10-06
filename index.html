@@ -1772,6 +1772,27 @@
       font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; letter-spacing: .14em; font-weight: 500;
     }
   }
+
+  /* ---------- Every section opens like the hero: mono pill, big two-tone headline, one short line, a black pill button, a mono caption ---------- */
+  .bh-actions { margin-top: 1.6rem; }
+  .bh-caps { margin: 1.5rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); line-height: 1.8; }
+  .bh-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
+  .band-head > p, .why-head > p, .tst-copy > p, .process-aside > p { max-width: 26rem; }
+  .band-head, .why-head { gap: 0; }
+  .band-head > h2, .why-head > h2 { margin-top: 1.4rem; }
+  .band-head > p, .why-head > p { margin-top: 1.2rem; }
+  .cta .eyebrow-pill { margin-bottom: 1.4rem; display: inline-flex; }
+  .cta .bh-caps { margin-bottom: 0; }
+  @media (min-width: 621px) {
+    .band-head h2, .process-aside h2, .cta h2, .tst-copy h2, .why-head h2 { font-size: clamp(2.7rem, 4.8vw, 4.3rem); line-height: 1.02; }
+    .process-aside h2, .tst-copy h2 { margin-top: .4rem; }
+    .cta h2 { font-size: clamp(2.8rem, 5.2vw, 4.6rem); }
+    .band-head { margin-bottom: clamp(2.2rem, 4.5vw, 3.4rem); }
+  }
+  @media (max-width: 620px) {
+    .band-head h2, .process-aside h2, .cta h2, .tst-copy h2, .why-head h2 { font-size: clamp(2.3rem, 10.2vw, 2.9rem); }
+    .bh-caps { font-size: .64rem; letter-spacing: .13em; }
+  }
 </style>
 </head>
 <body>
@@ -1843,7 +1864,9 @@
     <div class="why-head reveal">
       <span class="why-label">Why Dotnapps</span>
       <h2 class="serif">Discover why <span class="h2-end">we stand out</span></h2>
-      <p>A studio that carries product risk of its own &mdash; and brings that instinct to client work.</p>
+      <p>A studio that carries product risk of its own.</p>
+      <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <p class="bh-caps">Own products<i>&middot;</i>Senior team<i>&middot;</i>No handoffs</p>
     </div>
     <div class="why-bento reveal">
       <div class="wb wb-a">
@@ -1922,7 +1945,9 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">What we do for clients</span>
       <h2 class="serif">Twenty-four services, <span class="h2-end">five practices</span></h2>
-      <p>From a first MVP to a core-systems rebuild. <span class="hint-hover">Hover</span><span class="hint-tap">Tap</span> a service for the short version.</p>
+      <p>From a first MVP to a core-systems rebuild.</p>
+      <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <p class="bh-caps">24 services <i>&middot;</i> 5 practices <i>&middot;</i> <span class="hint-hover">Hover</span><span class="hint-tap">Tap</span> for detail</p>
     </div>
 
     <div class="practices stagger">
@@ -1983,7 +2008,8 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">Coffee break</span>
       <h2 class="serif">Ship it</h2>
-      <p>A tiny endless runner. Jump the bugs with Space or a tap &mdash; see how far you ship.</p>
+      <p>A tiny endless runner. See how far you ship.</p>
+      <p class="bh-caps">Space or tap to jump</p>
     </div>
 
     <div class="game reveal" data-game>
@@ -2014,7 +2040,7 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">Industries</span>
       <h2 class="serif">Where we've <span class="h2-end">done the work</span></h2>
-      <p>Domain knowledge matters. These are the sectors we've shipped in and can move fast in.</p>
+      <p>The sectors we've shipped in and can move fast in.</p>
     </div>
     <div class="ind-grid stagger">
       <span class="ind">Fintech &amp; Payments</span>
@@ -2033,7 +2059,7 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">Selected work</span>
       <h2 class="serif">Shipped, <span class="h2-end">not just designed</span></h2>
-      <p>A sample of recent builds. Some client work is under NDA, so a few of these are anonymised.</p>
+      <p>Recent builds. Some are anonymised under NDA.</p>
     </div>
     <div class="work-grid stagger">
       <article class="work-card">
@@ -2083,7 +2109,8 @@
       <div class="tst-copy">
         <span class="eyebrow-pill">Testimonials</span>
         <h2 class="serif">Trusted by teams <span class="h2-end">who ship with us</span></h2>
-        <p>What it is like to build with a studio that also runs its own product &mdash; straight from the people on the other side of the table.</p>
+        <p>From the people on the other side of the table.</p>
+        <p class="bh-caps">Illustrative quotes</p>
       </div>
       <div class="tst-viewport" aria-label="Client testimonials">
         <div class="tst-track">
@@ -2102,6 +2129,8 @@
         <span class="eyebrow-pill">Process</span>
         <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
         <p>Small teams, short cycles, and working software you can see every week.</p>
+        <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        <p class="bh-caps">Small teams<i>&middot;</i>Short cycles<i>&middot;</i>Seen every week</p>
       </div>
       <ol class="timeline">
         <li class="tl-step">
@@ -2129,6 +2158,8 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">Ways to work with us</span>
       <h2 class="serif">Three <span class="h2-end">engagement models</span></h2>
+      <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <p class="bh-caps">Fixed scope<i>&middot;</i>Dedicated team<i>&middot;</i>Advisory</p>
     </div>
     <div class="models stagger">
       <div class="model">
@@ -2154,7 +2185,8 @@
     <div class="band-head reveal">
       <span class="eyebrow-pill">How we compare</span>
       <h2 class="serif">Studio, freelancer, <span class="h2-end">or a new hire</span></h2>
-      <p>The honest version of when a studio is the right call &mdash; and when it isn't.</p>
+      <p>When a studio is the right call &mdash; and when it isn't.</p>
+      <p class="bh-caps">Studio<i>&middot;</i>Freelancer<i>&middot;</i>In-house hire</p>
     </div>
     <div class="compare reveal">
       <div class="compare-wrap">
@@ -2181,6 +2213,8 @@
       <span class="eyebrow-pill">FAQ</span>
       <h2 class="serif">We have the <span class="h2-end"><span class="mark-hl">answers</span></span></h2>
       <p>Straight answers on how we scope, price, work, and hand over.</p>
+      <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Ask a question<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <p class="bh-caps">Scoping<i>&middot;</i>Pricing<i>&middot;</i>Working<i>&middot;</i>Handover</p>
     </div>
 
     <div class="faq-shell reveal">
@@ -2229,8 +2263,10 @@
 
   <!-- ===================== CONTACT ===================== -->
   <section class="cta" id="contact">
+    <span class="eyebrow-pill reveal">Contact</span>
     <h2 class="serif reveal">Have something <span class="h2-end">to build?</span></h2>
-    <p class="reveal">Send a short brief. You get a real response &mdash; an approach, a rough shape, a timeline &mdash; not a sales sequence.</p>
+    <p class="reveal">Send a short brief. You get a real response, not a sales sequence.</p>
+    <p class="bh-caps reveal">An approach<i>&middot;</i>A rough shape<i>&middot;</i>A timeline</p>
     <form class="brief reveal" id="brief-form">
       <div class="row">
         <label>Your name<input type="text" name="name" autocomplete="name" required></label>
