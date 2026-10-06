@@ -1796,68 +1796,35 @@
   .tst-themes span { grid-row: 1 / span 2; font: 400 .68rem/1.9 "Space Mono", ui-monospace, monospace; letter-spacing: .1em; color: var(--faint); }
   .tst-themes b { font-size: .98rem; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
   .tst-themes em { font-style: normal; font-size: .86rem; line-height: 1.5; color: var(--muted); }
-  /* ---------- Process: zig-zag timeline ---------- */
-  .pz { display: flex; flex-direction: column; align-items: center; gap: clamp(2rem, 5vw, 3.2rem); }
-  .band .pz-head { position: static; align-self: center; align-items: center; text-align: center; max-width: 52rem; }
-  .band .pz-head h2, .band .pz-head p { text-align: center; margin-left: auto; margin-right: auto; }
-  .band .pz-head > p:not(.bh-caps) { max-width: 30rem; }
-  .pz-list { list-style: none; margin: 0; padding: 0; width: 100%; max-width: 980px; position: relative; display: flex; flex-direction: column; gap: .4rem; --pz-h: 0px; }
-  .pz-list::before, .pz-list::after { content: ""; position: absolute; left: 50%; top: 0; width: 1px; margin-left: -.5px; pointer-events: none; }
-  .pz-list::before { bottom: 0; background: var(--hairline); -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); }
-  .pz-list::after { height: var(--pz-h); background: linear-gradient(transparent, var(--ink) 40%); transition: height .5s cubic-bezier(.22,.7,.2,1); }
-  .pz-step {
-    position: relative; display: grid; align-items: center; outline: none;
-    grid-template-columns: 1fr 44px 1fr; grid-template-areas: "ico node txt";
-    column-gap: clamp(.6rem, 2vw, 1.4rem);
-    padding: 1.35rem clamp(1rem, 4vw, 3rem); border-radius: 40px; cursor: default;
-    background: transparent; transition: background .45s ease;
+  /* ---------- Process: numbered rows ---------- */
+  .pr { display: flex; flex-direction: column; gap: clamp(1.8rem, 4vw, 2.6rem); }
+  .band .pr-head { position: static; align-self: flex-start; align-items: flex-start; text-align: left; max-width: 52rem; }
+  .pr-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); }
+  .pr-row {
+    display: grid; align-items: center; outline: none; cursor: default;
+    grid-template-columns: clamp(4rem, 9vw, 7.5rem) minmax(0, 1fr) minmax(0, 1.15fr) 44px;
+    column-gap: clamp(.8rem, 3vw, 2rem);
+    padding: clamp(1.3rem, 3vw, 2rem) 0; border-bottom: 1px solid var(--hairline);
+    transition: padding .45s cubic-bezier(.22,.7,.2,1);
   }
-  .pz-step.is-on { background: var(--sunken); }
-  .pz-step:focus-visible { box-shadow: 0 0 0 2px var(--focus); }
-  .pz-ico { grid-area: ico; display: flex; align-items: center; justify-content: flex-end; gap: .6rem; }
-  .pz-txt { grid-area: txt; text-align: left; }
-  .pz-step.is-flip { grid-template-areas: "txt node ico"; }
-  .pz-step.is-flip .pz-ico { flex-direction: row-reverse; justify-content: flex-end; }
-  .pz-step.is-flip .pz-txt { text-align: right; }
-  .pz-tile {
-    width: 56px; height: 56px; border-radius: 18px; flex: none; display: grid; place-items: center;
-    background: var(--frame); color: var(--ink); border: 1px solid var(--hairline);
-    box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 8%, transparent), 0 8px 16px -8px color-mix(in srgb, var(--ink) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--frame) 90%, transparent);
-    transition: background .45s ease, color .45s ease, border-color .45s ease, transform .45s cubic-bezier(.22,.7,.2,1);
+  .pr-num { font-size: clamp(2.2rem, 5.2vw, 4rem); line-height: 1; font-weight: 500; letter-spacing: -.04em; color: var(--faint); transition: color .4s ease; font-variant-numeric: tabular-nums; }
+  .pr-title { margin: 0; font-size: clamp(1.35rem, 2.6vw, 2rem); font-weight: 500; letter-spacing: -.03em; line-height: 1.1; color: var(--muted); transition: color .4s ease; }
+  .pr-desc { margin: 0; font-size: .95rem; line-height: 1.6; color: var(--muted); max-width: 26rem; }
+  .pr-go {
+    width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; justify-self: end;
+    border: 1px solid var(--border); color: var(--text); background: transparent;
+    transition: background .4s ease, color .4s ease, border-color .4s ease, transform .45s cubic-bezier(.22,.7,.2,1);
   }
-  .pz-tile svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .pz-tile svg .f { fill: currentColor; stroke: none; }
-  .pz-step.is-on .pz-tile { background: var(--ink); color: var(--frame); border-color: var(--ink); transform: scale(1.04); box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--ink) 55%, transparent), inset 0 1px 0 color-mix(in srgb, var(--frame) 28%, transparent); }
-  .pz-num {
-    min-width: 28px; height: 28px; padding: 0 .4rem; border-radius: 10px; display: grid; place-items: center;
-    background: var(--sunken); color: var(--muted); border: 1px solid var(--hairline);
-    font: 400 .66rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .06em;
-    transition: background .45s ease, color .45s ease;
-  }
-  .pz-step.is-on .pz-num { background: var(--frame); color: var(--text); }
-  .pz-node {
-    grid-area: node; justify-self: center; width: 18px; height: 18px; border-radius: 50%; position: relative; z-index: 1;
-    background: var(--frame); border: 1px solid var(--border);
-    transition: border-color .4s ease, box-shadow .4s ease;
-  }
-  .pz-node::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--ink); transform: scale(0); transition: transform .4s cubic-bezier(.22,.7,.2,1); }
-  .pz-step.is-on .pz-node { border-color: var(--ink); box-shadow: 0 0 0 6px var(--hl); }
-  .pz-step.is-on .pz-node::after { transform: scale(1); }
-  .pz-txt h3 { margin: 0 0 .3rem; font-size: 1.1rem; font-weight: 600; letter-spacing: -.02em; color: var(--text); }
-  .pz-txt p { margin: 0; font-size: .86rem; line-height: 1.55; color: var(--muted); max-width: 22rem; }
-  .pz-step.is-flip .pz-txt p { margin-left: auto; }
-  .pz-cta { margin-top: .4rem; justify-content: center; }
+  .pr-go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .pr-row.is-on .pr-num, .pr-row.is-on .pr-title { color: var(--text); }
+  .pr-row.is-on .pr-go { background: var(--ink); color: var(--frame); border-color: var(--ink); transform: rotate(45deg); }
+  .pr-row:focus-visible { box-shadow: 0 1px 0 var(--focus); }
+  .pr-cta { margin-top: .2rem; }
   @media (max-width: 720px) {
-    .pz-list::before, .pz-list::after { left: 22px; margin-left: 0; }
-    .pz-step, .pz-step.is-flip { grid-template-columns: 44px 1fr; grid-template-areas: "node ico" "node txt"; row-gap: .8rem; align-items: start; padding: 1.1rem 1rem 1.1rem 0; border-radius: 28px; }
-    .pz-step .pz-node { align-self: center; grid-row: 1 / span 2; align-self: start; margin-top: 20px; }
-    .pz-ico, .pz-step.is-flip .pz-ico { flex-direction: row; justify-content: flex-start; padding-left: .4rem; }
-    .pz-txt, .pz-step.is-flip .pz-txt { text-align: left; padding-left: .4rem; }
-    .pz-step.is-flip .pz-txt p { margin-left: 0; }
-    .pz-tile { width: 48px; height: 48px; border-radius: 16px; }
-    .pz-step.is-on { background: var(--sunken); }
+    .pr-row { grid-template-columns: 3.2rem minmax(0, 1fr) 40px; grid-template-areas: "num title go" ". desc desc"; row-gap: .6rem; }
+    .pr-num { grid-area: num; } .pr-title { grid-area: title; } .pr-go { grid-area: go; width: 40px; height: 40px; } .pr-desc { grid-area: desc; max-width: none; }
   }
-  @media (prefers-reduced-motion: reduce) { .pz-step, .pz-tile, .pz-num, .pz-node, .pz-node::after, .pz-list::after { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .pr-row, .pr-num, .pr-title, .pr-go { transition: none; } }
 
 </style>
 </head>
@@ -2193,34 +2160,18 @@
   <!-- ===================== PROCESS ===================== -->
   <section class="band" id="process">
     <div class="sec-row reveal"><span><i></i>SEC. 09 / PROCESS</span><span class="r">[ 4 STEPS ]</span></div>
-    <div class="pz">
-      <div class="process-aside pz-head">
+    <div class="pr">
+      <div class="process-aside pr-head">
         <h2 class="serif">How the work flows, <span class="h2-end">start to scale</span></h2>
         <p>Small teams, short cycles, and working software you can see every week.</p>
       </div>
-      <ol class="pz-list" data-pz>
-        <li class="pz-step is-on" tabindex="0">
-          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.2"/><path d="M20 20l-4.4-4.4"/></svg></span><span class="pz-num">01</span></div>
-          <span class="pz-node" aria-hidden="true"></span>
-          <div class="pz-txt"><h3>Discovery</h3><p>Users, constraints, and what success actually looks like &mdash; agreed before anything is built.</p></div>
-        </li>
-        <li class="pz-step is-flip" tabindex="0">
-          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.2"/><circle cx="6.5" cy="6.5" r="2" class="f"/><circle cx="17.5" cy="6.5" r="2" class="f"/><circle cx="6.5" cy="17.5" r="2" class="f"/><circle cx="17.5" cy="17.5" r="2" class="f"/></svg></span><span class="pz-num">02</span></div>
-          <span class="pz-node" aria-hidden="true"></span>
-          <div class="pz-txt"><h3>Design</h3><p>Flows first, then interface. We prototype the risky parts before a line of production code.</p></div>
-        </li>
-        <li class="pz-step" tabindex="0">
-          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span><span class="pz-num">03</span></div>
-          <span class="pz-node" aria-hidden="true"></span>
-          <div class="pz-txt"><h3>Build</h3><p>Ship in slices. You see working software every week and steer as it takes shape.</p></div>
-        </li>
-        <li class="pz-step is-flip" tabindex="0">
-          <div class="pz-ico"><span class="pz-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span><span class="pz-num">04</span></div>
-          <span class="pz-node" aria-hidden="true"></span>
-          <div class="pz-txt"><h3>Scale</h3><p>Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p></div>
-        </li>
+      <ol class="pr-list" data-pr>
+        <li class="pr-row is-on" tabindex="0"><span class="pr-num">01</span><h3 class="pr-title">Discovery</h3><p class="pr-desc">Users, constraints, and what success actually looks like &mdash; agreed before anything is built.</p><span class="pr-go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></li>
+        <li class="pr-row" tabindex="0"><span class="pr-num">02</span><h3 class="pr-title">Design</h3><p class="pr-desc">Flows first, then interface. We prototype the risky parts before a line of production code.</p><span class="pr-go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></li>
+        <li class="pr-row" tabindex="0"><span class="pr-num">03</span><h3 class="pr-title">Build</h3><p class="pr-desc">Ship in slices. You see working software every week and steer as it takes shape.</p><span class="pr-go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></li>
+        <li class="pr-row" tabindex="0"><span class="pr-num">04</span><h3 class="pr-title">Scale</h3><p class="pr-desc">Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p><span class="pr-go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></li>
       </ol>
-      <div class="bh-actions pz-cta"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <div class="bh-actions pr-cta"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
   </section>
 
@@ -2698,39 +2649,15 @@
       });
     });
 
-    /* process timeline: active step follows the viewport centre */
-    var pz = document.querySelector("[data-pz]");
-    if (pz) {
-      var pzSteps = [].slice.call(pz.querySelectorAll(".pz-step"));
-      var pzOn = null;
-      var pzSet = function (st) {
-        if (st === pzOn) return;
-        pzOn = st;
-        pzSteps.forEach(function (x) { x.classList.toggle("is-on", x === st); });
-        var n = st.querySelector(".pz-node");
-        var h = n.getBoundingClientRect().top + n.offsetHeight / 2 - pz.getBoundingClientRect().top;
-        pz.style.setProperty("--pz-h", Math.max(h, 0) + "px");
-      };
-      pzSet(pzSteps[0]);
-      var pzTick = false;
-      var pzPick = function () {
-        pzTick = false;
-        var r = pz.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > window.innerHeight) return;
-        var mid = window.innerHeight * 0.5, best = null, bd = 1e9;
-        pzSteps.forEach(function (st) {
-          var b = st.getBoundingClientRect(), d = Math.abs(b.top + b.height / 2 - mid);
-          if (d < bd) { bd = d; best = st; }
-        });
-        if (best) pzSet(best);
-      };
-      var pzReq = function () { if (!pzTick) { pzTick = true; requestAnimationFrame(pzPick); } };
-      window.addEventListener("scroll", pzReq, { passive: true });
-      window.addEventListener("resize", function () { pzOn = null; pzReq(); });
-      pzSteps.forEach(function (st) {
-        st.addEventListener("mouseenter", function () { pzSet(st); });
-        st.addEventListener("focus", function () { pzSet(st); });
-        st.addEventListener("click", function () { pzSet(st); });
+    /* process rows: hover, focus or tap makes a row the active one */
+    var prList = document.querySelector("[data-pr]");
+    if (prList) {
+      var prRows = [].slice.call(prList.querySelectorAll(".pr-row"));
+      var prSet = function (row) { prRows.forEach(function (x) { x.classList.toggle("is-on", x === row); }); };
+      prRows.forEach(function (row) {
+        row.addEventListener("mouseenter", function () { prSet(row); });
+        row.addEventListener("focus", function () { prSet(row); });
+        row.addEventListener("click", function () { prSet(row); });
       });
     }
 
