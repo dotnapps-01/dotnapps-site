@@ -497,38 +497,28 @@
   .bsys-actions { margin-top: 1.8rem; }
   .bsys-caps { margin: 1.9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
   .bsys-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
-  .bstack { width: 100%; max-width: 40rem; margin-left: auto; }
-  .stk-svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .stk-svg .lay { cursor: pointer; outline: none; transform: translateY(var(--dy, 0px)); transition: transform .5s cubic-bezier(.2, .8, .2, 1), opacity .3s ease; }
-  .stk-svg .top { fill: var(--frame); stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; transition: fill .3s ease; }
-  .stk-svg .side { stroke: var(--ink); stroke-width: 1.2; stroke-linejoin: round; }
-  .stk-svg .side.l { fill: color-mix(in srgb, var(--ink) 16%, var(--frame)); } .stk-svg .side.r { fill: color-mix(in srgb, var(--ink) 30%, var(--frame)); }
-  .stk-svg .lay.on .top { fill: color-mix(in srgb, var(--ink) 6%, var(--frame)); stroke-width: 2; }
-  .stk-svg .lay:not(.on) .stk-tile, .stk-svg .lay:not(.on) .lab-n, .stk-svg .lay:not(.on) .lab-s { opacity: .55; } .stk-svg .lay:not(.on):hover .stk-tile, .stk-svg .lay:not(.on):hover .lab-n, .stk-svg .lay:not(.on):hover .lab-s { opacity: 1; }
-  .stk-svg .stk-tile .bg { fill: var(--ink); }
-  .stk-svg .stk-tile .fg { fill: var(--frame); filter: none; } .stk-svg .stk-tile .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); }
-  .stk-svg .stk-tile .dk { fill: var(--ink); } .stk-svg .stk-tile .dks { stroke: var(--ink); fill: none; }
-  .stk-svg .lead { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 4; opacity: .5; } .stk-svg .lay.on .lead { opacity: 1; stroke-dasharray: none; }
-  .stk-svg .lead-dot { fill: var(--ink); opacity: .5; } .stk-svg .lay.on .lead-dot { opacity: 1; }
-  .stk-svg .lab-n { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; letter-spacing: .14em; font-weight: 600; fill: var(--ink); }
-  .stk-svg .lab-s { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 10px; letter-spacing: .12em; fill: var(--muted); }
-  .stk-detail { margin-top: .6rem; border: 1px solid var(--ink); border-radius: 14px; padding: .9rem 1.1rem 1rem; background: var(--frame); }
-  .stk-detail small { display: block; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-  .stk-detail b { display: block; margin-top: .25rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
-  .stk-detail ul { list-style: none; margin: .7rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
-  .stk-detail li { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; font-size: .86rem; font-weight: 500; color: var(--ink); }
-  .stk-detail li svg { width: 2.4rem; height: 2.4rem; border-radius: 28%; background: var(--ink); padding: .1rem; box-sizing: border-box; }
-  .stk-detail li .fg { fill: var(--frame); } .stk-detail li .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); } .stk-detail li .dk { fill: var(--ink); } .stk-detail li .dks { stroke: var(--ink); fill: none; }
-  .stk-detail li em { font-style: normal; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .5rem; letter-spacing: .12em; text-transform: uppercase; padding: .16rem .42rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--muted); }
-  .stk-detail li em.live { background: var(--ink); color: var(--frame); border: 1px solid var(--ink); }
-  .bd-note { margin: .9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
-  @media (prefers-reduced-motion: reduce) { .stk-svg .lay { transition: none; } }
+  .bbox { width: 100%; max-width: 40rem; margin-left: auto; border: 1px solid var(--ink); border-radius: 20px; background: var(--frame); padding: 1.3rem 1.4rem 1.2rem; }
+  .bb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--hairline); }
+  .bb-head small, .bb-head b, .bb-cap { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; text-transform: uppercase; }
+  .bb-head small { font-size: .62rem; letter-spacing: .16em; color: var(--muted); }
+  .bb-head b { font-size: .72rem; letter-spacing: .14em; font-weight: 600; color: var(--ink); }
+  .bb-grid { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem .8rem; }
+  .bb-app { width: 100%; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; text-align: left; display: flex; flex-direction: column; align-items: flex-start; gap: .55rem; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+  .bb-app svg { width: 3.4rem; height: 3.4rem; border-radius: 28%; padding: .15rem; box-sizing: border-box; background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 74%, var(--frame)) 0%, var(--ink) 100%); transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease; box-shadow: 0 10px 18px -10px rgba(0, 0, 0, .45); }
+  .bb-app .fg { fill: var(--frame); } .bb-app .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); } .bb-app .dk { fill: var(--ink); } .bb-app .dks { stroke: var(--ink); fill: none; }
+  .bb-app span { font-size: .9rem; font-weight: 500; line-height: 1.2; }
+  .bb-app em { font-style: normal; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .5rem; letter-spacing: .13em; padding: .17rem .45rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--muted); }
+  .bb-app em.live { background: var(--ink); color: var(--frame); border: 1px solid var(--ink); }
+  .bb-app:hover svg, .bb-app:focus-visible svg { transform: translateY(-4px); box-shadow: 0 16px 22px -10px rgba(0, 0, 0, .5); }
+  .bb-app:focus-visible { outline: none; }
+  .bb-cap { margin: 1.3rem 0 0; padding-top: 1rem; border-top: 1px solid var(--hairline); font-size: .62rem; letter-spacing: .11em; line-height: 1.6; color: var(--muted); min-height: 1.6em; box-sizing: content-box; }
+  .bb-cap b { color: var(--ink); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .bb-app svg { transition: none; } }
   @media (max-width: 860px) {
     .bsys { grid-template-columns: 1fr; gap: 2rem; }
-    .bstack { max-width: none; margin: 0; }
-    .stk-svg .lab-n, .stk-svg .lab-s, .stk-svg .lead, .stk-svg .lead-dot { display: none; }
-    .bstack { overflow: hidden; }
-    .stk-svg { width: 128%; max-width: none; }
+    .bbox { max-width: none; margin: 0; padding: 1.1rem 1rem 1rem; }
+    .bb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem .6rem; }
+    .bb-app svg { width: 3.1rem; height: 3.1rem; }
   }
 
   .product-note { margin: 1.5rem 0 0; font-size: .88rem; color: var(--muted); }
@@ -1892,8 +1882,10 @@
         </div>
         <p class="bsys-caps">12 modules <i>&middot;</i> 2 live <i>&middot;</i> 1 account</p>
       </div>
-      <div class="bstack" data-layers='[{"n": "Customers", "apps": [{"n": "CRM", "s": "Live"}, {"n": "Helpdesk", "s": "Planned"}, {"n": "Knowledge Base", "s": "Planned"}]}, {"n": "Money", "apps": [{"n": "Invoice", "s": "Live"}, {"n": "Books", "s": "Planned"}, {"n": "Payroll", "s": "Later"}]}, {"n": "Operations", "apps": [{"n": "Projects", "s": "Next"}, {"n": "Inventory", "s": "Later"}, {"n": "People", "s": "Later"}]}, {"n": "Foundation", "apps": [{"n": "Identity", "s": "Next"}, {"n": "Analytics", "s": "Planned"}, {"n": "Automation", "s": "Planned"}]}]'><svg class="stk-svg" viewBox="0 0 640 470" role="img" aria-label="Business OS as four layers of apps"><g class="lay" data-i="3" tabindex="0" role="button" aria-label="Foundation layer"><polygon class="side l" points="80.3,340.0 250.0,438.0 250.0,454.0 80.3,356.0"/><polygon class="side r" points="419.7,340.0 250.0,438.0 250.0,454.0 419.7,356.0"/><polygon class="top" points="250.0,242.0 419.7,340.0 250.0,438.0 80.3,340.0"/><g transform="translate(250,340) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="50,21 74,31 74,52 50,79 26,52 26,31"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="23" y="52" width="16" height="24"/><rect class="fg" x="42" y="38" width="16" height="38"/><rect class="fg" x="61" y="24" width="16" height="52"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="57,21 31,53 49,53 43,79 69,46 51,46"/></g></g></g><line class="lead" x1="429.7" y1="340" x2="448" y2="340"/><circle class="lead-dot" cx="429.7" cy="340" r="3"/><text class="lab-n" x="458" y="337">FOUNDATION</text><text class="lab-s" x="458" y="353">03 MODULES</text></g><g class="lay" data-i="2" tabindex="0" role="button" aria-label="Operations layer"><polygon class="side l" points="80.3,264.0 250.0,362.0 250.0,378.0 80.3,280.0"/><polygon class="side r" points="419.7,264.0 250.0,362.0 250.0,378.0 419.7,280.0"/><polygon class="top" points="250.0,166.0 419.7,264.0 250.0,362.0 80.3,264.0"/><g transform="translate(250,264) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="24" y="24" width="22" height="52"/><rect class="fg" x="54" y="24" width="22" height="30"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="24" y="26" width="52" height="48"/><rect class="dk" x="24" y="40" width="52" height="5"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><circle class="fg" cx="50" cy="36" r="13"/><polygon class="fg" points="26,78 26,66 36,56 64,56 74,66 74,78"/></g></g></g><line class="lead" x1="429.7" y1="264" x2="448" y2="264"/><circle class="lead-dot" cx="429.7" cy="264" r="3"/><text class="lab-n" x="458" y="261">OPERATIONS</text><text class="lab-s" x="458" y="277">03 MODULES</text></g><g class="lay" data-i="1" tabindex="0" role="button" aria-label="Money layer"><polygon class="side l" points="80.3,188.0 250.0,286.0 250.0,302.0 80.3,204.0"/><polygon class="side r" points="419.7,188.0 250.0,286.0 250.0,302.0 419.7,204.0"/><polygon class="top" points="250.0,90.0 419.7,188.0 250.0,286.0 80.3,188.0"/><g transform="translate(250,188) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="28,22 56,22 72,38 72,78 28,78"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="22" y="28" width="26" height="46"/><rect class="fg" x="52" y="28" width="26" height="46"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><circle class="fg" cx="50" cy="50" r="27"/><circle class="dk" cx="50" cy="50" r="14"/></g></g></g><line class="lead" x1="429.7" y1="188" x2="448" y2="188"/><circle class="lead-dot" cx="429.7" cy="188" r="3"/><text class="lab-n" x="458" y="185">MONEY</text><text class="lab-s" x="458" y="201">03 MODULES · 1 LIVE</text></g><g class="lay" data-i="0" tabindex="0" role="button" aria-label="Customers layer"><polygon class="side l" points="80.3,112.0 250.0,210.0 250.0,226.0 80.3,128.0"/><polygon class="side r" points="419.7,112.0 250.0,210.0 250.0,226.0 419.7,128.0"/><polygon class="top" points="250.0,14.0 419.7,112.0 250.0,210.0 80.3,112.0"/><g transform="translate(250,112) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="23,27 77,27 57,52 57,74 43,74 43,52"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="23,25 77,25 77,63 52,63 36,79 36,63 23,63"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="32,22 68,22 68,78 50,63 32,78"/></g></g></g><line class="lead" x1="429.7" y1="112" x2="448" y2="112"/><circle class="lead-dot" cx="429.7" cy="112" r="3"/><text class="lab-n" x="458" y="109">CUSTOMERS</text><text class="lab-s" x="458" y="125">03 MODULES · 1 LIVE</text></g></svg><div class="stk-detail" role="status" aria-live="polite"><small></small><b></b><ul></ul></div>
-        <p class="bd-note">Hover or tap a layer. Only CRM and Invoice are live; the rest are mapped.</p>
+      <div class="bbox" aria-label="Business OS apps">
+        <div class="bb-head"><small>Business OS</small><b>12 modules</b></div>
+        <ul class="bb-grid"><li><button class="bb-app" type="button" data-d="Leads, contacts and the sales pipeline" data-n="CRM"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="23,27 77,27 57,52 57,74 43,74 43,52"/></svg><span>CRM</span><em class="live">LIVE</em></button></li><li><button class="bb-app" type="button" data-d="Quotes, invoices and payments" data-n="Invoice"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="28,22 56,22 72,38 72,78 28,78"/></svg><span>Invoice</span><em class="live">LIVE</em></button></li><li><button class="bb-app" type="button" data-d="Tasks, timelines and delivery" data-n="Projects"><svg viewBox="0 0 100 100" aria-hidden="true"><rect class="fg" x="24" y="24" width="22" height="52"/><rect class="fg" x="54" y="24" width="22" height="30"/></svg><span>Projects</span><em class="">NEXT</em></button></li><li><button class="bb-app" type="button" data-d="Sign-in, roles and access" data-n="Identity"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="50,21 74,31 74,52 50,79 26,52 26,31"/></svg><span>Identity</span><em class="">NEXT</em></button></li><li><button class="bb-app" type="button" data-d="Tickets and customer support" data-n="Helpdesk"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="23,25 77,25 77,63 52,63 36,79 36,63 23,63"/></svg><span>Helpdesk</span><em class="">PLANNED</em></button></li><li><button class="bb-app" type="button" data-d="Accounting and the ledger" data-n="Books"><svg viewBox="0 0 100 100" aria-hidden="true"><rect class="fg" x="22" y="28" width="26" height="46"/><rect class="fg" x="52" y="28" width="26" height="46"/></svg><span>Books</span><em class="">PLANNED</em></button></li><li><button class="bb-app" type="button" data-d="Docs, answers and the wiki" data-n="Knowledge Base"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="32,22 68,22 68,78 50,63 32,78"/></svg><span>Knowledge Base</span><em class="">PLANNED</em></button></li><li><button class="bb-app" type="button" data-d="Reports and live dashboards" data-n="Analytics"><svg viewBox="0 0 100 100" aria-hidden="true"><rect class="fg" x="23" y="52" width="16" height="24"/><rect class="fg" x="42" y="38" width="16" height="38"/><rect class="fg" x="61" y="24" width="16" height="52"/></svg><span>Analytics</span><em class="">PLANNED</em></button></li><li><button class="bb-app" type="button" data-d="Workflows that run themselves" data-n="Automation"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon class="fg" points="57,21 31,53 49,53 43,79 69,46 51,46"/></svg><span>Automation</span><em class="">PLANNED</em></button></li><li><button class="bb-app" type="button" data-d="Stock, orders and suppliers" data-n="Inventory"><svg viewBox="0 0 100 100" aria-hidden="true"><rect class="fg" x="24" y="26" width="52" height="48"/><rect class="dk" x="24" y="40" width="52" height="5"/></svg><span>Inventory</span><em class="">LATER</em></button></li><li><button class="bb-app" type="button" data-d="Teams, roles and time off" data-n="People"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="fg" cx="50" cy="36" r="13"/><polygon class="fg" points="26,78 26,66 36,56 64,56 74,66 74,78"/></svg><span>People</span><em class="">LATER</em></button></li><li><button class="bb-app" type="button" data-d="Pay runs and payslips" data-n="Payroll"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="fg" cx="50" cy="50" r="27"/><circle class="dk" cx="50" cy="50" r="14"/></svg><span>Payroll</span><em class="">LATER</em></button></li></ul>
+        <p class="bb-cap" aria-live="polite">Only CRM and Invoice are live; the rest are mapped.</p>
       </div>
     </div>
     <p class="product-note">Want a product like this for your business? That's what the services below are for.</p>
@@ -3383,30 +3375,17 @@
 })();
 </script>
 <script>
-/* Business OS layered stack — hover, focus or tap a layer: it lifts, the layers above it part, and the detail card lists its apps. Idle, it walks down the stack. */
+/* Business OS box — hover, focus or tap an app to read what it does */
 (function () {
-  var root = document.querySelector(".bstack");
-  if (!root) return;
-  var meta = JSON.parse(root.getAttribute("data-layers")), GL = {"CRM": "<polygon class=\"fg\" points=\"23,27 77,27 57,52 57,74 43,74 43,52\"/>", "Invoice": "<polygon class=\"fg\" points=\"28,22 56,22 72,38 72,78 28,78\"/>", "Projects": "<rect class=\"fg\" x=\"24\" y=\"24\" width=\"22\" height=\"52\"/><rect class=\"fg\" x=\"54\" y=\"24\" width=\"22\" height=\"30\"/>", "Helpdesk": "<polygon class=\"fg\" points=\"23,25 77,25 77,63 52,63 36,79 36,63 23,63\"/>", "Books": "<rect class=\"fg\" x=\"22\" y=\"28\" width=\"26\" height=\"46\"/><rect class=\"fg\" x=\"52\" y=\"28\" width=\"26\" height=\"46\"/>", "Knowledge Base": "<polygon class=\"fg\" points=\"32,22 68,22 68,78 50,63 32,78\"/>", "Inventory": "<rect class=\"fg\" x=\"24\" y=\"26\" width=\"52\" height=\"48\"/><rect class=\"dk\" x=\"24\" y=\"40\" width=\"52\" height=\"5\"/>", "People": "<circle class=\"fg\" cx=\"50\" cy=\"36\" r=\"13\"/><polygon class=\"fg\" points=\"26,78 26,66 36,56 64,56 74,66 74,78\"/>", "Analytics": "<rect class=\"fg\" x=\"23\" y=\"52\" width=\"16\" height=\"24\"/><rect class=\"fg\" x=\"42\" y=\"38\" width=\"16\" height=\"38\"/><rect class=\"fg\" x=\"61\" y=\"24\" width=\"16\" height=\"52\"/>", "Automation": "<polygon class=\"fg\" points=\"57,21 31,53 49,53 43,79 69,46 51,46\"/>", "Identity": "<polygon class=\"fg\" points=\"50,21 74,31 74,52 50,79 26,52 26,31\"/>", "Payroll": "<circle class=\"fg\" cx=\"50\" cy=\"50\" r=\"27\"/><circle class=\"dk\" cx=\"50\" cy=\"50\" r=\"14\"/>"};
-  var lays = [].slice.call(root.querySelectorAll(".lay")), det = root.querySelector(".stk-detail"), tag = det.querySelector("small"), nm = det.querySelector("b"), ul = det.querySelector("ul");
-  var cur = -1, auto = true, step = 0, visible = true;
-  function sel(i) {
-    if (i === cur) return; cur = i;
-    lays.forEach(function (l, k) { l.classList.toggle("on", k === i); l.style.setProperty("--dy", (k < i ? -30 : k === i ? -12 : 0) + "px"); });
-    var m = meta[i]; tag.textContent = "LAYER 0" + (i + 1) + " / 04"; nm.textContent = m.n;
-    ul.innerHTML = m.apps.map(function (a) { return '<li><svg viewBox="0 0 100 100" aria-hidden="true">' + GL[a.n] + '</svg>' + a.n + '<em class="' + (a.s === "Live" ? "live" : "") + '">' + (a.s === "Live" ? "LIVE" : "CONCEPT · " + a.s.toUpperCase()) + '</em></li>'; }).join("");
-  }
-  lays.forEach(function (l, i) {
-    l.addEventListener("mouseenter", function () { auto = false; sel(i); });
-    l.addEventListener("focus", function () { auto = false; sel(i); });
-    l.addEventListener("click", function () { auto = false; sel(i); });
-    l.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); auto = false; sel(i); } });
+  var box = document.querySelector(".bbox");
+  if (!box) return;
+  var cap = box.querySelector(".bb-cap"), def = cap.textContent;
+  [].slice.call(box.querySelectorAll(".bb-app")).forEach(function (b) {
+    function show() { cap.innerHTML = "<b>" + b.dataset.n + "</b> — " + b.dataset.d; }
+    b.addEventListener("mouseenter", show); b.addEventListener("focus", show); b.addEventListener("click", show);
+    b.addEventListener("mouseleave", function () { cap.textContent = def; });
+    b.addEventListener("blur", function () { cap.textContent = def; });
   });
-  root.addEventListener("mouseleave", function () { setTimeout(function () { auto = true; }, 1500); });
-  sel(0);
-  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  setInterval(function () { if (auto && visible) sel(step++ % 4); }, 3200);
-  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(root);
 })();
 </script>
 </body>
