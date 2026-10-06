@@ -1815,6 +1815,27 @@
     .band-head > p:not(.bh-caps), .why-head > p:not(.bh-caps), .process-aside > p:not(.bh-caps), .tst-copy > p:not(.bh-caps), .cta > p:not(.bh-caps), .bsys-copy > p:not(.bsys-caps) { font-size: 1.12rem; margin-top: 1.2rem; }
     .bh-actions .btn, .bsys-actions .btn { padding: .72rem 1.3rem; font-size: .9rem; }
   }
+
+  /* ---------- Business OS app icons: monochrome black tiles with white glyphs (light tiles in dark mode) ---------- */
+  .dkb .app-mark {
+    background: linear-gradient(180deg, #424245 0%, #0b0b0c 100%);
+    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .16), inset 0 1px 0 rgba(255, 255, 255, .28), 0 1px 2px rgba(0, 0, 0, .3), 0 12px 22px -8px rgba(0, 0, 0, .5);
+  }
+  .dkb .app-mark svg .dk, .dkb .app-mark svg .dkl { fill: rgba(0, 0, 0, .42); stroke: rgba(0, 0, 0, .42); }
+  .dkb .app-mark svg .dk { stroke: none; }
+  .dkb .app-mark svg .dks { stroke: rgba(0, 0, 0, .5); }
+  :root[data-theme="dark"] .dkb .app-mark {
+    background: linear-gradient(180deg, #ffffff 0%, #c8c8cd 100%);
+    box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .8), 0 1px 2px rgba(0, 0, 0, .4), 0 12px 22px -8px rgba(0, 0, 0, .6);
+  }
+  :root[data-theme="dark"] .dkb .app-mark svg .fg { fill: #0b0b0c; filter: none; }
+  :root[data-theme="dark"] .dkb .app-mark svg .fg2 { fill: rgba(0, 0, 0, .5); }
+  :root[data-theme="dark"] .dkb .app-mark svg .fgs { stroke: #0b0b0c; filter: none; }
+  :root[data-theme="dark"] .dkb .app-mark svg .dk { fill: rgba(255, 255, 255, .55); }
+  :root[data-theme="dark"] .dkb .app-mark svg .dkl { fill: rgba(255, 255, 255, .55); stroke: rgba(255, 255, 255, .55); }
+  :root[data-theme="dark"] .dkb .app-mark svg .dks { stroke: rgba(255, 255, 255, .6); }
+  :root[data-theme="dark"] .dkb .app-mark::before { background: none; }
+  .dkb.live::after { background: var(--ink); }
 </style>
 </head>
 <body>
