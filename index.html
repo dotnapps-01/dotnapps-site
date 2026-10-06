@@ -497,97 +497,39 @@
   .bsys-actions { margin-top: 1.8rem; }
   .bsys-caps { margin: 1.9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
   .bsys-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
-  .bdock { width: 100%; max-width: 40rem; margin-left: auto; }
-  .bd-stage {
-    position: relative; border-radius: 30px; border: 1px solid var(--hairline); padding: 1.3rem 1.3rem 1.1rem; display: flex; flex-direction: column; gap: 1.5rem;
-    background-color: color-mix(in srgb, var(--sunken) 55%, var(--frame));
-    background-image: radial-gradient(color-mix(in srgb, var(--text) 16%, transparent) 1px, transparent 1.4px); background-size: 22px 22px; background-position: 11px 11px;
-  }
-  .bd-win {
-    height: 23.5rem; display: flex; flex-direction: column; border-radius: 18px; background: var(--frame); border: 1px solid var(--hairline); overflow: hidden;
-    box-shadow: 0 30px 60px -32px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .05); transform-origin: 50% 100%;
-  }
-  .bd-win.swap { animation: winOpen .34s cubic-bezier(.2, .9, .3, 1.1); }
-  @keyframes winOpen { from { opacity: .2; transform: translateY(14px) scale(.975); } }
-  .bd-bar { display: flex; align-items: center; gap: .4rem; padding: .8rem 1rem; border-bottom: 1px solid var(--hairline); position: relative; flex: none; }
-  .bd-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
-  .bd-title { position: absolute; left: 50%; transform: translateX(-50%); font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .66rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
-  .bd-chip { margin-left: auto; font-style: normal; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .56rem; letter-spacing: .14em; padding: .24rem .55rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--muted); }
-  .bd-chip.live { background: var(--ink); color: var(--frame); border: 1px solid var(--ink); }
-  .bd-body { flex: 1; min-height: 0; padding: 1rem 1.1rem 1.1rem; overflow: hidden; display: flex; flex-direction: column; gap: .8rem; }
-  .bd-cap { font-size: .86rem; color: var(--muted); line-height: 1.4; }
-  .bd-cap b { color: var(--ink); font-weight: 600; }
-  .bd-win .lbl { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .56rem; letter-spacing: .15em; text-transform: uppercase; color: var(--faint); }
-  .bd-win .sk { display: block; height: .5rem; border-radius: 4px; background: color-mix(in srgb, var(--text) 9%, transparent); }
-  .bd-win .sk.d { background: color-mix(in srgb, var(--ink) 80%, transparent); height: .62rem; }
-  .bd-win .sk.s { height: .38rem; }
-  .bd-win .chp { display: inline-block; font-style: normal; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; padding: .16rem .42rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
-  .bd-win .chp.k { background: var(--ink); border-color: var(--ink); color: var(--frame); }
-  .bd-win .card { border: 1px solid var(--hairline); border-radius: 10px; padding: .55rem .6rem; display: flex; flex-direction: column; gap: .4rem; background: var(--frame); }
-  .bd-win .cols { display: grid; gap: .6rem; flex: 1; min-height: 0; }
-  .bd-win .col { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
-  .bd-win .row { display: grid; align-items: center; gap: .7rem; padding: .5rem 0; border-bottom: 1px solid var(--hairline); }
-  .bd-win .av { width: 1.5rem; height: 1.5rem; border-radius: 50%; background: color-mix(in srgb, var(--text) 12%, transparent); flex: none; }
-  .bd-win .bars { display: flex; align-items: flex-end; gap: .4rem; height: 6.4rem; padding-top: .4rem; border-bottom: 1px solid var(--hairline); }
-  .bd-win .bars i { flex: 1; border-radius: 4px 4px 0 0; background: color-mix(in srgb, var(--text) 14%, transparent); }
-  .bd-win .bars i.k { background: var(--ink); }
-  .bd-win .pg { height: .32rem; border-radius: 3px; background: color-mix(in srgb, var(--text) 10%, transparent); overflow: hidden; } .bd-win .pg i { display: block; height: 100%; background: var(--ink); }
-  .bd-win .node { border: 1px solid var(--ink); border-radius: 10px; padding: .6rem .8rem; display: flex; flex-direction: column; gap: .35rem; background: var(--frame); min-width: 0; }
-  .bd-win .arrow { flex: none; width: 1.6rem; height: 1px; background: var(--ink); position: relative; } .bd-win .arrow::after { content: ""; position: absolute; right: 0; top: -3px; width: 6px; height: 6px; border-top: 1px solid var(--ink); border-right: 1px solid var(--ink); transform: rotate(45deg); }
-  .bd-win .tog { width: .9rem; height: .9rem; border-radius: 50%; border: 1px solid var(--border); } .bd-win .tog.on { background: var(--ink); border-color: var(--ink); }
-  .bd-win .bub { border-radius: 12px; padding: .55rem .7rem; display: flex; flex-direction: column; gap: .35rem; width: 72%; background: color-mix(in srgb, var(--text) 7%, transparent); }
-  .bd-win .bub.me { align-self: flex-end; background: var(--ink); } .bd-win .bub.me .sk { background: color-mix(in srgb, var(--frame) 70%, transparent); }
-
-  .bd-dock {
-    align-self: center; display: flex; align-items: flex-end; gap: .3rem; padding: .55rem .7rem .45rem; border-radius: 24px; position: relative;
-    background: color-mix(in srgb, var(--frame) 72%, transparent); border: 1px solid var(--hairline); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 24px 44px -26px rgba(0, 0, 0, .4), inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent);
-  }
-  .dkb { position: relative; flex: none; width: var(--w, 40px); height: var(--w, 40px); padding: 0; border: 0; background: none; cursor: pointer; transition: width .09s linear, height .09s linear; -webkit-tap-highlight-color: transparent; }
-  .dkb:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 12px; }
-  .dkn {
-    position: absolute; left: 50%; bottom: calc(100% + .7rem); transform: translateX(-50%) translateY(4px); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .16s ease, transform .16s ease;
-    padding: .32rem .6rem; border-radius: 7px; background: var(--ink); color: var(--frame); font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .58rem; letter-spacing: .13em; text-transform: uppercase;
-  }
-  .dkb.hot .dkn { opacity: 1; transform: translateX(-50%); }
-  .dki { position: absolute; left: 50%; bottom: -.38rem; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--ink); opacity: 0; transition: opacity .2s ease; }
-  .dkb.on .dki { opacity: 1; }
-  .dkb.live::after { content: ""; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 2px var(--frame); }
-  .dkb .app-mark {
-    width: 100%; height: 100%; border-radius: 23%; display: block;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--ic) 62%, #fff) 0%, var(--ic) 100%);
-    box-shadow:
-      inset 0 0 0 .5px rgba(0, 0, 0, .12),
-      inset 0 1px 0 rgba(255, 255, 255, .45),
-      0 1px 2px rgba(0, 0, 0, .14),
-      0 12px 22px -8px rgba(0, 0, 0, .38);
-  }
-  @supports (corner-shape: squircle) { .dkb .app-mark { border-radius: 34%; corner-shape: squircle; } }
-  .dkb .app-mark::before { background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 50%); }
-  .dkb .app-mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .dkb .app-mark svg .fg { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .2)); }
-  .dkb .app-mark { width: 100%; height: 100%; }
+  .bstack { width: 100%; max-width: 40rem; margin-left: auto; }
+  .stk-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .stk-svg .lay { cursor: pointer; outline: none; transform: translateY(var(--dy, 0px)); transition: transform .5s cubic-bezier(.2, .8, .2, 1), opacity .3s ease; }
+  .stk-svg .top { fill: var(--frame); stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; transition: fill .3s ease; }
+  .stk-svg .side { stroke: var(--ink); stroke-width: 1.2; stroke-linejoin: round; }
+  .stk-svg .side.l { fill: color-mix(in srgb, var(--ink) 16%, var(--frame)); } .stk-svg .side.r { fill: color-mix(in srgb, var(--ink) 30%, var(--frame)); }
+  .stk-svg .lay.on .top { fill: color-mix(in srgb, var(--ink) 6%, var(--frame)); stroke-width: 2; }
+  .stk-svg .lay:not(.on) .stk-tile, .stk-svg .lay:not(.on) .lab-n, .stk-svg .lay:not(.on) .lab-s { opacity: .55; } .stk-svg .lay:not(.on):hover .stk-tile, .stk-svg .lay:not(.on):hover .lab-n, .stk-svg .lay:not(.on):hover .lab-s { opacity: 1; }
+  .stk-svg .stk-tile .bg { fill: var(--ink); }
+  .stk-svg .stk-tile .fg { fill: var(--frame); filter: none; } .stk-svg .stk-tile .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); }
+  .stk-svg .stk-tile .dk { fill: var(--ink); } .stk-svg .stk-tile .dks { stroke: var(--ink); fill: none; }
+  .stk-svg .lead { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 4; opacity: .5; } .stk-svg .lay.on .lead { opacity: 1; stroke-dasharray: none; }
+  .stk-svg .lead-dot { fill: var(--ink); opacity: .5; } .stk-svg .lay.on .lead-dot { opacity: 1; }
+  .stk-svg .lab-n { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 12px; letter-spacing: .14em; font-weight: 600; fill: var(--ink); }
+  .stk-svg .lab-s { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 10px; letter-spacing: .12em; fill: var(--muted); }
+  .stk-detail { margin-top: .6rem; border: 1px solid var(--ink); border-radius: 14px; padding: .9rem 1.1rem 1rem; background: var(--frame); }
+  .stk-detail small { display: block; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .stk-detail b { display: block; margin-top: .25rem; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .9rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+  .stk-detail ul { list-style: none; margin: .7rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+  .stk-detail li { display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; font-size: .86rem; font-weight: 500; color: var(--ink); }
+  .stk-detail li svg { width: 2.4rem; height: 2.4rem; border-radius: 28%; background: var(--ink); padding: .1rem; box-sizing: border-box; }
+  .stk-detail li .fg { fill: var(--frame); } .stk-detail li .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); } .stk-detail li .dk { fill: var(--ink); } .stk-detail li .dks { stroke: var(--ink); fill: none; }
+  .stk-detail li em { font-style: normal; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .5rem; letter-spacing: .12em; text-transform: uppercase; padding: .16rem .42rem; border-radius: 999px; border: 1px dashed var(--border); color: var(--muted); }
+  .stk-detail li em.live { background: var(--ink); color: var(--frame); border: 1px solid var(--ink); }
   .bd-note { margin: .9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
-  @media (prefers-reduced-motion: reduce) { .bd-win.swap { animation: none; } .dkb { transition: none; } }
-  /* narrow column: a 6 x 2 icon grid, no magnification */
-  .bdock.compact .bd-stage { padding: 1rem .8rem .9rem; }
-  .bdock.compact .bd-win { height: 21rem; }
-  .bdock.compact .bd-dock { display: grid; grid-template-columns: repeat(6, 1fr); gap: .7rem .35rem; align-self: stretch; justify-items: center; padding: .8rem .5rem; border-radius: 20px; }
-  .bdock.compact .dkb { width: 2.7rem !important; height: 2.7rem !important; }
-  .bdock.compact .dkn { display: none; }
-  .bdock.compact .bd-title { position: static; transform: none; margin-left: .5rem; }
-  .bdock.compact .bd-chip { font-size: .5rem; padding: .22rem .45rem; }
-
+  @media (prefers-reduced-motion: reduce) { .stk-svg .lay { transition: none; } }
   @media (max-width: 860px) {
     .bsys { grid-template-columns: 1fr; gap: 2rem; }
-    .bdock { max-width: none; margin: 0; }
-    .bd-stage { padding: 1rem .8rem .9rem; }
-    .bd-win { height: 21rem; }
-    .bd-dock { display: grid; grid-template-columns: repeat(6, 1fr); gap: .7rem .35rem; align-self: stretch; justify-items: center; padding: .8rem .5rem .8rem; border-radius: 20px; }
-    .dkb { width: 2.7rem !important; height: 2.7rem !important; }
-    .dkn { display: none; }
+    .bstack { max-width: none; margin: 0; }
+    .stk-svg .lab-n, .stk-svg .lab-s, .stk-svg .lead, .stk-svg .lead-dot { display: none; }
+    .bstack { overflow: hidden; }
+    .stk-svg { width: 128%; max-width: none; }
   }
-  @media (max-width: 420px) { .bd-dock { grid-template-columns: repeat(4, 1fr); } .dkb { width: 2.9rem !important; height: 2.9rem !important; } }
 
   .product-note { margin: 1.5rem 0 0; font-size: .88rem; color: var(--muted); }
 
@@ -1816,34 +1758,7 @@
     .bh-actions .btn, .bsys-actions .btn { padding: .72rem 1.3rem; font-size: .9rem; }
   }
 
-  /* ---------- Business OS app icons: monochrome black tiles with white glyphs (light tiles in dark mode) ---------- */
-  .dkb .app-mark {
-    background: linear-gradient(180deg, #424245 0%, #0b0b0c 100%);
-    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .16), inset 0 1px 0 rgba(255, 255, 255, .28), 0 1px 2px rgba(0, 0, 0, .3), 0 12px 22px -8px rgba(0, 0, 0, .5);
-  }
-  .dkb .app-mark svg .dk, .dkb .app-mark svg .dkl { fill: rgba(0, 0, 0, .42); stroke: rgba(0, 0, 0, .42); }
-  .dkb .app-mark svg .dk { stroke: none; }
-  .dkb .app-mark svg .dks { stroke: rgba(0, 0, 0, .5); }
-  :root[data-theme="dark"] .dkb .app-mark {
-    background: linear-gradient(180deg, #ffffff 0%, #c8c8cd 100%);
-    box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .8), 0 1px 2px rgba(0, 0, 0, .4), 0 12px 22px -8px rgba(0, 0, 0, .6);
-  }
-  :root[data-theme="dark"] .dkb .app-mark svg .fg { fill: #0b0b0c; filter: none; }
-  :root[data-theme="dark"] .dkb .app-mark svg .fg2 { fill: rgba(0, 0, 0, .5); }
-  :root[data-theme="dark"] .dkb .app-mark svg .fgs { stroke: #0b0b0c; filter: none; }
-  :root[data-theme="dark"] .dkb .app-mark svg .dk { fill: rgba(255, 255, 255, .55); }
-  :root[data-theme="dark"] .dkb .app-mark svg .dkl { fill: rgba(255, 255, 255, .55); stroke: rgba(255, 255, 255, .55); }
-  :root[data-theme="dark"] .dkb .app-mark svg .dks { stroke: rgba(255, 255, 255, .6); }
-  :root[data-theme="dark"] .dkb .app-mark::before { background: none; }
-  .dkb.live::after { background: var(--ink); }
 
-  .dkb .app-mark { --cut: #0b0b0c; }
-  .dkb .app-mark svg .dk, .dkb .app-mark svg .dkl { fill: var(--cut); stroke: none; }
-  .dkb .app-mark svg .dks { stroke: var(--cut); }
-  :root[data-theme="dark"] .dkb .app-mark { --cut: #d4d4d9; }
-  :root[data-theme="dark"] .dkb .app-mark svg .dk, :root[data-theme="dark"] .dkb .app-mark svg .dkl { fill: var(--cut); }
-  :root[data-theme="dark"] .dkb .app-mark svg .dks { stroke: var(--cut); }
-  .dkb .app-mark svg .fg { filter: none; }
 </style>
 </head>
 <body>
@@ -1977,15 +1892,8 @@
         </div>
         <p class="bsys-caps">12 modules <i>&middot;</i> 2 live <i>&middot;</i> 1 account</p>
       </div>
-      <div class="bdock" aria-label="Business OS apps">
-        <div class="bd-stage">
-          <div class="bd-win" role="status" aria-live="polite">
-            <div class="bd-bar"><i></i><i></i><i></i><b class="bd-title">CRM</b><em class="bd-chip">LIVE</em></div>
-            <div class="bd-body"></div>
-          </div>
-          <div class="bd-dock"><button class="dkb" type="button" data-i="0" data-n="CRM" data-s="Live" data-d="Leads, contacts and the sales pipeline" aria-label="CRM, live"><span class="app-mark" style="--ic:#007AFF"><svg viewBox="0 0 100 100"><polygon class="fg" points="23,27 77,27 57,52 57,74 43,74 43,52"/></svg></span><span class="dkn">CRM</span><i class="dki"></i></button><button class="dkb" type="button" data-i="1" data-n="Invoice" data-s="Live" data-d="Quotes, invoices and payments" aria-label="Invoice, live"><span class="app-mark" style="--ic:#34C759"><svg viewBox="0 0 100 100"><polygon class="fg" points="28,22 56,22 72,38 72,78 28,78"/></svg></span><span class="dkn">Invoice</span><i class="dki"></i></button><button class="dkb" type="button" data-i="2" data-n="Projects" data-s="Next" data-d="Tasks, timelines and delivery" aria-label="Projects, next"><span class="app-mark" style="--ic:#FF9500"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="24" width="22" height="52"/><rect class="fg" x="54" y="24" width="22" height="30"/></svg></span><span class="dkn">Projects</span><i class="dki"></i></button><button class="dkb" type="button" data-i="3" data-n="Helpdesk" data-s="Planned" data-d="Tickets and customer support" aria-label="Helpdesk, planned"><span class="app-mark" style="--ic:#5AC8FA"><svg viewBox="0 0 100 100"><polygon class="fg" points="23,25 77,25 77,63 52,63 36,79 36,63 23,63"/></svg></span><span class="dkn">Helpdesk</span><i class="dki"></i></button><button class="dkb" type="button" data-i="4" data-n="Books" data-s="Planned" data-d="Accounting and the ledger" aria-label="Books, planned"><span class="app-mark" style="--ic:#5856D6"><svg viewBox="0 0 100 100"><rect class="fg" x="22" y="28" width="26" height="46"/><rect class="fg" x="52" y="28" width="26" height="46"/></svg></span><span class="dkn">Books</span><i class="dki"></i></button><button class="dkb" type="button" data-i="5" data-n="Knowledge Base" data-s="Planned" data-d="Docs, answers and the wiki" aria-label="Knowledge Base, planned"><span class="app-mark" style="--ic:#AF52DE"><svg viewBox="0 0 100 100"><polygon class="fg" points="32,22 68,22 68,78 50,63 32,78"/></svg></span><span class="dkn">Knowledge Base</span><i class="dki"></i></button><button class="dkb" type="button" data-i="6" data-n="Inventory" data-s="Later" data-d="Stock, orders and suppliers" aria-label="Inventory, later"><span class="app-mark" style="--ic:#A2845E"><svg viewBox="0 0 100 100"><rect class="fg" x="24" y="26" width="52" height="48"/><rect class="dk" x="24" y="40" width="52" height="5"/></svg></span><span class="dkn">Inventory</span><i class="dki"></i></button><button class="dkb" type="button" data-i="7" data-n="People" data-s="Later" data-d="Teams, roles and time off" aria-label="People, later"><span class="app-mark" style="--ic:#FF2D55"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="36" r="13"/><polygon class="fg" points="26,78 26,66 36,56 64,56 74,66 74,78"/></svg></span><span class="dkn">People</span><i class="dki"></i></button><button class="dkb" type="button" data-i="8" data-n="Analytics" data-s="Planned" data-d="Reports and live dashboards" aria-label="Analytics, planned"><span class="app-mark" style="--ic:#32ADE6"><svg viewBox="0 0 100 100"><rect class="fg" x="23" y="52" width="16" height="24"/><rect class="fg" x="42" y="38" width="16" height="38"/><rect class="fg" x="61" y="24" width="16" height="52"/></svg></span><span class="dkn">Analytics</span><i class="dki"></i></button><button class="dkb" type="button" data-i="9" data-n="Automation" data-s="Planned" data-d="Workflows that run themselves" aria-label="Automation, planned"><span class="app-mark" style="--ic:#00C7BE"><svg viewBox="0 0 100 100"><polygon class="fg" points="57,21 31,53 49,53 43,79 69,46 51,46"/></svg></span><span class="dkn">Automation</span><i class="dki"></i></button><button class="dkb" type="button" data-i="10" data-n="Identity" data-s="Next" data-d="Sign-in, roles and access" aria-label="Identity, next"><span class="app-mark" style="--ic:#FF3B30"><svg viewBox="0 0 100 100"><polygon class="fg" points="50,21 74,31 74,52 50,79 26,52 26,31"/></svg></span><span class="dkn">Identity</span><i class="dki"></i></button><button class="dkb" type="button" data-i="11" data-n="Payroll" data-s="Later" data-d="Pay runs and payslips" aria-label="Payroll, later"><span class="app-mark" style="--ic:#FFCC00"><svg viewBox="0 0 100 100"><circle class="fg" cx="50" cy="50" r="27"/><circle class="dk" cx="50" cy="50" r="14"/></svg></span><span class="dkn">Payroll</span><i class="dki"></i></button></div>
-        </div>
-        <p class="bd-note">Hover or tap an app. Only CRM and Invoice are live; the other previews are concepts.</p>
+      <div class="bstack" data-layers='[{"n": "Customers", "apps": [{"n": "CRM", "s": "Live"}, {"n": "Helpdesk", "s": "Planned"}, {"n": "Knowledge Base", "s": "Planned"}]}, {"n": "Money", "apps": [{"n": "Invoice", "s": "Live"}, {"n": "Books", "s": "Planned"}, {"n": "Payroll", "s": "Later"}]}, {"n": "Operations", "apps": [{"n": "Projects", "s": "Next"}, {"n": "Inventory", "s": "Later"}, {"n": "People", "s": "Later"}]}, {"n": "Foundation", "apps": [{"n": "Identity", "s": "Next"}, {"n": "Analytics", "s": "Planned"}, {"n": "Automation", "s": "Planned"}]}]'><svg class="stk-svg" viewBox="0 0 640 470" role="img" aria-label="Business OS as four layers of apps"><g class="lay" data-i="3" tabindex="0" role="button" aria-label="Foundation layer"><polygon class="side l" points="80.3,340.0 250.0,438.0 250.0,454.0 80.3,356.0"/><polygon class="side r" points="419.7,340.0 250.0,438.0 250.0,454.0 419.7,356.0"/><polygon class="top" points="250.0,242.0 419.7,340.0 250.0,438.0 80.3,340.0"/><g transform="translate(250,340) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="50,21 74,31 74,52 50,79 26,52 26,31"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="23" y="52" width="16" height="24"/><rect class="fg" x="42" y="38" width="16" height="38"/><rect class="fg" x="61" y="24" width="16" height="52"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="57,21 31,53 49,53 43,79 69,46 51,46"/></g></g></g><line class="lead" x1="429.7" y1="340" x2="448" y2="340"/><circle class="lead-dot" cx="429.7" cy="340" r="3"/><text class="lab-n" x="458" y="337">FOUNDATION</text><text class="lab-s" x="458" y="353">03 MODULES</text></g><g class="lay" data-i="2" tabindex="0" role="button" aria-label="Operations layer"><polygon class="side l" points="80.3,264.0 250.0,362.0 250.0,378.0 80.3,280.0"/><polygon class="side r" points="419.7,264.0 250.0,362.0 250.0,378.0 419.7,280.0"/><polygon class="top" points="250.0,166.0 419.7,264.0 250.0,362.0 80.3,264.0"/><g transform="translate(250,264) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="24" y="24" width="22" height="52"/><rect class="fg" x="54" y="24" width="22" height="30"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="24" y="26" width="52" height="48"/><rect class="dk" x="24" y="40" width="52" height="5"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><circle class="fg" cx="50" cy="36" r="13"/><polygon class="fg" points="26,78 26,66 36,56 64,56 74,66 74,78"/></g></g></g><line class="lead" x1="429.7" y1="264" x2="448" y2="264"/><circle class="lead-dot" cx="429.7" cy="264" r="3"/><text class="lab-n" x="458" y="261">OPERATIONS</text><text class="lab-s" x="458" y="277">03 MODULES</text></g><g class="lay" data-i="1" tabindex="0" role="button" aria-label="Money layer"><polygon class="side l" points="80.3,188.0 250.0,286.0 250.0,302.0 80.3,204.0"/><polygon class="side r" points="419.7,188.0 250.0,286.0 250.0,302.0 419.7,204.0"/><polygon class="top" points="250.0,90.0 419.7,188.0 250.0,286.0 80.3,188.0"/><g transform="translate(250,188) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="28,22 56,22 72,38 72,78 28,78"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><rect class="fg" x="22" y="28" width="26" height="46"/><rect class="fg" x="52" y="28" width="26" height="46"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><circle class="fg" cx="50" cy="50" r="27"/><circle class="dk" cx="50" cy="50" r="14"/></g></g></g><line class="lead" x1="429.7" y1="188" x2="448" y2="188"/><circle class="lead-dot" cx="429.7" cy="188" r="3"/><text class="lab-n" x="458" y="185">MONEY</text><text class="lab-s" x="458" y="201">03 MODULES · 1 LIVE</text></g><g class="lay" data-i="0" tabindex="0" role="button" aria-label="Customers layer"><polygon class="side l" points="80.3,112.0 250.0,210.0 250.0,226.0 80.3,128.0"/><polygon class="side r" points="419.7,112.0 250.0,210.0 250.0,226.0 419.7,128.0"/><polygon class="top" points="250.0,14.0 419.7,112.0 250.0,210.0 80.3,112.0"/><g transform="translate(250,112) matrix(.866 .5 -.866 .5 0 0)"><g transform="translate(-74,30)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="23,27 77,27 57,52 57,74 43,74 43,52"/></g></g><g transform="translate(-22,-22)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="23,25 77,25 77,63 52,63 36,79 36,63 23,63"/></g></g><g transform="translate(30,-74)" class="stk-tile"><rect class="bg" width="44" height="44" rx="9"/><g transform="scale(.44)"><polygon class="fg" points="32,22 68,22 68,78 50,63 32,78"/></g></g></g><line class="lead" x1="429.7" y1="112" x2="448" y2="112"/><circle class="lead-dot" cx="429.7" cy="112" r="3"/><text class="lab-n" x="458" y="109">CUSTOMERS</text><text class="lab-s" x="458" y="125">03 MODULES · 1 LIVE</text></g></svg><div class="stk-detail" role="status" aria-live="polite"><small></small><b></b><ul></ul></div>
+        <p class="bd-note">Hover or tap a layer. Only CRM and Invoice are live; the rest are mapped.</p>
       </div>
     </div>
     <p class="product-note">Want a product like this for your business? That's what the services below are for.</p>
@@ -3475,65 +3383,30 @@
 })();
 </script>
 <script>
-/* Business OS dock — icons swell under the cursor like a Mac dock; the window above shows a skeleton preview of the app. Idle, it walks through the apps itself. */
+/* Business OS layered stack — hover, focus or tap a layer: it lifts, the layers above it part, and the detail card lists its apps. Idle, it walks down the stack. */
 (function () {
-  var stage = document.querySelector(".bdock");
-  if (!stage) return;
-  var win = stage.querySelector(".bd-win"), body = win.querySelector(".bd-body"), titleEl = win.querySelector(".bd-title"), chip = win.querySelector(".bd-chip");
-  var dock = stage.querySelector(".bd-dock"), dks = [].slice.call(dock.querySelectorAll(".dkb"));
-  var sk = function (w, c) { return '<i class="sk ' + (c || "") + '" style="width:' + w + '%"></i>'; };
-  var chp = function (t, k) { return '<i class="chp ' + (k ? "k" : "") + '">' + t + '</i>'; };
-  var card = function (a, b, c) { return '<div class="card">' + sk(a, "d") + sk(b, "s") + (c ? chp(c) : "") + '</div>'; };
-  var cols = function (n, parts) { return '<div class="cols" style="grid-template-columns:repeat(' + n + ',1fr)">' + parts.join("") + '</div>'; };
-  var col = function (t, cards) { return '<div class="col"><span class="lbl">' + t + '</span>' + cards.join("") + '</div>'; };
-  var rows = function (tpl, n, cells) { var r = "", k; for (k = 0; k < n; k++) r += '<div class="row" style="grid-template-columns:' + tpl + '">' + cells(k) + '</div>'; return r; };
-  var head = function (tpl, labels) { return '<div class="row" style="grid-template-columns:' + tpl + ';padding-top:0">' + labels.map(function (l) { return '<span class="lbl">' + l + '</span>'; }).join("") + '</div>'; };
-  var W = [58, 44, 66, 38, 52, 70];
-  var mocks = {
-    "CRM": function () { return cols(4, [col("Lead", [card(70, 40, "New"), card(55, 34), card(64, 30)]), col("Qualified", [card(62, 38, "Call"), card(48, 30)]), col("Proposal", [card(66, 36, "Sent")]), col("Won", [card(58, 32, "Closed"), card(70, 40)])]); },
-    "Invoice": function () { var st = ["Paid", "Sent", "Draft", "Paid", "Sent", "Draft"]; return head("1.2fr 1.4fr .8fr .8fr", ["Invoice", "Client", "Amount", "Status"]) + rows("1.2fr 1.4fr .8fr .8fr", 6, function (k) { return sk(W[k] + 10, "d") + sk(W[(k + 2) % 6]) + sk(50) + chp(st[k], st[k] === "Paid"); }); },
-    "Projects": function () { return cols(3, [col("To do", [card(70, 40), card(55, 34), card(62, 30)]), col("Doing", ['<div class="card">' + sk(68, "d") + sk(40, "s") + '<div class="pg"><i style="width:62%"></i></div></div>', '<div class="card">' + sk(52, "d") + '<div class="pg"><i style="width:30%"></i></div></div>']), col("Done", [card(60, 36, "Shipped"), card(48, 30, "Shipped")])]); },
-    "Helpdesk": function () { return '<div style="display:grid;grid-template-columns:.9fr 1.3fr;gap:.9rem;flex:1;min-height:0"><div>' + rows("1.6rem 1fr", 5, function (k) { return '<i class="av"></i><div style="display:flex;flex-direction:column;gap:.35rem">' + sk(W[k], "d") + sk(80, "s") + '</div>'; }) + '</div><div style="display:flex;flex-direction:column;gap:.6rem"><div class="bub">' + sk(90) + sk(60) + '</div><div class="bub me">' + sk(80) + sk(50) + '</div><div class="bub">' + sk(70) + '</div><div class="card" style="margin-top:auto">' + sk(40, "s") + '</div></div></div>'; },
-    "Books": function () { return head("1fr 1.6fr .8fr .8fr", ["Date", "Account", "Debit", "Credit"]) + rows("1fr 1.6fr .8fr .8fr", 7, function (k) { return sk(60) + sk(W[k] + 10, "d") + (k % 2 ? sk(0) : sk(60)) + (k % 2 ? sk(60) : sk(0)); }); },
-    "Knowledge Base": function () { return '<div style="display:grid;grid-template-columns:.8fr 1.6fr;gap:1.1rem;flex:1;min-height:0"><div style="display:flex;flex-direction:column;gap:.55rem">' + sk(70, "d") + sk(55, "s") + sk(65, "s") + sk(45, "s") + sk(70, "d") + sk(50, "s") + sk(60, "s") + '</div><div style="display:flex;flex-direction:column;gap:.6rem">' + sk(55, "d") + sk(95) + sk(88) + sk(92) + sk(60) + '<div class="card" style="margin-top:.3rem">' + sk(40, "d") + sk(80, "s") + '</div>' + sk(90) + sk(70) + '</div></div>'; },
-    "Inventory": function () { var t = ""; for (var k = 0; k < 6; k++) t += '<div class="card"><i class="av" style="width:100%;height:2.4rem;border-radius:8px"></i>' + sk(W[k], "d") + '<div class="pg"><i style="width:' + (30 + k * 11) + '%"></i></div></div>'; return '<div class="cols" style="grid-template-columns:repeat(3,1fr);grid-auto-rows:min-content">' + t + '</div>'; },
-    "People": function () { var t = ""; for (var k = 0; k < 6; k++) t += '<div class="card" style="align-items:flex-start"><i class="av" style="width:2rem;height:2rem"></i>' + sk(W[k], "d") + sk(44, "s") + chp(["Design", "Eng", "Ops", "Sales", "Eng", "Design"][k]) + '</div>'; return '<div class="cols" style="grid-template-columns:repeat(3,1fr);grid-auto-rows:min-content">' + t + '</div>'; },
-    "Analytics": function () { var h = [30, 46, 38, 62, 52, 74, 60, 88, 70, 96], b = ""; h.forEach(function (v, k) { b += '<i class="' + (k > 6 ? "k" : "") + '" style="height:' + v + '%"></i>'; }); return '<div class="cols" style="grid-template-columns:repeat(3,1fr);flex:none"><div class="card"><span class="lbl">Revenue</span>' + sk(60, "d") + '</div><div class="card"><span class="lbl">Pipeline</span>' + sk(48, "d") + '</div><div class="card"><span class="lbl">Tickets</span>' + sk(40, "d") + '</div></div><div class="bars">' + b + '</div>'; },
-    "Automation": function () { var n = function (l, a) { return '<div class="node"><span class="lbl">' + l + '</span>' + sk(a, "d") + sk(60, "s") + '</div>'; }; return '<div style="display:flex;align-items:center;gap:.5rem;margin:auto 0">' + n("Trigger", 70) + '<i class="arrow"></i>' + n("Condition", 55) + '<i class="arrow"></i>' + n("Action", 65) + '</div><div class="bd-cap">New lead &rarr; budget set &rarr; invoice drafted.</div>'; },
-    "Identity": function () { return head("1.6fr repeat(3,.5fr)", ["User", "Admin", "Editor", "Viewer"]) + rows("1.6fr repeat(3,.5fr)", 6, function (k) { return '<div style="display:flex;align-items:center;gap:.6rem"><i class="av"></i>' + sk(W[k], "d") + '</div>' + '<i class="tog ' + (k < 2 ? "on" : "") + '"></i><i class="tog ' + (k < 4 ? "on" : "") + '"></i><i class="tog on"></i>'; }); },
-    "Payroll": function () { return head("1.4fr 1.4fr .9fr", ["Employee", "Pay run", "Status"]) + rows("1.4fr 1.4fr .9fr", 5, function (k) { return '<div style="display:flex;align-items:center;gap:.6rem"><i class="av"></i>' + sk(W[k], "d") + '</div><div class="pg"><i style="width:' + (50 + k * 10) + '%"></i></div>' + chp(k < 3 ? "Approved" : "Review", k < 3); }) + '<div style="margin-top:auto;align-self:flex-start">' + chp("Run payroll", 1) + '</div>'; }
-  };
-  var compact = false;
-  function fit() { compact = stage.clientWidth < 560 || window.matchMedia("(max-width: 860px)").matches; stage.classList.toggle("compact", compact); if (compact) dks.forEach(function (d) { d.style.removeProperty("--w"); d.classList.remove("hot"); }); }
-  var cur = -1, auto = true, ordr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], step = 0, visible = true, mouse = false;
-  function open(i) {
+  var root = document.querySelector(".bstack");
+  if (!root) return;
+  var meta = JSON.parse(root.getAttribute("data-layers")), GL = {"CRM": "<polygon class=\"fg\" points=\"23,27 77,27 57,52 57,74 43,74 43,52\"/>", "Invoice": "<polygon class=\"fg\" points=\"28,22 56,22 72,38 72,78 28,78\"/>", "Projects": "<rect class=\"fg\" x=\"24\" y=\"24\" width=\"22\" height=\"52\"/><rect class=\"fg\" x=\"54\" y=\"24\" width=\"22\" height=\"30\"/>", "Helpdesk": "<polygon class=\"fg\" points=\"23,25 77,25 77,63 52,63 36,79 36,63 23,63\"/>", "Books": "<rect class=\"fg\" x=\"22\" y=\"28\" width=\"26\" height=\"46\"/><rect class=\"fg\" x=\"52\" y=\"28\" width=\"26\" height=\"46\"/>", "Knowledge Base": "<polygon class=\"fg\" points=\"32,22 68,22 68,78 50,63 32,78\"/>", "Inventory": "<rect class=\"fg\" x=\"24\" y=\"26\" width=\"52\" height=\"48\"/><rect class=\"dk\" x=\"24\" y=\"40\" width=\"52\" height=\"5\"/>", "People": "<circle class=\"fg\" cx=\"50\" cy=\"36\" r=\"13\"/><polygon class=\"fg\" points=\"26,78 26,66 36,56 64,56 74,66 74,78\"/>", "Analytics": "<rect class=\"fg\" x=\"23\" y=\"52\" width=\"16\" height=\"24\"/><rect class=\"fg\" x=\"42\" y=\"38\" width=\"16\" height=\"38\"/><rect class=\"fg\" x=\"61\" y=\"24\" width=\"16\" height=\"52\"/>", "Automation": "<polygon class=\"fg\" points=\"57,21 31,53 49,53 43,79 69,46 51,46\"/>", "Identity": "<polygon class=\"fg\" points=\"50,21 74,31 74,52 50,79 26,52 26,31\"/>", "Payroll": "<circle class=\"fg\" cx=\"50\" cy=\"50\" r=\"27\"/><circle class=\"dk\" cx=\"50\" cy=\"50\" r=\"14\"/>"};
+  var lays = [].slice.call(root.querySelectorAll(".lay")), det = root.querySelector(".stk-detail"), tag = det.querySelector("small"), nm = det.querySelector("b"), ul = det.querySelector("ul");
+  var cur = -1, auto = true, step = 0, visible = true;
+  function sel(i) {
     if (i === cur) return; cur = i;
-    var d = dks[i], n = d.dataset.n, live = d.dataset.s === "Live";
-    titleEl.textContent = n; chip.textContent = live ? "LIVE" : "CONCEPT · " + d.dataset.s.toUpperCase(); chip.className = "bd-chip" + (live ? " live" : "");
-    body.innerHTML = '<div class="bd-cap"><b>' + n + '</b> — ' + d.dataset.d + '.</div>' + mocks[n]();
-    dks.forEach(function (k, j) { k.classList.toggle("on", j === i); });
-    win.classList.remove("swap"); void win.offsetWidth; win.classList.add("swap");
+    lays.forEach(function (l, k) { l.classList.toggle("on", k === i); l.style.setProperty("--dy", (k < i ? -30 : k === i ? -12 : 0) + "px"); });
+    var m = meta[i]; tag.textContent = "LAYER 0" + (i + 1) + " / 04"; nm.textContent = m.n;
+    ul.innerHTML = m.apps.map(function (a) { return '<li><svg viewBox="0 0 100 100" aria-hidden="true">' + GL[a.n] + '</svg>' + a.n + '<em class="' + (a.s === "Live" ? "live" : "") + '">' + (a.s === "Live" ? "LIVE" : "CONCEPT · " + a.s.toUpperCase()) + '</em></li>'; }).join("");
   }
-  dks.forEach(function (d, i) { if (d.dataset.s === "Live") d.classList.add("live"); d.addEventListener("click", function () { auto = false; open(i); }); d.addEventListener("focus", function () { auto = false; open(i); }); });
-  /* magnify */
-  var BASE = 40, MAX = 74, RANGE = 120;
-  function mag(x) {
-    var big = compact;
-    dks.forEach(function (d) {
-      if (big) { d.style.removeProperty("--w"); d.classList.remove("hot"); return; }
-      var r = d.getBoundingClientRect(), c = r.left + r.width / 2, dist = Math.abs(x - c), f = x === null ? 0 : Math.max(0, 1 - dist / RANGE), e = f * f * (3 - 2 * f);
-      d.style.setProperty("--w", (BASE + (MAX - BASE) * e).toFixed(1) + "px");
-    });
-  }
-  function hotOne(x) { var best = -1, bd = 1e9; dks.forEach(function (d, i) { var r = d.getBoundingClientRect(), dd = Math.abs(x - (r.left + r.width / 2)); if (dd < bd) { bd = dd; best = i; } }); dks.forEach(function (d, i) { d.classList.toggle("hot", i === best); }); return best; }
-  dock.addEventListener("pointermove", function (e) { if (e.pointerType === "touch" || compact) return; mouse = true; auto = false; mag(e.clientX); var b = hotOne(e.clientX); if (b >= 0) open(b); });
-  dock.addEventListener("pointerleave", function () { mouse = false; dks.forEach(function (d) { d.style.removeProperty("--w"); d.classList.remove("hot"); }); setTimeout(function () { if (!mouse) auto = true; }, 1600); });
-  function tick() { if (auto && visible) { open(ordr[step++ % ordr.length]); } }
-  fit(); if ("ResizeObserver" in window) new ResizeObserver(fit).observe(stage); else window.addEventListener("resize", fit);
-  open(0);
+  lays.forEach(function (l, i) {
+    l.addEventListener("mouseenter", function () { auto = false; sel(i); });
+    l.addEventListener("focus", function () { auto = false; sel(i); });
+    l.addEventListener("click", function () { auto = false; sel(i); });
+    l.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); auto = false; sel(i); } });
+  });
+  root.addEventListener("mouseleave", function () { setTimeout(function () { auto = true; }, 1500); });
+  sel(0);
   if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  setInterval(tick, 3200);
-  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(stage);
+  setInterval(function () { if (auto && visible) sel(step++ % 4); }, 3200);
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(root);
 })();
 </script>
 </body>
