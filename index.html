@@ -491,28 +491,12 @@
     padding: .56rem 1.05rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); color: var(--ink);
     background: color-mix(in srgb, var(--frame) 68%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent), 0 1px 3px rgba(0, 0, 0, .04);
   }
-  .bsys-copy h2 { margin: 1.5rem 0 0; font-size: clamp(2.3rem, 3.7vw, 3.35rem); line-height: 1.06; padding-bottom: .08em; letter-spacing: -.045em; color: var(--ink); text-wrap: balance; }
+  .bsys-copy h2 { margin: 1.5rem 0 0; font-size: clamp(2.5rem, 4.4vw, 4rem); line-height: 1.02; padding-bottom: .05em; letter-spacing: -.045em; color: var(--ink); text-wrap: balance; }
   .bsys-copy .h2-end { display: block; color: var(--muted); }
-  .bsys-copy > p { margin: 1.4rem 0 0; max-width: 31rem; font-size: 1.05rem; line-height: 1.62; color: var(--muted); }
+  .bsys-copy > p:not(.bsys-caps) { margin: 1.2rem 0 0; max-width: 24rem; font-size: 1.05rem; line-height: 1.6; color: var(--muted); }
   .bsys-actions { margin-top: 1.8rem; }
-  .bsys-meter { display: flex; gap: .3rem; width: 100%; max-width: 27rem; margin-top: 2.1rem; }
-  .bsys-meter i { flex: 1; height: .9rem; border-radius: 4px; border: 1px solid var(--ink); }
-  .bsys-meter .live { background: var(--ink); }
-  .bsys-meter .next { border-style: dashed; }
-  .bsys-meter .planned { border-style: dotted; border-color: color-mix(in srgb, var(--ink) 70%, transparent); }
-  .bsys-meter .later { border-style: dotted; border-color: color-mix(in srgb, var(--ink) 45%, transparent); }
-  .bsys-count { margin: .9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); line-height: 1.6; max-width: 27rem; }
-  .bsys-count b { color: var(--ink); font-weight: 600; font-size: .8rem; margin-right: .35rem; }
-  .bsys-ledger { list-style: none; margin: 1.4rem 0 0; padding: 0; width: 100%; max-width: 27rem; display: flex; flex-direction: column; gap: .15rem; }
-  .bsys-ledger li { display: grid; grid-template-columns: 1.1rem 4.6rem minmax(0, 1fr); align-items: baseline; gap: .4rem .6rem; padding: .62rem .5rem; margin: 0 -.5rem; border-radius: 10px; transition: background .2s ease; cursor: default; }
-  .bsys-ledger li:hover { background: color-mix(in srgb, var(--text) 5%, transparent); }
-  .bsys-ledger .sw { width: .8rem; height: .8rem; border-radius: 3px; border: 1px solid var(--ink); align-self: center; }
-  .bsys-ledger .sw.live { background: var(--ink); } .bsys-ledger .sw.next { border-style: dashed; }
-  .bsys-ledger .sw.planned { border-style: dotted; border-color: color-mix(in srgb, var(--ink) 70%, transparent); } .bsys-ledger .sw.later { border-style: dotted; border-color: color-mix(in srgb, var(--ink) 45%, transparent); }
-  .bsys-ledger b { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .64rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--ink); }
-  .bsys-ledger span { font-size: .9rem; line-height: 1.4; color: var(--muted); }
-  .dkb.glow { transform: translateY(-7px); }
-  .dkb.glow .app-mark { box-shadow: 0 0 0 2px var(--frame), 0 0 0 3.5px var(--ink), 0 12px 22px -8px rgba(0, 0, 0, .38); }
+  .bsys-caps { margin: 1.9rem 0 0; font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+  .bsys-caps i { font-style: normal; margin: 0 .75em; color: var(--faint); }
   .bdock { width: 100%; max-width: 40rem; margin-left: auto; }
   .bd-stage {
     position: relative; border-radius: 30px; border: 1px solid var(--hairline); padding: 1.3rem 1.3rem 1.1rem; display: flex; flex-direction: column; gap: 1.5rem;
@@ -1913,13 +1897,11 @@
       <div class="bsys-copy">
         <span class="bsys-tag">Business OS</span>
         <h2 class="serif">One platform <span class="h2-end">for every business app.</span></h2>
-        <p>We don't only work on client roadmaps. Business OS is a product we own, run, and sell &mdash; one account, one bill, one design system, and the bar we hold every engagement to.</p>
+        <p>One account, one bill, one design system. CRM and Invoice are live.</p>
         <div class="bsys-actions">
           <a class="btn btn--solid" href="#contact" data-modal="businessos">Request access<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
-<div class="bsys-meter" aria-hidden="true"><i class="live"></i><i class="live"></i><i class="next"></i><i class="next"></i><i class="planned"></i><i class="planned"></i><i class="planned"></i><i class="planned"></i><i class="planned"></i><i class="later"></i><i class="later"></i><i class="later"></i></div>
-        <p class="bsys-count"><b>12</b> modules on one account, one bill, one design system</p>
-        <ul class="bsys-ledger" aria-label="Module status"><li data-s="Live"><i class="sw live"></i><b>Live</b><span>CRM, Invoice</span></li><li data-s="Next"><i class="sw next"></i><b>Next</b><span>Projects, Identity</span></li><li data-s="Planned"><i class="sw planned"></i><b>Planned</b><span>Helpdesk, Books, Knowledge Base, Analytics, Automation</span></li><li data-s="Later"><i class="sw later"></i><b>Later</b><span>Inventory, People, Payroll</span></li></ul>
+        <p class="bsys-caps">12 modules <i>&middot;</i> 2 live <i>&middot;</i> 1 account</p>
       </div>
       <div class="bdock" aria-label="Business OS apps">
         <div class="bd-stage">
@@ -3436,10 +3418,6 @@
   };
   var compact = false;
   function fit() { compact = stage.clientWidth < 560 || window.matchMedia("(max-width: 860px)").matches; stage.classList.toggle("compact", compact); if (compact) dks.forEach(function (d) { d.style.removeProperty("--w"); d.classList.remove("hot"); }); }
-  [].slice.call(document.querySelectorAll(".bsys-ledger li")).forEach(function (li) {
-    li.addEventListener("mouseenter", function () { dks.forEach(function (d) { d.classList.toggle("glow", d.dataset.s === li.dataset.s); }); });
-    li.addEventListener("mouseleave", function () { dks.forEach(function (d) { d.classList.remove("glow"); }); });
-  });
   var cur = -1, auto = true, ordr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], step = 0, visible = true, mouse = false;
   function open(i) {
     if (i === cur) return; cur = i;
