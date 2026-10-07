@@ -732,3 +732,17 @@
   var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { pf.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.2 });
   io.observe(pf);
 })();
+
+/* smooth scrolling — inertial wheel scrolling on desktop; touch stays native, reduced motion skips it */
+(function () {
+  if (!window.Lenis) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true, anchors: { offset: -72 } });
+  window.__lenis = lenis;
+  function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+  var dlg = document.getElementById("formModal");
+  if (dlg) {
+    new MutationObserver(function () { dlg.open ? lenis.stop() : lenis.start(); }).observe(dlg, { attributes: true, attributeFilter: ["open"] });
+  }
+})();
