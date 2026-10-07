@@ -63,43 +63,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" href="/site.css">
-<style>
-/* preloader: shown once per visit while the page loads */
-#pre{display:none}
-html.pre-on{overflow:hidden}
-html.pre-on #pre{display:grid}
-#pre{position:fixed;inset:0;z-index:1000;place-items:center;background:var(--frame);color:var(--ink);transition:opacity .55s ease,visibility .55s ease}
-#pre .pre-in{display:flex;flex-direction:column;align-items:center;gap:1rem;transition:transform .55s cubic-bezier(.5,0,.2,1)}
-#pre .pre-box{position:relative;width:200px;height:200px;display:grid;place-items:center}
-#pre .pre-box i{position:absolute;inset:0;border:1px solid color-mix(in srgb,currentColor 34%,transparent);border-radius:30%;background:linear-gradient(160deg,color-mix(in srgb,currentColor 4%,transparent),transparent 60%);opacity:0;transform:scale(.1);animation:preRing 2.3s cubic-bezier(.3,.35,.25,1) both;animation-delay:calc(var(--i)*.3s)}
-@supports (corner-shape:squircle){#pre .pre-box i{border-radius:34%;corner-shape:squircle}}
-#pre svg{position:relative;width:46px;height:auto;opacity:0;animation:preFade .6s ease .45s forwards}
-#pre .pre-t{font:400 .62rem/1 "Space Mono",ui-monospace,monospace;letter-spacing:.34em;color:var(--muted);padding-left:.34em;opacity:0;animation:preFade .6s ease .8s forwards}
-#pre.pre-out{opacity:0;visibility:hidden}
-#pre.pre-out .pre-in{transform:translateY(-14px)}
-@keyframes preRing{0%{transform:scale(.1) rotate(0);opacity:0}15%{opacity:1}100%{transform:scale(1.2) rotate(20deg);opacity:0}}
-@keyframes preFade{to{opacity:1}}
-</style>
-<script>
-(function(){try{
-var d=document.documentElement;
-if(sessionStorage.getItem("dn-pre"))return;
-if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-var th=localStorage.getItem("dotnapps-site-theme");if(th==="dark"||th==="light")d.setAttribute("data-theme",th);
-d.classList.add("pre-on");sessionStorage.setItem("dn-pre","1");
-var t0=Date.now(),done=false;
-function out(){if(done)return;done=true;var p=document.getElementById("pre");if(!p){d.classList.remove("pre-on");return}
-var b=p.querySelector(".pre-bar i");if(b){b.style.animation="none";b.style.transition="transform .25s ease";b.style.transform="scaleX(1)"}
-setTimeout(function(){p.classList.add("pre-out");setTimeout(function(){d.classList.remove("pre-on")},580)},260)}
-function ready(){setTimeout(out,Math.max(0,2100-(Date.now()-t0)))}
-function loaded(){if(document.fonts&&document.fonts.ready)document.fonts.ready.then(ready,ready);else ready()}
-if(document.readyState==="complete")loaded();else window.addEventListener("load",loaded);
-setTimeout(out,4500);
-}catch(e){}})();
-</script>
 </head>
 <body>
-<div id="pre" aria-hidden="true"><div class="pre-in"><div class="pre-box"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><svg viewBox="26 27.4 48 45.1"><path fill="currentColor" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg></div><span class="pre-t">DOTNAPPS</span></div></div>
 
 <div class="nav-veil" aria-hidden="true"><i></i><i></i><i></i></div>
 
