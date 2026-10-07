@@ -75,7 +75,9 @@
     overflow: clip;
   }
 
-  ::selection { background: var(--focus); color: #fff; }
+  /* text selection: black on light, white on dark (follows the theme tokens) */
+  ::selection { background: var(--ink); color: var(--frame); -webkit-text-fill-color: var(--frame); text-shadow: none; }
+  ::-moz-selection { background: var(--ink); color: var(--frame); text-shadow: none; }
   a { color: inherit; text-decoration: none; }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
 
