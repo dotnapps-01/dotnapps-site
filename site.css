@@ -2128,3 +2128,12 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
   .bos-apps > li.is-open .svc-inc li { font-size: .84rem; }
   .bos-apps > li.is-open::after { content: "\2212  close"; }
 }
+
+/* Business OS "why" and "AI-powered" on phones: two columns */
+@media (max-width: 620px) {
+  #why .sg.bos-grid, #ai .sg.bos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #why .sg.bos-grid > li, #ai .sg.bos-grid > li { padding: .9rem .8rem 1rem; }
+  #why .bos-grid .pf-n, #ai .bos-grid .pf-n { margin-bottom: .7rem; padding: .22rem .38rem; font-size: .56rem; }
+  #why .bos-grid h3, #ai .bos-grid h3 { font-size: .8rem; letter-spacing: .02em; margin-bottom: .45rem; }
+  #why .bos-grid .svc-lead, #ai .bos-grid .svc-lead { font-size: .76rem; line-height: 1.48; }
+}
