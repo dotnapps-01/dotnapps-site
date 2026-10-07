@@ -2040,3 +2040,11 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 .prac li { display: block; grid-template-columns: none; }
 .prac li > a { width: 100%; }
 .prac li > a > div { min-width: 0; }
+
+/* Hero on laptops: lighter touch */
+@media (min-width: 1100px) {
+  body .hero-globe { opacity: .5; }
+  body .hero h1 { font-weight: 500; font-size: clamp(2.9rem, 4.1vw, 3.9rem); letter-spacing: -.04em; }
+  .hero-rings { opacity: .7; }
+  .hero-caps li, .hero-caps { opacity: .8; }
+}

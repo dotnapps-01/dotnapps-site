@@ -682,11 +682,6 @@
         }
       }
     }
-    var hintA = Math.max(0, 1 - (touched ? (now - touched) / 2500 : 0));
-    if (hintA > 0.02) {
-      mono(10.5, 500); var ht = "MOVE TO ATTRACT  ·  HOLD TO REPEL  ·  CLICK FOR A PULSE  ·  DRAG TO SPIN", hw = ctx.measureText(ht).width;
-      ctx.fillStyle = "rgba(" + ink + "," + (0.42 * hintA) + ")"; ctx.fillText(ht, cx - hw / 2, cy + R + 66);
-    }
   }
 
   function step(now) {
