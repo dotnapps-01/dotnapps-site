@@ -43,7 +43,7 @@
       ]
     },
     {
-      "source": "/(products|site\\.css|site\\.js)",
+      "source": "/(products|services|site\\.css|site\\.js)",
       "headers": [
         {
           "key": "Cache-Control",
