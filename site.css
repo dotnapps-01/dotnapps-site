@@ -2047,3 +2047,8 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .hero-rings { opacity: .7; }
   .hero-caps li, .hero-caps { opacity: .8; }
 }
+
+/* scroll smoothness */
+.is-scrolling .hero-rings i, .is-scrolling .stack-track, .is-scrolling .hero-tag .dot { animation-play-state: paused; }
+.js .reveal:not(.in), .js .stagger:not(.in) > * { will-change: opacity, transform; }
+@media (max-width: 820px) { .nav-veil i:nth-child(1), .nav-veil i:nth-child(3) { display: none; } }

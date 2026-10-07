@@ -423,7 +423,7 @@
   var ctx = cv.getContext("2d"), RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var path = new Path2D("M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z");
   var VB = { x: 26, y: 27.4, w: 48, h: 45.1 }, COLS = 17, ROWS = 16;
-  var W = 0, H = 0, cell = 0, dpr = 1, cells = [], mx = -999, my = -999, raf = 0, vis = false, t0 = performance.now();
+  var W = 0, H = 0, cell = 0, dpr = 1, cells = [], mx = -999, my = -999, raf = 0, vis = false, t0 = performance.now(), rgbC = "", rgbT = 0, root = document.documentElement;
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function amb() { var r = Math.random(); return r < .72 ? 0 : r < .92 ? .05 : .09; }
   /* wireframe: ordered list of cells so it can be drawn in */
@@ -483,7 +483,8 @@
   }
   function draw(now) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0], rgb = m[0] + "," + m[1] + "," + m[2], arm = cell * .2;
+    if (!rgbC || now - rgbT > 1500) { var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0]; rgbC = m[0] + "," + m[1] + "," + m[2]; rgbT = now; }
+    var rgb = rgbC, arm = cell * .2;
     var el = RM ? 0 : (now - t0) % TOTAL, acc = 0, sc = scenes[0], p = .5;
     for (var q = 0; q < scenes.length; q++) { if (el < acc + scenes[q].dur) { sc = scenes[q]; p = (el - acc) / scenes[q].dur; break; } acc += scenes[q].dur; }
     ctx.lineWidth = Math.max(1.5, cell * .06);
@@ -504,7 +505,7 @@
       ctx.fillText(sc.label, W / 2, ROWS * cell + (H - ROWS * cell) / 2);
     }
   }
-  function loop(now) { draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
+  function loop(now) { if (!root.classList.contains("is-scrolling")) draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
   size(); window.addEventListener("resize", size);
   if (RM) return;
   window.addEventListener("mousemove", function (e) { var r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });

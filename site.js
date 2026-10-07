@@ -723,3 +723,12 @@
   var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { pf.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.2 });
   io.observe(pf);
 })();
+
+/* while the page is moving, pause the hero's looping animations so section entrances get every frame */
+(function () {
+  var root = document.documentElement, t = 0;
+  window.addEventListener("scroll", function () {
+    if (!root.classList.contains("is-scrolling")) root.classList.add("is-scrolling");
+    clearTimeout(t); t = setTimeout(function () { root.classList.remove("is-scrolling"); }, 140);
+  }, { passive: true });
+})();
