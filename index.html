@@ -1865,6 +1865,16 @@
   }
   @media (prefers-reduced-motion: reduce) { .sx-index a, .sx-index a::before { transition: none; } }
 
+  /* head aside: a small spec list on the right of the section heading (wide screens) */
+  .hd-aside { display: none; margin: 0; }
+  @media (min-width: 1100px) {
+    .band-head, .why-head { position: relative; }
+    .hd-aside { display: block; position: absolute; right: 0; top: 4.6rem; width: 19rem; border-top: 1px solid var(--hairline); }
+    .hd-aside div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: .95rem 0; border-bottom: 1px solid var(--hairline); }
+    .hd-aside dt { font: 400 .6rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+    .hd-aside dd { margin: 0; font-size: .95rem; font-weight: 500; letter-spacing: -.01em; color: var(--text); text-align: right; }
+  }
+
 </style>
 </head>
 <body>
@@ -1939,6 +1949,7 @@
       <p>A studio that carries product risk of its own.</p>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       <p class="bh-caps">Own products<i>&middot;</i>Senior team<i>&middot;</i>No handoffs</p>
+      <dl class="hd-aside" aria-hidden="false"><div><dt>Own products</dt><dd>Business OS</dd></div><div><dt>Team</dt><dd>Senior, no handoffs</dd></div><div><dt>Delivery</dt><dd>Idea to scale</dd></div></dl>
     </div>
     <div class="why-bento reveal">
       <div class="wb wb-a">
@@ -2015,7 +2026,7 @@
       <p>From a first <b>MVP</b> to a core-systems <b>rebuild</b>.</p>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       <div class="stats"><div><small>Services</small><b>24</b></div><div><small>Practices</small><b>05</b></div><div><small>Index</small><b>A&ndash;E</b></div></div>
-      <div class="sec-fig" aria-hidden="true"><i></i><small>FIG. 04 / THE FIVE PRACTICES</small></div>
+      <dl class="hd-aside" aria-hidden="false"><div><dt>From</dt><dd>A first MVP</dd></div><div><dt>To</dt><dd>A core-systems rebuild</dd></div><div><dt>Team</dt><dd>Dedicated, if you need one</dd></div></dl>
     </div>
 
     <div class="sx">
