@@ -2111,3 +2111,20 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 }
 .bo-moret b { width: 3.4rem; height: 3.4rem; display: grid; place-items: center; border: 1px dashed var(--border-strong); border-radius: 28%; font: 400 .9rem/1 "Space Mono", ui-monospace, monospace; color: var(--muted); }
 @media (min-width: 900px) { .bo-moret b { width: 4rem; height: 4rem; } }
+
+/* Business OS apps on phones: two per row, tap a card for its features */
+@media (max-width: 620px) {
+  .sg.bos-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; }
+  .bos-apps > li { padding: .9rem .8rem 1rem; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .bos-apps .pc-top { margin: 0 0 .7rem; }
+  .bos-apps .pc-n { display: none; }
+  .bos-apps .pc-ico svg { width: 2.6rem; height: 2.6rem; }
+  .bos-apps h3 { font-size: .95rem; margin: 0 0 .25rem; }
+  .bos-apps .svc-lead { font-size: .76rem; line-height: 1.42; }
+  .bos-apps .svc-inc { display: none; margin-top: .8rem; }
+  .bos-apps > li::after { content: "+ features"; margin-top: auto; padding-top: .8rem; font: 400 .56rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .bos-apps > li.is-open { grid-column: 1 / -1; }
+  .bos-apps > li.is-open .svc-inc { display: grid; }
+  .bos-apps > li.is-open .svc-inc li { font-size: .84rem; }
+  .bos-apps > li.is-open::after { content: "\2212  close"; }
+}

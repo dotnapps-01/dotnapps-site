@@ -739,3 +739,16 @@
     clearTimeout(t); t = setTimeout(function () { root.classList.remove("is-scrolling"); }, 140);
   }, { passive: true });
 })();
+
+/* business os: on phones a tap opens an app card to show its features */
+(function () {
+  var grids = document.querySelectorAll(".bos-apps");
+  if (!grids.length) return;
+  grids.forEach(function (g) {
+    g.addEventListener("click", function (e) {
+      if (!window.matchMedia("(max-width: 620px)").matches) return;
+      var li = e.target.closest(".bos-apps > li");
+      if (li) li.classList.toggle("is-open");
+    });
+  });
+})();
