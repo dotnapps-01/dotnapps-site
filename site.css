@@ -1931,3 +1931,14 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .pf-foot p { display: none; }
   .pf-foot { justify-content: flex-start; padding: 1rem .9rem; }
 }
+
+/* Business OS on the home page: three icons and a link */
+.bo-row { display: flex; align-items: flex-start; gap: clamp(1rem, 4vw, 1.8rem); margin: 1.8rem 0 0; }
+.bo-app { display: flex; flex-direction: column; align-items: center; gap: .55rem; text-decoration: none; color: var(--text); font-size: .82rem; font-weight: 500; }
+.bo-app svg { width: 3.4rem; height: 3.4rem; border-radius: 28%; padding: .15rem; box-sizing: border-box; background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 74%, var(--frame)) 0%, var(--ink) 100%); box-shadow: 0 10px 18px -10px rgba(0, 0, 0, .45); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+.bo-app:hover svg, .bo-app:focus-visible svg { transform: translateY(-3px); }
+.bo-app .fg { fill: var(--frame); } .bo-app .fg2 { fill: color-mix(in srgb, var(--frame) 50%, transparent); } .bo-app .dk { fill: var(--ink); } .bo-app .dks { stroke: var(--ink); fill: none; }
+.bo-more { align-self: flex-start; height: 3.4rem; display: grid; place-items: center; font: 400 .8rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .08em; color: var(--faint); }
+.bo-link { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.6rem; font-size: .95rem; font-weight: 500; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: .2rem; transition: border-color .25s ease; }
+.bo-link:hover { border-color: var(--ink); }
+.bo-link .arr { width: 14px; height: 14px; }
