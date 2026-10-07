@@ -416,43 +416,92 @@
 
 <script src="/site.js"></script>
 <script>
-/* hero — the Dotnapps mark drawn in "+" signs: marks inside the logo flicker black and grey, a few faint ones sit around it, and they warm up near the cursor */
+/* hero — a field of "+" signs that tells the Dotnapps story in a loop: the mark, then idea, design, build, launch and scale drawn out of the same marks */
 (function () {
   var cv = document.querySelector(".hero-plus");
   if (!cv || !cv.getContext) return;
   var ctx = cv.getContext("2d"), RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var path = new Path2D("M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z");
-  var VB = { x: 26, y: 27.4, w: 48, h: 45.1 }, COLS = 17;
-  var W = 0, H = 0, cell = 0, dpr = 1, cells = [], mx = -999, my = -999, raf = 0, vis = false;
-  function inLevel() { var r = Math.random(); return r < .55 ? 1 : r < .85 ? .78 : .5; }
-  function outLevel() { var r = Math.random(); return r < .72 ? 0 : r < .92 ? .05 : .09; }
+  var VB = { x: 26, y: 27.4, w: 48, h: 45.1 }, COLS = 17, ROWS = 16;
+  var W = 0, H = 0, cell = 0, dpr = 1, cells = [], mx = -999, my = -999, raf = 0, vis = false, t0 = performance.now();
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function amb() { var r = Math.random(); return r < .72 ? 0 : r < .92 ? .05 : .09; }
+  /* wireframe: ordered list of cells so it can be drawn in */
+  var wire = {}, wn = 0;
+  function wput(r, c) { var k = r * COLS + c; if (wire[k] === undefined) wire[k] = wn++; }
+  (function () {
+    var r, c;
+    for (c = 3; c <= 13; c++) { wput(2, c); wput(13, c); }
+    for (r = 2; r <= 13; r++) { wput(r, 3); wput(r, 13); }
+    for (c = 3; c <= 13; c++) wput(4, c);
+    for (r = 5; r <= 12; r++) wput(r, 6);
+    for (c = 8; c <= 12; c++) { wput(7, c); wput(9, c); }
+    for (c = 8; c <= 10; c++) wput(11, c);
+  })();
+  var scenes = [
+    { name: "logo", label: "DOTNAPPS", dur: 5200 },
+    { name: "idea", label: "01 / IDEA, SCOPED", dur: 3600 },
+    { name: "design", label: "02 / DESIGN, SIGNED OFF", dur: 3800 },
+    { name: "build", label: "03 / BUILT IN SLICES", dur: 3800 },
+    { name: "launch", label: "04 / LAUNCHED", dur: 3400 },
+    { name: "scale", label: "05 / SCALING WITH YOU", dur: 3800 }
+  ], TOTAL = 0; scenes.forEach(function (x) { TOTAL += x.dur; });
+  function level(sc, p, r, c, inside) {
+    var dx = c - 8, dy = r - 7.5, d = Math.sqrt(dx * dx + dy * dy);
+    switch (sc) {
+      case "logo": return inside ? 1 : 0;
+      case "idea": var R = p * 12;
+        if (d < .7 && p > .05) return 1;
+        if (Math.abs(d - R) < .85) return .95;
+        if (R > 4.5 && Math.abs(d - (R - 4.5)) < .7) return .5;
+        return 0;
+      case "design": var o = wire[r * COLS + c]; return o !== undefined && o / wn <= clamp(p / .62, 0, 1) ? 1 : 0;
+      case "build": var i = 13 - r; if (i < 0 || i > 6) return 0; var w = 13 - 2 * i, left = 8 - (w - 1) / 2;
+        if (c < left || c > left + w - 1) return 0;
+        var f = clamp(p * 7.6 - i, 0, 1); return (c - left) / w <= f && f > 0 ? (i === 0 ? 1 : .9) : 0;
+      case "launch": var head = r === 3 && c === 8, shaft = c === 8 && r >= 4 && r <= 13,
+          wing = (r === 4 && (c === 7 || c === 9)) || (r === 5 && c >= 6 && c <= 10);
+        var on = head || shaft || wing; if (!on) return (r >= 14 && Math.abs(c - 8) <= 1 && Math.random() < .5) ? .6 : 0;
+        return (13 - r) / 11 <= p * 1.25 ? 1 : 0;
+      case "scale": if (r === 14 && c >= 2 && c <= 14) return .45;
+        var bar = c === 3 || c === 4 ? 0 : c === 6 || c === 7 ? 1 : c === 9 || c === 10 ? 2 : c === 12 || c === 13 ? 3 : -1;
+        if (bar < 0) return 0; var hs = [3, 5, 8, 11], e = 1 - Math.pow(1 - clamp(p / .8, 0, 1), 3);
+        return 13 - r < hs[bar] * e && r <= 13 ? 1 : 0;
+    }
+    return 0;
+  }
   function size() {
     W = cv.clientWidth; H = cv.clientHeight; if (!W || !H) return;
     dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    cell = W / COLS; var rows = Math.floor(H / cell), s = (W * .78) / VB.w, ox = (W - VB.w * s) / 2, oy = (H - VB.h * s) / 2;
+    cell = W / COLS; var s = (W * .78) / VB.w, ox = (W - VB.w * s) / 2, oy = (ROWS * cell - VB.h * s) / 2;
     ctx.setTransform(1, 0, 0, 1, 0, 0); cells = [];
-    for (var r = 0; r < rows; r++) for (var c = 0; c < COLS; c++) {
-      var x = (c + .5) * cell, y = (r + .5) * cell + (H - rows * cell) / 2, lx = VB.x + (x - ox) / s, ly = VB.y + (y - oy) / s;
-      var inside = ctx.isPointInPath(path, lx, ly);
-      cells.push({ x: x, y: y, inside: inside, v: inside ? inLevel() : outLevel(), t: 0, n: performance.now() + Math.random() * 2500 });
-      cells[cells.length - 1].t = cells[cells.length - 1].v;
+    for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+      var x = (c + .5) * cell, y = (r + .5) * cell, lx = VB.x + (x - ox) / s, ly = VB.y + (y - oy) / s;
+      cells.push({ x: x, y: y, r: r, c: c, inside: ctx.isPointInPath(path, lx, ly), v: 0, a: amb(), at: amb(), n: performance.now() + Math.random() * 2500, ph: Math.random() * 6.28 });
     }
     draw(performance.now());
   }
   function draw(now) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0], rgb = m[0] + "," + m[1] + "," + m[2], arm = cell * .2;
+    var el = RM ? 0 : (now - t0) % TOTAL, acc = 0, sc = scenes[0], p = .5;
+    for (var q = 0; q < scenes.length; q++) { if (el < acc + scenes[q].dur) { sc = scenes[q]; p = (el - acc) / scenes[q].dur; break; } acc += scenes[q].dur; }
     ctx.lineWidth = Math.max(1.5, cell * .06);
     for (var i = 0; i < cells.length; i++) {
       var k = cells[i];
-      if (!RM) {
-        if (now > k.n) { k.t = k.inside ? inLevel() : outLevel(); k.n = now + 1000 + Math.random() * 2600; }
-        k.v += (k.t - k.v) * .08;
-      }
-      var dx = k.x - mx, dy = k.y - my, d = Math.sqrt(dx * dx + dy * dy), boost = d < 90 ? (1 - d / 90) * .5 : 0, a = Math.min(1, k.v + boost);
-      if (a < .02) continue;
-      ctx.strokeStyle = "rgba(" + rgb + "," + a.toFixed(3) + ")";
+      if (!RM && now > k.n) { k.at = amb(); k.n = now + 1000 + Math.random() * 2600; }
+      k.a += (k.at - k.a) * .08;
+      var T = level(sc.name, p, k.r, k.c, k.inside), tgt = Math.max(T * (.76 + .24 * Math.sin(now * .0018 + k.ph)), k.a);
+      k.v += (tgt - k.v) * (RM ? 1 : .13);
+      var dx = k.x - mx, dy = k.y - my, d = Math.sqrt(dx * dx + dy * dy), boost = d < 90 ? (1 - d / 90) * .5 : 0, al = Math.min(1, k.v + boost);
+      if (al < .02) continue;
+      ctx.strokeStyle = "rgba(" + rgb + "," + al.toFixed(3) + ")";
       ctx.beginPath(); ctx.moveTo(k.x - arm, k.y); ctx.lineTo(k.x + arm, k.y); ctx.moveTo(k.x, k.y - arm); ctx.lineTo(k.x, k.y + arm); ctx.stroke();
+    }
+    if (!RM) {
+      ctx.font = '500 10px "Space Mono", ui-monospace, monospace'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "rgba(" + rgb + "," + (.55 * Math.min(1, p * 6, (1 - p) * 6)).toFixed(3) + ")";
+      ctx.fillText(sc.label, W / 2, ROWS * cell + (H - ROWS * cell) / 2);
     }
   }
   function loop(now) { draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
