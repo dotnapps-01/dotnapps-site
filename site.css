@@ -2043,3 +2043,6 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 .sg .svc-fit { margin-top: auto; padding-top: 1rem; font-size: .8rem; }
 @media (min-width: 560px) { .sg { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .sg { grid-template-columns: repeat(3, 1fr); } }
+.prac li { display: block; grid-template-columns: none; }
+.prac li > a { width: 100%; }
+.prac li > a > div { min-width: 0; }
