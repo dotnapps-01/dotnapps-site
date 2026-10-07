@@ -726,3 +726,12 @@
     } else { vis = true; raf = requestAnimationFrame(loop); }
   });
 })();
+
+/* process: start the drawings when the frame scrolls into view */
+(function () {
+  var pf = document.querySelector(".pf");
+  if (!pf) return;
+  if (!("IntersectionObserver" in window)) { pf.classList.add("is-in"); return; }
+  var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { pf.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.2 });
+  io.observe(pf);
+})();
