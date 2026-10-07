@@ -93,12 +93,9 @@
         var d = new FormData(bf);
         var body = "Name: " + (d.get("name") || "") +
           "\nEmail: " + (d.get("email") || "") +
-          "\nCompany: " + (d.get("company") || "") +
-          "\nBudget: " + (d.get("budget") || "") +
-          "\nTimeline: " + (d.get("timeline") || "") +
           "\n\nWhat they're building:\n" + (d.get("detail") || "");
         var href = "mailto:hello@dotnapps.com?subject=" +
-          encodeURIComponent("Project brief — " + (d.get("company") || d.get("name") || "new")) +
+          encodeURIComponent("Project brief — " + (d.get("name") || "new")) +
           "&body=" + encodeURIComponent(body);
         var done = document.getElementById("brief-done");
         if (done) done.hidden = false;

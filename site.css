@@ -1889,3 +1889,45 @@
 /* section headings after the hero: minimal */
 body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; letter-spacing: -.03em; font-weight: 500; }
 @media (max-width: 620px) { body h2.serif { font-size: clamp(1.45rem, 6.2vw, 1.7rem); } }
+
+/* ---------- Minimal pass ---------- */
+.mini, .prac, .cases { list-style: none; margin: clamp(1.6rem, 4vw, 2.4rem) 0 0; padding: 0; border-top: 1px solid var(--hairline); max-width: 52rem; }
+.mini li { display: flex; flex-direction: column; gap: .3rem; padding: 1.1rem 0; border-bottom: 1px solid var(--hairline); }
+.mini b { font-size: 1.05rem; font-weight: 500; letter-spacing: -.02em; color: var(--text); }
+.mini span { font-size: .92rem; line-height: 1.55; color: var(--muted); max-width: 34rem; }
+.prac li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .4rem; padding: 1.1rem 0; border-bottom: 1px solid var(--hairline); scroll-margin-top: 100px; }
+.prac .l { font: 400 .72rem/1.9 "Space Mono", ui-monospace, monospace; color: var(--faint); letter-spacing: .08em; }
+.prac h3 { margin: 0 0 .3rem; font-size: 1.05rem; font-weight: 500; letter-spacing: -.02em; color: var(--text); }
+.prac p { margin: 0; font-size: .86rem; line-height: 1.6; color: var(--muted); }
+.cases li { display: grid; grid-template-columns: 1fr; gap: .25rem; padding: 1.1rem 0; border-bottom: 1px solid var(--hairline); }
+.cases .t { font: 400 .62rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); margin-bottom: .3rem; }
+.cases b { font-size: 1.05rem; font-weight: 500; letter-spacing: -.02em; color: var(--text); }
+.cases em { font-style: normal; font-size: .88rem; color: var(--muted); }
+@media (min-width: 821px) {
+  .prac li { grid-template-columns: 2.6rem 16rem 1fr; align-items: baseline; }
+  .prac h3 { margin: 0; } .prac p { font-size: .9rem; }
+  .cases li { grid-template-columns: 8rem 1fr 1fr; align-items: baseline; gap: 1rem; }
+  .cases .t { margin: 0; }
+  .mini li { flex-direction: row; gap: 2rem; align-items: baseline; } .mini b { flex: 0 0 15rem; }
+}
+/* phones: calmer rhythm, fewer boxes */
+@media (max-width: 620px) {
+  .band { padding-top: clamp(2.6rem, 11vw, 3.6rem); padding-bottom: 0; }
+  .models { gap: 0; }
+  .model { border-radius: 0; border: 0; border-top: 1px solid var(--hairline); background: none; padding: 1.1rem 0; box-shadow: none; }
+  .pf-fig { max-height: 7rem; width: auto; margin-inline: auto; margin-bottom: 1rem; }
+}
+
+.foot-links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin: 1.6rem 0 0; }
+.foot-links a { font: 400 .68rem/1.4 "Space Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s ease; }
+.foot-links a:hover { color: var(--text); }
+@media (max-width: 559px) {
+  .pf-grid { grid-template-columns: repeat(2, 1fr); }
+  .pf-cell { padding: .9rem; }
+  .pf-fig { max-height: none; width: 100%; margin: 0 0 .8rem; }
+  .pf-n { margin-bottom: .7rem; padding: .25rem .4rem; font-size: .58rem; }
+  .pf-cell h3 { font-size: .82rem; margin-bottom: .4rem; }
+  .pf-cell p { font-size: .76rem; line-height: 1.5; }
+  .pf-foot p { display: none; }
+  .pf-foot { justify-content: flex-start; padding: 1rem .9rem; }
+}
