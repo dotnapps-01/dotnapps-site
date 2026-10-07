@@ -2071,3 +2071,11 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 .foot-social svg .f { fill: currentColor; stroke: none; }
 .foot-social .pp { stroke: var(--frame); stroke-width: 1.5; }
 .foot-social a:hover .pp, .foot-social a:focus-visible .pp { stroke: var(--ink); }
+
+/* Phones: the scroll entrance is a plain fade of the whole block — no sliding, no per-item stagger — so scrolling never has to animate dozens of pieces at once */
+@media (max-width: 820px) {
+  .js .reveal { transform: none; transition: opacity .45s ease; }
+  .js .stagger { opacity: 0; transition: opacity .45s ease; }
+  .js .stagger.in { opacity: 1; }
+  .js .stagger > *, .js .stagger.in > * { opacity: 1; transform: none; transition: none; transition-delay: 0s; }
+}

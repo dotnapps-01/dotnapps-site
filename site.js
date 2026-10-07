@@ -221,7 +221,7 @@
         entries.forEach(function (en) {
           if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
         });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+      }, window.matchMedia && window.matchMedia("(max-width: 820px)").matches ? { rootMargin: "0px 0px 8% 0px", threshold: 0.02 } : { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
       revealEls.forEach(function (el) { io.observe(el); });
     } else {
       revealEls.forEach(function (el) { el.classList.add("in"); });
