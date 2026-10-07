@@ -356,10 +356,11 @@
     padding: 1.15rem 0;
     border-top: 1px solid var(--hairline);
     border-bottom: 1px solid var(--hairline);
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    overflow: hidden; position: relative;
   }
+  .stack::before, .stack::after { content: ""; position: absolute; top: 0; bottom: 0; width: 9%; z-index: 1; pointer-events: none; }
+  .stack::before { left: 0; background: linear-gradient(90deg, var(--frame), transparent); }
+  .stack::after { right: 0; background: linear-gradient(270deg, var(--frame), transparent); }
   .stack-track { display: flex; width: max-content; }
   .js .stack-track { animation: marquee 34s linear infinite; }
   .stack:hover .stack-track { animation-play-state: paused; }
@@ -2067,3 +2068,6 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 .foot-social svg .f { fill: currentColor; stroke: none; }
 .foot-social .pp { stroke: var(--frame); stroke-width: 1.5; }
 .foot-social a:hover .pp, .foot-social a:focus-visible .pp { stroke: var(--ink); }
+
+/* while the page is being scrolled, loops sit still so scrolling gets all the frames */
+html.is-scrolling .hero-rings i, html.is-scrolling .stack-track, html.is-scrolling .pf-fig *, html.is-scrolling .hero-tag .dot { animation-play-state: paused; }

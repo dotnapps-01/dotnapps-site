@@ -730,3 +730,13 @@
   if (!hero || !("IntersectionObserver" in window)) return;
   new IntersectionObserver(function (e) { hero.classList.toggle("is-off", !e[0].isIntersecting); }).observe(hero);
 })();
+
+/* mark the page as scrolling so looping animations pause until it settles */
+(function () {
+  var root = document.documentElement, on = false, t = 0;
+  window.addEventListener("scroll", function () {
+    if (!on) { on = true; root.classList.add("is-scrolling"); }
+    clearTimeout(t);
+    t = setTimeout(function () { on = false; root.classList.remove("is-scrolling"); }, 160);
+  }, { passive: true });
+})();
