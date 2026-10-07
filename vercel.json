@@ -50,6 +50,19 @@
           "value": "no-store, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/staff(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
     }
   ]
 }
