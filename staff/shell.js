@@ -6,10 +6,18 @@
   var DN = window.DN, h = DN.h;
   var HR_ONLY = ["hr", "admin"], MGR = ["manager", "hr", "admin"], THEME_KEY = "dotnapps-site-theme";
 
+  /* Divisions ship one at a time. Rename a division by changing its `name` here. */
+  var DIVISIONS = [
+    { id: "dealdesk", name: "Deal Desk", tag: "Sales & Finance", released: true, apps: ["crm", "sales", "contracts"] },
+    { id: "hr", name: "HR", tag: "People", released: false, apps: ["hrm", "recruitment", "leave", "payroll", "timesheets", "performance"] },
+    { id: "work", name: "Work", tag: "Collaboration", released: false, apps: ["tasks", "chat", "calendar", "documents", "kb"] }
+  ];
+  var divOf = function (appId) { return DIVISIONS.filter(function (d) { return d.apps.indexOf(appId) > -1; })[0]; };
+
   DN.load();
   ["contracts", "recruitment"].forEach(function (id) { DN.cfg[id].roles = MGR; });   // cosmetic until a backend enforces access
 
-  var id = document.body.getAttribute("data-app"), app = DN.cfg[id];
+  var id = document.body.getAttribute("data-app"), app = DN.cfg[id], div = divOf(id);
   var head = document.getElementById("head"), page = document.getElementById("page");
 
   function companyDialog() {
@@ -21,10 +29,36 @@
       onSave: function (v) { DN.setSettings(v); DN.toast("Saved."); } });
   }
 
+  function teamDialog() {
+    var ef = DN.cfg.hrm.engine.fields.filter(function (f) { return !f.hideInForm; });
+    var body = h("div", { class: "dlg-b" }), list = h("div", { class: "fld full", style: "gap:6px" }), dlg;
+    function draw() {
+      DN.clear(list);
+      DN.live("employees").forEach(function (e) {
+        list.append(h("div", { style: "display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid var(--hairline)" },
+          h("span", { style: "flex:1" }, h("b", null, e.name), h("span", { class: "muted" }, "  " + (e.title || e.dept || "") + " · " + e.access)),
+          h("button", { class: "btn sm", onclick: function () { edit(e); } }, "Edit")));
+      });
+    }
+    function edit(e) {
+      var isNew = !e;
+      DN.form({ title: isNew ? "Add team member" : "Edit team member", fields: ef, saveLabel: isNew ? "Add" : "Save",
+        values: e || { status: "Active", access: "Staff", joined: DN.today(), dept: "Sales" },
+        onSave: function (v) {
+          if (isNew) { v.code = DN.nextNo("EMP-", "employees", "code"); DN.insert("employees", v); } else DN.patch("employees", e.id, v);
+          draw(); buildHead();
+        } });
+    }
+    body.append(list, h("div", { class: "fld full" }, h("button", { class: "btn", onclick: function () { edit(null); } }, "+ Add team member")));
+    draw();
+    dlg = DN.dialog("Team members", body, h("div", { class: "dlg-f" }, h("span", { class: "grow" }), h("button", { class: "btn pri", onclick: function () { dlg.close(); } }, "Done")));
+  }
+
   function dataDialog() {
     var body = h("div", { class: "dlg-b" }), dlg, isAdmin = DN.role() === "admin";
     var box = function (title, text, ctl) { return h("div", { class: "fld full" }, h("label", null, title), h("span", { class: "hint" }, text), ctl); };
     body.append(
+      box("Team members", "Who can be an owner, assignee or reviewer, and what each person can access.", h("button", { class: "btn", disabled: !DN.can(HR_ONLY), onclick: function () { dlg.close(); teamDialog(); } }, "Manage team")),
       box("Company details", "Name, address and GSTIN printed on quotes, invoices and payslips.", h("button", { class: "btn", disabled: !DN.can(HR_ONLY), onclick: function () { dlg.close(); companyDialog(); } }, "Edit company details")),
       box("Export backup", "Download all staff data held in this browser as a JSON file.", h("button", { class: "btn", onclick: function () {
         var a = h("a", { href: URL.createObjectURL(new Blob([JSON.stringify(DN.dump(), null, 1)], { type: "application/json" })), download: "dotnapps-staff-backup-" + DN.today() + ".json" });
@@ -61,6 +95,7 @@
         h("svg", { viewBox: "26 27.4 48 45.1", "aria-hidden": "true" }, h("path", { d: "M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z" }))),
       h("span", { class: "mono-ico" }, app.mono),
       h("h1", { id: "pageTitle" }, app.name),
+      div ? h("span", { class: "crumb" }, div.name) : null,
       h("span", { class: "grow" }),
       h("label", { class: "who" }, h("span", null, "Signed in as"), sel),
       h("button", { class: "btn sm", type: "button", onclick: dataDialog }, "Data"),
@@ -74,6 +109,12 @@
     buildHead(); DN.clear(page);
     DN.onExternalChange = start;                       // another tab changed the data
     if (!DN.me()) { page.append(h("div", { class: "empty" }, "No employees yet. Use Data → Start blank.")); return; }
+    if (div && !div.released) {
+      page.append(h("div", { class: "demo-bar" }, "The " + div.name + " division (" + div.tag + ") isn't released yet. " + app.name + " will open once that division is switched on."), h("p", null, h("a", { href: "/staff/" }, "← Released staff apps")));
+      return;
+    }
+    if (div) page.append(h("nav", { class: "divnav", "aria-label": div.name + " apps" }, h("b", null, div.name),
+      div.apps.map(function (a) { return h("a", { href: "/staff/" + a + "/", "aria-current": a === id ? "page" : null }, DN.cfg[a].name); })));
     if (DN.isDemo()) page.append(h("div", { class: "demo-bar" }, "Sample company: people, deals and records are made up and saved only in this browser. Use Data → Start blank when your team is ready."));
     if (!DN.can(app.roles)) { page.append(h("div", { class: "demo-bar" }, "Your role (" + DN.role() + ") doesn't have access to " + app.name + ". Ask an Admin or HR.")); return; }
     var host = h("div"); page.append(host); app.mount(host);

@@ -17,6 +17,26 @@
     return n;
   };
 
+
+  var ONES = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+  var TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  function below100(n) { return n < 20 ? ONES[n] : TENS[Math.floor(n / 10)] + (n % 10 ? " " + ONES[n % 10] : ""); }
+  function below1000(n) { return (n >= 100 ? ONES[Math.floor(n / 100)] + " hundred" + (n % 100 ? " " : "") : "") + (n % 100 ? below100(n % 100) : ""); }
+  DN.rupeesInWords = function (amount) {          // Indian numbering: crore / lakh / thousand
+    var total = Math.round((+amount || 0) * 100), rs = Math.floor(total / 100), ps = total % 100, parts = [];
+    [[1e7, "crore"], [1e5, "lakh"], [1e3, "thousand"]].forEach(function (u) {
+      var q = Math.floor(rs / u[0]); if (q) { parts.push(below1000(q) + " " + u[1]); rs -= q * u[0]; }
+    });
+    if (rs) parts.push(below1000(rs));
+    var w = (parts.join(" ") || "zero") + " rupees" + (ps ? " and " + below100(ps) + " paise" : "") + " only";
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  };
+  // Draft a contract from a won lead or accepted quotation. Managers only (Contracts is manager+).
+  function makeContract(party, value, note) {
+    var c = DN.insert("contracts", { title: party + " — agreement", party: party, type: "Client", value: value || "", status: "Draft", owner: meId(), link: "", notes: note || "" });
+    DN.toast("Draft contract created."); return c;
+  }
+
   function register(a) { DN.apps.push(a); DN.cfg[a.id] = a; }
   function engineApp(meta, A) {
     A.id = meta.id; meta.engine = A;
@@ -51,8 +71,10 @@
         { l: "Follow-ups due", v: open.filter(function (r) { return r.follow && r.follow <= t; }).length, tone: "bad" }
       ];
     },
-    actions: [{ label: "Create quotation", when: function (r) { return r.stage !== "Lost"; }, run: function (r) {
-      var doc = { type: "Quotation", client: r.company || r.name, date: DN.today(), due: DN.addDays(DN.today(), 15), gst: "18",
+    actions: [{ label: "Create contract", when: function (r) { return r.stage === "Won" && !r.contractId && DN.isMgr(); }, run: function (r) {
+      var c = makeContract(r.company || r.name, r.value, "From CRM lead " + r.name + "."); DN.patch("leads", r.id, { contractId: c.id }); go("contracts");
+    } }, { label: "Create quotation", when: function (r) { return r.stage !== "Lost"; }, run: function (r) {
+      var doc = { type: "Quotation", client: r.company || r.name, date: DN.today(), due: DN.addDays(DN.today(), 15), gst: "18", supply: "Same state (CGST + SGST)",
         lines: [{ d: "Services for " + (r.company || r.name), q: 1, r: +r.value || 0 }], status: "Draft", notes: "", leadId: r.id };
       doc.no = DN.nextNo("QT-", "salesdocs", "no");
       DN.insert("salesdocs", doc);
@@ -61,6 +83,7 @@
     } }]
   });
 
+  var SAME = "Same state (CGST + SGST)", IGST = "Other state (IGST)";
   function printDoc(r) {
     var s = DN.settings(), t = DN.linesTotals(r), box = h("div");
     box.append(h("div", { class: "pr-h" },
@@ -72,9 +95,15 @@
       tb.append(h("tr", null, h("td", null, i + 1), h("td", null, l.d), h("td", { class: "num" }, l.q), h("td", { class: "num" }, DN.money(l.r)), h("td", { class: "num" }, DN.money(l.q * l.r))));
     });
     box.append(h("table", null, h("thead", null, h("tr", null, h("th", null, "#"), h("th", null, "Description"), h("th", { class: "num" }, "Qty"), h("th", { class: "num" }, "Rate"), h("th", { class: "num" }, "Amount"))), tb));
-    box.append(h("div", { class: "pr-tot" }, h("div", null, h("span", null, "Subtotal"), h("span", null, DN.money(t.sub))),
-      h("div", null, h("span", null, "GST @ " + (r.gst || 0) + "%"), h("span", null, DN.money(t.tax))),
+    var rate = +r.gst || 0, igst = r.supply === IGST, tax = [];
+    if (igst) tax.push(h("div", null, h("span", null, "IGST @ " + rate + "%"), h("span", null, DN.money(t.tax))));
+    else {
+      var half = Math.round(t.tax * 50) / 100;
+      tax.push(h("div", null, h("span", null, "CGST @ " + rate / 2 + "%"), h("span", null, DN.money(half))), h("div", null, h("span", null, "SGST @ " + rate / 2 + "%"), h("span", null, DN.money(t.tax - half))));
+    }
+    box.append(h("div", { class: "pr-tot" }, h("div", null, h("span", null, "Subtotal"), h("span", null, DN.money(t.sub))), tax,
       h("div", { class: "g" }, h("span", null, "Total"), h("span", null, DN.money(t.total)))));
+    box.append(h("p", { style: "margin-top:60px" }, h("b", null, "Amount in words: "), DN.rupeesInWords(t.total)));
     if (r.notes) box.append(h("p", null, h("b", null, "Notes: "), r.notes));
     DN.print(box);
   }
@@ -89,12 +118,13 @@
       { k: "date", label: "Date", type: "date", required: true, list: true },
       { k: "due", label: "Due / valid till", type: "date", list: true },
       { k: "gst", label: "GST %", type: "select", options: ["0", "5", "12", "18", "28"], required: true },
+      { k: "supply", label: "Place of supply", type: "select", options: [SAME, IGST], required: true, hint: "Decides whether GST prints as CGST + SGST or IGST." },
       { k: "status", label: "Status", type: "select", options: ["Draft", "Sent", "Accepted", "Rejected", "Paid", "Cancelled"], required: true, list: true, pill: true },
       { k: "lines", label: "Line items", type: "lines" },
       { k: "notes", label: "Notes / terms", type: "textarea" }
     ],
     extraCols: [{ label: "Total", num: true, cell: function (r) { return DN.money(DN.linesTotals(r).total); }, csv: function (r) { return DN.linesTotals(r).total; } }],
-    defaults: function () { return { type: "Quotation", date: DN.today(), due: DN.addDays(DN.today(), 15), gst: "18", status: "Draft" }; },
+    defaults: function () { return { type: "Quotation", date: DN.today(), due: DN.addDays(DN.today(), 15), gst: "18", supply: SAME, status: "Draft" }; },
     beforeSave: function (r, isNew, old) {
       if (!r.lines || !r.lines.length) return "Add at least one line item.";
       if (isNew || (old && old.type !== r.type)) r.no = DN.nextNo(r.type === "Invoice" ? "INV-" : "QT-", "salesdocs", "no");
@@ -115,12 +145,14 @@
         run: function (r, done) { DN.patch("salesdocs", r.id, { status: "Paid", paidOn: DN.today() }); DN.toast(r.no + " marked paid."); if (done) done(); } },
       { label: "Convert to invoice", when: function (r) { return r.type === "Quotation" && ["Rejected", "Cancelled"].indexOf(r.status) < 0; },
         run: function (r) {
-          var inv = { type: "Invoice", client: r.client, gstin: r.gstin, date: DN.today(), due: DN.addDays(DN.today(), 15), gst: r.gst,
+          var inv = { type: "Invoice", client: r.client, gstin: r.gstin, date: DN.today(), due: DN.addDays(DN.today(), 15), gst: r.gst, supply: r.supply || SAME,
             lines: JSON.parse(JSON.stringify(r.lines || [])), status: "Sent", notes: r.notes || "", fromQuote: r.no };
           inv.no = DN.nextNo("INV-", "salesdocs", "no"); DN.insert("salesdocs", inv);
           DN.patch("salesdocs", r.id, { status: "Accepted" });
           DN.toast("Invoice " + inv.no + " created from " + r.no + ".");
         } },
+      { label: "Create contract", when: function (r) { return r.type === "Quotation" && r.status === "Accepted" && !r.contractId && DN.isMgr(); },
+        run: function (r) { var c = makeContract(r.client, DN.linesTotals(r).total, "From quotation " + r.no + "."); DN.patch("salesdocs", r.id, { contractId: c.id }); go("contracts"); } },
       { label: "Print / save PDF", run: function (r) { setTimeout(function () { printDoc(r); }, 50); } }
     ]
   });
