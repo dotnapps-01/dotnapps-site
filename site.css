@@ -1885,3 +1885,7 @@
   background-size: 96px 96px; background-position: center top;
   -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
 }
+
+/* section headings after the hero: minimal */
+body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; letter-spacing: -.03em; font-weight: 500; }
+@media (max-width: 620px) { body h2.serif { font-size: clamp(1.45rem, 6.2vw, 1.7rem); } }
