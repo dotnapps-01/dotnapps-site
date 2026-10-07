@@ -733,11 +733,11 @@
   io.observe(pf);
 })();
 
-/* smooth scrolling — inertial wheel scrolling on desktop; touch stays native, reduced motion skips it */
+/* smooth scrolling — glides on wheel, trackpad and touch; reduced motion skips it */
 (function () {
   if (!window.Lenis) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true, anchors: { offset: -72 } });
+  var lenis = new Lenis({ duration: 1.6, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true, syncTouch: true, syncTouchLerp: 0.07, touchInertiaMultiplier: 30, anchors: { offset: -72 } });
   window.__lenis = lenis;
   function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
   requestAnimationFrame(raf);
