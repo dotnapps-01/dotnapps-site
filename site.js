@@ -720,23 +720,6 @@
   var pf = document.querySelector(".pf");
   if (!pf) return;
   if (!("IntersectionObserver" in window)) { pf.classList.add("is-in"); return; }
-  var io = new IntersectionObserver(function (e) { var on = e[0].isIntersecting; if (on) pf.classList.add("is-in"); pf.classList.toggle("is-off", !on); }, { threshold: 0.05 });
+  var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { pf.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.2 });
   io.observe(pf);
-})();
-
-/* hero: pause the ripples and the logo strip while the hero is off-screen */
-(function () {
-  var hero = document.querySelector(".hero");
-  if (!hero || !("IntersectionObserver" in window)) return;
-  new IntersectionObserver(function (e) { hero.classList.toggle("is-off", !e[0].isIntersecting); }).observe(hero);
-})();
-
-/* mark the page as scrolling so looping animations pause until it settles */
-(function () {
-  var root = document.documentElement, on = false, t = 0;
-  window.addEventListener("scroll", function () {
-    if (!on) { on = true; root.classList.add("is-scrolling"); }
-    clearTimeout(t);
-    t = setTimeout(function () { on = false; root.classList.remove("is-scrolling"); }, 160);
-  }, { passive: true });
 })();
