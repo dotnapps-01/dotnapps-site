@@ -2079,3 +2079,26 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
   .js .stagger.in { opacity: 1; }
   .js .stagger > *, .js .stagger.in > * { opacity: 1; transform: none; transition: none; transition-delay: 0s; }
 }
+
+/* ---------- Business OS page (overview) ---------- */
+.pg-facts.f4 { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 60rem; }
+.pg-facts.f4 dt { font: 500 1.5rem/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: -.03em; text-transform: none; color: var(--text); }
+.bos-sec .band-head { margin-bottom: 1.6rem; }
+.bos-sec .band-head p { max-width: 40rem; }
+.bos-grid { margin-top: 0; }
+.bos-note { margin: 1.2rem 0 0; max-width: 46rem; font-size: .92rem; line-height: 1.6; color: var(--muted); }
+.bos-sec .svc-wrap { padding-top: 0; }
+.bos-apps > li { gap: .15rem; }
+.bos-apps .pc-top { display: flex; align-items: flex-start; justify-content: space-between; margin: 0 0 1rem; }
+.bos-apps h3 { text-transform: none; font-size: 1.15rem; letter-spacing: -.02em; }
+.bos-flows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); max-width: 56rem; }
+.bos-flows li { padding: 1rem 0; border-bottom: 1px solid var(--hairline); font: 400 .8rem/1.6 "Space Mono", ui-monospace, monospace; letter-spacing: .02em; color: var(--text); }
+.bos-tag { max-width: 36rem !important; color: var(--text) !important; font-weight: 500; }
+@media (max-width: 820px) { .pg-facts.f4 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; } }
+/* home: all 22 apps beside the heading on laptops */
+@media (min-width: 900px) { .bo-all { grid-template-columns: repeat(6, 1fr); gap: 1.2rem .6rem; } .bo-all .bo-app svg { width: 3.2rem; height: 3.2rem; } .bo-all .bo-app span { font-size: .72rem; } }
+@media (min-width: 900px) {
+  .bo-all { grid-template-columns: repeat(6, minmax(0, 1fr)); padding-right: 0; }
+  .bo-all .bo-app { min-width: 0; align-items: center; text-align: center; }
+  .bo-all .bo-app span { white-space: normal; line-height: 1.2; font-size: .7rem; }
+}
