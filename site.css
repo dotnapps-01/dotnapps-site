@@ -1718,36 +1718,30 @@
   .tst-themes span { grid-row: 1 / span 2; font: 400 .68rem/1.9 "Space Mono", ui-monospace, monospace; letter-spacing: .1em; color: var(--faint); }
   .tst-themes b { font-size: .98rem; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
   .tst-themes em { font-style: normal; font-size: .86rem; line-height: 1.5; color: var(--muted); }
-  /* ---------- Process: stacked cards ---------- */
+  /* ---------- Process: framed grid with line drawings ---------- */
   .ps { display: flex; flex-direction: column; gap: clamp(1.8rem, 4vw, 2.6rem); }
   .band .ps-head { position: static; align-self: flex-start; align-items: flex-start; text-align: left; max-width: 52rem; }
-  .ps-list { list-style: none; margin: 0; padding: 0 0 .5rem; display: flex; flex-direction: column; gap: 1.1rem; }
-  .ps-card {
-    position: sticky; top: calc(92px + var(--i) * 18px);
-    min-height: clamp(210px, 32vh, 290px); padding: clamp(1.4rem, 3.4vw, 2.4rem);
-    border-radius: 12px; background: var(--frame); border: 1px solid var(--card-line);
-    box-shadow: 0 -14px 28px -20px color-mix(in srgb, var(--ink) 30%, transparent);
-    display: grid; grid-template-columns: clamp(4.5rem, 12vw, 9rem) minmax(0, 1fr); column-gap: clamp(1rem, 3vw, 2.4rem); align-content: space-between; align-items: start;
-  }
-  .ps-top { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font: 400 .68rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-  .ps-num { align-self: end; font-size: clamp(3rem, 8vw, 6rem); line-height: .9; font-weight: 500; letter-spacing: -.05em; color: var(--text); font-variant-numeric: tabular-nums; }
-  .ps-body { align-self: end; }
-  .ps-body h3 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 3.2vw, 2.4rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.05; color: var(--text); }
-  .ps-body p { margin: 0; font-size: .98rem; line-height: 1.6; color: var(--muted); max-width: 30rem; }
-  .ps-card.is-last { background: var(--ink); border-color: var(--ink); }
-  .ps-card.is-last .ps-top { color: color-mix(in srgb, var(--frame) 55%, transparent); }
-  .ps-card.is-last .ps-num, .ps-card.is-last .ps-body h3 { color: var(--frame); }
-  .ps-card.is-last .ps-body p { color: color-mix(in srgb, var(--frame) 68%, transparent); }
-  .ps-cta { margin-top: .2rem; }
-  @media (max-width: 720px) {
-    .ps-card { top: calc(76px + var(--i) * 14px); grid-template-columns: 1fr; row-gap: 1.2rem; border-radius: 12px; min-height: 220px; }
-    .ps-num { align-self: start; }
-  }
+  .pf { border: 1px solid var(--card-line); background: var(--frame); }
+  .pf-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--card-line); }
+  .pf-cell { background: var(--frame); padding: clamp(1.2rem, 2.4vw, 1.7rem); display: flex; flex-direction: column; gap: 0; min-width: 0; }
+  .pf-fig { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; color: var(--muted); margin-bottom: 1.4rem; transition: color .35s ease; }
+  .pf-fig * { vector-effect: non-scaling-stroke; }
+  .pf-fig .l { fill: none; stroke: currentColor; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+  .pf-fig .d { fill: none; stroke: currentColor; stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+  .pf-fig .f { fill: currentColor; stroke: none; }
+  .pf-fig .w { fill: var(--frame); stroke: currentColor; stroke-width: 1; }
+  .pf-fig text { font: 400 7px "Space Mono", ui-monospace, monospace; letter-spacing: .08em; fill: var(--faint); text-transform: uppercase; }
+  .pf-cell:hover .pf-fig { color: var(--ink); }
+  .pf-n { align-self: flex-start; font: 400 .66rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .1em; color: var(--muted); border: 1px solid var(--border); padding: .32rem .5rem; margin-bottom: 1.1rem; }
+  .pf-cell h3 { margin: 0 0 .6rem; font-size: 1.05rem; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; color: var(--text); }
+  .pf-cell p { margin: 0; font-size: .92rem; line-height: 1.55; color: var(--muted); max-width: 26rem; }
+  .pf-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.2rem clamp(1.2rem, 2.4vw, 1.7rem); border-top: 1px solid var(--card-line); }
+  .pf-foot p { margin: 0; font: 400 .66rem/1.6 "Space Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .pf-btn { font: 400 .68rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--text); text-decoration: none; border: 1px solid var(--ink); padding: .85rem 1.1rem; transition: background .25s ease, color .25s ease; }
+  .pf-btn:hover, .pf-btn:focus-visible { background: var(--ink); color: var(--frame); }
+  @media (min-width: 560px) { .pf-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .pf-grid { grid-template-columns: repeat(4, 1fr); } }
 
-
-  /* section headings: smaller than the hero; boxier minimal corners */
-  body h2.serif { font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1.06; letter-spacing: -.04em; }
-  @media (max-width: 620px) { body h2.serif { font-size: clamp(1.85rem, 7.8vw, 2.15rem); } }
   /* ---------- Services: sticky index + scrolling list ---------- */
   .sx { display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 4vw, 2.5rem); align-items: start; }
   .sx-index { display: none; }
