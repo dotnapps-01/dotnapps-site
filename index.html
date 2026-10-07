@@ -863,10 +863,6 @@
     var cap = (hover >= 5 ? nodes2[hover - 5] : hover >= 0 ? stages[hover] : stages[reached]), txt = cap.n + " — " + cap.t;
     if (txt !== shownText) { shownText = txt; fade = 0; }
     fade = Math.min(1, fade + 0.06);
-    mono(12); var cw = ctx.measureText(shownText).width + 28, cxp = cx - cw / 2, cyp = cy + R + 30;
-    ctx.globalAlpha = 0.55 + 0.45 * fade; ctx.fillStyle = bg; ctx.strokeStyle = "rgba(" + ink + ",.2)";
-    rrect(cxp, cyp - 13, cw, 26, 13); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "rgba(" + ink + ",.9)"; ctx.textBaseline = "middle"; ctx.fillText(shownText, cxp + 14, cyp + 0.5); ctx.globalAlpha = 1;
     if (!pop && now - lastNodePop > 1700) {              /* between stage pops, the service nodes announce themselves */
       for (var tries = 0; tries < nodes2.length; tries++) {
         var ni = (nodeCur + tries) % nodes2.length, nr = rot(nodes2[ni].v);
