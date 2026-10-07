@@ -41,15 +41,6 @@
           "value": "no-store, must-revalidate"
         }
       ]
-    },
-    {
-      "source": "/(products|services|site\\.css|site\\.js)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, must-revalidate"
-        }
-      ]
     }
   ]
 }
