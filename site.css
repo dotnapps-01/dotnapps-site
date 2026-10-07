@@ -133,7 +133,8 @@
   html { overflow-x: hidden; }
   /* iPhone Safari widens the layout (and nudges everything off-centre) if anything pokes past the edge; lock the page to the screen width on small screens */
   @media (max-width: 900px) {
-    html, body { max-width: 100%; overflow-x: hidden; }
+    html { max-width: 100%; overflow-x: hidden; }
+    body { max-width: 100%; overflow-x: clip; }
     body { position: relative; width: 100%; }
     html { touch-action: pan-y pinch-zoom; }
     .hero-actions { flex-wrap: wrap; row-gap: .6rem; }
@@ -2054,8 +2055,7 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .eyebrow-pill, .hero-tag, .hero-caps li, .btn--ghost, .ind, .faq-tab.is-active { -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--frame) 94%, transparent); }
   .hero-rings { -webkit-mask-image: none; mask-image: none; }
   .hero-rings::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, var(--frame) 0, transparent 18%, transparent 70%, var(--frame) 100%); }
-  .hero-rings i:nth-child(n+5) { display: none; }
-  .hero-rings i { will-change: transform, opacity; }
+  .hero-rings i:nth-child(n+4) { display: none; }
 }
 .hero.is-off .hero-rings i, .hero.is-off .stack-track, .pf.is-off .pf-fig * { animation-play-state: paused; }
 
