@@ -1978,6 +1978,12 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 }
 .bo-all .bo-app span { white-space: nowrap; }
 @media (max-width: 820px) {
-  .pg-head { padding-top: clamp(8rem, 26vw, 9.5rem); }
+  .pg-head { padding-top: clamp(6.4rem, 19vw, 7.4rem); }
   .pg-head h1 .h1-end { display: block; }
+}
+
+@media (max-width: 820px) {
+  .pg-head h1 { margin-top: 1.2rem; }
+  .pg-head .bh-actions, .pg-end .bh-actions { flex-wrap: nowrap; gap: .5rem; }
+  .pg-head .bh-actions .btn, .pg-end .bh-actions .btn { padding: .78rem 1.05rem; font-size: .88rem; white-space: nowrap; }
 }
