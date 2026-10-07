@@ -553,12 +553,6 @@
     transition: transform .2s ease, box-shadow .2s ease;
   }
   .model:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
-  .model::before {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--focus) 13%, transparent), transparent 62%);
-    opacity: 0; transition: opacity .3s ease;
-  }
-  .model:hover::before { opacity: 1; }
   .model h3 { font-size: 1.02rem; font-weight: 650; letter-spacing: -.02em; margin: 0 0 .5rem; }
   .model p { margin: 0; font-size: .87rem; color: var(--muted); }
   .model .who { margin-top: .8rem; font-size: .78rem; color: var(--faint); }
