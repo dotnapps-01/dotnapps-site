@@ -2102,3 +2102,12 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
   .bo-all .bo-app { min-width: 0; align-items: center; text-align: center; }
   .bo-all .bo-app span { white-space: normal; line-height: 1.2; font-size: .7rem; }
 }
+
+/* home: a short set of apps beside the heading (laptops) */
+@media (min-width: 900px) {
+  .bo-all { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.8rem 1rem; padding-right: clamp(1rem, 4vw, 4rem); max-width: 30rem; justify-self: end; }
+  .bo-all .bo-app svg { width: 4rem; height: 4rem; }
+  .bo-all .bo-app span { font-size: .8rem; }
+}
+.bo-moret b { width: 3.4rem; height: 3.4rem; display: grid; place-items: center; border: 1px dashed var(--border-strong); border-radius: 28%; font: 400 .9rem/1 "Space Mono", ui-monospace, monospace; color: var(--muted); }
+@media (min-width: 900px) { .bo-moret b { width: 4rem; height: 4rem; } }
