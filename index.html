@@ -438,13 +438,62 @@
     for (c = 8; c <= 12; c++) { wput(7, c); wput(9, c); }
     for (c = 8; c <= 10; c++) wput(11, c);
   })();
+  /* extra scenes */
+  function sFlow(r, c, p) {
+    var nodes = [[1, 3], [7, 9], [13, 15]], q = clamp(p / .8, 0, 1), px = 4 + q * 8;
+    for (var i = 0; i < 3; i++) {
+      var a = nodes[i][0], b = nodes[i][1];
+      if (r >= 6 && r <= 8 && c >= a && c <= b) { var edge = (r === 6 || r === 8 || c === a || c === b), lit = px >= a - .5 + (i ? 0 : -5); return edge ? 1 : (lit && q > i * .34 ? .7 : 0); }
+    }
+    if (r === 7 && ((c >= 4 && c <= 6) || (c >= 10 && c <= 12))) return .5;
+    if (r === 7 && Math.abs(c - px) < .6 && p > .05 && p < .9) return 1;
+    return 0;
+  }
+  function sCode(r, c, p) {
+    if ((r === 2 || r === 13) && c >= 1 && c <= 15 || (c === 1 || c === 15) && r >= 2 && r <= 13) return 1;
+    if (r === 4 && c >= 1 && c <= 15) return .7;
+    if (r === 3 && (c === 3 || c === 5 || c === 7)) return .9;
+    var ws = [9, 6, 11, 7], rows = [6, 8, 10, 12], ind = [0, 2, 2, 0];
+    for (var i = 0; i < 4; i++) {
+      if (r === rows[i]) {
+        var q = clamp((p - i * .2) / .2, 0, 1), w = ws[i];
+        if (c >= 3 + ind[i] && c < 3 + ind[i] + w && (c - 3 - ind[i]) < w * q) return .95;
+        if (q > 0 && q < 1 && c === 3 + ind[i] + Math.floor(w * q) && Math.floor(p * 10) % 2 === 0) return 1;
+      }
+    }
+    if (p > .9 && r === 12 && c === 3 && Math.floor(p * 40) % 2 === 0) return 1;
+    return 0;
+  }
+  function sTeam(r, c, p) {
+    var xs = [3, 8, 13];
+    for (var i = 0; i < 3; i++) {
+      var x = xs[i], a = clamp((p - i * .08) / .2, 0, 1);
+      if (a > 0) { if (r === 2 && c === x) return 1; if (r === 3 && c >= x - 1 && c <= x + 1) return 1; if (r === 4 && c >= x - 1 && c <= x + 1) return .8; }
+      var q = clamp((p - .3) / .3, 0, 1); if (c === x && r >= 5 && r <= 5 + Math.floor(q * 3)) return .8;
+    }
+    if (p > .55) { var q2 = clamp((p - .55) / .2, 0, 1); if (r === 9 && c >= 3 && c <= 13 && (c - 3) <= q2 * 10) return .8; }
+    if (p > .7 && r >= 10 && r <= 14 && c >= 5 && c <= 11) { var q3 = clamp((p - .7) / .25, 0, 1); return (14 - r) / 5 <= q3 ? 1 : 0; }
+    return 0;
+  }
+  function sWeeks(r, c, p) {
+    var cols = [[1, 3], [5, 7], [9, 11], [13, 15]];
+    for (var i = 0; i < 4; i++) {
+      var a = cols[i][0], b = cols[i][1];
+      if (c >= a && c <= b) { var q = clamp((p - i * .18) / .2, 0, 1), h = (i + 1) * 3; if (r === 14) return .5; if (r >= 14 - h * q && r < 14) return r % 2 === 0 ? 1 : .75; }
+    }
+    return 0;
+  }
   var scenes = [
     { name: "logo", label: "DOTNAPPS", dur: 5200 },
     { name: "idea", label: "01 / IDEA, SCOPED", dur: 3600 },
-    { name: "design", label: "02 / DESIGN, SIGNED OFF", dur: 3800 },
-    { name: "build", label: "03 / BUILT IN SLICES", dur: 3800 },
-    { name: "launch", label: "04 / LAUNCHED", dur: 3400 },
-    { name: "scale", label: "05 / SCALING WITH YOU", dur: 3800 }
+    { name: "team", label: "02 / ONE TEAM, NO HANDOFFS", dur: 4000 },
+    { name: "design", label: "03 / DESIGN, SIGNED OFF", dur: 3800 },
+    { name: "code", label: "04 / CODE, WRITTEN IN SLICES", dur: 4000 },
+    { name: "flow", label: "05 / WORK THAT RUNS ITSELF", dur: 3800 },
+    { name: "build", label: "06 / BUILT, LAYER BY LAYER", dur: 3800 },
+    { name: "weeks", label: "07 / WORKING SOFTWARE EVERY WEEK", dur: 4000 },
+    { name: "launch", label: "08 / LAUNCHED", dur: 3400 },
+    { name: "scale", label: "09 / SCALING WITH YOU", dur: 3800 }
   ], TOTAL = 0; scenes.forEach(function (x) { TOTAL += x.dur; });
   function level(sc, p, r, c, inside) {
     var dx = c - 8, dy = r - 7.5, d = Math.sqrt(dx * dx + dy * dy);
@@ -463,6 +512,10 @@
           wing = (r === 4 && (c === 7 || c === 9)) || (r === 5 && c >= 6 && c <= 10);
         var on = head || shaft || wing; if (!on) return (r >= 14 && Math.abs(c - 8) <= 1 && Math.random() < .5) ? .6 : 0;
         return (13 - r) / 11 <= p * 1.25 ? 1 : 0;
+      case "flow": return sFlow(r, c, p);
+      case "code": return sCode(r, c, p);
+      case "team": return sTeam(r, c, p);
+      case "weeks": return sWeeks(r, c, p);
       case "scale": if (r === 14 && c >= 2 && c <= 14) return .45;
         var bar = c === 3 || c === 4 ? 0 : c === 6 || c === 7 ? 1 : c === 9 || c === 10 ? 2 : c === 12 || c === 13 ? 3 : -1;
         if (bar < 0) return 0; var hs = [3, 5, 8, 11], e = 1 - Math.pow(1 - clamp(p / .8, 0, 1), 3);
