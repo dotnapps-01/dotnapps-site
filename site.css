@@ -2062,3 +2062,12 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 }
 .hero.is-off .hero-rings i, .hero.is-off .stack-track, .pf.is-off .pf-fig * { animation-play-state: paused; }
 html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-state: paused; }
+
+/* Footer social icons */
+.foot-social { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.4rem 0 0; }
+.foot-social a { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; color: var(--text); background: transparent; transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; }
+.foot-social a:hover, .foot-social a:focus-visible { background: var(--ink); color: var(--frame); border-color: var(--ink); transform: translateY(-2px); }
+.foot-social svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.foot-social svg .f { fill: currentColor; stroke: none; }
+.foot-social .pp { stroke: var(--frame); stroke-width: 1.5; }
+.foot-social a:hover .pp, .foot-social a:focus-visible .pp { stroke: var(--ink); }
