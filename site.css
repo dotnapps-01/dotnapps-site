@@ -1969,3 +1969,11 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .pc h3 { font-size: .98rem; }
   .pc p { font-size: .78rem; line-height: 1.45; }
 }
+.bo-split { width: 100%; }
+.bo-left h2 { margin-bottom: 0; }
+.bo-left > p { margin: 1rem 0 0; }
+@media (min-width: 900px) {
+  .bo-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .bo-all { padding: 0 clamp(1rem, 3vw, 2.5rem) 0 clamp(2rem, 5vw, 4rem); }
+}
+.bo-all .bo-app span { white-space: nowrap; }
