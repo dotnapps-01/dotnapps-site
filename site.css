@@ -2047,3 +2047,14 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .hero-rings { opacity: .7; }
   .hero-caps li, .hero-caps { opacity: .8; }
 }
+
+/* ---------- Phone performance: no stacked blurs, lighter hero ripples, pause what is off-screen ---------- */
+@media (max-width: 820px) {
+  .nav-veil i { display: none; }
+  .eyebrow-pill, .hero-tag, .hero-caps li, .btn--ghost, .ind, .faq-tab.is-active { -webkit-backdrop-filter: none; backdrop-filter: none; background: color-mix(in srgb, var(--frame) 94%, transparent); }
+  .hero-rings { -webkit-mask-image: none; mask-image: none; }
+  .hero-rings::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, var(--frame) 0, transparent 18%, transparent 70%, var(--frame) 100%); }
+  .hero-rings i:nth-child(n+5) { display: none; }
+  .hero-rings i { will-change: transform, opacity; }
+}
+.hero.is-off .hero-rings i, .hero.is-off .stack-track, .pf.is-off .pf-fig * { animation-play-state: paused; }
