@@ -739,6 +739,25 @@
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var lenis = new Lenis({ duration: 1.6, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true, syncTouch: true, syncTouchLerp: 0.13, touchInertiaMultiplier: 45, anchors: { offset: -72 } });
   window.__lenis = lenis;
+  /* glide to the next section: after a downward scroll settles, if the next section's top is close, carry on to it */
+  var secs = [].slice.call(document.querySelectorAll("header.hero, header.band, section.band, section.cta, section.careers, footer"));
+  var snapTimer = 0, snapping = false, goingDown = false;
+  function tops() { return secs.map(function (el) { return el.getBoundingClientRect().top + window.scrollY; }); }
+  function snap() {
+    if (!goingDown || snapping || lenis.isStopped) return;
+    var y = lenis.scroll, vh = window.innerHeight, ts = tops(), next = null;
+    for (var i = 0; i < ts.length; i++) { if (ts[i] > y + vh * 0.18) { next = ts[i]; break; } }
+    if (next === null || next - y > vh * 0.62) return;
+    snapping = true;
+    var release = setTimeout(function () { snapping = false; }, 1700);
+    lenis.scrollTo(next - 16, { duration: 1.2, lock: false, onComplete: function () { clearTimeout(release); snapping = false; } });
+  }
+  lenis.on("scroll", function (e) {
+    goingDown = e.direction > 0;
+    if (snapping) return;
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(snap, 170);
+  });
   function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
   requestAnimationFrame(raf);
   var dlg = document.getElementById("formModal");
