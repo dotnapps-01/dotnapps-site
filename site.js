@@ -685,3 +685,44 @@
     b.addEventListener("touchcancel", function () { drag = false; reset(); });
   });
 })();
+
+/* plus matrix — a field of "+" marks that settle between black, grey and near-white */
+(function () {
+  var cvs = [].slice.call(document.querySelectorAll("canvas[data-plus]"));
+  if (!cvs.length) return;
+  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function pick() { var r = Math.random(); return r < .38 ? 1 : r < .62 ? .5 : r < .85 ? .22 : .1; }
+  cvs.forEach(function (cv) {
+    var ctx = cv.getContext("2d"), cells = [], cols = 0, rows = 0, cell = 48, W = 0, H = 0, dpr = 1, raf = 0, vis = false;
+    function size() {
+      W = cv.clientWidth; if (!W) return;
+      cell = W < 560 ? 30 : W < 900 ? 40 : 48; cols = Math.max(4, Math.floor(W / cell)); rows = W < 560 ? 6 : 8; H = rows * cell;
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + "px";
+      cells = [];
+      for (var i = 0; i < cols * rows; i++) cells.push({ v: pick(), t: pick(), n: performance.now() + Math.random() * 3000 });
+      draw(performance.now());
+    }
+    function draw(now) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0], rgb = m[0] + "," + m[1] + "," + m[2];
+      var ox = (W - cols * cell) / 2 + cell / 2, oy = cell / 2, arm = cell * .19;
+      ctx.lineWidth = Math.max(2, cell * .07);
+      for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+        var k = cells[r * cols + c];
+        if (!RM && now > k.n) { k.t = pick(); k.n = now + 900 + Math.random() * 2600; }
+        if (!RM) k.v += (k.t - k.v) * .08;
+        var x = ox + c * cell, y = oy + r * cell;
+        ctx.strokeStyle = "rgba(" + rgb + "," + k.v.toFixed(3) + ")";
+        ctx.beginPath(); ctx.moveTo(x - arm, y); ctx.lineTo(x + arm, y); ctx.moveTo(x, y - arm); ctx.lineTo(x, y + arm); ctx.stroke();
+      }
+    }
+    function loop(now) { draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
+    size();
+    window.addEventListener("resize", size);
+    if (RM) return;
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(cv);
+    } else { vis = true; raf = requestAnimationFrame(loop); }
+  });
+})();

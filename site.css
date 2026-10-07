@@ -1839,3 +1839,16 @@
   @media (prefers-reduced-motion: reduce) { .sec-fig i { animation: none; } }
 
   @keyframes dmBreathe { 0%, 100% { -webkit-mask-size: 70% 70%; mask-size: 70% 70%; opacity: .35; } 50% { -webkit-mask-size: 110% 110%; mask-size: 110% 110%; opacity: .7; } }
+
+/* ---------- Plus matrix + grid backdrop ---------- */
+.plus-field { display: block; width: 100%; color: var(--ink); margin: clamp(1.4rem, 3vw, 2.2rem) 0; }
+.px-grid { position: relative; isolation: isolate; }
+.px-grid::before {
+  content: ""; position: absolute; inset: 0 -2rem; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(var(--hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px),
+    radial-gradient(circle, color-mix(in srgb, var(--ink) 16%, transparent) 2px, transparent 2.6px);
+  background-size: 96px 96px; background-position: center top;
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
