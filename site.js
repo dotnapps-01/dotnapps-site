@@ -688,12 +688,12 @@
   var cvs = [].slice.call(document.querySelectorAll("canvas[data-plus]"));
   if (!cvs.length) return;
   var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function pick() { var r = Math.random(); return r < .38 ? 1 : r < .62 ? .5 : r < .85 ? .22 : .1; }
+  function pick() { var r = Math.random(); return r < .22 ? .8 : r < .5 ? .38 : r < .8 ? .16 : .07; }
   cvs.forEach(function (cv) {
     var ctx = cv.getContext("2d"), cells = [], cols = 0, rows = 0, cell = 48, W = 0, H = 0, dpr = 1, raf = 0, vis = false;
     function size() {
       W = cv.clientWidth; if (!W) return;
-      cell = W < 560 ? 30 : W < 900 ? 40 : 48; cols = Math.max(4, Math.floor(W / cell)); rows = W < 560 ? 6 : 8; H = rows * cell;
+      cell = W < 560 ? 28 : W < 900 ? 34 : 38; cols = Math.max(4, Math.floor(W / cell)); rows = W < 560 ? 4 : 5; H = rows * cell;
       dpr = Math.min(2, window.devicePixelRatio || 1);
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + "px";
       cells = [];
@@ -703,8 +703,8 @@
     function draw(now) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0], rgb = m[0] + "," + m[1] + "," + m[2];
-      var ox = (W - cols * cell) / 2 + cell / 2, oy = cell / 2, arm = cell * .19;
-      ctx.lineWidth = Math.max(2, cell * .07);
+      var ox = (W - cols * cell) / 2 + cell / 2, oy = cell / 2, arm = cell * .17;
+      ctx.lineWidth = Math.max(1.5, cell * .05);
       for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
         var k = cells[r * cols + c];
         if (!RM && now > k.n) { k.t = pick(); k.n = now + 900 + Math.random() * 2600; }

@@ -1881,7 +1881,7 @@
   background-image:
     linear-gradient(var(--hairline) 1px, transparent 1px),
     linear-gradient(90deg, var(--hairline) 1px, transparent 1px),
-    radial-gradient(circle, color-mix(in srgb, var(--ink) 16%, transparent) 2px, transparent 2.6px);
+    radial-gradient(circle, color-mix(in srgb, var(--ink) 9%, transparent) 1.5px, transparent 2px);
   background-size: 96px 96px; background-position: center top;
   -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
 }
@@ -1953,3 +1953,8 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
   .bo-all { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1.4rem, 3vw, 2.2rem) 1rem; justify-items: center; padding-left: clamp(1.5rem, 4vw, 3rem); border-left: 1px solid var(--hairline); }
   .bo-all .bo-app svg { width: 4rem; height: 4rem; }
 }
+
+.px-grid::before { opacity: .6; }
+.pg-head h1 { font-size: clamp(1.9rem, 3.4vw, 2.7rem); letter-spacing: -.035em; font-weight: 500; max-width: none; }
+.pg-head h1 .h1-end { display: inline; }
+.plus-field { margin: clamp(1.2rem, 2.5vw, 1.8rem) 0; }
