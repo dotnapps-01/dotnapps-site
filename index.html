@@ -1758,20 +1758,6 @@
   .practice:hover, .work-card:hover, .model:hover { border-color: color-mix(in srgb, var(--ink) 22%, transparent); }
   .ind { font-family: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; padding: .7rem 1.1rem; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; border: 1px solid var(--card-line); }
 
-  /* dot-matrix figure */
-  .sec-fig { display: none; }
-  @media (min-width: 1100px) {
-    .band-head, .why-head { position: relative; }
-    .sec-fig { display: block; position: absolute; right: 0; top: 4.6rem; width: 13rem; pointer-events: none; text-align: right; }
-    .sec-fig i { display: block; width: 100%; aspect-ratio: 1.3; background-image: radial-gradient(circle, var(--ink) 1.1px, transparent 1.6px); background-size: 10px 10px; opacity: .55;
-      -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent 100%); mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
-      -webkit-mask-size: 90% 90%; mask-size: 90% 90%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: 50% 50%; mask-position: 50% 50%;
-      animation: dmBreathe 7s ease-in-out infinite; }
-    .sec-fig.sq i { -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent), linear-gradient(0deg, transparent, #000 30%, #000 70%, transparent); -webkit-mask-composite: source-in; mask-composite: intersect; mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent), linear-gradient(0deg, transparent, #000 30%, #000 70%, transparent); }
-    .sec-fig small { display: block; margin-top: .9rem; font-family: "Space Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .56rem; letter-spacing: .26em; text-transform: uppercase; color: var(--faint); }
-  }
-  @keyframes dmBreathe { 0%, 100% { -webkit-mask-size: 70% 70%; mask-size: 70% 70%; opacity: .35; } 50% { -webkit-mask-size: 110% 110%; mask-size: 110% 110%; opacity: .7; } }
-  @media (prefers-reduced-motion: reduce) { .sec-fig i { animation: none; } }
 
   /* nav: round badge left, links centred, black pill right, hairline under (desktop) */
   @media (min-width: 821px) {
@@ -2129,7 +2115,7 @@
       <div class="sec-row"><span><i></i>SEC. 06 / INDUSTRIES</span><span class="r">[ 8 SECTORS ]</span></div>
       <h2 class="serif">Where we've <span class="h2-end">done the work</span></h2>
       <p>The sectors we've shipped in and can move fast in.</p>
-      <div class="sec-fig sq" aria-hidden="true"><i></i><small>FIG. 06 / WHERE WE HAVE SHIPPED</small></div>
+      <dl class="hd-aside"><div><dt>Sectors</dt><dd>Eight</dd></div><div><dt>Includes</dt><dd>Fintech, Healthtech</dd></div><div><dt>And</dt><dd>Logistics, Retail, B2B SaaS</dd></div></dl>
     </div>
     <div class="ind-grid stagger">
       <span class="ind">Fintech &amp; Payments</span>
@@ -2149,7 +2135,7 @@
       <div class="sec-row"><span><i></i>SEC. 07 / SELECTED WORK</span><span class="r">[ 4 CASES ]</span></div>
       <h2 class="serif">Shipped, <span class="h2-end">not just designed</span></h2>
       <p>Recent builds. Some are anonymised under NDA.</p>
-      <div class="sec-fig" aria-hidden="true"><i></i><small>FIG. 07 / SHIPPED, NOT DESIGNED</small></div>
+      <dl class="hd-aside"><div><dt>Cases</dt><dd>Four</dd></div><div><dt>Includes</dt><dd>Fintech, Logistics, B2B SaaS</dd></div><div><dt>Note</dt><dd>Some under NDA</dd></div></dl>
     </div>
     <div class="work-grid stagger">
       <article class="work-card">
@@ -2241,7 +2227,7 @@
       <h2 class="serif">Three <span class="h2-end">engagement models</span></h2>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       <p class="bh-caps">Fixed scope<i>&middot;</i>Dedicated team<i>&middot;</i>Advisory</p>
-      <div class="sec-fig sq" aria-hidden="true"><i></i><small>FIG. 10 / THREE WAYS IN</small></div>
+      <dl class="hd-aside"><div><dt>Fixed scope</dt><dd>MVPs and redesigns</dd></div><div><dt>Dedicated team</dt><dd>Ongoing product work</dd></div><div><dt>Advisory</dt><dd>Direction for your team</dd></div></dl>
     </div>
     <div class="models stagger">
       <div class="model">
@@ -2269,7 +2255,7 @@
       <h2 class="serif">Studio, freelancer, <span class="h2-end">or a new hire</span></h2>
       <p>When a studio is the right call &mdash; and when it isn't.</p>
       <p class="bh-caps">Studio<i>&middot;</i>Freelancer<i>&middot;</i>In-house hire</p>
-      <div class="sec-fig" aria-hidden="true"><i></i><small>FIG. 11 / THE HONEST VERSION</small></div>
+      <dl class="hd-aside"><div><dt>Start</dt><dd>Days to a week</dd></div><div><dt>Skills</dt><dd>Design, engineering, AI, DevOps</dd></div><div><dt>Scale</dt><dd>Month to month</dd></div></dl>
     </div>
     <div class="compare reveal">
       <div class="compare-wrap">
@@ -2298,7 +2284,7 @@
       <p>Straight answers on how we scope, price, work, and hand over.</p>
       <div class="bh-actions"><a class="btn btn--solid" href="#contact" data-modal="contact">Ask a question<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
       <p class="bh-caps">Scoping<i>&middot;</i>Pricing<i>&middot;</i>Working<i>&middot;</i>Handover</p>
-      <div class="sec-fig sq" aria-hidden="true"><i></i><small>FIG. 12 / STRAIGHT ANSWERS</small></div>
+      <dl class="hd-aside"><div><dt>General</dt><dd>What we do</dd></div><div><dt>Projects</dt><dd>Scope and pricing</dd></div><div><dt>Ownership</dt><dd>Legal and handover</dd></div></dl>
     </div>
 
     <div class="faq-shell reveal">
