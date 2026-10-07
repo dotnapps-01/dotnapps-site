@@ -1942,3 +1942,14 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 .bo-link { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.6rem; font-size: .95rem; font-weight: 500; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: .2rem; transition: border-color .25s ease; }
 .bo-link:hover { border-color: var(--ink); }
 .bo-link .arr { width: 14px; height: 14px; }
+
+/* Business OS: phones show three icons; laptops show all twelve beside the heading */
+.bo-split { display: block; }
+.bo-all { display: none; }
+@media (min-width: 900px) {
+  .bo-split { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; margin-top: 1.4rem; }
+  .bo-left .bo-row { display: none; }
+  .bo-left h2 { margin-top: 0; }
+  .bo-all { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1.4rem, 3vw, 2.2rem) 1rem; justify-items: center; padding-left: clamp(1.5rem, 4vw, 3rem); border-left: 1px solid var(--hairline); }
+  .bo-all .bo-app svg { width: 4rem; height: 4rem; }
+}
