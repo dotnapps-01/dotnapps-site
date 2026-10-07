@@ -508,7 +508,18 @@
     }
   }
   function loop(now) { if (!root.classList.contains("is-scrolling")) draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
-  size(); window.addEventListener("resize", size);
+  /* the box spans the headline block: from the top of "Unlock your…" down to the last line of the capability list */
+  function place() {
+    var hero = document.querySelector(".hero"), h1 = hero && hero.querySelector("h1"), caps = hero && hero.querySelector(".hero-caps");
+    if (!h1 || !caps || window.innerWidth < 1100) return;
+    var hr = hero.getBoundingClientRect(), a = h1.getBoundingClientRect(), b = caps.getBoundingClientRect(), h = Math.max(220, Math.round(b.bottom - a.top));
+    cv.style.top = Math.round(a.top - hr.top) + "px"; cv.style.width = h + "px"; cv.style.height = h + "px";
+  }
+  function fit() { place(); size(); }
+  place(); size();
+  window.addEventListener("resize", fit);
+  window.addEventListener("load", fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   if (RM) return;
   window.addEventListener("mousemove", function (e) { var r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });
   if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(cv);
