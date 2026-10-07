@@ -7,7 +7,7 @@
 (function () {
   "use strict";
   var DN = (window.DN = { apps: [], cfg: {} });
-  var KEY = "dn.staff.v1", ME_KEY = "dn.staff.me";
+  var KEY = "dn.staff.v2", ME_KEY = "dn.staff.me";
   var db = null;
 
   /* ---------- tiny DOM helper ---------- */
@@ -105,6 +105,16 @@
   DN.can = function (roles) { return !roles || roles.indexOf(DN.role()) > -1; };
   DN.isMgr = function () { return DN.can(["manager", "hr", "admin"]); };
   DN.nm = function (id) { var e = id && DN.get("employees", id); return e ? e.name : (id ? "(removed)" : ""); };
+  DN.refOptions = function (c) {
+    if (c === "employees") return DN.empOptions();
+    return DN.live(c).map(function (r) { return { v: r.id, l: r.name || r.title || "(unnamed)" }; })
+      .sort(function (a, b) { return a.l.localeCompare(b.l); });
+  };
+  DN.refName = function (c, id) {
+    if (c === "employees") return DN.nm(id);
+    var r = id && DN.get(c, id);
+    return r ? (r.name || r.title || "") : (id ? "(removed)" : "");
+  };
   DN.empOptions = function () {
     return DN.live("employees").filter(function (e) { return e.status !== "Exited"; })
       .map(function (e) { return { v: e.id, l: e.name }; });
@@ -146,8 +156,8 @@
   /* ---------- fields / forms ---------- */
   function visibleField(f) { return DN.can(f.roles); }
   DN.optionsOf = function (f) {
-    if (f.ref) return DN.empOptions();
-    return (f.options || []).map(function (o) { return typeof o === "object" ? o : { v: o, l: o }; });
+    if (f.ref) return DN.refOptions(f.ref);
+    return (typeof f.options === "function" ? f.options() : f.options || []).map(function (o) { return typeof o === "object" ? o : { v: o, l: o }; });
   };
   DN.fmt = function (f, rec) {
     var v = rec[f.k];
@@ -155,7 +165,9 @@
     if (v == null || v === "") return "";
     if (f.type === "money") return DN.money(v);
     if (f.type === "date") return DN.date(v);
-    if (f.ref) return DN.nm(v);
+    if (f.ref) return DN.refName(f.ref, v);
+    if (typeof f.options === "function") { var o = f.options().filter(function (x) { return (x.v || x) === v; })[0]; return o ? (o.l || o) : String(v); }
+    if (f.type === "addresses") return (v || []).map(function (a) { return a.city || a.line1 || ""; }).filter(Boolean).join("; ");
     if (f.type === "bool") return v ? "Yes" : "No";
     return String(v);
   };
@@ -184,6 +196,7 @@
       return { el: el, get: function () { return el.checked; } };
     }
     if (t === "lines") return linesControl(v);
+    if (t === "addresses") return addressesControl(v);
     var type = { money: "number", number: "number", date: "date", time: "time", url: "url", email: "email", tel: "tel" }[t] || "text";
     el = h("input", { type: type, name: f.k, required: !!f.required, value: v == null ? "" : v,
       step: type === "number" ? "any" : null, min: type === "number" ? (f.min != null ? f.min : 0) : null,
@@ -191,6 +204,26 @@
     return { el: el, get: function () {
       if (type === "number") return el.value === "" ? "" : Number(el.value);
       return el.value.trim();
+    } };
+  }
+  function addressesControl(v) {
+    var box = h("div", { class: "lines" }), rows = [];
+    var ph = { line1: "Address line 1", line2: "Line 2", city: "City", state: "State", postal: "PIN code", country: "Country" };
+    function addRow(a) {
+      var kind = h("select", null, ["Billing", "Shipping", "Other"].map(function (k) { return h("option", { value: k }, k); }));
+      kind.value = a.kind || "Billing";
+      var inp = {}; Object.keys(ph).forEach(function (k) { inp[k] = h("input", { placeholder: ph[k], value: a[k] || "", maxlength: 120 }); });
+      var row = { kind: kind, inp: inp };
+      row.el = h("div", { style: "display:grid;gap:6px;padding:10px;border:1px solid var(--hairline);border-radius:12px" },
+        h("div", { style: "display:flex;gap:6px" }, kind, h("span", { style: "flex:1" }), h("button", { type: "button", class: "btn sm", onclick: function () { rows.splice(rows.indexOf(row), 1); row.el.remove(); } }, "Remove")),
+        inp.line1, inp.line2, h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:6px" }, inp.city, inp.state), h("div", { style: "display:grid;grid-template-columns:1fr 1fr;gap:6px" }, inp.postal, inp.country));
+      rows.push(row); box.insertBefore(row.el, addBtn);
+    }
+    var addBtn = h("button", { type: "button", class: "btn sm", onclick: function () { addRow({}); } }, "+ Add address");
+    box.append(addBtn); (v || []).forEach(addRow);
+    return { el: box, get: function () {
+      return rows.map(function (r) { var o = { kind: r.kind.value }; Object.keys(r.inp).forEach(function (k) { o[k] = r.inp[k].value.trim(); }); return o; })
+        .filter(function (a) { return a.line1 || a.city || a.postal; });
     } };
   }
   function linesControl(v) {
@@ -223,7 +256,7 @@
 
   /* Opens a form. opts: {title, fields, values, onSave(values)->false|string to block, actions:[{label,run}], onArchive} */
   DN.form = function (opts) {
-    var fields = opts.fields.filter(visibleField), ctl = {};
+    var fields = opts.fields.filter(function (f) { return visibleField(f) && !(f.createOnly && !opts.isNew); }), ctl = {};
     var form = h("form", { class: "dlg-b", id: "f" + DN.uid(), novalidate: false });
     fields.forEach(function (f) {
       if (f.hideInForm) return;
@@ -252,7 +285,9 @@
       if (typeof r === "string") { DN.toast(r); return; }
       if (r !== false) dlg.close();
     });
-    dlg = DN.dialog(opts.title, form, foot, { wide: opts.wide });
+    var body = form;
+    if (opts.extra) { body = h("div", { class: "dlg-scroll" }, form, opts.extra); form.classList.add("noscroll"); }
+    dlg = DN.dialog(opts.title, body, foot, { wide: opts.wide });
     return dlg;
   };
 
@@ -292,7 +327,7 @@
   };
 
   DN.engine = function (A, root) {
-    var st = { q: "", view: A.board ? "board" : "table", arch: false };
+    var st = { q: "", view: A.board ? "board" : "table", arch: false, f: {}, preset: 0 };
     var fields = A.fields.filter(visibleField);
 
     function rows() {
@@ -300,6 +335,8 @@
       return DN.col(A.col).filter(function (r) {
         if (!!r.archived !== st.arch) return false;
         if (A.filter && !A.filter(r)) return false;
+        if (A.presets && A.presets[st.preset].test && !A.presets[st.preset].test(r)) return false;
+        for (var i = 0; i < (A.filters || []).length; i++) { var fl = A.filters[i], fv = st.f[i]; if (fv && !fl.test(r, fv)) return false; }
         if (!q) return true;
         return fields.some(function (f) { return String(DN.fmt(f, r)).toLowerCase().indexOf(q) > -1; });
       }).sort(A.sort || function (a, b) { return b.created - a.created; });
@@ -329,7 +366,8 @@
         actions.push({ label: a.label, run: function () { var res = a.run(rec, render); render(); return res; } });
       });
       DN.form({
-        title: (isNew ? "New " : "Edit ") + A.noun, fields: A.fields, values: rec, wide: A.wide, actions: actions,
+        title: (isNew ? "New " : "Edit ") + A.noun, fields: A.fields, values: rec, wide: A.wide, actions: actions, isNew: isNew,
+        extra: !isNew && A.extra ? A.extra(rec) : null,
         saveLabel: isNew ? "Create" : "Save",
         onSave: function (vals) {
           var next = Object.assign({}, rec, vals);
@@ -408,6 +446,14 @@
       var bar = h("div", { class: "bar" });
       bar.append(h("input", { class: "search", type: "search", placeholder: "Search " + A.noun.toLowerCase() + "s…", value: st.q,
         "aria-label": "Search", oninput: function (e) { st.q = e.target.value; var p = e.target.selectionStart; render(); var s = root.querySelector(".search"); s.focus(); s.setSelectionRange(p, p); } }));
+      if (A.presets) bar.append(h("div", { class: "seg", role: "group", "aria-label": "Show" }, A.presets.map(function (pr, i) {
+        return h("button", { type: "button", "aria-pressed": st.preset === i, onclick: function () { st.preset = i; render(); } }, pr.label);
+      })));
+      (A.filters || []).forEach(function (fl, i) {
+        var sel = h("select", { class: "flt", "aria-label": fl.label, onchange: function (e) { st.f[i] = e.target.value; render(); } }, h("option", { value: "" }, "All " + fl.label.toLowerCase()));
+        (typeof fl.options === "function" ? fl.options() : fl.options).forEach(function (o) { var v = o.v || o, l = o.l || o; sel.append(h("option", { value: v }, l)); });
+        sel.value = st.f[i] || ""; bar.append(sel);
+      });
       if (A.board) bar.append(h("div", { class: "seg", role: "group", "aria-label": "View" },
         ["board", "table"].map(function (v) { return h("button", { type: "button", "aria-pressed": st.view === v, onclick: function () { st.view = v; render(); } }, v === "board" ? "Board" : "List"); })));
       bar.append(h("span", { class: "grow" }));

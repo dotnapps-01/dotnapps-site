@@ -3,7 +3,6 @@
   "use strict";
   var DN = window.DN, h = DN.h;
 
-  var OPEN_STAGES_CRM = ["New", "Contacted", "Qualified", "Proposal"];
   var GSTIN_RE = "[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]";
   var meId = function () { var m = DN.me(); return m ? m.id : ""; };
   var mine = function (k) { return function (r) { return DN.isMgr() || r[k] === meId(); }; };
@@ -32,12 +31,14 @@
     return w.charAt(0).toUpperCase() + w.slice(1);
   };
   // Draft a contract from a won lead or accepted quotation. Managers only (Contracts is manager+).
+  DN.makeContract = makeContract;
   function makeContract(party, value, note) {
     var c = DN.insert("contracts", { title: party + " — agreement", party: party, type: "Client", value: value || "", status: "Draft", owner: meId(), link: "", notes: note || "" });
     DN.toast("Draft contract created."); return c;
   }
 
   function register(a) { DN.apps.push(a); DN.cfg[a.id] = a; }
+  DN.register = register;
   function engineApp(meta, A) {
     A.id = meta.id; meta.engine = A;
     meta.mount = function (root) { return DN.engine(A, root); };
@@ -45,45 +46,8 @@
   }
 
   /* ================= SALES & FINANCE ================= */
-  engineApp({ id: "crm", name: "CRM", group: "Sales & Finance", mono: "CR", desc: "Leads, deals and follow-ups." }, {
-    col: "leads", noun: "Lead", csvName: "crm-leads", board: "stage", wide: true,
-    fields: [
-      { k: "name", label: "Contact", required: true, list: true },
-      { k: "company", label: "Company", list: true },
-      { k: "email", label: "Email", type: "email" },
-      { k: "phone", label: "Phone", type: "tel" },
-      { k: "value", label: "Deal value", type: "money", list: true },
-      { k: "stage", label: "Stage", type: "select", options: ["New", "Contacted", "Qualified", "Proposal", "Won", "Lost"], required: true, list: true, pill: true },
-      { k: "owner", label: "Owner", ref: "employees", list: true },
-      { k: "follow", label: "Next follow-up", type: "date", list: true },
-      { k: "source", label: "Source", type: "select", options: ["Website", "Referral", "Cold outreach", "Event", "Other"] },
-      { k: "notes", label: "Notes", type: "textarea" }
-    ],
-    defaults: function () { return { stage: "New", owner: meId(), source: "Website" }; },
-    cardTitle: function (r) { return r.company || r.name; },
-    cardSub: function (r) { return [r.company ? r.name : "", r.value ? DN.money(r.value) : "", r.follow ? "Follow up " + DN.date(r.follow) : ""]; },
-    stats: function (rs) {
-      var open = rs.filter(function (r) { return OPEN_STAGES_CRM.indexOf(r.stage) > -1; }), t = DN.today();
-      return [
-        { l: "Open pipeline", v: DN.money(sum(open, function (r) { return r.value; })) },
-        { l: "Open leads", v: open.length },
-        { l: "Won", v: DN.money(sum(rs.filter(function (r) { return r.stage === "Won"; }), function (r) { return r.value; })), tone: "good" },
-        { l: "Follow-ups due", v: open.filter(function (r) { return r.follow && r.follow <= t; }).length, tone: "bad" }
-      ];
-    },
-    actions: [{ label: "Create contract", when: function (r) { return r.stage === "Won" && !r.contractId && DN.isMgr(); }, run: function (r) {
-      var c = makeContract(r.company || r.name, r.value, "From CRM lead " + r.name + "."); DN.patch("leads", r.id, { contractId: c.id }); go("contracts");
-    } }, { label: "Create quotation", when: function (r) { return r.stage !== "Lost"; }, run: function (r) {
-      var doc = { type: "Quotation", client: r.company || r.name, date: DN.today(), due: DN.addDays(DN.today(), 15), gst: "18", supply: "Same state (CGST + SGST)",
-        lines: [{ d: "Services for " + (r.company || r.name), q: 1, r: +r.value || 0 }], status: "Draft", notes: "", leadId: r.id };
-      doc.no = DN.nextNo("QT-", "salesdocs", "no");
-      DN.insert("salesdocs", doc);
-      if (r.stage === "New" || r.stage === "Contacted" || r.stage === "Qualified") DN.patch("leads", r.id, { stage: "Proposal" });
-      DN.toast("Quotation " + doc.no + " created from this lead."); go("sales");
-    } }]
-  });
-
   var SAME = "Same state (CGST + SGST)", IGST = "Other state (IGST)";
+  DN.SAME_STATE = SAME;
   function printDoc(r) {
     var s = DN.settings(), t = DN.linesTotals(r), box = h("div");
     box.append(h("div", { class: "pr-h" },
@@ -400,11 +364,7 @@
     emp("karan", "Karan Shah", "Sales", "Sales Executive", "Staff", 840000, 200, "aarav");
     emp("sana", "Sana Khan", "Engineering", "Software Engineer", "Staff", 1320000, 120, "rohan");
     var n = 0, mk = function (o) { o.id = "s" + (++n); o.created = Date.now() + n; return o; };
-    db.leads = [
-      mk({ name: "Vikram Rao", company: "Rao Textiles", value: 450000, stage: "Qualified", owner: I.karan, follow: d(2), source: "Referral", email: "", phone: "", notes: "Wants HRM + payroll." }),
-      mk({ name: "Priya Menon", company: "Menon Logistics", value: 900000, stage: "Proposal", owner: I.karan, follow: d(-1), source: "Website", email: "", phone: "", notes: "" }),
-      mk({ name: "Arjun Das", company: "Das Clinics", value: 250000, stage: "New", owner: I.karan, follow: d(5), source: "Event", email: "", phone: "", notes: "" }),
-      mk({ name: "Neha Kapoor", company: "Kapoor Foods", value: 600000, stage: "Won", owner: I.aarav, follow: "", source: "Referral", email: "", phone: "", notes: "" })];
+    DN.seedCrm(db, I, d, mk);
     db.salesdocs = [
       mk({ type: "Quotation", no: "QT-0001", client: "Menon Logistics", gstin: "", date: d(-6), due: d(9), gst: "18", status: "Sent", notes: "50% advance, balance on delivery.", lines: [{ d: "Business OS setup (CRM, Invoices, HRM)", q: 1, r: 600000 }, { d: "Staff training", q: 3, r: 100000 }] }),
       mk({ type: "Invoice", no: "INV-0001", client: "Kapoor Foods", gstin: "", date: d(-30), due: d(-15), gst: "18", status: "Sent", notes: "", lines: [{ d: "Implementation — phase 1", q: 1, r: 300000 }] }),

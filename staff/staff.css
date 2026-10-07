@@ -312,3 +312,20 @@ dialog::backdrop { background: rgba(0,0,0,.4); }
 .divnav a { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--raise); color: var(--text); text-decoration: none; font-size: 14px; }
 .divnav a:hover { border-color: var(--ink); }
 .divnav a[aria-current="page"] { background: var(--ink); color: var(--frame); border-color: var(--ink); }
+
+/* ---- CRM additions ---- */
+.dlg-scroll { overflow-y: auto; flex: 1; min-height: 0; }
+.dlg-b.noscroll { overflow: visible; }
+.flt { width: auto; padding: 7px 10px; font-size: 13.5px; border-radius: 999px; }
+.tl { margin: 4px 20px 20px; display: grid; gap: 8px; }
+.tl h4 { margin: 10px 0 0; font-size: 14px; }
+.tl .add { display: grid; grid-template-columns: 130px 1fr auto; gap: 6px; }
+.tl .ev { display: grid; grid-template-columns: 78px 1fr; gap: 8px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--hairline); font-size: 13.5px; }
+.tl .ev small { color: var(--muted); display: block; }
+.tl .ev.sys { background: var(--sunken); color: var(--muted); }
+.tl .ty { font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.fin { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 20px 6px; }
+.fin div { padding: 8px 14px; border-radius: 12px; background: var(--sunken); font-size: 13px; }
+.fin b { display: block; font-size: 17px; }
+.tag { display: inline-block; font-size: 11.5px; padding: 1px 8px; border-radius: 999px; background: var(--sunken); border: 1px solid var(--hairline); margin: 0 4px 0 0; }
+@media (max-width: 860px) { .tl .add { grid-template-columns: 1fr; } .bar .flt { flex: 1; } }
