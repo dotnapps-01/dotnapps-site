@@ -269,12 +269,12 @@
 
 
 
-  /* hero globe: a sphere of dots that turns and tilts toward the cursor, with the idea-to-scale journey drawn over it — canvas, see script */
-  .hero-globe { display: none; }
+  /* hero mark: the logo drawn in plus signs (laptops and wider) — canvas, see script */
+  .hero-plus { display: none; }
   @media (min-width: 1100px) {
-    .hero-globe {
-      display: block; position: absolute; z-index: 1; right: -1rem; top: 4.2rem; width: clamp(24rem, calc(100% - 30vw), 42rem); aspect-ratio: 1 / 1;
-      color: var(--text); pointer-events: auto; user-select: none; -webkit-user-select: none; cursor: grab; touch-action: pan-y;
+    .hero-plus {
+      display: block; position: absolute; z-index: 1; right: 0; top: 3.4rem; width: clamp(22rem, calc(100% - 38vw), 36rem); aspect-ratio: 1 / 1;
+      color: var(--ink); pointer-events: none;
     }
     .hero .hero-inner > .hero-caps { max-width: 30rem; }
   }
@@ -2043,7 +2043,6 @@ body h2.serif { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.12; lett
 
 /* Hero on laptops: lighter touch */
 @media (min-width: 1100px) {
-  body .hero-globe { opacity: .5; }
   body .hero h1 { font-weight: 500; font-size: clamp(2.9rem, 4.1vw, 3.9rem); letter-spacing: -.04em; }
   .hero-rings { opacity: .7; }
   .hero-caps li, .hero-caps { opacity: .8; }

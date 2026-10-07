@@ -98,7 +98,7 @@
 
   <header class="hero" id="top">
     <div class="hero-rings" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i></div>
-    <canvas class="hero-globe" aria-hidden="true"></canvas>
+    <canvas class="hero-plus" aria-hidden="true"></canvas>
     <div class="hero-inner">
       <div class="sec-row"><span><i></i>STUDIO &amp; PRODUCT COMPANY</span><span class="r">[ SOFTWARE STUDIO ]</span></div>
       <h1 class="serif">Unlock your <em>digital potential</em> <span class="h1-end">with us.</span></h1>
@@ -416,344 +416,51 @@
 
 <script src="/site.js"></script>
 <script>
-/* hero globe — 5,200 dots on a sphere that turns by itself.
-   move: the cursor is a magnet (dots stretch into iron-filing strokes toward it) · hold: flip the pole and repel · click: shockwave ·
-   drag: spin it, with inertia · hover a pin: its story · click a pin: turn the globe to it and jump the journey there */
+/* hero — the Dotnapps mark drawn in "+" signs: marks inside the logo flicker black and grey, a few faint ones sit around it, and they warm up near the cursor */
 (function () {
-  var cv = document.querySelector(".hero-globe");
+  var cv = document.querySelector(".hero-plus");
   if (!cv || !cv.getContext) return;
-  var ctx = cv.getContext("2d");
-  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var N = 5200, pts = [], i;
-  var ox = new Float32Array(N), oy = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N), RAD = 150;
-  for (i = 0; i < N; i++) {
-    var y = 1 - (i + 0.5) / N * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
-    pts.push([Math.cos(th) * r, y, Math.sin(th) * r]);
-  }
-  function ll(lat, lon) { lat *= Math.PI / 180; lon *= Math.PI / 180; return [Math.cos(lat) * Math.sin(lon), Math.sin(lat), Math.cos(lat) * Math.cos(lon)]; }
-  var stages = [
-    { n: "Idea",   v: ll(32, -70),  t: "Scoped with a senior team" },
-    { n: "Design", v: ll(14, -20),  t: "Interfaces people get on the first tap" },
-    { n: "Build",  v: ll(36, 28),   t: "One team, no handoffs" },
-    { n: "Launch", v: ll(-4, 78),   t: "Shipped, and live" },
-    { n: "Scale",  v: ll(-28, 130), t: "Ready to grow with you" }
-  ];
-  var nodes2 = [
-    { n: "Web",       to: 2, v: ll(58, -35),  t: "Fast, responsive web apps" },
-    { n: "Mobile",    to: 3, v: ll(20, 110),  t: "iOS and Android apps" },
-    { n: "AI agents", to: 2, v: ll(-14, 40),  t: "Automation wired into your work" },
-    { n: "Cloud",     to: 4, v: ll(-52, 160), t: "Cloud and DevOps that keep it live" },
-    { n: "APIs",      to: 1, v: ll(-30, -30), t: "Backends the product runs on" },
-    { n: "SaaS",      to: 3, v: ll(48, 95),   t: "Subscription products, end to end" },
-    { n: "MVPs",      to: 0, v: ll(-8, -120), t: "The smallest thing worth shipping" },
-    { n: "Data",      to: 4, v: ll(10, 170),  t: "Pipelines, analytics, reporting" }
-  ];
-  var popText = ["Idea scoped", "Design signed off", "Built, no handoffs", "Launched", "Scaling up"], pop = null, lastReached = -2, popN = 0;
-  var nodeCur = 0, lastNodePop = 0;                     /* pops sit on the connected points themselves: a stage pin, or one of the service nodes */
-  function newPop(text, now, target) { pop = { t: now, text: text, target: target }; }
-  function popPoint() {
-    var tg = pop.target, v = tg.s != null ? stages[tg.s].v : nodes2[tg.n].v, pr = rot(v);
-    return pr[2] < 0.08 ? null : { x: cx + pr[0] * R, y: cy - pr[1] * R, z: pr[2] };
-  }
-  var W = 0, H = 0, cx = 0, cy = 0, R = 0, dpr = 1, ink = "29,29,31", bg = "#fff", raf = 0, running = false;
-  var yaw = -0.35, pitch = 0.32, spin = 0.00016, base = 0.00016, tVel = base, tPitch = 0.32;
-  var mx = -999, my = -999, last = 0, jt = 0, hover = -1, focus = null, waves = [], repel = false, touched = 0;
-  var drag = { down: false, on: false, x: 0, y: 0, lx: 0, ly: 0, t: 0, moved: 0, hold: 0 };
-  var shown = 0, shownText = "", fade = 1;
-  var SEG = 2600, HOLD = 1500, CYCLE = SEG * (stages.length - 1) + HOLD;
-
-  function colors() {
-    var m = getComputedStyle(cv).color.match(/[\d.]+/g);
-    if (m && m.length >= 3) ink = m[0] + "," + m[1] + "," + m[2];
-    var f = document.querySelector(".frame");
-    if (f) bg = getComputedStyle(f).backgroundColor || bg;
-  }
-  function rot(v) {
-    var cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-    var x1 = v[0] * cyw + v[2] * syw, z1 = -v[0] * syw + v[2] * cyw;
-    return [x1, v[1] * cp - z1 * sp, v[1] * sp + z1 * cp];
-  }
-  function ease(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-  function angd(a, b) { var d = (a - b) % 6.2832; if (d > 3.1416) d -= 6.2832; if (d < -3.1416) d += 6.2832; return d; }
-  function rrect(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
-  function mono(px, w) { ctx.font = (w || 600) + " " + px + "px ui-monospace, SF Mono, Menlo, Consolas, monospace"; }
-  function pill(text, x, y, right, a, active, sub) {
-    mono(12);
-    var tw = ctx.measureText(text).width, sw = 0;
-    if (sub) { mono(11, 500); sw = ctx.measureText(sub).width; mono(12); }
-    var w = Math.max(tw, sw) + 20, h = sub ? 42 : 24, px = right ? x + 12 : x - 12 - w;
-    ctx.globalAlpha = a;
-    ctx.fillStyle = active ? "rgb(" + ink + ")" : bg; ctx.strokeStyle = "rgba(" + ink + ",.22)";
-    rrect(px, y - 12, w, h, sub ? 12 : 12); ctx.fill(); if (!active) ctx.stroke();
-    ctx.fillStyle = active ? bg : "rgba(" + ink + ",.9)"; ctx.textBaseline = "middle";
-    mono(12); ctx.fillText(text, px + 10, y + 0.5);
-    if (sub) { mono(11, 500); ctx.fillStyle = active ? "rgba(255,255,255,.7)" : "rgba(" + ink + ",.55)"; ctx.fillText(sub, px + 10, y + 21); }
-    ctx.globalAlpha = 1;
-  }
-  function slerp(a, b, u, lift) {
-    var om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))), so = Math.sin(om) || 1, wa = Math.sin((1 - u) * om) / so, wb = Math.sin(u * om) / so, l = 1 + lift * Math.sin(Math.PI * u);
-    return rot([(a[0] * wa + b[0] * wb) * l, (a[1] * wa + b[1] * wb) * l, (a[2] * wa + b[2] * wb) * l]);
-  }
-  function pinPos(k) { var p = rot(stages[k].v); return { x: cx + p[0] * R, y: cy - p[1] * R, z: p[2] }; }
-
-  function draw(now) {
-    ctx.clearRect(0, 0, W, H);
-    ctx.strokeStyle = "rgba(" + ink + ",.07)"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
-
-    /* dots */
-    var far = [], mid = [], near = [], lines = [], k, w, live = mx > -900, sign = repel ? -1 : 1;
-    for (w = waves.length - 1; w >= 0; w--) if (now - waves[w].t > 950) waves.splice(w, 1);
-    for (k = 0; k < N; k++) {
-      var p = rot(pts[k]), hx = cx + p[0] * R, hy = cy - p[1] * R, d = p[2];
-      if (d < -0.25) { ox[k] = oy[k] = vx[k] = vy[k] = 0; far.push(hx, hy); continue; }
-      var x = hx + ox[k], y = hy + oy[k], dx = mx - x, dy = my - y, dist = Math.hypot(dx, dy) || 1, f = 0;
-      if (live && dist < RAD) {
-        f = 1 - dist / RAD; f *= f;
-        var pull = f * 1.15 * Math.min(1, dist / 26) * sign;
-        vx[k] += dx / dist * pull; vy[k] += dy / dist * pull;
-      }
-      for (w = 0; w < waves.length; w++) {
-        var wv = waves[w], age = now - wv.t, wdx = x - wv.x, wdy = y - wv.y, wd = Math.hypot(wdx, wdy) || 1, dd = Math.abs(wd - age * 0.5);
-        if (dd < 46) { var push = (1 - dd / 46) * (1 - age / 950) * 2.4; vx[k] += wdx / wd * push; vy[k] += wdy / wd * push; }
-      }
-      vx[k] -= ox[k] * 0.05; vy[k] -= oy[k] * 0.05;
-      vx[k] *= 0.84; vy[k] *= 0.84; ox[k] += vx[k]; oy[k] += vy[k];
-      x = hx + ox[k]; y = hy + oy[k];
-      if (f > 0.06 && !repel) {
-        var ux = dx / dist, uy = dy / dist, len = 1.5 + 6 * f;
-        lines.push(x - ux * len, y - uy * len, x + ux * len, y + uy * len, 0.35 + 0.6 * Math.min(1, f * 1.6));
-      } else {
-        var sp2 = Math.abs(vx[k]) + Math.abs(vy[k]);
-        if (sp2 > 1.2) lines.push(x - vx[k] * 1.6, y - vy[k] * 1.6, x, y, Math.min(0.7, 0.25 + sp2 * 0.1));
-        else (d < 0 ? far : d < 0.5 ? mid : near).push(x, y);
-      }
-    }
-    function batch(arr, a, rad) {
-      ctx.fillStyle = "rgba(" + ink + "," + a + ")"; ctx.beginPath();
-      for (var q = 0; q < arr.length; q += 2) { ctx.moveTo(arr[q] + rad, arr[q + 1]); ctx.arc(arr[q], arr[q + 1], rad, 0, 6.2832); }
-      ctx.fill();
-    }
-    batch(far, 0.07, 0.8); batch(mid, 0.26, 1.05); batch(near, 0.5, 1.35);
-    ctx.lineCap = "round"; ctx.lineWidth = 1.5;
-    for (k = 0; k < lines.length; k += 5) {
-      ctx.strokeStyle = "rgba(" + ink + "," + lines[k + 4] + ")";
-      ctx.beginPath(); ctx.moveTo(lines[k], lines[k + 1]); ctx.lineTo(lines[k + 2], lines[k + 3]); ctx.stroke();
-    }
-    /* shockwave rings */
-    for (w = 0; w < waves.length; w++) {
-      var ag = now - waves[w].t;
-      ctx.strokeStyle = "rgba(" + ink + "," + (0.28 * (1 - ag / 950)) + ")"; ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(waves[w].x, waves[w].y, ag * 0.5, 0, 6.2832); ctx.stroke();
-    }
-
-    /* journey: arcs + packet */
-    var tt = jt % CYCLE, done = tt >= SEG * (stages.length - 1), seg = done ? stages.length - 2 : Math.floor(tt / SEG), prog = done ? 1 : (tt % SEG) / SEG;
-    var reached = done ? stages.length - 1 : seg, s0, a, b, om, so, j, u, pr;
-    if (reached !== lastReached) { lastReached = reached; newPop(popText[reached], now, { s: reached }); lastNodePop = now; }
-    for (s0 = 0; s0 < stages.length - 1; s0++) {
-      a = stages[s0].v; b = stages[s0 + 1].v;
-      om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))); so = Math.sin(om);
-      var upto = s0 < seg || done ? 1 : s0 === seg ? ease(prog) : 0;
-      ctx.beginPath(); var pen = false, lx = 0, ly = 0, lz = 0;
-      for (j = 0; j <= 36; j++) {
-        u = j / 36; if (u > upto + 0.0001) break;
-        var wa = Math.sin((1 - u) * om) / so, wb = Math.sin(u * om) / so, lift = 1 + 0.2 * Math.sin(Math.PI * u);
-        pr = rot([(a[0] * wa + b[0] * wb) * lift, (a[1] * wa + b[1] * wb) * lift, (a[2] * wa + b[2] * wb) * lift]);
-        if (pr[2] > -0.05) { if (!pen) { ctx.moveTo(cx + pr[0] * R, cy - pr[1] * R); pen = true; } else ctx.lineTo(cx + pr[0] * R, cy - pr[1] * R); } else pen = false;
-        lx = cx + pr[0] * R; ly = cy - pr[1] * R; lz = pr[2];
-      }
-      ctx.strokeStyle = "rgba(" + ink + "," + (s0 === seg && !done ? 0.7 : 0.32) + ")"; ctx.lineWidth = 1.3; ctx.stroke();
-      if (s0 === seg && !done && lz > 0) {
-        ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(lx, ly, 3.4, 0, 6.2832); ctx.fill();
-        ctx.fillStyle = "rgba(" + ink + ",.18)"; ctx.beginPath(); ctx.arc(lx, ly, 8, 0, 6.2832); ctx.fill();
-      }
-    }
-
-    /* the wider network: services hang off the journey on faint dashed links, with small packets running along them */
-    var n2, pk;
-    ctx.setLineDash([2, 4]); ctx.lineWidth = 1;
-    for (n2 = 0; n2 < nodes2.length; n2++) {
-      var nd = nodes2[n2], tg = stages[nd.to].v, pen2 = false, hl = (hover === 5 + n2 || hover === nd.to);
-      ctx.beginPath();
-      for (j = 0; j <= 24; j++) {
-        pr = slerp(nd.v, tg, j / 24, 0.12);
-        if (pr[2] > -0.05) { if (!pen2) { ctx.moveTo(cx + pr[0] * R, cy - pr[1] * R); pen2 = true; } else ctx.lineTo(cx + pr[0] * R, cy - pr[1] * R); } else pen2 = false;
-      }
-      ctx.strokeStyle = "rgba(" + ink + "," + (hl ? 0.55 : 0.2) + ")"; ctx.stroke();
-    }
-    ctx.setLineDash([]);
-    for (n2 = 0; n2 < nodes2.length; n2++) {
-      nd = nodes2[n2]; pk = ((now / 2600) + n2 * 0.37) % 1;
-      pr = slerp(nd.v, stages[nd.to].v, pk, 0.12);
-      if (pr[2] > 0.05) { ctx.fillStyle = "rgba(" + ink + ",.55)"; ctx.beginPath(); ctx.arc(cx + pr[0] * R, cy - pr[1] * R, 1.8, 0, 6.2832); ctx.fill(); }
-    }
-
-    /* pins, labels, hover story */
-    var nh = -1, bestd = 22;
-    for (s0 = 0; s0 < stages.length; s0++) {
-      var pp = pinPos(s0);
-      if (pp.z < 0.05) continue;
-      var dm = Math.hypot(pp.x - mx, pp.y - my); if (dm < bestd) { bestd = dm; nh = s0; }
-    }
-    for (n2 = 0; n2 < nodes2.length; n2++) {
-      pr = rot(nodes2[n2].v); if (pr[2] < 0.1) continue;
-      var dm2 = Math.hypot(cx + pr[0] * R - mx, cy - pr[1] * R - my); if (dm2 < Math.min(bestd, 15)) { bestd = dm2; nh = 5 + n2; }
-    }
-    if (nh !== hover) { hover = nh; cv.style.cursor = drag.on ? "grabbing" : hover >= 0 ? "pointer" : "grab"; }
-    for (s0 = 0; s0 < stages.length; s0++) {
-      pr = rot(stages[s0].v);
-      if (pr[2] < 0.05) continue;
-      var px = cx + pr[0] * R, py = cy - pr[1] * R, vis = Math.min(1, (pr[2] - 0.05) / 0.3), on = s0 <= reached, hv = s0 === hover;
-      var ring = ((now / 1400) + s0 * 0.2) % 1;
-      ctx.strokeStyle = "rgba(" + ink + "," + (0.35 * (1 - ring) * vis) + ")"; ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(px, py, 4 + ring * (hv ? 22 : 14), 0, 6.2832); ctx.stroke();
-      ctx.globalAlpha = vis; ctx.fillStyle = on || hv ? "rgb(" + ink + ")" : "rgba(" + ink + ",.45)";
-      ctx.beginPath(); ctx.arc(px, py, hv ? 5.5 : 4, 0, 6.2832); ctx.fill(); ctx.globalAlpha = 1;
-      pill(stages[s0].n, px, py, px < cx + R * 0.25, vis * (on || hv ? 1 : 0.55), (s0 === reached && !done) || (done && s0 === stages.length - 1) || hv, hv ? stages[s0].t : null);
-    }
-
-    for (n2 = 0; n2 < nodes2.length; n2++) {
-      nd = nodes2[n2]; pr = rot(nd.v);
-      if (pr[2] < 0.1) continue;
-      var qx = cx + pr[0] * R, qy = cy - pr[1] * R, qv = Math.min(1, (pr[2] - 0.1) / 0.3), qh = hover === 5 + n2;
-      ctx.globalAlpha = qv; ctx.fillStyle = "rgba(" + ink + "," + (qh ? 0.95 : 0.6) + ")";
-      ctx.beginPath(); ctx.arc(qx, qy, qh ? 4 : 2.6, 0, 6.2832); ctx.fill();
-      if (qh) pill(nd.n, qx, qy, qx < cx + R * 0.25, 1, true, nd.t);
-      else { mono(10, 500); ctx.fillStyle = "rgba(" + ink + ",.55)"; ctx.textBaseline = "middle"; ctx.fillText(nd.n, qx < cx + R * 0.25 ? qx + 7 : qx - 7 - ctx.measureText(nd.n).width, qy + 0.5); }
-      ctx.globalAlpha = 1;
-    }
-
-    /* magnet cursor */
-    if (live && (mx > 0 && mx < W && my > 0 && my < H)) {
-      var pulse = 0.5 + 0.5 * Math.sin(now / 260);
-      ctx.strokeStyle = "rgba(" + ink + "," + (repel ? 0.5 : 0.22) + ")"; ctx.lineWidth = 1.2;
-      ctx.setLineDash(repel ? [3, 4] : []); ctx.beginPath(); ctx.arc(mx, my, repel ? 20 + pulse * 6 : 12 + pulse * 3, 0, 6.2832); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = "rgba(" + ink + ",.8)"; ctx.beginPath(); ctx.arc(mx, my, 2.2, 0, 6.2832); ctx.fill();
-    }
-
-    /* current-stage caption + hint */
-    var cap = (hover >= 5 ? nodes2[hover - 5] : hover >= 0 ? stages[hover] : stages[reached]), txt = cap.n + " — " + cap.t;
-    if (txt !== shownText) { shownText = txt; fade = 0; }
-    fade = Math.min(1, fade + 0.06);
-    if (!pop && now - lastNodePop > 1700) {              /* between stage pops, the service nodes announce themselves */
-      for (var tries = 0; tries < nodes2.length; tries++) {
-        var ni = (nodeCur + tries) % nodes2.length, nr = rot(nodes2[ni].v);
-        if (nr[2] > 0.35) { nodeCur = ni + 1; newPop(nodes2[ni].n + " connected", now, { n: ni }); lastNodePop = now; break; }
-      }
-    }
-    if (pop) {                                           /* pop on the point itself, springing in */
-      var pa = now - pop.t;
-      if (pa > 2900) { pop = null; lastNodePop = now; }
-      else {
-        var pt = popPoint();
-        if (pt) {                                        /* a drafting-style annotation: leader line draws out of the point, the label types itself in, mono caps */
-          var al = pa < 2500 ? 1 : 1 - (pa - 2500) / 400, tg2 = pop.target;
-          var main = pop.text.toUpperCase(), tag = tg2.s != null ? "STAGE 0" + (tg2.s + 1) + " / 05" : "SERVICE LINK";
-          try { ctx.letterSpacing = "1.4px"; } catch (e1) {}
-          mono(12.5); var mw = ctx.measureText(main).width; mono(9.5, 500); var tgw = ctx.measureText(tag).width;
-          var L = Math.max(mw, tgw) + 18, sx = pt.x + 34 + L > W - 6 ? -1 : 1, sy = pt.y < 70 ? -1 : 1;
-          var ex = pt.x + sx * 30, ey = pt.y - sy * 30, endx = ex + sx * L;
-          var d1 = Math.min(1, pa / 190), d2 = pa < 190 ? 0 : Math.min(1, (pa - 190) / 260);
-          d1 = 1 - Math.pow(1 - d1, 2); d2 = 1 - Math.pow(1 - d2, 3);
-          ctx.globalAlpha = Math.max(0, al);
-          /* ping + point */
-          ctx.strokeStyle = "rgba(" + ink + "," + (0.45 * (1 - (pa % 900) / 900)) + ")"; ctx.lineWidth = 1.2;
-          ctx.beginPath(); ctx.arc(pt.x, pt.y, 5 + (pa % 900) / 900 * 16, 0, 6.2832); ctx.stroke();
-          ctx.fillStyle = "rgb(" + ink + ")"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.8, 0, 6.2832); ctx.fill();
-          /* label plate, then the leader on top */
-          if (d2 > 0.05) {
-            var chars = Math.max(0, Math.min(main.length, Math.floor((pa - 320) / 30))), shown2 = main.slice(0, chars);
-            var plx = sx > 0 ? ex + 2 : endx - 2, plw = L + 2, ply = ey - 38;
-            ctx.fillStyle = bg; ctx.globalAlpha = Math.max(0, al) * 0.88; rrect(plx, ply, plw, 36, 4); ctx.fill(); ctx.globalAlpha = Math.max(0, al);
-            ctx.textBaseline = "alphabetic";
-            mono(9.5, 500); ctx.fillStyle = "rgba(" + ink + ",.5)"; ctx.fillText(tag, (sx > 0 ? ex + 8 : endx + 8), ey - 25);
-            mono(12.5); ctx.fillStyle = "rgb(" + ink + ")"; ctx.fillText(shown2, (sx > 0 ? ex + 8 : endx + 8), ey - 9);
-            if (chars < main.length || (pa % 600) < 340) { var cw3 = ctx.measureText(shown2).width; ctx.fillRect((sx > 0 ? ex + 8 : endx + 8) + cw3 + 2, ey - 19, 6, 11); }
-          }
-          ctx.strokeStyle = "rgb(" + ink + ")"; ctx.lineWidth = 1.3; ctx.lineCap = "butt"; ctx.lineJoin = "miter";
-          ctx.beginPath(); ctx.moveTo(pt.x, pt.y);
-          ctx.lineTo(pt.x + (ex - pt.x) * d1, pt.y + (ey - pt.y) * d1);
-          if (d2 > 0) ctx.lineTo(ex + (endx - ex) * d2, ey);
-          ctx.stroke();
-          if (d2 >= 1) { ctx.fillStyle = "rgb(" + ink + ")"; ctx.fillRect(endx - 2.5, ey - 2.5, 5, 5); }
-          try { ctx.letterSpacing = "0px"; } catch (e2) {}
-          ctx.globalAlpha = 1;
-        }
-      }
-    }
-  }
-
-  function step(now) {
-    var dt = Math.min(48, now - (last || now)); last = now; jt += dt;
-    if (focus && now < focus.until) {
-      yaw += angd(focus.yaw, yaw) * 0.09; pitch += (focus.pitch - pitch) * 0.09; spin = 0;
-    } else {
-      focus = null;
-      if (!drag.on) { spin += (tVel - spin) * 0.035; pitch += (tPitch - pitch) * 0.04; yaw += spin * dt; }
-    }
-    draw(now);
-  }
-  function frame(now) { step(now); raf = requestAnimationFrame(frame); }
+  var ctx = cv.getContext("2d"), RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var path = new Path2D("M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z");
+  var VB = { x: 26, y: 27.4, w: 48, h: 45.1 }, COLS = 17;
+  var W = 0, H = 0, cell = 0, dpr = 1, cells = [], mx = -999, my = -999, raf = 0, vis = false;
+  function inLevel() { var r = Math.random(); return r < .55 ? 1 : r < .85 ? .78 : .5; }
+  function outLevel() { var r = Math.random(); return r < .72 ? 0 : r < .92 ? .05 : .09; }
   function size() {
-    var r = cv.getBoundingClientRect(); if (!r.width) return;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width; H = r.height; cx = W / 2; cy = H / 2 - 30; R = W * 0.345;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    colors(); jt = reduce ? SEG * 3.2 : jt; draw(performance.now());
-  }
-  function start() { if (!running && !reduce && W) { running = true; last = 0; raf = requestAnimationFrame(frame); } }
-  function stop() { running = false; cancelAnimationFrame(raf); }
-
-  var hero = document.querySelector(".hero");
-  function local(e) { var r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  window.addEventListener("pointermove", function (e) {
-    if (!W) return;
-    var hr = hero.getBoundingClientRect();
-    if (drag.down) {
-      var dx = e.clientX - drag.lx, dy = e.clientY - drag.ly;
-      drag.moved += Math.abs(dx) + Math.abs(dy);
-      if (!drag.on && drag.moved > 6) { drag.on = true; clearTimeout(drag.hold); repel = false; cv.style.cursor = "grabbing"; focus = null; }
-      if (drag.on) { yaw += dx * 0.006; pitch = Math.max(-1.1, Math.min(1.1, pitch + dy * 0.005)); tPitch = pitch; spin = dx * 0.006 / Math.max(8, e.timeStamp - drag.t) ; drag.t = e.timeStamp; touched = touched || performance.now(); }
-      drag.lx = e.clientX; drag.ly = e.clientY;
+    W = cv.clientWidth; H = cv.clientHeight; if (!W || !H) return;
+    dpr = Math.min(2, window.devicePixelRatio || 1); cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cell = W / COLS; var rows = Math.floor(H / cell), s = (W * .78) / VB.w, ox = (W - VB.w * s) / 2, oy = (H - VB.h * s) / 2;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); cells = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < COLS; c++) {
+      var x = (c + .5) * cell, y = (r + .5) * cell + (H - rows * cell) / 2, lx = VB.x + (x - ox) / s, ly = VB.y + (y - oy) / s;
+      var inside = ctx.isPointInPath(path, lx, ly);
+      cells.push({ x: x, y: y, inside: inside, v: inside ? inLevel() : outLevel(), t: 0, n: performance.now() + Math.random() * 2500 });
+      cells[cells.length - 1].t = cells[cells.length - 1].v;
     }
-    if (e.clientY < hr.top || e.clientY > hr.bottom) { mx = my = -999; tVel = base; if (!drag.on) tPitch = 0.32; return; }
-    var l = local(e); mx = l.x; my = l.y;
-    if (!drag.on) {
-      var nx = (e.clientX - (cv.getBoundingClientRect().left + W / 2)) / (window.innerWidth / 2), ny = (e.clientY - (cv.getBoundingClientRect().top + H / 2)) / (window.innerHeight / 2);
-      tVel = base + Math.max(-1, Math.min(1, nx)) * 0.0006; tPitch = 0.32 + Math.max(-1, Math.min(1, ny)) * 0.3;
-    }
-  }, { passive: true });
-  cv.addEventListener("pointerdown", function (e) {
-    if (e.button !== 0) return;
-    drag.down = true; drag.on = false; drag.moved = 0; drag.lx = e.clientX; drag.ly = e.clientY; drag.t = e.timeStamp;
-    try { cv.setPointerCapture(e.pointerId); } catch (x) {}
-    clearTimeout(drag.hold);
-    drag.hold = setTimeout(function () { if (drag.down && !drag.on) { repel = true; touched = touched || performance.now(); } }, 240);
-  });
-  function up(e) {
-    if (!drag.down) return;
-    clearTimeout(drag.hold);
-    var wasDrag = drag.on, wasHold = repel, quick = e.timeStamp - drag.t < 260 || (!wasDrag && !wasHold);
-    drag.down = false; drag.on = false; repel = false; cv.style.cursor = hover >= 0 ? "pointer" : "grab";
-    if (wasDrag) return;
-    var l = local(e), now = performance.now(); touched = touched || now;
-    if (wasHold) { waves.push({ x: l.x, y: l.y, t: now }); return; }
-    if (hover >= 0) {                                   /* click a pin: turn to it and jump the journey */
-      var v = (hover >= 5 ? nodes2[hover - 5] : stages[hover]).v, tyaw = Math.atan2(-v[0], v[2]), z1 = -v[0] * Math.sin(tyaw) + v[2] * Math.cos(tyaw), tp = Math.atan2(v[1], z1);
-      focus = { yaw: tyaw, pitch: tp, until: now + 3600 }; if (hover < 5) { jt = hover * SEG + 5; newPop(popText[hover], now, { s: hover }); lastReached = hover; lastNodePop = now; } tVel = base;
-    } else waves.push({ x: l.x, y: l.y, t: now });
+    draw(performance.now());
   }
-  cv.addEventListener("pointerup", up);
-  cv.addEventListener("pointercancel", function () { drag.down = drag.on = false; repel = false; clearTimeout(drag.hold); });
-  document.addEventListener("pointerleave", function () { mx = my = -999; tVel = base; tPitch = 0.32; });
-
-  size();
-  if ("ResizeObserver" in window) new ResizeObserver(size).observe(cv); else window.addEventListener("resize", size);
-  if (reduce) return;
-  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { e[0].isIntersecting ? start() : stop(); }).observe(cv); else start();
-  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
-  new MutationObserver(function () { colors(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  function draw(now) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    var m = getComputedStyle(cv).color.match(/[\d.]+/g) || [0, 0, 0], rgb = m[0] + "," + m[1] + "," + m[2], arm = cell * .2;
+    ctx.lineWidth = Math.max(1.5, cell * .06);
+    for (var i = 0; i < cells.length; i++) {
+      var k = cells[i];
+      if (!RM) {
+        if (now > k.n) { k.t = k.inside ? inLevel() : outLevel(); k.n = now + 1000 + Math.random() * 2600; }
+        k.v += (k.t - k.v) * .08;
+      }
+      var dx = k.x - mx, dy = k.y - my, d = Math.sqrt(dx * dx + dy * dy), boost = d < 90 ? (1 - d / 90) * .5 : 0, a = Math.min(1, k.v + boost);
+      if (a < .02) continue;
+      ctx.strokeStyle = "rgba(" + rgb + "," + a.toFixed(3) + ")";
+      ctx.beginPath(); ctx.moveTo(k.x - arm, k.y); ctx.lineTo(k.x + arm, k.y); ctx.moveTo(k.x, k.y - arm); ctx.lineTo(k.x, k.y + arm); ctx.stroke();
+    }
+  }
+  function loop(now) { draw(now); raf = vis ? requestAnimationFrame(loop) : 0; }
+  size(); window.addEventListener("resize", size);
+  if (RM) return;
+  window.addEventListener("mousemove", function (e) { var r = cv.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(cv);
+  else { vis = true; raf = requestAnimationFrame(loop); }
 })();
 </script>
 <script>
