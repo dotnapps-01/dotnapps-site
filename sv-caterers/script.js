@@ -341,8 +341,8 @@
   if (slides.length) {
     showSlide(0);
     document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(sTimer); else { showSlide(sIdx); queue(); } });
-    hero.addEventListener('mouseenter', () => { hoverPause = true; clearTimeout(sTimer); segs[sIdx].style.animationPlayState = 'paused'; });
-    hero.addEventListener('mouseleave', () => { hoverPause = false; segs[sIdx].style.animationPlayState = ''; showSlide(sIdx); queue(); });
+    $('.hero-media', hero).addEventListener('mouseenter', () => { hoverPause = true; clearTimeout(sTimer); segs[sIdx].style.animationPlayState = 'paused'; });
+    $('.hero-media', hero).addEventListener('mouseleave', () => { hoverPause = false; segs[sIdx].style.animationPlayState = ''; showSlide(sIdx); queue(); });
     if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { heroVisible = en.isIntersecting; if (heroVisible) { showSlide(sIdx); queue(); } else clearTimeout(sTimer); }).observe(hero);
     else queue();
     // gentle parallax on larger screens
@@ -352,7 +352,7 @@
       addEventListener('scroll', () => {
         if (ticking || !heroVisible) return;
         ticking = true;
-        requestAnimationFrame(() => { layer.style.transform = `translate3d(0, ${Math.min(scrollY, 900) * .16}px, 0)`; ticking = false; });
+        requestAnimationFrame(() => { layer.style.transform = `translate3d(0, ${Math.min(scrollY * .1, layer.offsetHeight * .045)}px, 0)`; ticking = false; });
       }, { passive: true });
     }
   }
