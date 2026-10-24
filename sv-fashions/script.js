@@ -3,10 +3,8 @@
 
   /* ---- Studio settings: edit these, nothing else needs to change ---- */
   const CONFIG = {
-    instagram: 'sv_fashions._',
-    // WhatsApp number with country code, digits only (e.g. '919876543210').
-    // Leave empty to hide every WhatsApp button until the client shares one.
-    whatsapp: '',
+    // WhatsApp number with country code, digits only.
+    whatsapp: '919150099500',
   };
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -112,21 +110,8 @@
     reveals.forEach(el => el.classList.add('in'));
   }
 
-  /* ---- WhatsApp (only when a number is configured) ---- */
-  const wa = CONFIG.whatsapp.replace(/\D/g, '');
-  const waLink = text => `https://wa.me/${wa}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
-  if (wa) {
-    $('#send-wa').hidden = false;
-    $('#dock-wa').hidden = false;
-    $('#dock-wa').href = waLink('Hi SV Fashions! I would like to place an order.');
-    const line = $('[data-wa-line]');
-    line.hidden = false;
-    const num = $('#wa-num');
-    num.href = waLink('');
-    num.textContent = `+${wa}`;
-  }
-
-  /* ---- Order brief: writes the DM for the customer ---- */
+  /* ---- Order brief: opens WhatsApp with the message already written ---- */
+  const waLink = text => `https://wa.me/${CONFIG.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
   const form = $('#brief');
   const msg = $('#brief-msg');
   const dateInput = $('#f-date');
@@ -146,31 +131,29 @@
     return t;
   }
 
-  async function copy(text) {
-    try { await navigator.clipboard.writeText(text); return true; } catch (_) {
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      let ok = false;
-      try { ok = document.execCommand('copy'); } catch (_) { /* ignore */ }
-      ta.remove();
-      return ok;
-    }
-  }
-
-  form.addEventListener('submit', async e => {
+  form.addEventListener('submit', e => {
     e.preventDefault();
-    const text = buildMessage();
-    const ok = await copy(text);
-    msg.textContent = ok
-      ? 'Message copied — paste it into the Instagram DM and send.'
-      : 'Please copy this message into the DM: ' + text;
-    window.open(`https://ig.me/m/${CONFIG.instagram}`, '_blank', 'noopener');
+    const url = waLink(buildMessage());
+    msg.textContent = 'Opening WhatsApp…';
+    const w = window.open(url, '_blank');
+    if (w) w.opener = null; else location.href = url;   // popup blocked: go there in this tab
   });
-  if (wa) {
-    const waBtn = $('#send-wa');
-    ['input', 'change'].forEach(ev => form.addEventListener(ev, () => { waBtn.href = waLink(buildMessage()); }));
-    waBtn.href = waLink(buildMessage());
+
+  /* ---- Preloader ---- */
+  const pre = $('#pre');
+  const unlock = () => document.documentElement.classList.remove('pre-lock');
+  if (pre) {
+    const t0 = performance.now();
+    const min = matchMedia('(prefers-reduced-motion: reduce)').matches ? 350 : 2500;
+    const finish = () => {
+      pre.classList.add('done');
+      unlock();
+      setTimeout(() => pre.remove(), 1200);
+    };
+    const wait = () => setTimeout(finish, Math.max(0, min - (performance.now() - t0)));
+    if (document.readyState === 'complete') wait(); else window.addEventListener('load', wait, { once: true });
+  } else {
+    unlock();
   }
 
   $('#year').textContent = new Date().getFullYear();
