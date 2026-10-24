@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  /* When served from a sub-path without a trailing slash (e.g. a preview at
+     /sv-fashions on the Dotnapps Vercel project) make relative URLs resolve inside the folder.
+     Harmless when the site is deployed on its own at the root. */
+  if (!/\/$|\.html$/.test(location.pathname)) document.write('<base href="' + location.pathname + '/">');
+</script>
 
 <title>SV Fashions — Bespoke tailoring &amp; fashion designers, Coimbatore</title>
 <meta name="description" content="SV Fashions is a women's boutique and bespoke tailoring studio in Selvapuram, Coimbatore — designer blouses, bridal wear and ethnic wear, made to measure. DM to place your order.">

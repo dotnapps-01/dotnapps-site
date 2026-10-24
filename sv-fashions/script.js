@@ -16,6 +16,24 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (_) { /* private mode */ } },
   };
 
+  /* ---- Sub-path hosting (see <base> script in index.html) ----
+     A <base> makes "#work" and the SVG "#circ" point at a different URL than the
+     current page, so resolve those two cases against the page itself. */
+  const pageUrl = location.href.split('#')[0];
+  if (document.baseURI.split('#')[0] !== pageUrl) {
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a || e.defaultPrevented) return;
+      const target = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView();
+      history.replaceState(null, '', pageUrl + a.getAttribute('href'));
+    });
+    const tp = $('textPath');
+    if (tp) tp.setAttribute('href', `${location.pathname}${location.search}#circ`);
+  }
+
   /* ---- Language (English / Tamil) ---- */
   const i18n = $$('[data-ta]');
   const phs = $$('[data-ta-ph]');
