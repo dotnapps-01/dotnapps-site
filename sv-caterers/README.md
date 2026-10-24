@@ -23,3 +23,6 @@ Deploy: Vercel → new project from this repo, **Root Directory = `sv-caterers`*
    7234281, 33932441, 30685770, 17878224, 35407778, 5560763 (gallery). Open `https://www.pexels.com/photo/<id>/` for photographer and licence.
    They are stock, not the caterer's own food — replace with real photos (`src` + `alt` in `index.html`).
 7. Add a real address / map and opening details if wanted; set an absolute `og:image` URL once the domain is known.
+
+## Deploy status
+Deployed on Vercel as project `sv-caterers` (Root Directory `sv-caterers`, production branch `claude/fervent-goldberg-sbbkkm`).
