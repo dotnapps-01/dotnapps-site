@@ -20,3 +20,7 @@ Static site — no build step. `python3 -m http.server 8080` in this folder, or 
 4. Confirm the Tamil copy with the client, and the "How it works" steps and About text match how they actually work.
 5. Set the real domain: absolute `og:image` URL and a `canonical` link; add a `sitemap.xml` if it gets its own domain.
 6. Optionally add exact opening hours / phone number to the "Find us" card.
+
+## Deploying
+Vercel: new project from this repo, **Root Directory = `sv-fashions`**, preset *Other*, no build command.
+Cloudflare Pages: build output directory = `sv-fashions`, no build command.
