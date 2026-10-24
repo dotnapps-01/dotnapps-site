@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Red Turban — Event management for celebrations worth a crown</title>
+<meta name="description" content="The Red Turban plans and stages weddings, traditional entries, corporate events and family celebrations across Tamil Nadu and India. Estimate your budget, build a planning timeline and send your brief in minutes.">
+<meta name="theme-color" content="#E4152C">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Red Turban">
+<meta property="og:title" content="The Red Turban — Celebrations worthy of a crown">
+<meta property="og:description" content="Weddings, traditional entries, corporate events and family celebrations — planned, styled and staged with honour.">
+<meta property="og:image" content="assets/logo-original.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/turban.png">
+<link rel="apple-touch-icon" href="assets/turban.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;500;700&family=Noto+Sans+Tamil:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+
+<script>
+/* Apply theme + intro flag before first paint to avoid flashes. */
+(function () {
+  try {
+    var d = document.documentElement;
+    var t = localStorage.getItem('rt_theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    d.setAttribute('data-theme', t);
+    var l = localStorage.getItem('rt_lang'); if (l === 'ta') d.setAttribute('lang', 'ta');
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!sessionStorage.getItem('rt_intro') && !reduce) d.classList.add('intro-play');
+  } catch (e) {}
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "The Red Turban",
+  "description": "Event management for weddings, traditional entries, corporate events and family celebrations.",
+  "image": "assets/logo-original.webp",
+  "areaServed": ["Tamil Nadu", "India"],
+  "knowsAbout": ["Wedding planning", "Traditional wedding entries", "Corporate events", "Birthday and family celebrations", "Event décor"]
+}
+</script>
+</head>
+
+<body id="top">
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- Brand intro: the turban settles onto the ट, as in the logo -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro-stack">
+    <img class="intro-turban" src="assets/turban.png" alt="">
+    <img class="intro-ta" src="assets/ta.png" alt="">
+  </div>
+  <p class="intro-word">The Red Turban</p>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="wordmark" href="#top" aria-label="The Red Turban — home">
+      <img class="wm-turban" src="assets/turban.png" alt="">
+      <span class="wm-text">The Red <img class="wm-ta" src="assets/ta.png" alt="T">urban</span>
+    </a>
+
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#experiences" data-i18n="nav.exp">Experiences</a>
+      <a href="#plan" data-i18n="nav.plan">Plan</a>
+      <a href="#packages" data-i18n="nav.packages">Packages</a>
+      <a href="#process" data-i18n="nav.process">Process</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+
+    <div class="nav-tools">
+      <button class="icon-btn lang-btn" id="lang-btn" type="button" aria-label="Switch language to Tamil" title="English / தமிழ்">
+        <span class="l-en">EN</span><span class="l-ta">த</span>
+      </button>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle night mode" title="Night mode">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      </button>
+      <a class="btn btn-red btn-sm nav-cta" href="#enquire" data-i18n="nav.cta">Plan my event</a>
+      <button class="icon-btn burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow rise" style="--d:.05s" data-i18n="hero.eyebrow">Event management · Tamil Nadu &amp; across India</p>
+      <h1 id="hero-title" class="rise" style="--d:.15s" data-i18n-html="hero.title">Celebrations worthy of a <em>crown</em>.</h1>
+      <p class="lede rise" style="--d:.28s" data-i18n="hero.sub">From the horse-chariot baraat to the boardroom offsite, The Red Turban plans, styles and stages every occasion — so the host can simply be the guest of honour.</p>
+      <div class="hero-cta rise" style="--d:.4s">
+        <a class="btn btn-red" href="#enquire"><span data-i18n="hero.cta1">Plan my event</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" href="#plan" data-i18n="hero.cta2">Estimate my budget</a>
+      </div>
+      <ul class="hero-points rise" style="--d:.52s">
+        <li>Weddings &amp; receptions</li>
+        <li>Traditional entries</li>
+        <li>Corporate &amp; brand events</li>
+        <li>Birthdays &amp; family</li>
+      </ul>
+    </div>
+
+    <div class="hero-art rise" style="--d:.2s" id="hero-art" aria-hidden="true">
+      <svg class="ring" viewBox="0 0 400 400">
+        <defs><path id="ringpath" d="M200,200 m-176,0 a176,176 0 1,1 352,0 a176,176 0 1,1 -352,0"/></defs>
+        <text><textPath href="#ringpath" startOffset="0">WEDDINGS ✦ CORPORATE ✦ BIRTHDAYS ✦ TRADITIONS ✦ RECEPTIONS ✦ FAMILY ✦ </textPath></text>
+      </svg>
+      <div class="arch" data-depth="6">
+        <div class="arch-pattern"></div>
+        <div class="stage">
+          <img class="h-turban" src="assets/turban.png" alt="" data-depth="16">
+          <img class="h-ta" src="assets/ta.png" alt="" data-depth="8">
+        </div>
+        <span class="arch-cap">स्वागतम् · வணக்கம் · Welcome</span>
+      </div>
+      <span class="chip c1" data-depth="22">Baraat</span>
+      <span class="chip c2" data-depth="30">Sangeet</span>
+      <span class="chip c3" data-depth="26">Annual day</span>
+      <span class="chip c4" data-depth="34">First birthday</span>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#about" aria-label="Scroll to about"><i></i></a>
+</section>
+
+<!-- RIBBON -->
+<div class="ribbon" aria-hidden="true">
+  <div class="ribbon-track">
+    <span>Weddings</span><b>✦</b><span>திருமணம்</span><b>✦</b><span>विवाह</span><b>✦</b>
+    <span>Receptions</span><b>✦</b><span>வரவேற்பு</span><b>✦</b><span>स्वागत</span><b>✦</b>
+    <span>Birthdays</span><b>✦</b><span>பிறந்தநாள்</span><b>✦</b><span>जन्मदिन</span><b>✦</b>
+    <span>Celebrations</span><b>✦</b><span>கொண்டாட்டம்</span><b>✦</b><span>उत्सव</span><b>✦</b>
+    <span>Weddings</span><b>✦</b><span>திருமணம்</span><b>✦</b><span>विवाह</span><b>✦</b>
+    <span>Receptions</span><b>✦</b><span>வரவேற்பு</span><b>✦</b><span>स्वागत</span><b>✦</b>
+    <span>Birthdays</span><b>✦</b><span>பிறந்தநாள்</span><b>✦</b><span>जन्मदिन</span><b>✦</b>
+    <span>Celebrations</span><b>✦</b><span>கொண்டாட்டம்</span><b>✦</b><span>उत्सव</span><b>✦</b>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec about" id="about">
+  <div class="wrap about-in">
+    <div class="about-mark reveal" aria-hidden="true">
+      <div class="about-disc">
+        <img src="assets/turban.png" alt="">
+      </div>
+      <p class="about-quote">“The turban is worn to honour. So is every guest we welcome.”</p>
+    </div>
+    <div class="about-copy">
+      <p class="eyebrow reveal" data-i18n="about.eyebrow">Our idea</p>
+      <h2 class="reveal" data-i18n="about.title">The turban is a promise.</h2>
+      <p class="reveal" data-i18n="about.p">In Indian tradition, a turban crowns the person being honoured. That is how we plan: the host is the guest of honour, every guest is welcomed like family, and every detail — from the first invitation to the last farewell — carries the same respect.</p>
+      <div class="pillars">
+        <article class="pillar reveal">
+          <h3>Swagat</h3>
+          <p>Warm, unhurried welcomes — at the gate, at the table, on the stage.</p>
+        </article>
+        <article class="pillar reveal">
+          <h3>Craft</h3>
+          <p>Traditions done properly, décor done beautifully, timings done to the minute.</p>
+        </article>
+        <article class="pillar reveal">
+          <h3>Calm</h3>
+          <p>A control room that absorbs the chaos so the family never feels it.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec services" id="services">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="svc.eyebrow">What we do</p>
+      <h2 class="reveal" data-i18n="svc.title">One team for every kind of celebration.</h2>
+      <p class="sub reveal" data-i18n="svc.sub">Take one service or hand us the whole occasion — from the first idea to the last guest’s goodbye.</p>
+    </header>
+
+    <div class="svc-grid">
+      <article class="svc reveal">
+        <span class="svc-no">01</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/><path d="M8 5l1.5 2M16 5l-1.5 2M12 3v3"/></svg>
+        <h3>Weddings &amp; receptions</h3>
+        <p>Muhurtham to reception, run as one seamless story.</p>
+        <ul><li>Engagement</li><li>Haldi &amp; mehendi</li><li>Sangeet</li><li>Reception</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">02</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 4v6M12 14v6M4 12h6M14 12h6M6.3 6.3l4.2 4.2M13.5 13.5l4.2 4.2M17.7 6.3l-4.2 4.2M10.5 13.5l-4.2 4.2"/></svg>
+        <h3>Traditional entries</h3>
+        <p>An arrival people talk about for years.</p>
+        <ul><li>Horse chariot</li><li>Palki &amp; doli</li><li>Nadaswaram &amp; melam</li><li>Pyro entry</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">03</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>
+        <h3>Corporate &amp; brand events</h3>
+        <p>Polished, on-brand, on schedule.</p>
+        <ul><li>Launches</li><li>Annual days</li><li>Offsites</li><li>Team-building</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">04</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7M5 16c2 1.6 3.5 1.6 5 0s3-1.6 4 0 3 1.6 5 0M12 12V8M12 8c-1.2-1-1.2-2.4 0-3.6 1.2 1.2 1.2 2.6 0 3.6z"/></svg>
+        <h3>Birthdays &amp; family</h3>
+        <p>Big days for small hearts and grand elders.</p>
+        <ul><li>First birthdays</li><li>Half-saree functions</li><li>Baby showers</li><li>Housewarmings</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">05</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V11a8 8 0 0 1 16 0v10M8 21v-9a4 4 0 0 1 8 0v9M2 21h20"/></svg>
+        <h3>Stage, décor &amp; lighting</h3>
+        <p>Spaces that look like a memory already.</p>
+        <ul><li>Floral &amp; mandap</li><li>Welcome arches</li><li>Stage design</li><li>Lighting</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">06</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <h3>Photography &amp; films</h3>
+        <p>The day, kept the way it felt.</p>
+        <ul><li>Candid photography</li><li>Cinematic films</li><li>Albums</li><li>Live highlights</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">07</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
+        <h3>DJ, bands &amp; live music</h3>
+        <p>The right sound for every hour of the day.</p>
+        <ul><li>DJ &amp; sound</li><li>Band sets</li><li>Kerala melam</li><li>Live singers</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">08</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19V6M3 15h18v4M21 15v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11" r="2"/></svg>
+        <h3>Stay &amp; guest hospitality</h3>
+        <p>Out-of-town guests, looked after properly.</p>
+        <ul><li>Accommodation</li><li>Transport</li><li>Welcome kits</li><li>Help desk</li></ul>
+      </article>
+      <article class="svc reveal">
+        <span class="svc-no">09</span>
+        <svg class="svc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <h3>Invitations &amp; gifting</h3>
+        <p>The first impression, before anyone arrives.</p>
+        <ul><li>Printed cards</li><li>Digital invites</li><li>RSVP tracking</li><li>Return gifts</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section class="sec experiences" id="experiences">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="exp.eyebrow">Signature concepts</p>
+      <h2 class="reveal" data-i18n="exp.title">Where the imagining begins.</h2>
+      <p class="sub reveal" data-i18n="exp.sub">A few concept boards for how your celebration could look and feel. Pick one you love and we’ll build it around you.</p>
+    </header>
+    <div class="filters reveal" id="exp-filters" role="group" aria-label="Filter concepts"></div>
+    <div class="exp-grid" id="exp-grid"></div>
+  </div>
+</section>
+
+<dialog class="lightbox" id="lightbox" aria-labelledby="lb-title">
+  <form method="dialog"><button class="lb-close icon-btn" aria-label="Close">✕</button></form>
+  <div class="lb-art" id="lb-art"></div>
+  <div class="lb-body">
+    <p class="lb-cat" id="lb-cat"></p>
+    <h3 id="lb-title"></h3>
+    <p id="lb-text"></p>
+    <ul class="lb-tags" id="lb-tags"></ul>
+    <div class="lb-actions">
+      <button class="btn btn-red" id="lb-plan" type="button">Plan something like this</button>
+      <button class="btn btn-ghost" id="lb-prev" type="button" aria-label="Previous concept">←</button>
+      <button class="btn btn-ghost" id="lb-next" type="button" aria-label="Next concept">→</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- PLAN: estimator + timeline -->
+<section class="sec plan" id="plan">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="plan.eyebrow">Plan it now</p>
+      <h2 class="reveal" data-i18n="plan.title">Shape your plan before you call us.</h2>
+      <p class="sub reveal" data-i18n="plan.sub">See a planning range for your guest list and wishes, then get a month-by-month checklist counting down to your date.</p>
+    </header>
+
+    <div class="tabs reveal" role="tablist" aria-label="Planning tools">
+      <button class="tab is-on" role="tab" id="tab-estimate" aria-selected="true" aria-controls="panel-estimate" type="button">Budget estimator</button>
+      <button class="tab" role="tab" id="tab-timeline" aria-selected="false" aria-controls="panel-timeline" type="button" tabindex="-1">Planning timeline</button>
+      <i class="tab-ink" aria-hidden="true"></i>
+    </div>
+
+    <div class="tabpanel reveal" id="panel-estimate" role="tabpanel" aria-labelledby="tab-estimate">
+      <div class="est">
+        <div class="est-controls">
+          <fieldset><legend>What are we celebrating?</legend><div class="pills" id="est-types"></div></fieldset>
+          <div class="field">
+            <label for="est-guests">Guests <output id="est-guests-out" for="est-guests">300</output></label>
+            <input type="range" id="est-guests" min="20" max="2000" step="10" value="300">
+            <div class="scale"><span>20</span><span>500</span><span>1000</span><span>2000</span></div>
+          </div>
+          <fieldset><legend>Setting</legend><div class="pills" id="est-style"></div></fieldset>
+          <fieldset><legend>Add to the celebration</legend><div class="pills multi" id="est-addons"></div></fieldset>
+        </div>
+
+        <aside class="est-result" aria-live="polite">
+          <img class="est-watermark" src="assets/turban.png" alt="">
+          <p class="est-label">Indicative planning range</p>
+          <p class="est-range" id="est-range">₹—</p>
+          <p class="est-per" id="est-per"></p>
+          <ul class="bars" id="est-bars"></ul>
+          <button class="btn btn-light" id="est-go" type="button">Turn this into an enquiry →</button>
+          <p class="fine">A sample rate card for early planning. Your written, itemised quote follows a short conversation.</p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="panel-timeline" role="tabpanel" aria-labelledby="tab-timeline" hidden>
+      <div class="tl">
+        <div class="tl-head">
+          <div class="tl-controls">
+            <label>Event
+              <select id="tl-type"></select>
+            </label>
+            <label>Event date
+              <input type="date" id="tl-date">
+            </label>
+            <button class="btn btn-ghost" id="tl-ics" type="button">Add to calendar (.ics)</button>
+          </div>
+          <div class="tl-ring" id="tl-ring" role="img" aria-label="Checklist progress">
+            <span id="tl-pct">0%</span><small id="tl-count">0 of 0</small>
+          </div>
+        </div>
+        <p class="tl-note" id="tl-note"></p>
+        <ol class="tl-list" id="tl-list"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="sec packages" id="packages">
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="pkg.eyebrow">Ways to work together</p>
+      <h2 class="reveal" data-i18n="pkg.title">Choose the level of care that fits.</h2>
+      <p class="sub reveal" data-i18n="pkg.sub">Every package is tailored and quoted individually. These are simply starting points.</p>
+    </header>
+
+    <div class="pkg-grid">
+      <article class="pkg reveal">
+        <p class="pkg-sub">Swagat</p>
+        <h3>Essential</h3>
+        <p class="pkg-desc">Day-of calm for events you’ve mostly planned yourself.</p>
+        <ul>
+          <li>Run-of-show &amp; vendor coordination</li>
+          <li>On-site event manager &amp; crew</li>
+          <li>Guest &amp; stage management</li>
+          <li>Pre-event walkthrough</li>
+        </ul>
+        <button class="btn btn-ghost" data-pkg="Swagat · Essential" type="button">Ask about Essential</button>
+      </article>
+      <article class="pkg pkg-hero reveal">
+        <span class="pkg-badge">Most loved</span>
+        <p class="pkg-sub">Utsav</p>
+        <h3>Signature</h3>
+        <p class="pkg-desc">Planning, styling and staging — we run the whole celebration.</p>
+        <ul>
+          <li>Everything in Essential</li>
+          <li>Concept, décor &amp; stage design</li>
+          <li>Vendor shortlisting &amp; negotiation</li>
+          <li>Traditional entry planning</li>
+          <li>Guest stay &amp; transport desk</li>
+        </ul>
+        <button class="btn btn-red" data-pkg="Utsav · Signature" type="button">Ask about Signature</button>
+      </article>
+      <article class="pkg reveal">
+        <p class="pkg-sub">Maharaja</p>
+        <h3>Royal</h3>
+        <p class="pkg-desc">Multi-day, multi-venue celebrations with nothing left to chance.</p>
+        <ul>
+          <li>Everything in Signature</li>
+          <li>Dedicated planner from day one</li>
+          <li>Destination &amp; multi-event logistics</li>
+          <li>Custom entertainment &amp; production</li>
+          <li>Photo &amp; film direction</li>
+        </ul>
+        <button class="btn btn-ghost" data-pkg="Maharaja · Royal" type="button">Ask about Royal</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec process" id="process">
+  <div class="process-scallop" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="proc.eyebrow">How we work</p>
+      <h2 class="reveal" data-i18n="proc.title">From a first idea to the last goodbye.</h2>
+    </header>
+    <ol class="steps" id="steps">
+      <li class="step reveal"><span class="step-no">1</span><h3>Listen</h3><p>A relaxed conversation about your people, your traditions and the feeling you want in the room.</p></li>
+      <li class="step reveal"><span class="step-no">2</span><h3>Design</h3><p>Mood boards, décor concepts and a run-of-show you can actually picture.</p></li>
+      <li class="step reveal"><span class="step-no">3</span><h3>Curate</h3><p>Venues, vendors, artists and stay — shortlisted, negotiated and confirmed in one place.</p></li>
+      <li class="step reveal"><span class="step-no">4</span><h3>Stage</h3><p>Rehearsals, an on-site crew and a calm control room on the day itself.</p></li>
+      <li class="step reveal"><span class="step-no">5</span><h3>Remember</h3><p>Photos and films delivered, accounts closed, thank-yous sent to every guest.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- REACH -->
+<section class="sec reach" id="reach">
+  <div class="wrap reach-in">
+    <div class="reach-copy">
+      <h2 class="reveal" data-i18n="reach.title">Where we celebrate</h2>
+      <p class="reveal">Rooted in Tamil Nadu, travelling across India for destination weddings and corporate retreats.</p>
+    </div>
+    <ul class="cities reveal">
+      <li>Madurai</li><li>Chennai</li><li>Dindigul</li><li>Theni</li><li>Sivakasi</li>
+      <li>Virudhunagar</li><li>Ramanathapuram</li><li>Rameswaram</li><li>Kodaikanal</li>
+      <li class="cities-more">Anywhere in India →</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec faq" id="faq">
+  <div class="wrap faq-in">
+    <header class="sec-head">
+      <p class="eyebrow reveal" data-i18n="faq.eyebrow">Good questions</p>
+      <h2 class="reveal" data-i18n="faq.title">Before you ask.</h2>
+    </header>
+    <div class="faq-list reveal">
+      <details open>
+        <summary>How early should we book?</summary>
+        <p>For weddings we suggest four to six months; for corporate and family events, four to eight weeks. Shorter notice? Ask anyway — we’ll tell you honestly what’s possible.</p>
+      </details>
+      <details>
+        <summary>Can you arrange traditional entries — horse chariot, palki, nadaswaram?</summary>
+        <p>Yes. We coordinate the whole entry: the chariot or palki, musicians and melam, pyro, and the route, timing and safety planning that make it smooth.</p>
+      </details>
+      <details>
+        <summary>Can we use our own venue, caterer or photographer?</summary>
+        <p>Of course. We’re happy to fold your favourite vendors into the plan, or recommend trusted ones where you need them.</p>
+      </details>
+      <details>
+        <summary>Do you travel outside Tamil Nadu?</summary>
+        <p>We plan events across Tamil Nadu and travel anywhere in India for destination weddings, retreats and multi-day celebrations.</p>
+      </details>
+      <details>
+        <summary>How does pricing work?</summary>
+        <p>The estimator above gives an early planning range. After a short conversation we send a written quote with every line itemised — no surprises on the day.</p>
+      </details>
+      <details>
+        <summary>What if our plans change?</summary>
+        <p>They often do. We build flexibility into timelines and vendor terms from the start, and we tell you early about anything that affects the day.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ENQUIRE -->
+<section class="sec enquire" id="enquire">
+  <div class="wrap enquire-in">
+    <div class="enq-copy">
+      <p class="eyebrow reveal" data-i18n="enq.eyebrow">Let’s begin</p>
+      <h2 class="reveal" data-i18n="enq.title">Tell us about your celebration.</h2>
+      <p class="reveal" data-i18n="enq.sub">Four small steps. We’ll come back with ideas, not a form letter.</p>
+      <img class="enq-turban reveal" src="assets/turban.png" alt="">
+    </div>
+
+    <form class="wiz reveal" id="wiz" novalidate>
+      <div class="wiz-top">
+        <ol class="wiz-steps" aria-label="Progress">
+          <li class="is-on"><b>1</b><span>Occasion</span></li>
+          <li><b>2</b><span>Date &amp; guests</span></li>
+          <li><b>3</b><span>Wishes</span></li>
+          <li><b>4</b><span>You</span></li>
+        </ol>
+        <div class="wiz-bar" aria-hidden="true"><i id="wiz-bar"></i></div>
+      </div>
+
+      <section class="wiz-step is-on" data-step="1" aria-labelledby="ws1">
+        <h3 id="ws1">What are we celebrating?</h3>
+        <div class="type-cards" id="wiz-types"></div>
+        <p class="wiz-chip" id="wiz-inspo" hidden></p>
+      </section>
+
+      <section class="wiz-step" data-step="2" aria-labelledby="ws2" hidden>
+        <h3 id="ws2">When and how many?</h3>
+        <div class="grid2">
+          <label class="fld">Event date <small>(approximate is fine)</small>
+            <input type="date" id="w-date" name="date">
+          </label>
+          <label class="fld">Venue city
+            <input type="text" id="w-city" name="city" placeholder="e.g. Madurai" autocomplete="address-level2">
+          </label>
+        </div>
+        <div class="fld">
+          <span id="w-guests-l">Expected guests</span>
+          <div class="stepper" role="group" aria-labelledby="w-guests-l">
+            <button type="button" id="w-g-minus" aria-label="Fewer guests">−</button>
+            <input type="number" id="w-guests" min="10" max="5000" step="10" inputmode="numeric" aria-labelledby="w-guests-l">
+            <button type="button" id="w-g-plus" aria-label="More guests">+</button>
+          </div>
+        </div>
+        <fieldset class="fld"><legend>Setting</legend><div class="pills" id="w-style"></div></fieldset>
+      </section>
+
+      <section class="wiz-step" data-step="3" aria-labelledby="ws3" hidden>
+        <h3 id="ws3">What would make it yours?</h3>
+        <fieldset class="fld"><legend>Services you’d like help with</legend><div class="pills multi" id="w-addons"></div></fieldset>
+        <label class="fld">Comfortable budget
+          <select id="w-budget" name="budget">
+            <option value="">Not sure yet</option>
+            <option>Under ₹3 lakh</option>
+            <option>₹3 – 6 lakh</option>
+            <option>₹6 – 12 lakh</option>
+            <option>₹12 – 25 lakh</option>
+            <option>₹25 lakh +</option>
+          </select>
+        </label>
+        <p class="wiz-chip" id="wiz-pkg" hidden></p>
+        <label class="fld">Anything we should know? <small>(traditions, themes, must-haves)</small>
+          <textarea id="w-notes" rows="3" placeholder="e.g. Chettinad-style wedding, horse chariot entry, 3-day celebration"></textarea>
+        </label>
+      </section>
+
+      <section class="wiz-step" data-step="4" aria-labelledby="ws4" hidden>
+        <h3 id="ws4">How do we reach you?</h3>
+        <div class="grid2">
+          <label class="fld">Your name
+            <input type="text" id="w-name" autocomplete="name" placeholder="Full name">
+          </label>
+          <label class="fld">Phone / WhatsApp
+            <input type="tel" id="w-phone" autocomplete="tel" inputmode="tel" placeholder="10-digit mobile number">
+          </label>
+          <label class="fld">Email <small>(optional)</small>
+            <input type="email" id="w-email" autocomplete="email" placeholder="you@example.com">
+          </label>
+          <fieldset class="fld"><legend>Best time to call</legend><div class="pills" id="w-slot"></div></fieldset>
+        </div>
+      </section>
+
+      <p class="wiz-err" id="wiz-err" role="alert"></p>
+      <div class="wiz-nav" id="wiz-nav">
+        <button class="btn btn-ghost" type="button" id="wiz-back" hidden>← Back</button>
+        <button class="btn btn-red" type="button" id="wiz-next">Continue →</button>
+      </div>
+
+      <section class="wiz-done" id="wiz-done" hidden aria-live="polite">
+        <img src="assets/turban.png" alt="" class="done-turban">
+        <h3>Your brief is ready.</h3>
+        <p>Send it to the team and we’ll reply with ideas and a conversation time that suits you.</p>
+        <pre class="brief" id="brief-text"></pre>
+        <div class="done-actions">
+          <a class="btn btn-red" id="send-wa" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
+          <a class="btn btn-red" id="send-mail" hidden>Send by email</a>
+          <button class="btn btn-ghost" type="button" id="copy-brief">Copy brief</button>
+          <button class="btn btn-ghost" type="button" id="dl-brief">Download</button>
+          <button class="btn btn-quiet" type="button" id="wiz-reset">Start again</button>
+        </div>
+        <p class="copied" id="copied" role="status"></p>
+      </section>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div class="lockup" aria-label="The Red Turban">
+      <span class="lk-the">The</span>
+      <span class="lk-row">
+        <span class="lk-word">Red</span>
+        <span class="lk-glyph"><img class="lk-turban" src="assets/turban.png" alt=""><img class="lk-ta" src="assets/ta.png" alt=""></span>
+        <span class="lk-word">urban</span>
+      </span>
+    </div>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="#services">Services</a><a href="#experiences">Experiences</a><a href="#plan">Plan</a>
+      <a href="#packages">Packages</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#enquire">Enquire</a>
+    </nav>
+    <p class="foot-line">Event management for weddings, traditions, corporate &amp; family celebrations.</p>
+    <p class="foot-copy">© <span id="year">2026</span> The Red Turban. All rights reserved. <a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<nav class="mbar" id="mbar" aria-label="Quick actions">
+  <a class="btn btn-ghost" href="#plan">Estimate</a>
+  <a class="btn btn-red" href="#enquire">Plan my event</a>
+</nav>
+
+<noscript><style>.reveal,.rise{opacity:1!important;transform:none!important}.intro{display:none}</style></noscript>
+<script src="app.js" defer></script>
+</body>
+</html>
