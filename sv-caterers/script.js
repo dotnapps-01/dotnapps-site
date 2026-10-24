@@ -248,7 +248,7 @@
     return `SVC-${String(today.getFullYear()).slice(2)}${pad(today.getMonth() + 1)}${pad(today.getDate())}-${s}`;
   }
 
-  function goto(n) {
+  function goto(n, scroll = true) {
     step = n;
     steps.forEach(s => { s.hidden = Number(s.dataset.step) !== n; });
     $('#pstep').textContent = `Step ${n} of 5 · ${STEP_NAMES[n - 1]}`;
@@ -258,6 +258,7 @@
     if (n === 2) renderCal();
     if (n === 5) $('#summary').innerHTML = summaryHtml();
     clearErr();
+    if (!scroll) return;
     const top = card.getBoundingClientRect().top;
     if (top < 0 || top > innerHeight * .5) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -295,7 +296,7 @@
     setGuests(100); $('#done').hidden = true; form.hidden = false; goto(1);
   });
   setGuests(100);
-  goto(1);
+  goto(1, false);
 
   /* quick question → WhatsApp */
   const quick = $('#quick');
@@ -308,6 +309,53 @@
     $('#q-err').textContent = '';
     openWhatsApp(`Hi SV Caterers! ${name ? `I'm ${name}${phone ? ` (${showPhone(phone)})` : ''}. ` : ''}${msg}`);
   });
+
+  /* ---- Hero slideshow: real photos, slow zoom, crossfade; pauses when the tab is hidden ---- */
+  const hero = $('.hero');
+  const slides = $$('.slide', hero);
+  const segs = $$('.seg', hero);
+  const now = $('.now', hero);
+  const SLIDE_MS = 6200;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let sIdx = 0;
+  let sTimer = null;
+  function showSlide(i) {
+    sIdx = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('on', k === sIdx));
+    segs.forEach((g, k) => {
+      g.classList.remove('run');
+      g.classList.toggle('done', k < sIdx);
+      g.setAttribute('aria-current', String(k === sIdx));
+    });
+    void hero.offsetWidth;                               // restart the progress animation
+    if (!reduceMotion) { segs[sIdx].style.setProperty('--dur', `${SLIDE_MS}ms`); segs[sIdx].classList.add('run'); } else { segs[sIdx].classList.add('done'); }
+    const s = slides[sIdx];
+    $('#now-name').textContent = s.dataset.name;
+    $('#now-ta').textContent = s.dataset.ta;
+    now.classList.remove('swap'); void now.offsetWidth; now.classList.add('swap');
+  }
+  const queue = () => { clearTimeout(sTimer); if (!reduceMotion && !document.hidden && heroVisible && !hoverPause) sTimer = setTimeout(() => { showSlide(sIdx + 1); queue(); }, SLIDE_MS); };
+  let heroVisible = true;
+  let hoverPause = false;
+  segs.forEach((g, k) => g.addEventListener('click', () => { showSlide(k); queue(); }));
+  if (slides.length) {
+    showSlide(0);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(sTimer); else { showSlide(sIdx); queue(); } });
+    hero.addEventListener('mouseenter', () => { hoverPause = true; clearTimeout(sTimer); segs[sIdx].style.animationPlayState = 'paused'; });
+    hero.addEventListener('mouseleave', () => { hoverPause = false; segs[sIdx].style.animationPlayState = ''; showSlide(sIdx); queue(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { heroVisible = en.isIntersecting; if (heroVisible) { showSlide(sIdx); queue(); } else clearTimeout(sTimer); }).observe(hero);
+    else queue();
+    // gentle parallax on larger screens
+    const layer = $('.slides', hero);
+    if (!reduceMotion && matchMedia('(min-width: 700px)').matches) {
+      let ticking = false;
+      addEventListener('scroll', () => {
+        if (ticking || !heroVisible) return;
+        ticking = true;
+        requestAnimationFrame(() => { layer.style.transform = `translate3d(0, ${Math.min(scrollY, 900) * .16}px, 0)`; ticking = false; });
+      }, { passive: true });
+    }
+  }
 
   /* ---- Bottom bar (phones): after the hero buttons scroll away, hidden at the booking form ---- */
   const dock = $('#dock');

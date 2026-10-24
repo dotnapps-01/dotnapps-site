@@ -9,8 +9,8 @@ Deploy: Vercel → new project from this repo, **Root Directory = `sv-caterers`*
 
 ## Files
 - `index.html` — the page (edit it directly).
-- `styles.css`, `script.js` — calm white + warm cream design with green as an accent (buttons, details, footer). **One** banana leaf (hero, plus the preloader and logo); no other leaf decoration. Tabs, gallery viewer, WhatsApp form, bottom order bar on phones.
-- `assets/logo-mark.svg` — **placeholder logo**: an "SV" monogram (drawn from the site's serif font) in a green ring. Replace with the client's real logo when they share it. Replace with the client's real logo when they share it.
+- `styles.css`, `script.js` — calm white + warm cream design with green as an accent. **Hero = full-width real-photo slideshow** (5 slides, slow zoom + crossfade, headline lines slide up, dish-name label, clickable progress bars; pauses when the tab is hidden or hovered; no autoplay with reduced-motion). Menu tabs, gallery viewer, booking form, preloader, bottom order bar on phones.
+- `assets/logo-mark.svg` — **placeholder logo**: a minimal banana-leaf mark (white leaf, midrib and veins on a deep-green disc). The name "SV Caterers" is set as normal text beside it. Replace with the client's real logo when they share it.
 - `assets/img/plate.svg` — shown if a photo fails to load.
 
 ## Check with the client before launch
@@ -19,8 +19,8 @@ Deploy: Vercel → new project from this repo, **Root Directory = `sv-caterers`*
 3. **Menu** — the dish lists are typical Tamil Nadu items (idli, ven pongal, kal dosai, sambar, rasam, kootu, poriyal, kuzhambu, payasam, mysore pak, adhirasam…). Confirm what they really serve, and whether they cater non-veg.
 4. **Events** — Weddings, gruhapravesam, seemantham / family functions, corporate, temple & festival annadhanam. Confirm.
 5. **Tamil text** — the small Tamil accents (வாழை இலை விருந்து, தரம் · அளவு · சுத்தம், டிபன், சாப்பாடு, இனிப்பு) are mine; have a native speaker check them.
-6. **Photos** — free [Pexels](https://www.pexels.com) stock photos, hotlinked: 9266190, 32229637, 5560763 (hero) · 8312083, 5410418, 19151502 (menu) ·
-   7234281, 33932441, 30685770, 17878224, 35407778, 5560763 (gallery). Open `https://www.pexels.com/photo/<id>/` for photographer and licence.
+6. **Photos** — free [Pexels](https://www.pexels.com) stock photos, hotlinked: hero slideshow 9266190, 32229637, 8312083, 7234281, 19151502 · menu 8312083, 5410418, 19151502 · gallery 7234281, 33932441, 30685770, 17878224, 35407778, 5560763. Open `https://www.pexels.com/photo/<id>/` for photographer and licence.
+   To change the hero photos edit the five `<figure class="slide">` blocks in `index.html` (and the dish name / Tamil label in their `data-name` / `data-ta`).
    They are stock, not the caterer's own food — replace with real photos (`src` + `alt` in `index.html`).
 7. Add a real address / map and opening details if wanted; set an absolute `og:image` URL once the domain is known.
 
