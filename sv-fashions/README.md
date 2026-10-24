@@ -29,15 +29,18 @@ Cloudflare Pages: build output directory = `sv-fashions`, no build command.
 The SV mark draws itself on load (inline SVG + CSS, see `.pre` in `styles.css`; minimum 2.5 s, set in `script.js`). It is skipped for `prefers-reduced-motion`.
 
 ## Stock photos (preview only)
-The hero, service cards, About and Instagram tiles use free-licence [Unsplash](https://unsplash.com) photos of women in
-sarees / bridal wear and tailoring, linked straight from Unsplash (`unsplash.com/photos/<id>/download`).
-If a photo fails to load, the page falls back to the matching illustration in `assets/img/` (`data-fb` attribute).
-Replace them with the studio's own photos before launch: put the files in `assets/img/`, then change `src` (and the `alt`) in `index.html`.
+The hero, work gallery, service cards, About and Instagram tiles use free [Pexels](https://www.pexels.com) photos of women in
+sarees / bridal wear, tailors and stitching, linked straight from Pexels' image CDN
+(`images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg`). If a photo fails to load, the page falls back to the matching
+illustration in `assets/img/` (`data-fb` attribute).
 
-Photo IDs used: uKxGITxD4Uw, KxHcyNOIO_M, 96rElJqbW9g (hero) · o1KTJRqHslU, DuHE2A_yz8Q, EtSixZZfbVk, nnlbnAAA6M8 (services) ·
-S49g-JZK_7g (about) · Rm9DL9DmGi4, ptobQlii1hc, GDCRWeu7-JE, KaMViYpd8tc, xYqTyeYQorI (Instagram tiles).
-Each is at `https://unsplash.com/photos/<id>` — open it to confirm the licence and photographer.
+**These are stock photos, not the studio's work** — replace them with the studio's own photos before launch: put the files in
+`assets/img/`, then change `src` (and the `alt` / caption) in `index.html`. The gallery captions describe the stock photos.
+
+Photo pages (open `https://www.pexels.com/photo/<id>/` to see photographer and licence): hero 34345410, 12726134, 9852970 ·
+services 15384798, 12411105, 19556879, 7778035 · about 6461195 · Instagram tiles 3838680, 8517098, 6766353, 7148066, 31935139, 7147578 ·
+gallery 4427080, 2119095, 29172782, 28213789, 12792004, 33078836, 7486650, 28943572, 5858761, 33306356, 36114634, 20627903.
 
 ## Mobile
-Most visitors are on phones: the first screen holds the headline, WhatsApp button and the start of the hero photo; the order bar is pinned at the bottom;
+Most visitors are on phones: the first screen holds the headline, WhatsApp button and the start of the hero photo; the order bar slides in at the bottom once the hero buttons scroll away (and hides at the order form);
 fonts are limited to two families; images are lazy-loaded with fixed aspect ratios; blur effects are off on phones; the photo viewer supports swipe.

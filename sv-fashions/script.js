@@ -155,6 +155,19 @@
     if (w) w.opener = null; else location.href = url;   // popup blocked: go there in this tab
   });
 
+  /* ---- Bottom order bar (phones): only once the hero buttons are out of view, and not over the order form ---- */
+  const dock = $('#dock');
+  const heroCta = $('.hero-cta');
+  const contact = $('#contact');
+  if (dock && heroCta && 'IntersectionObserver' in window) {
+    let pastHero = false, atForm = false;
+    const sync = () => dock.classList.toggle('show', pastHero && !atForm);
+    new IntersectionObserver(([en]) => { pastHero = !en.isIntersecting && en.boundingClientRect.top < 0; sync(); }).observe(heroCta);
+    new IntersectionObserver(([en]) => { atForm = en.isIntersecting; sync(); }, { threshold: .25 }).observe(contact);
+  } else if (dock) {
+    dock.classList.add('show');
+  }
+
   /* ---- Preloader ---- */
   const pre = $('#pre');
   const unlock = () => document.documentElement.classList.remove('pre-lock');
