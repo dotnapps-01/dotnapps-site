@@ -9,8 +9,8 @@ Deploy: Vercel → new project from this repo, **Root Directory = `sv-caterers`*
 
 ## Files
 - `index.html` — the page (generated once from `index.template.html`; edit `index.html` directly from now on and ignore the template).
-- `styles.css`, `script.js` — green/white design (banana-leaf shapes, leaf-edge band, kolam-dot hero), tabs, gallery viewer, WhatsApp form, preloader, bottom order bar on phones.
-- `assets/logo-mark.svg` — **placeholder logo** (white banana leaf on green). Replace with the client's real logo when they share it.
+- `styles.css`, `script.js` — calm white + warm cream design with green as an accent (buttons, details, footer). **One** banana leaf (hero, plus the preloader and logo); no other leaf decoration. Tabs, gallery viewer, WhatsApp form, bottom order bar on phones.
+- `assets/logo-mark.svg` — **placeholder logo** (white banana leaf on deep green). Replace with the client's real logo when they share it.
 - `assets/img/plate.svg` — shown if a photo fails to load.
 
 ## Check with the client before launch
