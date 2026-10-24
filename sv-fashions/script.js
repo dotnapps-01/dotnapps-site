@@ -32,6 +32,13 @@
     if (tp) tp.setAttribute('href', `${location.pathname}${location.search}#circ`);
   }
 
+  /* ---- Photos: fall back to the built-in illustration if a photo can't load ---- */
+  const fallback = img => {
+    if (img.dataset.fb && !img.dataset.fbDone) { img.dataset.fbDone = '1'; img.removeAttribute('srcset'); img.src = img.dataset.fb; }
+  };
+  document.addEventListener('error', e => { if (e.target.tagName === 'IMG') fallback(e.target); }, true);
+  $$('img[data-fb]').forEach(i => { if (i.complete && i.naturalWidth === 0) fallback(i); });
+
   /* ---- Header + mobile menu ---- */
   const header = $('.site-header');
   const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
@@ -97,6 +104,15 @@
     else if (e.key === 'ArrowRight') show(current + 1);
   });
 
+  /* swipe left / right in the viewer */
+  let x0 = null;
+  lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
   /* ---- Scroll reveal ---- */
   const reveals = $$('.reveal');
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -144,7 +160,7 @@
   const unlock = () => document.documentElement.classList.remove('pre-lock');
   if (pre) {
     const t0 = performance.now();
-    const min = matchMedia('(prefers-reduced-motion: reduce)').matches ? 350 : 2500;
+    const min = matchMedia('(prefers-reduced-motion: reduce)').matches ? 350 : 2100;
     const finish = () => {
       pre.classList.add('done');
       unlock();

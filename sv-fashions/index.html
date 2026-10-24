@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>
   /* When served from a sub-path without a trailing slash (e.g. a preview at
      /sv-fashions on the Dotnapps Vercel project) make relative URLs resolve inside the folder.
@@ -52,7 +52,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Sans+Tamil:wght@400;500;600&family=Noto+Serif+Tamil:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://unsplash.com">
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script>document.documentElement.classList.add('js', 'pre-lock');</script>
 </head>
@@ -78,7 +80,7 @@
 -->
 <div class="offer" role="note">
   <span>Diwali offer · Aari work blouse stitching ₹1500</span>
-  <a href="https://wa.me/919150099500?text=Hi%20SV%20Fashions%21%20I%27d%20like%20to%20place%20an%20order." target="_blank" rel="noopener">Order on WhatsApp →</a>
+  <a class="offer-cta" href="https://wa.me/919150099500?text=Hi%20SV%20Fashions%21%20I%27d%20like%20to%20place%20an%20order." target="_blank" rel="noopener">Order on WhatsApp →</a>
 </div>
 
 <header class="site-header" id="top">
@@ -108,12 +110,12 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow">Bespoke tailoring &amp; fashion designing · Coimbatore</p>
-      <h1>Made for you, <em>stitch by stitch.</em></h1>
+      <p class="eyebrow"><span class="eb-full">Bespoke tailoring &amp; fashion designing</span><span class="eb-short">Bespoke tailoring</span> · Coimbatore</p>
+      <h1>Made for you, <em>stitch by stitch.<svg class="stitch" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 7 C40 2 70 12 110 7 S190 2 230 7 S280 11 298 6"/></svg></em></h1>
       <p class="lede">Designer blouses, bridal wear and ethnic wear — designed around you and finished by hand in Selvapuram, Coimbatore.</p>
       <div class="hero-cta">
-        <a class="btn btn-dark" href="#work">See our work</a>
-        <a class="btn btn-line" href="https://wa.me/919150099500?text=Hi%20SV%20Fashions%21%20I%27d%20like%20to%20place%20an%20order." target="_blank" rel="noopener"><svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Chat on WhatsApp</a>
+        <a class="btn btn-dark" href="https://wa.me/919150099500?text=Hi%20SV%20Fashions%21%20I%27d%20like%20to%20place%20an%20order." target="_blank" rel="noopener"><svg class="wa-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Chat on WhatsApp</a>
+        <a class="btn btn-line" href="#work">See our work</a>
       </div>
       <ul class="hero-tags" aria-label="What we make">
         <li>Designer blouses</li>
@@ -123,11 +125,14 @@
       </ul>
     </div>
 
-    <div class="hero-art" aria-hidden="true">
-      <div class="arch"><img src="assets/img/bridal-lehenga.svg" alt="" width="400" height="500"></div>
-      <div class="chip chip-a"><img src="assets/img/blouse-aari.svg" alt="" width="220" height="275"></div>
-      <div class="chip chip-b"><img src="assets/img/saree-silk.svg" alt="" width="400" height="500"></div>
-      <svg class="seal" viewBox="0 0 120 120" role="presentation">
+    <div class="hero-art">
+      <div class="stitch-ring" aria-hidden="true"></div>
+      <div class="arch"><img src="https://unsplash.com/photos/uKxGITxD4Uw/download?force=true&amp;w=900" data-fb="assets/img/bridal-lehenga.svg" alt="Woman in a red and gold bridal outfit" width="800" height="1000" fetchpriority="high" decoding="async"></div>
+      <div class="chip chip-a"><img src="https://unsplash.com/photos/KxHcyNOIO_M/download?force=true&amp;w=480" data-fb="assets/img/blouse-aari.svg" alt="Smiling woman in traditional attire and jewellery" width="480" height="480" decoding="async"></div>
+      <div class="chip chip-b"><img src="https://unsplash.com/photos/96rElJqbW9g/download?force=true&amp;w=480" data-fb="assets/img/saree-silk.svg" alt="Woman in a green sari with a beaded necklace" width="480" height="600" decoding="async"></div>
+      <div class="gtag" aria-hidden="true"><b>Made to measure</b><span>SV · Coimbatore</span></div>
+      <span class="bt bt-1" aria-hidden="true"></span><span class="bt bt-2" aria-hidden="true"></span><span class="bt bt-3" aria-hidden="true"></span>
+      <svg class="seal" viewBox="0 0 120 120" role="presentation" aria-hidden="true">
         <defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
         <circle cx="60" cy="60" r="58" fill="#fbf7f0"/>
         <circle cx="60" cy="60" r="31" fill="none" stroke="#b8924a" stroke-width=".8"/>
@@ -138,8 +143,8 @@
   </div>
 </section>
 
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
+<div class="tape" aria-hidden="true">
+  <div class="tape-track">
     <span>Designer blouses</span><i>✦</i><span>Bridal wear</span><i>✦</i><span>Ethnic wear</span><i>✦</i><span>Aari work</span><i>✦</i><span>Custom designs</span><i>✦</i>
     <span>Designer blouses</span><i>✦</i><span>Bridal wear</span><i>✦</i><span>Ethnic wear</span><i>✦</i><span>Aari work</span><i>✦</i><span>Custom designs</span><i>✦</i>
   </div>
@@ -229,22 +234,22 @@
 
     <div class="cards">
       <article class="card reveal">
-        <div class="card-img"><img src="assets/img/blouse-aari.svg" alt="" loading="lazy" width="220" height="275"></div>
+        <div class="card-img"><img src="https://unsplash.com/photos/o1KTJRqHslU/download?force=true&amp;w=600" data-fb="assets/img/blouse-aari.svg" alt="Woman in a leaf-patterned sari" loading="lazy" decoding="async" width="600" height="600"></div>
         <h3>Designer blouses</h3>
         <p>Aari and hand embroidery, back-neck designs and a precise, comfortable fit.</p>
       </article>
       <article class="card reveal">
-        <div class="card-img"><img src="assets/img/bridal-lehenga.svg" alt="" loading="lazy" width="400" height="500"></div>
+        <div class="card-img"><img src="https://unsplash.com/photos/DuHE2A_yz8Q/download?force=true&amp;w=600" data-fb="assets/img/bridal-lehenga.svg" alt="Woman in a red and gold bridal outfit" loading="lazy" decoding="async" width="600" height="600"></div>
         <h3>Bridal wear</h3>
         <p>Bridal blouses, lehengas and silk-saree blouses, planned around your wedding date.</p>
       </article>
       <article class="card reveal">
-        <div class="card-img"><img src="assets/img/ethnic-anarkali.svg" alt="" loading="lazy" width="400" height="500"></div>
+        <div class="card-img"><img src="https://unsplash.com/photos/EtSixZZfbVk/download?force=true&amp;w=600" data-fb="assets/img/ethnic-anarkali.svg" alt="Woman in traditional Indian attire" loading="lazy" decoding="async" width="600" height="600"></div>
         <h3>Ethnic wear</h3>
         <p>Kurtis, anarkalis, salwar sets and festive outfits, stitched to your measurements.</p>
       </article>
       <article class="card reveal">
-        <div class="card-img"><img src="assets/img/design-sketch.svg" alt="" loading="lazy" width="400" height="500"></div>
+        <div class="card-img"><img src="https://unsplash.com/photos/nnlbnAAA6M8/download?force=true&amp;w=600" data-fb="assets/img/design-sketch.svg" alt="Hands stitching fabric" loading="lazy" decoding="async" width="600" height="600"></div>
         <h3>Custom designs</h3>
         <p>Have a reference photo or a sketch in mind? Bring it — we'll turn it into a pattern that fits you.</p>
       </article>
@@ -271,8 +276,8 @@
 <!-- ABOUT -->
 <section class="section about" id="about">
   <div class="wrap about-grid">
-    <div class="about-art reveal" aria-hidden="true">
-      <div class="about-photo"><img src="assets/img/studio-tools.svg" alt="" loading="lazy" width="400" height="500"></div>
+    <div class="about-art reveal">
+      <div class="about-photo"><img src="https://unsplash.com/photos/S49g-JZK_7g/download?force=true&amp;w=800" data-fb="assets/img/studio-tools.svg" alt="Tailor stitching at a sewing machine" loading="lazy" decoding="async" width="800" height="1000"></div>
       <div class="about-badge"><img src="assets/logo-mark.svg" alt="" width="96" height="96"></div>
     </div>
     <div class="about-copy reveal">
@@ -298,12 +303,12 @@
       <a class="btn btn-dark" href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener">@sv_fashions._</a>
     </div>
     <div class="insta-tiles reveal" aria-hidden="true">
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/blouse-aari.svg" alt="" loading="lazy" width="220" height="275"></a>
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/ethnic-anarkali.svg" alt="" loading="lazy" width="400" height="500"></a>
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/blouse-back.svg" alt="" loading="lazy" width="220" height="275"></a>
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/bridal-saree.svg" alt="" loading="lazy" width="400" height="500"></a>
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/blouse-royal.svg" alt="" loading="lazy" width="220" height="275"></a>
-      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="assets/img/ethnic-kurti.svg" alt="" loading="lazy" width="400" height="500"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/Rm9DL9DmGi4/download?force=true&amp;w=400" data-fb="assets/img/blouse-aari.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/ptobQlii1hc/download?force=true&amp;w=400" data-fb="assets/img/ethnic-anarkali.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/GDCRWeu7-JE/download?force=true&amp;w=400" data-fb="assets/img/blouse-back.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/KaMViYpd8tc/download?force=true&amp;w=400" data-fb="assets/img/bridal-saree.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/xYqTyeYQorI/download?force=true&amp;w=400" data-fb="assets/img/blouse-royal.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
+      <a href="https://www.instagram.com/sv_fashions._/" target="_blank" rel="noopener" tabindex="-1"><img src="https://unsplash.com/photos/DuHE2A_yz8Q/download?force=true&amp;w=400" data-fb="assets/img/ethnic-kurti.svg" alt="" loading="lazy" decoding="async" width="400" height="400"></a>
     </div>
   </div>
 </section>

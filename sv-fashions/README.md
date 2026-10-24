@@ -27,3 +27,17 @@ Cloudflare Pages: build output directory = `sv-fashions`, no build command.
 
 ## Preloader
 The SV mark draws itself on load (inline SVG + CSS, see `.pre` in `styles.css`; minimum 2.5 s, set in `script.js`). It is skipped for `prefers-reduced-motion`.
+
+## Stock photos (preview only)
+The hero, service cards, About and Instagram tiles use free-licence [Unsplash](https://unsplash.com) photos of women in
+sarees / bridal wear and tailoring, linked straight from Unsplash (`unsplash.com/photos/<id>/download`).
+If a photo fails to load, the page falls back to the matching illustration in `assets/img/` (`data-fb` attribute).
+Replace them with the studio's own photos before launch: put the files in `assets/img/`, then change `src` (and the `alt`) in `index.html`.
+
+Photo IDs used: uKxGITxD4Uw, KxHcyNOIO_M, 96rElJqbW9g (hero) · o1KTJRqHslU, DuHE2A_yz8Q, EtSixZZfbVk, nnlbnAAA6M8 (services) ·
+S49g-JZK_7g (about) · Rm9DL9DmGi4, ptobQlii1hc, GDCRWeu7-JE, KaMViYpd8tc, xYqTyeYQorI (Instagram tiles).
+Each is at `https://unsplash.com/photos/<id>` — open it to confirm the licence and photographer.
+
+## Mobile
+Most visitors are on phones: the first screen holds the headline, WhatsApp button and the start of the hero photo; the order bar is pinned at the bottom;
+fonts are limited to two families; images are lazy-loaded with fixed aspect ratios; blur effects are off on phones; the photo viewer supports swipe.
