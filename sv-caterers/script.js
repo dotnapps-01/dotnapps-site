@@ -389,7 +389,13 @@
     const min = matchMedia('(prefers-reduced-motion: reduce)').matches ? 350 : 2000;
     const finish = () => { pre.classList.add('done'); unlock(); setTimeout(() => pre.remove(), 1200); };
     const wait = () => setTimeout(finish, Math.max(0, min - (performance.now() - t0)));
-    if (document.readyState === 'complete') wait(); else window.addEventListener('load', wait, { once: true });
+    // lift the curtain once the first hero photo is in (or after a cap), not when every slide has loaded
+    const first = $('.slide img');
+    if (!first || (first.complete && first.naturalWidth > 0)) wait();
+    else {
+      let go = false; const fire = () => { if (!go) { go = true; wait(); } };
+      first.addEventListener('load', fire, { once: true }); first.addEventListener('error', fire, { once: true }); setTimeout(fire, 3500);
+    }
   } else {
     unlock();
   }
