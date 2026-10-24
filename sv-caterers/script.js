@@ -25,12 +25,15 @@
     if (w) w.opener = null; else location.href = url;   // popup blocked: go there in this tab
   }
 
-  /* ---- Photos: fall back to the built-in drawing if a photo can't load ---- */
-  const fallback = img => {
+  /* ---- Photos: if one fails, try its backup, then the built-in drawing. A hero slide that can't load is skipped. ---- */
+  function onBroken(img) {
+    if (img.dataset.alt && !img.dataset.altDone) { img.dataset.altDone = '1'; img.removeAttribute('srcset'); img.src = img.dataset.alt; return; }
+    const slide = img.closest('.slide');
+    if (slide) { slide.dataset.bad = '1'; const k = [...slide.parentNode.children].indexOf(slide); const seg = document.querySelectorAll('.seg')[k]; if (seg) seg.hidden = true; return; }
     if (img.dataset.fb && !img.dataset.fbDone) { img.dataset.fbDone = '1'; img.src = img.dataset.fb; }
-  };
-  document.addEventListener('error', e => { if (e.target.tagName === 'IMG') fallback(e.target); }, true);
-  $$('img[data-fb]').forEach(i => { if (i.complete && i.naturalWidth === 0) fallback(i); });
+  }
+  document.addEventListener('error', e => { if (e.target.tagName === 'IMG') onBroken(e.target); }, true);
+  $$('img').forEach(i => { if (i.complete && i.naturalWidth === 0 && i.getAttribute('src')) onBroken(i); });
 
   /* ---- Mobile menu ---- */
   const burger = $('.burger');
@@ -334,7 +337,15 @@
     $('#now-ta').textContent = s.dataset.ta;
     now.classList.remove('swap'); void now.offsetWidth; now.classList.add('swap');
   }
-  const queue = () => { clearTimeout(sTimer); if (!reduceMotion && !document.hidden && heroVisible && !hoverPause) sTimer = setTimeout(() => { showSlide(sIdx + 1); queue(); }, SLIDE_MS); };
+  const nextGood = from => { for (let n = 0; n < slides.length; n++) { const i = (from + n) % slides.length; if (!slides[i].dataset.bad) return i; } return sIdx; };
+  const whenReady = (i, go) => {                       // don't switch to a photo that hasn't arrived yet
+    const img = $('img', slides[i]);
+    if (!img || (img.complete && img.naturalWidth > 0) || slides[i].dataset.bad) return go();
+    let done = false; const fire = () => { if (!done) { done = true; go(); } };
+    img.addEventListener('load', fire, { once: true }); setTimeout(fire, 2500);
+  };
+  const slideNext = () => { const i = nextGood(sIdx + 1); whenReady(i, () => { showSlide(nextGood(i)); queue(); }); };
+  const queue = () => { clearTimeout(sTimer); if (!reduceMotion && !document.hidden && heroVisible && !hoverPause) sTimer = setTimeout(slideNext, SLIDE_MS); };
   let heroVisible = true;
   let hoverPause = false;
   segs.forEach((g, k) => g.addEventListener('click', () => { showSlide(k); queue(); }));
