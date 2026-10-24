@@ -51,11 +51,6 @@ em { font-style: italic; color: var(--maroon-2); }
 .sec-head { max-width: 680px; margin-bottom: clamp(32px, 5vw, 56px); }
 .sec-head h2 { margin-bottom: 14px; }
 .sec-sub { color: var(--muted); }
-html[lang="ta"] h1, html[lang="ta"] h2, html[lang="ta"] h3 { letter-spacing: 0; line-height: 1.25; font-weight: 500; }
-html[lang="ta"] h1 { font-size: clamp(2rem, 4.6vw, 3.5rem); }
-html[lang="ta"] h2 { font-size: clamp(1.8rem, 3.8vw, 2.8rem); }
-html[lang="ta"] em { font-style: normal; font-weight: 600; }
-html[lang="ta"] .eyebrow { letter-spacing: .06em; text-transform: none; }
 
 /* buttons */
 .btn {
@@ -100,9 +95,6 @@ html[lang="ta"] .eyebrow { letter-spacing: .06em; text-transform: none; }
 .nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--gold); transition: right .3s var(--ease); }
 .nav a:hover::after { right: 0; }
 .actions { display: flex; align-items: center; gap: 12px; }
-.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-.lang button { border: 0; background: none; padding: 5px 12px; border-radius: 999px; font-size: .8rem; letter-spacing: .04em; color: var(--muted); }
-.lang button[aria-pressed="true"] { background: var(--ink); color: var(--ivory); }
 .burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: none; position: relative; }
 .burger span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: var(--ink); transition: transform .3s var(--ease), top .3s var(--ease); }
 .burger span:first-child { top: 18px; } .burger span:last-child { top: 25px; }
@@ -155,7 +147,6 @@ html[lang="ta"] .eyebrow { letter-spacing: .06em; text-transform: none; }
 .tile figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: .95rem; }
 .tile figcaption b { font: 600 1.15rem/1.25 var(--serif); }
 .tile figcaption span { color: var(--gold); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
-html[lang="ta"] .tile figcaption span { letter-spacing: 0; text-transform: none; }
 .work-more { margin-top: 44px; display: flex; gap: 12px 20px; flex-wrap: wrap; align-items: baseline; color: var(--muted); }
 
 /* services */
@@ -210,7 +201,6 @@ html[lang="ta"] .tile figcaption span { letter-spacing: 0; text-transform: none;
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field.wide, .brief-actions, .brief-msg { grid-column: 1 / -1; }
 .field label { font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-l); }
-html[lang="ta"] .field label { letter-spacing: 0; text-transform: none; font-size: .92rem; }
 .opt { text-transform: none; letter-spacing: 0; opacity: .7; }
 .field input, .field select, .field textarea {
   width: 100%; padding: 13px 16px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .22);
@@ -300,10 +290,6 @@ html[lang="ta"] .field label { letter-spacing: 0; text-transform: none; font-siz
   .lb-nav { position: absolute; bottom: 20px; }
   .lb-prev { left: 20px; } .lb-next { right: 20px; }
   .lightbox img { max-height: 70vh; }
-}
-@media (max-width: 380px) {
-  .lang button { padding: 5px 9px; }
-  .actions { gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

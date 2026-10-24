@@ -34,23 +34,6 @@
     if (tp) tp.setAttribute('href', `${location.pathname}${location.search}#circ`);
   }
 
-  /* ---- Language (English / Tamil) ---- */
-  const i18n = $$('[data-ta]');
-  const phs = $$('[data-ta-ph]');
-  i18n.forEach(el => { el.dataset.en = el.innerHTML; });
-  phs.forEach(el => { el.dataset.enPh = el.placeholder; });
-
-  function setLang(lang) {
-    const ta = lang === 'ta';
-    document.documentElement.lang = ta ? 'ta' : 'en';
-    i18n.forEach(el => { el.innerHTML = ta ? el.dataset.ta : el.dataset.en; });
-    phs.forEach(el => { el.placeholder = ta ? el.dataset.taPh : el.dataset.enPh; });
-    $$('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-    store.set('sv-lang', lang);
-  }
-  $$('[data-lang]').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
-  if (store.get('sv-lang') === 'ta') setLang('ta');
-
   /* ---- Header + mobile menu ---- */
   const header = $('.site-header');
   const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
@@ -179,10 +162,9 @@
     e.preventDefault();
     const text = buildMessage();
     const ok = await copy(text);
-    const ta = document.documentElement.lang === 'ta';
     msg.textContent = ok
-      ? (ta ? 'செய்தி நகலெடுக்கப்பட்டது — Instagram DM-இல் ஒட்டி அனுப்புங்கள்.' : 'Message copied — paste it into the Instagram DM and send.')
-      : (ta ? 'தயவுசெய்து செய்தியை நகலெடுத்து DM-இல் அனுப்புங்கள்: ' : 'Please copy this message into the DM: ') + text;
+      ? 'Message copied — paste it into the Instagram DM and send.'
+      : 'Please copy this message into the DM: ' + text;
     window.open(`https://ig.me/m/${CONFIG.instagram}`, '_blank', 'noopener');
   });
   if (wa) {
