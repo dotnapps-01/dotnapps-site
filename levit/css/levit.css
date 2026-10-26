@@ -200,13 +200,11 @@ body::after {
 .sw:hover { scale: 1.12; }
 .sw.is-on::after, .sw[aria-pressed="true"]::after { opacity: 1; scale: 1; }
 
-.hero__aside { position: absolute; right: var(--gut); top: clamp(72px, 13svh, 130px); width: min(250px, 22vw); display: grid; gap: 28px; justify-items: end; text-align: right; }
-.hint { display: grid; gap: 14px; justify-items: end; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+.hint { position: absolute; left: var(--gut); bottom: 24px; z-index: 4; display: flex; align-items: center; gap: 12px; padding: 8px 18px 8px 8px; border-radius: 99px; background: var(--cream); box-shadow: 0 10px 30px rgba(11,9,7,.16); font-size: .86rem; line-height: 1.35; color: var(--muted); max-width: 340px; }
 .hint b { color: var(--ink); font-weight: 500; }
-.hint__icon { position: relative; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--ink); }
+.hint__icon { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--ink); }
 .hint__icon::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: var(--ink); animation: nudge 3.2s var(--ease-io) infinite; }
 @keyframes nudge { 0%, 100% { translate: -14px 0; } 50% { translate: 14px 0; } }
-.hero__no { font: 400 italic 1.4rem/1 var(--serif); } .hero__no span { opacity: .5; font-size: .9rem; }
 .is-dragging .hint__icon::after, .is-over .hint__icon::after { animation-play-state: paused; }
 
 .hotspot { position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; will-change: transform; }
@@ -216,6 +214,7 @@ body::after {
 @keyframes ring { 0% { scale: 1; opacity: .9; } 100% { scale: 2.4; opacity: 0; } }
 .hotspot__card { position: absolute; left: 24px; top: -30px; width: max-content; display: grid; gap: 4px; padding: 12px 16px; border-radius: 14px; background: var(--cream); box-shadow: 0 14px 36px rgba(11,9,7,.22); text-align: left; font-size: .85rem; line-height: 1.2; opacity: 0; translate: -8px 0; pointer-events: none; transition: opacity .3s, translate .4s var(--ease); }
 .hotspot__card b { font: 800 1rem/1.1 var(--serif); } .hotspot__card s { opacity: .5; } .hotspot__card em { font: 500 .68rem/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; font-style: normal; color: var(--rust); }
+.hotspot[data-flip] .hotspot__card { left: auto; right: 24px; translate: 8px 0; text-align: right; }
 .hotspot:hover .hotspot__card, .hotspot:focus-visible .hotspot__card { opacity: 1; translate: 0 0; }
 .hotspot:hover .hotspot__dot::before { scale: 1.5; }
 
@@ -233,7 +232,7 @@ body::after {
   .hero__copy { width: auto; right: var(--gut); top: 18px; gap: 12px; }
   .hero__cta .btn { padding-inline: 30px; }
   .hero__title { font-size: clamp(1.9rem, 9vw, 2.6rem); }
-  .hero__lede, .hero__aside, .hero__swlabel { display: none; }
+  .hero__lede, .hint, .hero__swlabel { display: none; }
   .hero__cta { position: absolute; left: 0; top: calc(100svh - var(--head-h) - var(--announce-h) - 190px); }
   .hero__cta .btn--ghost { display: none; }
   .hero__swatches { position: absolute; left: 0; top: calc(100svh - var(--head-h) - var(--announce-h) - 244px); }

@@ -460,7 +460,7 @@ reveal();
   if (!gl) { root.classList.add('no-webgl'); return; }
   try {
     const { initHero } = await import('./hero3d.js');
-    const h = initHero({ canvas, hero: heroEl, hotspot: $('#hotspot'), reduced });
+    const h = initHero({ canvas, hero: heroEl, hotspots: $$('.hotspot'), reduced });
     window.__levitHero = h;
     new MutationObserver(() => { root.dataset.over = heroEl.classList.contains('is-over') ? '1' : '0'; })
       .observe(heroEl, { attributes: true, attributeFilter: ['class'] });
