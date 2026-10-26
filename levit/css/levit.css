@@ -16,8 +16,8 @@
 :root {
   --sand: #D8C2AA;
   --sand-2: #E4D3BF;
-  --sand-3: #EFE4D5;
-  --cream: #F7F0E5;
+  --sand-3: #FFFDF9;      /* warm white: the page ground between the coloured sections */
+  --cream: #FFFAF2;
   --ink: #0B0907;
   --ink-2: #1B1511;
   --muted: #5A4A3D;
@@ -67,7 +67,7 @@ h1, h2, h3, p, figure, dl, dd, blockquote { margin: 0; }
 
 /* film grain over everything — keeps the flat sand from feeling digital */
 body::after {
-  content: ""; position: fixed; inset: -50%; z-index: 900; pointer-events: none; opacity: .09; mix-blend-mode: multiply;
+  content: ""; position: fixed; inset: -50%; z-index: 900; pointer-events: none; opacity: .045; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -388,9 +388,12 @@ body::after {
 .perks li { display: flex; align-items: center; gap: 10px; color: var(--butter); }
 
 /* boutique */
-.boutique { background: var(--lilac); }
+.boutique { background: var(--sand-3); }
+.arch-wrap { position: relative; margin-right: 20px; }
+.arch-wrap::before { content: ""; position: absolute; inset: 0; translate: 20px 20px; border-radius: 999px 999px 8px 8px; background: var(--lilac); }
+.arch-wrap .arch { position: relative; }
 .boutique__grid { display: grid; gap: 48px; align-items: center; }
-@media (min-width: 900px) { .boutique__grid { grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); } .boutique__grid .arch { order: 2; } }
+@media (min-width: 900px) { .boutique__grid { grid-template-columns: 1fr 1fr; gap: clamp(40px, 7vw, 120px); } .boutique__grid .arch-wrap { order: 2; } }
 .boutique__copy { display: grid; gap: 26px; justify-items: start; }
 .boutique__cta { display: flex; flex-wrap: wrap; gap: 10px; }
 
