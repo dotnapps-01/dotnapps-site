@@ -467,6 +467,7 @@ reveal();
     $$('.hero__swatches .sw').forEach((b) => b.addEventListener('click', () => {
       $$('.hero__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
       h.setColor(b.dataset.hex);
+      root.style.setProperty('--hero-bg', b.dataset.bg);
       h.nudge();
     }));
   } catch (err) {

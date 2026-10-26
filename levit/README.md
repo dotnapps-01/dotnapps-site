@@ -8,7 +8,8 @@ cd levit && python3 -m http.server 8080
 ```
 
 ## Design system (taken from the logo)
-- **Sand** `#D8C2AA` ground, **ink** `#0B0907` wordmark, high-contrast Didone-style serif (Playfair Display) + Jost for UI text
+- **Sand** `#D8C2AA` ground and **ink** `#0B0907` wordmark come from the logo; Playfair Display (a high-contrast serif close to the logo) + Jost for UI text
+- Supporting accents so the page is not all beige: sage, lilac (from the poster flowers), blush, butter, forest green and wine (from the window dress); the hero background follows the chosen colourway
 - **Rust** `#A8531E` from the knit, **gold** `#E7CD8B` from the boutique sign glow
 - Arch frames echo the alcoves in the lookbook photography
 
