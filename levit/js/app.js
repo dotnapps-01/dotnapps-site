@@ -453,35 +453,23 @@ async function reveal() {
 }
 reveal();
 
-/* boutique entrance: scrolling walks you into the door, and the pointer shifts the shopfront a little */
-(function entrance() {
-  const wrap = $('#hero'), sticky = $('#hero-sticky'), scene = $('#scene');
-  if (!wrap || reduced) return;
-  let queued = false;
-  const clamp01 = (v) => Math.min(1, Math.max(0, v));
-  const update = () => {
-    queued = false;
-    const r = wrap.getBoundingClientRect();
-    const head = parseFloat(getComputedStyle(root).getPropertyValue('--head-h')) || 72;
-    const span = wrap.offsetHeight - sticky.offsetHeight;
-    const p = clamp01(-(r.top - head) / span);
-    wrap.style.setProperty('--p', p.toFixed(4));
-  };
-  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
-  addEventListener('scroll', queue, { passive: true });
-  addEventListener('resize', queue);
-  update();
-  if (fine) {
-    let tx = 0, ty = 0, cx = 0, cy = 0, run = false;
-    const loop = () => {
-      cx += (tx - cx) * 0.08; cy += (ty - cy) * 0.08;
-      scene.style.setProperty('--mx', cx.toFixed(2)); scene.style.setProperty('--my', cy.toFixed(2));
-      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) requestAnimationFrame(loop); else run = false;
-    };
-    sticky.addEventListener('pointermove', (e) => {
-      const r = sticky.getBoundingClientRect();
-      tx = -((e.clientX - r.left) / r.width - 0.5) * 36; ty = -((e.clientY - r.top) / r.height - 0.5) * 22;
-      if (!run) { run = true; requestAnimationFrame(loop); }
-    });
+/* hero: Three.js loads on demand; the static photo is the fallback */
+(async function hero() {
+  const canvas = $('#hero-canvas'), heroEl = $('#hero');
+  const gl = (() => { try { return !!(canvas.getContext('webgl2') || canvas.getContext('webgl')); } catch { return false; } })();
+  if (!gl) { root.classList.add('no-webgl'); return; }
+  try {
+    const { initHero } = await import('./hero-float.js');
+    const h = initHero({ canvas, hero: heroEl, hotspots: $$('.hotspot'), reduced });
+    window.__levitHero = h;
+    $$('.float__swatches .sw').forEach((b) => b.addEventListener('click', () => {
+      $$('.float__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
+      h.setColor(b.dataset.hex);
+      root.style.setProperty('--hero-bg', b.dataset.bg);
+      h.nudge();
+    }));
+  } catch (err) {
+    console.warn('3D hero unavailable, using the photo instead.', err);
+    root.classList.add('no-webgl');
   }
 })();

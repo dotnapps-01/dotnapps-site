@@ -23,7 +23,7 @@ function inside(x, y, P) {
   return c;
 }
 
-function closest(x, y, P) {
+export function closest(x, y, P) {
   let best = { d: 1e9, x: 0, y: 0, e: 0 };
   for (let i = 0; i < P.length; i++) {
     const [ax, ay] = P[i], [bx, by] = P[(i + 1) % P.length];
@@ -122,6 +122,7 @@ export class Cloth {
     const N = lay.length;
     this.N = N;
     this.lay = lay;
+    this.tagOf = tagOf;
 
     /* index buffer: front as built, back wound the other way */
     const idx = [];
@@ -144,7 +145,7 @@ export class Cloth {
     this.anchor = [];                       // pinned particle -> [id, ax, ay, az] in garment space
     const zf = o.pinZ;
     for (let p = 0; p < N; p++) {
-      if (tagOf[p] === 'hang') {
+      if (tagOf[p] === 'hang' && !o.floating) {
         this.inv[p] = 0;
         this.anchor.push([p, lay[p][0], o.hangY(lay[p][0]), sheetOf[p] === 0 ? zf : -zf]);
       }
@@ -225,10 +226,38 @@ export class Cloth {
     this.nbStart[N] = flat.length; this.nb = Int32Array.from(flat);
 
     this.puff = o.puff || null;
+    if (o.form) this.buildForm(o.form);
     this.buildRender();
     this.iterations = o.iterations ?? 6;
     this.damp = o.damp ?? 0.992;
     this.time = 0;
+  }
+
+  /** soft shape targets ("ghost mannequin"): each particle is drawn towards where an invisible body would hold it.
+   *  depth(x, y) is the half-thickness of the garment at that pattern point; it tapers to zero at stitched seams. */
+  buildForm({ depth, soft = 0.2, stiff = 0.06, loose = 0.016 }) {
+    const { lay, N, sheetOf, tagOf } = this;
+    const seamSegs = [];
+    const F = this.o.front;
+    F.pts.forEach((p, i) => { if (F.tags[i] === 'seam') seamSegs.push([p, F.pts[(i + 1) % F.pts.length]]); });
+    const dist = (x, y) => {
+      let best = 1e9;
+      for (const [a, b] of seamSegs) {
+        const dx = b[0] - a[0], dy = b[1] - a[1];
+        const t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+        best = Math.min(best, Math.hypot(x - (a[0] + dx * t), y - (a[1] + dy * t)));
+      }
+      return best;
+    };
+    this.form = new Float64Array(N * 3); this.formK = new Float64Array(N);
+    for (let p = 0; p < N; p++) {
+      const x = lay[p][0], y = lay[p][1], sd = dist(x, y);
+      const t = Math.min(1, sd / soft), f = t * t * (3 - 2 * t);
+      this.form[p * 3] = x; this.form[p * 3 + 1] = y;
+      this.form[p * 3 + 2] = (sheetOf[p] === 0 ? 1 : -1) * depth(x, y) * f;
+      const tag = tagOf[p];
+      this.formK[p] = tag === 'open' || tag === 'hemg' || tag === 'gather' ? loose : stiff;
+    }
   }
 
   /** the visible mesh is the simulation mesh subdivided once; new vertices sit on a curved (PN-style) edge */
@@ -301,8 +330,8 @@ export class Cloth {
   reset(m) {
     const { lay, pos, prev, N, o } = this;
     for (let p = 0; p < N; p++) {
-      const z = this.sheetOf[p] === 0 ? o.pinZ + 0.012 : -o.pinZ - 0.012;
       const x = lay[p][0], y = lay[p][1];
+      const z = this.form ? this.form[p * 3 + 2] : this.sheetOf[p] === 0 ? o.pinZ + 0.012 : -o.pinZ - 0.012;
       pos[p * 3] = m[0] * x + m[4] * y + m[8] * z + m[12];
       pos[p * 3 + 1] = m[1] * x + m[5] * y + m[9] * z + m[13];
       pos[p * 3 + 2] = m[2] * x + m[6] * y + m[10] * z + m[14];
@@ -339,6 +368,15 @@ export class Cloth {
       const vx = (x - prev[k]) * damp, vy = (y - prev[k + 1]) * damp, vz = (z - prev[k + 2]) * damp;
       prev[k] = x; prev[k + 1] = y; prev[k + 2] = z;
       pos[k] = x + vx + ax * dt2; pos[k + 1] = y + vy + ay * dt2; pos[k + 2] = z + vz + az * dt2;
+    }
+    if (this.form) {
+      const F = this.form, K = this.formK;
+      for (let p = 0; p < N; p++) {
+        const k = p * 3, fx = F[k], fy = F[k + 1], fz = F[k + 2], w = K[p];
+        pos[k] += (m[0] * fx + m[4] * fy + m[8] * fz + m[12] - pos[k]) * w;
+        pos[k + 1] += (m[1] * fx + m[5] * fy + m[9] * fz + m[13] - pos[k + 1]) * w;
+        pos[k + 2] += (m[2] * fx + m[6] * fy + m[10] * fz + m[14] - pos[k + 2]) * w;
+      }
     }
     this.solve();
   }

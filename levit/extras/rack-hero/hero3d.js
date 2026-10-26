@@ -7,9 +7,9 @@
  */
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
-import { Cloth } from './cloth.js';
-import { paintFabric, fiberTexture } from './fabrics.js';
-import { PATTERNS } from './patterns.js';
+import { Cloth } from '../../js/cloth.js';
+import { paintFabric, fiberTexture } from '../../js/fabrics.js';
+import { PATTERNS } from '../../js/patterns.js';
 
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
