@@ -24,18 +24,20 @@ class Osc {
 }
 
 /* ------------------------------------------------------------------ the rack */
-const RAIL_ANGLE = 0.40;                      // the rail runs away from the camera to the right
+const RAIL_ANGLE = 0;                         // straight-on, like a studio rail
 const RAIL_DIR = new THREE.Vector3(Math.cos(RAIL_ANGLE), 0, -Math.sin(RAIL_ANGLE));
+const SPACING = 1.5;
 
+/* left to right: hoodie, puffer, jeans on a clip hanger, and the LEVIT waffle knit */
 const RACK = [
-  { key: 'knit', pattern: 'knit', color: '#b8561f', s: 0, rotY: 0.0, hanger: 'black', size: 1024,
+  { key: 'hoodie', pattern: 'hoodie', color: '#4f4844', s: -1.5 * SPACING, rotY: 0.03, hanger: 'black', size: 768,
+    mat: { roughness: 0.97, sheen: 0.7, sheenRoughness: 0.7, sheenColor: 0xbfb3aa, envMapIntensity: 0.45 }, normalK: 1.3, bump: 0.8, hot: [0.28, -0.5, 0.13] },
+  { key: 'puffer', pattern: 'puffer', color: '#69643f', s: -0.5 * SPACING, rotY: -0.04, hanger: 'black', size: 1024,
+    mat: { roughness: 0.38, sheen: 0.35, sheenRoughness: 0.5, sheenColor: 0xb9b48a, envMapIntensity: 0.8 }, normalK: 1.0, bump: 0.3, hot: [0.26, -0.42, 0.2] },
+  { key: 'jeans', pattern: 'jeans', color: '#6a8fbd', s: 0.5 * SPACING, rotY: 0.02, hanger: 'clip', size: 1024,
+    mat: { roughness: 0.82, sheen: 0.25, sheenRoughness: 0.6, sheenColor: 0xd3e3f2, envMapIntensity: 0.6 }, normalK: 2.0, bump: 0.7, hot: [0.2, -0.5, 0.1] },
+  { key: 'knit', pattern: 'knit', color: '#b8561f', s: 1.5 * SPACING, rotY: -0.03, hanger: 'black', size: 1024,
     mat: { roughness: 0.94, sheen: 1, sheenRoughness: 0.5, sheenColor: 0xffc690, envMapIntensity: 0.55 }, normalK: 1.1, bump: 0.9, hot: [0.3, -0.5, 0.12] },
-  { key: 'dress', pattern: 'dress', color: '#15100d', s: 1.35, rotY: 0.2, hanger: 'pale', size: 1024,
-    mat: { roughness: 0.4, sheen: 0.8, sheenRoughness: 0.3, sheenColor: 0xffffff, envMapIntensity: 1.3 }, normalK: 1.4, hot: [0.1, -0.7, 0.1] },
-  { key: 'shacket', pattern: 'shacket', color: '#6b6a3c', s: 2.7, rotY: 0.24, hanger: 'wood', size: 768,
-    mat: { roughness: 0.92, sheen: 0.5, sheenRoughness: 0.6, sheenColor: 0xd8d6a0, envMapIntensity: 0.5 }, normalK: 2.2, bump: 0.7, hot: [-0.3, -0.5, 0.1] },
-  { key: 'trouser', pattern: 'trouser', color: '#a58f78', s: 4.05, rotY: 0.28, hanger: 'clip', size: 640,
-    mat: { roughness: 0.86, sheen: 0.6, sheenRoughness: 0.55, sheenColor: 0xf0e2cc, envMapIntensity: 0.5 }, normalK: 1.6, bump: 0.6, hot: [0.2, -0.7, 0.1] },
 ];
 
 /* ------------------------------------------------------------- hangers & hook */
@@ -58,7 +60,7 @@ function hookGeometry() {
     [0, -0.20], [0, -0.13], [0.002, -0.085], [0.03, -0.052], [0.068, -0.022], [0.078, 0.025],
     [0.052, 0.072], [0.0, 0.088], [-0.05, 0.066], [-0.074, 0.02], [-0.066, -0.026],
   ].map(([x, y]) => new THREE.Vector3(x, y, 0));
-  return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 80, 0.0105, 12, false);
+  return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 80, 0.0078, 12, false);
 }
 
 function woodTexture() {
@@ -76,22 +78,22 @@ function woodTexture() {
   return t;
 }
 
-const matBrass = () => new THREE.MeshStandardMaterial({ color: 0xd9b46c, roughness: 0.26, metalness: 1, envMapIntensity: 1.3 });
+const matHook = () => new THREE.MeshStandardMaterial({ color: 0x15130f, roughness: 0.32, metalness: 0.75, envMapIntensity: 1.2 });
 
 function buildHanger(type) {
   const g = new THREE.Group();
   const add = (geo, mat, f) => { const m = new THREE.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; f?.(m); g.add(m); return m; };
   if (type === 'clip') {
     const black = new THREE.MeshStandardMaterial({ color: 0x15110e, roughness: 0.4, metalness: 0.2 });
-    add(new THREE.BoxGeometry(0.72, 0.026, 0.026), black, (m) => m.position.set(0, -0.215, 0));
-    add(new THREE.BoxGeometry(0.1, 0.04, 0.018), black, (m) => m.position.set(0, -0.2, 0));
+    add(new THREE.BoxGeometry(0.68, 0.022, 0.02), black, (m) => m.position.set(0, -0.225, 0));
+    add(new THREE.BoxGeometry(0.07, 0.04, 0.016), black, (m) => m.position.set(0, -0.205, 0));
     for (const sx of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.075, 0.07, 0.056), black, (m) => m.position.set(sx * 0.27, -0.255, 0));
-      add(new THREE.BoxGeometry(0.075, 0.012, 0.062), new THREE.MeshStandardMaterial({ color: 0xbfb9b0, metalness: 1, roughness: 0.3 }), (m) => m.position.set(sx * 0.27, -0.29, 0));
+      add(new THREE.BoxGeometry(0.07, 0.07, 0.05), black, (m) => m.position.set(sx * 0.255, -0.262, 0));
+      add(new THREE.BoxGeometry(0.07, 0.01, 0.056), new THREE.MeshStandardMaterial({ color: 0xc9c5bd, metalness: 1, roughness: 0.28 }), (m) => m.position.set(sx * 0.255, -0.298, 0));
     }
   } else {
     const cfg = {
-      black: { color: 0x15110e, rough: 0.36, depth: 0.03, half: 0.62, th: 0.044 },
+      black: { color: 0x131210, rough: 0.36, depth: 0.02, half: 0.6, th: 0.03 },
       pale: { color: 0xe6e0d6, rough: 0.5, depth: 0.026, half: 0.56, th: 0.036 },
       wood: { color: 0xb98d5b, rough: 0.5, depth: 0.04, half: 0.66, th: 0.054 },
     }[type];
@@ -102,8 +104,47 @@ function buildHanger(type) {
         : new THREE.MeshPhysicalMaterial({ color: cfg.color, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.08, metalness: 0.1 });  // black lacquer
     add(arms(-0.19, cfg.half, cfg.th, cfg.depth), mat);
   }
-  add(hookGeometry(), matBrass());
+  add(hookGeometry(), matHook());
   return g;
+}
+
+/* hood bunched around the hanger, and drawstrings that hang free */
+function lumpy(geo, seed, amp) {
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+    const d = 1 + amp * (Math.sin(x * 5.1 + seed) * Math.cos(y * 4.3 + seed * 1.7) + 0.6 * Math.sin(z * 7.3 + x * 3 + seed));
+    p.setXYZ(i, x * d, y * d, z * d);
+  }
+  geo.computeVertexNormals(); return geo;
+}
+function hoodieExtras(garment, color, fiber) {
+  const fleece = new THREE.MeshPhysicalMaterial({ color, roughness: 0.97, sheen: 0.7, sheenRoughness: 0.7, sheenColor: new THREE.Color(0xbfb3aa), bumpMap: fiber, bumpScale: 0.8, envMapIntensity: 0.45 });
+  const hood = new THREE.Mesh(lumpy(new THREE.SphereGeometry(1, 56, 40), 1.3, 0.1), fleece);
+  hood.scale.set(0.3, 0.21, 0.17); hood.position.set(0, 0.02, -0.1);
+  const hoodFront = new THREE.Mesh(lumpy(new THREE.TorusGeometry(0.16, 0.05, 24, 56), 4.1, 0.08), fleece);
+  hoodFront.rotation.x = Math.PI / 2 - 0.35; hoodFront.scale.set(1, 1, 0.9); hoodFront.position.set(0, -0.015, 0.0);
+  for (const m of [hood, hoodFront]) { m.castShadow = m.receiveShadow = true; garment.add(m); }
+  const cords = [];
+  const cordMat = new THREE.MeshStandardMaterial({ color: 0xd9d3c8, roughness: 0.9 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xbdbab3, metalness: 1, roughness: 0.3 });
+  for (const sx of [-1, 1]) {
+    const g = new THREE.Group(); g.position.set(sx * 0.055, -0.1, 0.095);
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.0055, 0.0055, 0.34, 8), cordMat); c.position.y = -0.17;
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0075, 0.04, 10), metal); tip.position.y = -0.355;
+    for (const m of [c, tip]) { m.castShadow = true; g.add(m); }
+    garment.add(g); cords.push(g);
+  }
+  return { cords, lag: 0, lagX: 0 };
+}
+function pufferExtras(garment, color, fiber) {
+  const shell = new THREE.MeshPhysicalMaterial({ color, roughness: 0.38, sheen: 0.35, sheenRoughness: 0.5, sheenColor: new THREE.Color(0xb9b48a), bumpMap: fiber, bumpScale: 0.3, envMapIntensity: 0.8 });
+  for (const [y, r] of [[-0.035, 0.16], [0.06, 0.15]]) {
+    const ring = new THREE.Mesh(lumpy(new THREE.TorusGeometry(r, 0.058, 24, 64), y * 20, 0.05), shell);
+    ring.rotation.x = Math.PI / 2; ring.scale.set(1.18, 0.9, 1); ring.position.set(0, y, -0.015);
+    ring.castShadow = ring.receiveShadow = true; garment.add(ring);
+  }
+  return null;
 }
 
 /* ------------------------------------------------- contact-hardening shadows (PCSS)
@@ -190,7 +231,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
 
   /* rail */
   const railG = new THREE.Group(); railG.rotation.y = RAIL_ANGLE; scene.add(railG);
-  const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 30, 28), new THREE.MeshStandardMaterial({ color: 0x0c0a08, roughness: 0.32, metalness: 0.7 }));
+  const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 30, 32), new THREE.MeshStandardMaterial({ color: 0xe4e2de, roughness: 0.16, metalness: 1, envMapIntensity: 1.5 }));
   rail.rotation.z = Math.PI / 2; railG.add(rail);
 
   /* ---- garments ---- */
@@ -228,18 +269,19 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
     scene.add(mesh);
 
     const hit = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 0.7), new THREE.MeshBasicMaterial({ visible: false }));
-    hit.position.set(0, spec.pattern === 'dress' || spec.pattern === 'trouser' ? -0.95 : -0.7, 0);
+    hit.position.set(0, spec.key === 'jeans' ? -0.95 : -0.65, 0);
     hit.userData.g = k; swing.add(hit);
 
     const anchor = new THREE.Object3D(); anchor.position.set(...spec.hot); garment.add(anchor);
+    const extras = spec.key === 'hoodie' ? hoodieExtras(garment, spec.color, fiber) : spec.key === 'puffer' ? pufferExtras(garment, spec.color, fiber) : null;
     if (spec.key === 'knit') { const slip = new THREE.Mesh(buildSlip(), slipMat); slip.receiveShadow = true; garment.add(slip); }
 
     G.push({
-      spec, swing, garment, cloth, mesh, hit, anchor, material, ready: false, settle: 0,
+      spec, swing, garment, cloth, mesh, hit, anchor, material, extras, ready: false, settle: 0,
       osc: { z: new Osc(3.3 + k * 0.07, 0.045), x: new Osc(3.6 + k * 0.06, 0.06), y: new Osc(2.3, 0.1) },
       phase: k * 2.1, hot: hotspots.find((h) => h.dataset.g === spec.key),
     });
-    if (!reduced) { const g = G[k]; g.osc.z.x = (k === 0 ? 0.42 : 0.16) * (k % 2 ? -1 : 1); g.osc.x.x = -0.1; g.osc.y.x = 0.2; }
+    if (!reduced) { const g = G[k]; g.osc.z.x = (g.spec.key === 'knit' ? 0.4 : 0.14) * (k % 2 ? -1 : 1); g.osc.x.x = -0.1; g.osc.y.x = 0.2; }
   });
 
   /* textures are painted in the background so the page never stalls */
@@ -247,7 +289,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   function paint(g, color) {
     const spec = g.spec, pat = PATTERNS[spec.pattern];
     const tex = paintFabric({
-      kind: spec.key === 'trouser' ? 'trouser' : spec.key, color: color || spec.color,
+      kind: spec.key, color: color || spec.color,
       poly: pat.outline(true), atlas: g.cloth.atlas, size: spec.size, normalK: spec.normalK, rough: spec.mat.roughness,
       anisotropy: Math.min(8, renderer.capabilities.getMaxAnisotropy()),
     });
@@ -289,12 +331,15 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const aspect = w / h, tan = view.tan;
-    const dist = Math.max(2.55 / (2 * tan), 2.0 / (2 * tan * aspect));
+    const portrait = aspect < 0.8;
+    const needH = portrait ? 3.9 : 3.45, needW = portrait ? 2.5 : 6.6;
+    const dist = Math.max(needH / (2 * tan), needW / (2 * tan * aspect));
     const visH = 2 * dist * tan;
-    const railFrac = aspect < 0.8 ? 0.2 : 0.07;
+    const railFrac = portrait ? 0.27 : 0.37;                 // the rail sits low enough to leave a band for the headline
     const lookY = railFrac * visH - visH / 2;
-    camera.position.set(0, lookY, dist);
-    camera.lookAt(0, lookY, 0);
+    const lookX = portrait ? -SPACING : 0;                   // phones show the first two garments
+    camera.position.set(lookX, lookY, dist);
+    camera.lookAt(lookX, lookY, 0);
     camera.updateProjectionMatrix(); camera.updateMatrixWorld();
     view.w = w; view.h = h;
   }
@@ -357,7 +402,12 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
       fz += breeze(time + g.phase) * 0.2 * br; fx += breeze(time * 0.8 + 4 + g.phase) * 0.11 * br; fy += breeze(time * 0.6 + 9 + g.phase) * 0.09 * br;
       fx += scrollVel * 5;
       o.z.step(STEP, fz); o.x.step(STEP, fx); o.y.step(STEP, fy);
-      g.swing.rotation.set(o.x.x, g.spec.rotY + o.y.x + spin * (k === 0 ? 1 : 0.3), o.z.x);
+      g.swing.rotation.set(o.x.x, g.spec.rotY + o.y.x + spin * 0.5, o.z.x);
+      if (g.extras?.cords) {                             // drawstrings hang from the neckline and lag the hanger
+        const e = g.extras;
+        e.lag += (o.z.x * 0.9 - e.lag) * 0.09; e.lagX += (o.x.x * 0.9 - e.lagX) * 0.09;
+        for (const c of e.cords) c.rotation.set(-o.x.x + e.lagX, 0, -o.z.x + e.lag);
+      }
     }
     if (ptr.over >= 0 && !drag.on) { ptr.vx *= 0.9; ptr.vy *= 0.9; }
     scrollVel *= 0.9;
@@ -367,8 +417,8 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
     for (let k = 0; k < G.length; k++) {
       const g = G[k];
       if (!g.ready) continue;
-      if (quality === 0 && k > 1) continue;
-      if (k > 1 && frameNo % 2) continue;               // far garments run at half rate
+      if (quality === 0 && k % 2) continue;
+      if (quality < 2 && k % 2 && frameNo % 2) continue;   // under load, alternate garments run at half rate
       g.swing.updateMatrixWorld(true);
       wind[0] = (gust * 0.4 + 0.12) * br; wind[1] = 0; wind[2] = (gust * 0.9 + 0.2 * Math.sin(time * 0.6 + k)) * br;
       /* brush: the pointer moving through the fabric pushes it */
@@ -379,7 +429,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
       }
       if (g.settle > 0) { g.settle--; g.cloth.damp = 0.96; } else g.cloth.damp = 0.992;
       g.cloth.iterations = quality === 2 ? g.cloth.o.iterations : Math.max(3, g.cloth.o.iterations - 2);
-      g.cloth.step(k > 1 ? STEP * 2 : STEP, g.garment.matrixWorld.elements, wind);
+      g.cloth.step(quality < 2 && k % 2 ? STEP * 2 : STEP, g.garment.matrixWorld.elements, wind);
       if (g.hot === undefined) continue;
     }
   }
@@ -435,8 +485,8 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   }, { passive: true });
 
   return {
-    setColor(hex) { const g = G[0]; if (g.ready) { paint(g, hex); g.material.sheenColor.set(hex).lerp(new THREE.Color(0xffffff), 0.45); } },
-    nudge(amount = 1) { for (const g of G) { g.osc.z.v += 1.4 * amount * (g === G[0] ? 1 : 0.5); g.osc.x.v -= 0.4 * amount; g.osc.y.v += 0.8 * amount; } },
+    setColor(hex) { const g = G.find((q) => q.spec.key === 'knit'); if (g?.ready) { paint(g, hex); g.material.sheenColor.set(hex).lerp(new THREE.Color(0xffffff), 0.45); } },
+    nudge(amount = 1) { for (const g of G) { g.osc.z.v += 1.4 * amount * (g.spec.key === 'knit' ? 1 : 0.6); g.osc.x.v -= 0.4 * amount; g.osc.y.v += 0.8 * amount; } },
     /* test helper: run the simulation ahead without drawing every step */
     settle(seconds = 10) {
       while (queue.length) prepareNext0();

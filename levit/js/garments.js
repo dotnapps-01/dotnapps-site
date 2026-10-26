@@ -132,6 +132,32 @@ const KINDS = {
       [96, 118, 140, 162].map((y) => `<circle cx="100" cy="${y}" r="1.7" fill="${shade(c, -0.55)}"/>`).join('') +
       P('M59 166 H141 V176 H59 Z', shade(c, -0.12));
   },
+  /* oversized hoodie with a bunched hood and drawcords */
+  hoodie: ({ c }) => {
+    const rib = shade(c, -0.15);
+    return hangerArms() +
+      P('M70 58 Q100 14 130 58 Q100 72 70 58 Z', shade(c, -0.12)) +
+      sleeveLongFn(c, rib, 14) +
+      P('M72 58 Q100 72 128 58 L143 66 L144 192 Q100 200 56 192 L57 66 Z', c) +
+      P('M56 182 Q100 190 144 182 L144 192 Q100 200 56 192 Z', rib) +
+      P('M76 130 L124 130 L132 172 L68 172 Z', shade(c, -0.07)) +
+      line('M76 130 L124 130 M76 130 L68 172 M124 130 L132 172', .3, 1.4) +
+      `<path d="M92 66 V104 M108 66 V104" stroke="#ddd6ca" stroke-width="2" stroke-linecap="round" fill="none"/>` +
+      P('M82 58 Q100 40 118 58 Q100 68 82 58 Z', shade(c, -0.3));
+  },
+  /* cropped puffer with horizontal baffles */
+  puffer: ({ c }) => {
+    const rib = shade(c, -0.2);
+    let baffles = '';
+    for (let y = 80; y < 150; y += 14) baffles += line(`M60 ${y} Q100 ${y + 5} 140 ${y}`, .3, 1.2);
+    let sleeve = '';
+    for (let y = 84; y < 160; y += 16) sleeve += line(`M36 ${y} Q46 ${y + 3} 58 ${y}`, .22, 1) + `<g transform="translate(200 0) scale(-1 1)">${line(`M36 ${y} Q46 ${y + 3} 58 ${y}`, .22, 1)}</g>`;
+    return hangerArms() + sleeveLongFn(c, rib, 4) + sleeve +
+      P('M70 56 L130 56 L142 62 L142 152 Q100 160 58 152 L58 62 Z', c) + baffles +
+      P('M58 144 Q100 152 142 144 L142 152 Q100 160 58 152 Z', rib) +
+      P('M80 46 Q100 40 120 46 L122 62 Q100 70 78 62 Z', shade(c, 0.06)) +
+      line('M100 66 V152', .4, 1.6, '#000') + `<rect x="98.5" y="66" width="3" height="6" rx="1" fill="#cfc9bd"/>`;
+  },
   /* wide-leg trousers on a bar hanger */
   trouser: ({ c, wide = 1 }) => {
     const w = 9 * wide;

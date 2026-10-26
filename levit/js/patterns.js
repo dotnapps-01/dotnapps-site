@@ -25,34 +25,17 @@ function top(p, front) {
   return mirrorOutline(half, ['neck', 'hang', 'seam', 'gather', 'seam', 'seam', p.hemTag]);
 }
 
-function dress(front) {
-  const sx = 0.30, sw = 0.105;                          // strap outer x, strap width
-  const half = [
-    [0, front ? -0.33 : -0.24],
-    [0.19, front ? -0.29 : -0.24],
-    [sx - sw, -SLOPE * (sx - sw)],
-    [sx, -SLOPE * sx],
-    [sx + 0.012, -0.27],
-    [0.42, -0.36],
-    [0.47, -0.58],
-    [0.43, -0.92],
-    [0.50, -1.30],
-    [0.47, -1.78],
-    [0, -1.78],
-  ];
-  return mirrorOutline(half, ['neck', 'neck', 'hang', 'open', 'open', 'seam', 'seam', 'seam', 'seam', 'open']);
-}
-
-function trousers() {
+function jeansOutline() {
   const half = [
     [0, -0.05],
-    [0.32, -0.05],
-    [0.46, -1.80],
-    [0.12, -1.80],
-    [0.035, -0.86],
-    [0, -0.84],
+    [0.315, -0.05],
+    [0.40, -1.00],
+    [0.37, -1.72],
+    [0.095, -1.72],
+    [0.036, -0.80],
+    [0, -0.77],
   ];
-  return mirrorOutline(half, ['hang', 'seam', 'open', 'seam', 'seam']);
+  return mirrorOutline(half, ['hang', 'seam', 'seam', 'open', 'seam', 'seam']);
 }
 
 const thickDefault = (y) => 0.052 + 0.03 * Math.min(1, Math.max(0, (-0.15 - y) / 0.35));
@@ -60,16 +43,18 @@ const thickDefault = (y) => 0.052 + 0.03 * Math.min(1, Math.max(0, (-0.15 - y) /
 export const PATTERNS = {
   knit: {
     outline: (front) => top({ neckDepth: 0.40, neckBack: 0.11, neckHalf: 0.17, shoulder: 0.56, sleeveL: 1.02, ang: 0.33, cuffW: 0.27, armpit: 0.40, side: 0.52, taper: 0.02, hemY: 0.95, hemTag: 'hemg' }, front),
-    hangY: armLine, h: 0.032, iterations: 8, thick: (x, y) => thickDefault(y), shrink: { gather: 0.52, hemg: 0.86 },
+    hangY: armLine, h: 0.032, iterations: 6, thick: (x, y) => thickDefault(y), shrink: { gather: 0.52, hemg: 0.86 },
   },
-  shacket: {
-    outline: (front) => top({ neckDepth: 0.22, neckBack: 0.08, neckHalf: 0.16, shoulder: 0.60, sleeveL: 1.04, ang: 0.20, cuffW: 0.31, armpit: 0.46, side: 0.60, taper: 0.0, hemY: 1.14, hemTag: 'open' }, front),
-    hangY: armLine, h: 0.055, iterations: 4, thick: (x, y) => thickDefault(y) + 0.012, shrink: { gather: 0.75 },
+  hoodie: {
+    outline: (front) => top({ neckDepth: 0.13, neckBack: 0.09, neckHalf: 0.16, shoulder: 0.62, sleeveL: 1.12, ang: 0.30, cuffW: 0.30, armpit: 0.44, side: 0.60, taper: 0.0, hemY: 1.10, hemTag: 'hemg' }, front),
+    hangY: armLine, h: 0.042, iterations: 5, thick: (x, y) => thickDefault(y) + 0.016, shrink: { gather: 0.6, hemg: 0.92 },
   },
-  dress: {
-    outline: dress, hangY: armLine, h: 0.045, iterations: 5, thick: (x, y) => 0.05 + 0.03 * Math.min(1, Math.max(0, (-0.3 - y) / 0.4)), shrink: {}, bend: 0.2,
+  puffer: {
+    outline: (front) => top({ neckDepth: 0.07, neckBack: 0.05, neckHalf: 0.17, shoulder: 0.60, sleeveL: 1.0, ang: 0.26, cuffW: 0.31, armpit: 0.42, side: 0.58, taper: 0.0, hemY: 0.84, hemTag: 'hemg' }, front),
+    hangY: armLine, h: 0.045, iterations: 6, thick: (x, y) => 0.1 + 0.025 * Math.min(1, Math.max(0, (-0.2 - y) / 0.3)), shrink: { gather: 0.62, hemg: 0.9 }, bend: 0.3,
+    puff: { period: 0.2, amp: 0.05, y0: -0.1 },
   },
-  trouser: {
-    outline: () => trousers(), hangY: barLine, h: 0.055, iterations: 4, thick: (x, y) => 0.06, shrink: {}, bend: 0.2,
+  jeans: {
+    outline: () => jeansOutline(), hangY: barLine, h: 0.05, iterations: 5, thick: () => 0.05, shrink: {}, bend: 0.25,
   },
 };

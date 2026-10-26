@@ -6,6 +6,7 @@ export const CATEGORIES = [
   { id: 'dresses', name: 'Dresses', blurb: 'Ruched, polka and after-dark silhouettes.' },
   { id: 'tops', name: 'Tops', blurb: 'Puff sleeves, button plackets, easy tees.' },
   { id: 'bottoms', name: 'Bottoms', blurb: 'Wide-leg, denim and pleated skirts.' },
+  { id: 'outerwear', name: 'Outerwear', blurb: 'Puffers, shackets and heavy layers.' },
   { id: 'kurtas', name: 'Kurtas', blurb: 'Block-print cotton, cut for everyday.' },
 ];
 
@@ -19,6 +20,8 @@ const C = {
   ivory: { name: 'Ivory', hex: '#eadfcd' },
   wine: { name: 'Wine', hex: '#6f2230' },
   sage: { name: 'Sage', hex: '#7c8160' },
+  charcoal: { name: 'Charcoal', hex: '#4f4844' },
+  khaki: { name: 'Khaki', hex: '#807a55' },
   olive: { name: 'Olive', hex: '#6b6a3c' },
   denim: { name: 'Indigo', hex: '#3d5166' },
   taupe: { name: 'Taupe', hex: '#9b8672' },
@@ -28,6 +31,18 @@ const C = {
 };
 
 export const PRODUCTS = [
+  {
+    id: 'brushed-fleece-hoodie', name: 'Brushed Fleece Hoodie', cat: 'tops', price: 2199, was: null, tag: 'New',
+    kind: 'hoodie', colors: [C.charcoal, C.sand, C.ivory], bg: '#C6D5DD',
+    blurb: 'Oversized, heavyweight and brushed soft inside. Dropped shoulders, ribbed cuffs, a deep kangaroo pocket and a hood that holds its shape.',
+    details: ['450 gsm brushed cotton fleece', 'Oversized fit', 'Ribbed cuffs and hem', 'Flat drawcords'],
+  },
+  {
+    id: 'cropped-puffer-jacket', name: 'Cropped Puffer Jacket', cat: 'outerwear', price: 3999, was: 4799, tag: '-17%',
+    kind: 'puffer', colors: [C.khaki, C.noir, C.blush], bg: '#D9D0E8',
+    blurb: 'A cropped, quilted puffer with a high collar, zipped pockets and a ripstop shell. Light on the shoulders, warm where it counts.',
+    details: ['Recycled ripstop shell', 'Lightweight recycled fill', 'Zipped hand pockets', 'Elasticated cuffs and hem'],
+  },
   {
     id: 'rust-waffle-wrap-knit', name: 'Waffle Wrap Knit', cat: 'knitwear', price: 1799, was: 2299, tag: 'New',
     kind: 'knit', colors: [C.rust, C.mocha, C.sand], bg: '#C5CFAE',
@@ -73,7 +88,7 @@ export const PRODUCTS = [
     details: ['Cotton poplin', 'Pearl-effect buttons', 'Regular fit', 'Machine washable'],
   },
   {
-    id: 'boxy-shacket', name: 'Boxy Shacket', cat: 'tops', price: 2999, was: 3499, tag: '-14%',
+    id: 'boxy-shacket', name: 'Boxy Shacket', cat: 'outerwear', price: 2999, was: 3499, tag: '-14%',
     kind: 'shacket', colors: [C.olive, C.mocha, C.sand], bg: '#EBCDBF',
     blurb: 'Heavy twill, boxy cut, two chest pockets. Wear it as a shirt, a jacket, or a layer.',
     details: ['Brushed cotton twill', 'Boxy fit', 'Two chest pockets', 'Corozo buttons'],

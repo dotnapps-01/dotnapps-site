@@ -224,6 +224,7 @@ export class Cloth {
     for (let p = 0; p < N; p++) { this.nbStart[p] = flat.length; flat.push(...nb[p]); }
     this.nbStart[N] = flat.length; this.nb = Int32Array.from(flat);
 
+    this.puff = o.puff || null;
     this.buildRender();
     this.iterations = o.iterations ?? 6;
     this.damp = o.damp ?? 0.992;
@@ -251,6 +252,9 @@ export class Cloth {
     this.rpos = new Float32Array(RN * 3); this.rnorm = new Float32Array(RN * 3);
     this.rcol = new Float32Array(RN * 3).fill(1); this.ruv = new Float32Array(RN * 2);
     this.ruv.set(this.uv);
+    this.ry = new Float32Array(RN);
+    for (let p = 0; p < N; p++) this.ry[p] = this.lay[p][1];
+    for (let e = 0; e < E; e++) this.ry[N + e] = (this.lay[ea[e]][1] + this.lay[eb[e]][1]) / 2;
     for (let e = 0; e < E; e++) {
       this.ruv[(N + e) * 2] = (this.uv[ea[e] * 2] + this.uv[eb[e] * 2]) / 2;
       this.ruv[(N + e) * 2 + 1] = (this.uv[ea[e] * 2 + 1] + this.uv[eb[e] * 2 + 1]) / 2;
@@ -275,6 +279,21 @@ export class Cloth {
       }
       const l = Math.hypot(rnorm[o], rnorm[o + 1], rnorm[o + 2]) || 1;
       rnorm[o] /= l; rnorm[o + 1] /= l; rnorm[o + 2] /= l;
+    }
+    /* quilting: baffles bulge between stitch lines, and the normal tilts with the bulge */
+    if (this.puff) {
+      const { period, amp, y0 } = this.puff, ry = this.ry, RN = N + E;
+      for (let v = 0; v < RN; v++) {
+        const s = (ry[v] - y0) / period, f = s - Math.floor(s);
+        const bulge = Math.sin(Math.PI * f), slope = (Math.cos(Math.PI * f) * Math.PI * amp) / period;
+        const k = v * 3, nx = rnorm[k], ny = rnorm[k + 1], nz = rnorm[k + 2];
+        rpos[k] += nx * amp * bulge; rpos[k + 1] += ny * amp * bulge; rpos[k + 2] += nz * amp * bulge;
+        /* tilt towards the tangent that points up the garment */
+        const tx = -ny * nx, ty = 1 - ny * ny, tz = -ny * nz;
+        let qx = nx - slope * tx, qy = ny - slope * ty, qz = nz - slope * tz;
+        const ql = Math.hypot(qx, qy, qz) || 1;
+        rnorm[k] = qx / ql; rnorm[k + 1] = qy / ql; rnorm[k + 2] = qz / ql;
+      }
     }
   }
 

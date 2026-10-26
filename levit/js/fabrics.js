@@ -44,7 +44,9 @@ const plainWeave = (x, y, c = 0.0065) => 0.5 + 0.5 * Math.sin((x / c) * Math.PI 
 const twill = (x, y, c = 0.0085) => 0.5 + 0.5 * Math.sin(((x + y) / c) * Math.PI * 2);
 const crepe = (x, y) => 0.55 * vnoise(x * 260, y * 260) + 0.3 * vnoise(x * 620, y * 620) + 0.15 * vnoise(x * 1500, y * 1500);
 
-/** per-garment pixel painters: (x, y, field) -> {r,g,b,h}   colours in 0..255, h in 0..1 */
+/** per-garment pixel painters: (x, y) -> {r,g,b,h,rough?,metal?,nx?,ny?}   colours 0..255, h 0..1 */
+const stitchDash = (d, s, off, w = 0.0013, dash = 0.0095) => Math.abs(d - off) < w && fract(s / dash) < 0.62;
+
 const PAINT = {
   knit: (tint, poly) => {
     const bands = edgeField(poly, ['gather', 'neck']);
@@ -66,89 +68,111 @@ const PAINT = {
       return { r: tint[0] * f, g: tint[1] * f, b: tint[2] * f, h };
     };
   },
-  dress: (tint) => (x, y) => {
-    let h = 0.5 + 0.08 * plainWeave(x, y, 0.005), f = 0.92 + 0.08 * h;
-    /* ruching: soft diagonal gathers running in from both side seams */
-    const ax = Math.abs(x);
-    const zone = smooth(0.14, 0.3, ax) * smooth(-0.32, -0.5, y) * (1 - smooth(-1.05, -1.2, y));
-    if (zone > 0) {
-      const wave = 0.5 + 0.5 * Math.sin(((y - 0.5 * (ax - 0.14)) / 0.058) * Math.PI * 2);
-      h += zone * (wave - 0.5) * 0.55; f *= 1 - zone * (0.22 * (1 - wave));
-    }
-    /* sequins: tiny discs, each tilted differently so they glint as the cloth moves */
-    const gx = Math.floor(x / 0.02), gy = Math.floor(y / 0.02);
-    const r = hash(gx, gy);
-    let spark = 0, rough = 0.4, metal = 0, nx = 0, ny = 0;
-    if (r > 0.4) {
-      const cx = (gx + 0.5 + (hash(gx + 7, gy) - 0.5) * 0.4) * 0.02, cy = (gy + 0.5 + (hash(gx, gy + 7) - 0.5) * 0.4) * 0.02;
-      const d = Math.hypot(x - cx, y - cy) / 0.0072;
-      if (d < 1) {
-        spark = 1 - smooth(0.82, 1, d); rough = 0.14; metal = 0.9;
-        nx = (hash(gx + 3, gy + 5) - 0.5) * 1.5; ny = (hash(gx + 9, gy + 1) - 0.5) * 1.5;
-        h += 0.35;
-      }
-    }
-    const lum = 0.55 + 0.45 * hash(gx + 11, gy + 13);
-    return { r: tint[0] * f * (1 - spark) + spark * 205 * lum, g: tint[1] * f * (1 - spark) + spark * 200 * lum, b: tint[2] * f * (1 - spark) + spark * 195 * lum, h: Math.min(1, h), rough, metal, nx, ny };
-  },
-  blouse: (tint, poly) => {
+
+  /* brushed-back cotton fleece, ribbed cuffs and hem, kangaroo pocket */
+  hoodie: (tint, poly) => {
     const bands = edgeField(poly, ['gather', 'neck']);
+    const hem = edgeField(poly, ['hemg']);
     return (x, y) => {
-      let h = plainWeave(x, y), f = 0.86 + 0.14 * h + (vnoise(x * 90, y * 90) - 0.5) * 0.05;
-      let r = tint[0], g = tint[1], b = tint[2];
-      const bd = bands(x, y);
-      if (bd.d < (bd.tag === 'neck' ? 0.04 : 0.06)) { f *= 1.04; if (Math.abs(bd.d - (bd.tag === 'neck' ? 0.04 : 0.06)) < 0.003) f *= 0.82; }
-      /* placket + buttons */
-      if (y < -0.12 && Math.abs(x) < 0.04) {
-        f *= 1.05;
-        if (Math.abs(Math.abs(x) - 0.04) < 0.0016) f *= 0.8;
-        if (Math.abs(Math.abs(x) - 0.026) < 0.0013 && fract(y / 0.014) < 0.6) f *= 0.84;
+      const n1 = vnoise(x * 420, y * 420), n2 = vnoise(x * 1100, y * 1100);
+      let h = 0.35 + 0.4 * n1 + 0.25 * n2, f = 0.93 + 0.07 * n1 + (vnoise(x * 12, y * 12) - 0.5) * 0.06;
+      const b = bands(x, y), o = hem(x, y);
+      const w = b.tag === 'neck' ? 0.04 : 0.1;
+      let rib = false;
+      if (b.d < w) { const r = ribbing(b.s, 0.02); h = 0.25 + 0.75 * r; f = (0.66 + 0.3 * r) * 0.95; if (b.d > w - 0.004) f *= 0.78; rib = true; }
+      else if (o.d < 0.1 && y < -0.8) { const r = ribbing(o.s, 0.02); h = 0.25 + 0.75 * r; f = (0.66 + 0.3 * r) * 0.95; if (o.d > 0.096) f *= 0.78; rib = true; }
+      if (!rib) {
+        /* kangaroo pocket: a trapezoid with angled openings, topstitched */
+        const top = -0.58, bot = -0.96, ax = Math.abs(x);
+        const sideX = 0.25 + (top - y) * (0.07 / 0.38);
+        if (y < top && y > bot && ax < sideX) {
+          f *= 0.975;
+          const dTop = Math.abs(y - top), dSide = Math.abs(ax - sideX), dBot = Math.abs(y - bot);
+          if (dTop < 0.0022 || dSide < 0.0022 || dBot < 0.0022) { f *= 0.7; h -= 0.3; }
+          if ((Math.abs(y - (top - 0.012)) < 0.0012 || Math.abs(ax - (sideX - 0.012)) < 0.0012) && fract((x + y) / 0.0095) < 0.62) f *= 0.86;
+        }
+        /* a heavy shoulder seam shadow */
       }
-      const by = (y + 0.32) / 0.17, bi = Math.round(by), cy = -0.32 + bi * 0.17;
-      if (bi >= 0 && bi < 6) {
-        const d = Math.hypot(x, y - cy);
-        if (d < 0.0175) { const e = d / 0.0175; f = 1.18 - 0.3 * e * e; r = 245; g = 238; b = 226; h = 0.95 - e * 0.5; if (Math.hypot(Math.abs(x) - 0.0045, Math.abs(y - cy) - 0.0045) < 0.0017) { r = g = b = 70; f = 1; h = 0.1; } }
-      }
-      return { r: r * f, g: g * f, b: b * f, h };
+      return { r: tint[0] * f, g: tint[1] * f, b: tint[2] * f, h, rough: 0.97 };
     };
   },
-  shacket: (tint, poly) => {
-    const cuff = edgeField(poly, ['gather']);
-    const neck = edgeField(poly, ['neck']);
-    const stitch = (d, s, w = 0.0016, dash = 0.012) => d < w && fract(s / dash) < 0.62;
+
+  /* ripstop nylon shell, horizontal baffles, front zip and zipped pockets */
+  puffer: (tint, poly) => {
+    const bands = edgeField(poly, ['gather', 'hemg']);
     return (x, y) => {
-      let h = twill(x, y), f = 0.84 + 0.16 * h + (vnoise(x * 120, y * 120) - 0.5) * 0.08;
-      let r = tint[0], g = tint[1], b = tint[2];
-      const lit = (k) => { r += k; g += k; b += k; };
-      /* chest pockets with flap and stitching */
-      for (const sx of [-1, 1]) {
-        const px = sx * 0.27, py = -0.52, hw = 0.1, hh = 0.115;
-        const dx = Math.abs(x - px) - hw, dy = Math.abs(y - py) - hh;
-        const d = Math.max(dx, dy);
-        if (d < 0 && Math.abs(d) < 0.002) f *= 0.6;
-        if (Math.abs(d + 0.012) < 0.0012 && fract((x + y) / 0.011) < 0.6) { lit(34); f *= 1.04; }
-        if (Math.abs(y - (py + hh - 0.05)) < 0.0012 && dx < -0.004) f *= 0.65;
+      const rip = (Math.abs(fract(x / 0.011) - 0.5) < 0.04 || Math.abs(fract(y / 0.011) - 0.5) < 0.04) ? 1 : 0;
+      let h = 0.5 + 0.12 * rip + 0.05 * vnoise(x * 600, y * 600);
+      const sP = (y + 0.1) / 0.2, fr = sP - Math.floor(sP);
+      let f = (0.78 + 0.22 * Math.sin(Math.PI * fr)) * (1 + 0.05 * rip) * (0.97 + (vnoise(x * 10, y * 10) - 0.5) * 0.08);
+      /* stitch lines between baffles */
+      const dl = Math.min(fr, 1 - fr) * 0.2;
+      if (dl < 0.0034) { f *= 0.55; h -= 0.35; }
+      if (dl < 0.0105 && dl > 0.006 && fract(x / 0.0095) < 0.55) f *= 0.9;
+      /* elastic cuffs and hem */
+      const b = bands(x, y);
+      let r = tint[0], g = tint[1], bl = tint[2], rough = 0.34;
+      if (b.d < 0.07 && y < 0.1) { const rr = ribbing(b.s, 0.016); f = 0.5 + 0.28 * rr; h = 0.3 + 0.7 * rr; rough = 0.85; if (b.d > 0.066) f *= 0.8; }
+      /* zip + pockets */
+      if (y < -0.07) {
+        if (Math.abs(x) < 0.007) { f = 0.55 + 0.4 * (fract(y / 0.008) < 0.5 ? 1 : 0.4); r = 190; g = 184; bl = 170; h = 0.7; rough = 0.3; }
+        else if (Math.abs(x) < 0.02) { f *= 0.82; h += 0.05; }
+        if (y > -0.2 && y < -0.075 && Math.hypot(x, y + 0.18) < 0.017) { r = 198; g = 190; bl = 172; f = 1.1; h = 0.9; }
+        const px = Math.abs(x);
+        const pl = -0.46 - (px - 0.27) * 0.35;               // slanted pocket zip
+        if (px > 0.2 && px < 0.42 && Math.abs(y - pl) < 0.0045) { f *= 0.45; h -= 0.3; }
       }
-      /* front placket and buttons */
-      if (y < -0.1 && Math.abs(x) < 0.042) {
-        f *= 1.04; if (Math.abs(Math.abs(x) - 0.042) < 0.0016) f *= 0.7;
-        const bi = Math.round((y + 0.3) / 0.205), cy = -0.3 + bi * 0.205;
-        if (bi >= 0 && bi < 5 && Math.hypot(x, y - cy) < 0.016) { const e = Math.hypot(x, y - cy) / 0.016; r = 214; g = 190; b = 150; f = 1.1 - 0.4 * e; h = 0.9 - e * 0.5; }
-      }
-      const c = cuff(x, y); if (c.d < 0.075) { f *= 0.94; if (Math.abs(c.d - 0.075) < 0.0025) f *= 0.72; if (stitch(Math.abs(c.d - 0.065), c.s)) lit(30); }
-      const n = neck(x, y); if (n.d < 0.055) { f *= 1.07; if (Math.abs(n.d - 0.055) < 0.0025) f *= 0.7; }
-      return { r: r * f, g: g * f, b: b * f, h };
+      return { r: r * f, g: g * f, b: bl * f, h, rough };
     };
   },
-  trouser: (tint) => (x, y) => {
-    let h = crepe(x, y), f = 0.9 + 0.12 * h;
-    /* waistband, fly, pressed creases */
-    if (y > -0.4) { f *= 1.06; if (Math.abs(y + 0.4) < 0.0022) f *= 0.7; if (Math.abs(y + 0.285) < 0.0016 && fract(x / 0.012) < 0.6) f *= 0.8; }
-    if (Math.abs(x) < 0.0016 && y < -0.4 && y > -0.85) f *= 0.8;
-    if (y < -0.5) for (const cx of [-0.205, 0.205]) { const d = Math.abs(x - cx); if (d < 0.003) f *= 1.0 + 0.1 * (1 - d / 0.003) * (x > 0 ? 1 : 1) * 0.6 - 0.07; }
-    if (y > -0.4 && Math.abs(Math.abs(x) - 0.22) < 0.0015 && y < -0.3) f *= 0.8;
-    if (y > -0.4 && Math.hypot(x, y + 0.34) < 0.012) { return { r: 214 * 1.0, g: 184 * 1.0, b: 112 * 1.0, h: 0.9 }; }
-    return { r: tint[0] * f, g: tint[1] * f, b: tint[2] * f, h: h * 0.6 };
+
+  /* light-wash straight denim with fades, topstitching, rivets and belt loops */
+  jeans: (tint) => {
+    const topstitch = [0xc9, 0xa3, 0x55];
+    const outer = (y) => 0.315 + (0.40 - 0.315) * Math.min(1, (-0.05 - y) / 0.95);
+    return (x, y) => {
+      const ax = Math.abs(x);
+      const warp = 0.5 + 0.5 * Math.sin((x / 0.0042) * Math.PI * 2), weft = 0.5 + 0.5 * Math.sin((y / 0.0042) * Math.PI * 2 + 1.2 * Math.sin(x * 40));
+      let h = 0.3 + 0.35 * warp * weft + 0.25 * twill(x, y, 0.006) + 0.1 * vnoise(x * 700, y * 700);
+      /* wash: hip + thigh whiskers, knee fade, lighter hem */
+      let fade = 0.45 * vnoise(x * 9, y * 9) + 0.3 * vnoise(x * 24, y * 5);
+      fade += 0.35 * Math.exp(-Math.pow((y + 1.08) / 0.16, 2)) * (0.6 + 0.4 * vnoise(x * 30, y * 30));        // knee
+      fade += 0.4 * Math.exp(-Math.pow((y + 0.62) / 0.12, 2)) * smooth(0.1, 0.3, ax);                       // thigh
+      fade += 0.5 * smooth(-1.5, -1.72, y);                                                                // hem
+      const whisker = vnoise(x * 70 + y * 10, y * 2.5) > 0.74 && y < -0.42 && y > -0.8 && ax < 0.24 ? 0.07 : 0;
+      let f = 0.7 + 0.12 * warp * weft + fade * 0.3 + whisker;
+      let r = tint[0], g = tint[1], b = tint[2];
+      let rough = 0.82;
+      const stitch = (d, s, off) => stitchDash(d, s, off, 0.0014, 0.011);
+      /* waistband */
+      if (y > -0.19) {
+        f *= 0.92; h += 0.08;
+        if (Math.abs(y + 0.19) < 0.0022) { f *= 0.55; }
+        if (Math.abs(y + 0.178) < 0.0012 && fract(x / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; }
+        if (Math.abs(y + 0.058) < 0.0012 && fract(x / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; }
+        for (const lx of [-0.235, -0.085, 0.085, 0.235]) if (Math.abs(x - lx) < 0.0095 && y > -0.205) { f *= 0.82; if (Math.abs(Math.abs(x - lx) - 0.0095) < 0.0012) f *= 0.8; }
+        if (ax < 0.017 && Math.abs(y + 0.115) < 0.017 && Math.hypot(x, (y + 0.115) * 1.0) < 0.017) { r = 205; g = 168; b = 108; f = 1.05; h = 0.9; rough = 0.25; }
+      } else {
+        /* fly J-stitch */
+        const fx = x - 0.0; const dFly = Math.abs(fx - (y > -0.5 ? 0.03 : 0.03 - (y + 0.5) * 0.0));
+        if (y < -0.19 && y > -0.56 && fx > 0) { const t = Math.abs(x - 0.034); if (t < 0.0013 && fract(y / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; } }
+        if (Math.abs(x) < 0.0017 && y < -0.19 && y > -0.77) f *= 0.7;
+        /* front scoop pockets */
+        const pk = Math.abs(ax - (0.13 + 0.19 * smooth(-0.19, -0.5, y))) ;
+        if (ax > 0.1 && ax < 0.33 && y < -0.19 && y > -0.52 && pk < 0.0014) { f *= 0.55; }
+        if (ax > 0.1 && ax < 0.33 && y < -0.19 && y > -0.52 && Math.abs(pk - 0.012) < 0.0012 && fract(y / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; }
+        if (Math.hypot(ax - 0.315, y + 0.215) < 0.0075) { r = 205; g = 168; b = 108; f = 1.1; h = 0.9; rough = 0.25; }     // rivets
+        /* outer-seam topstitching */
+        const od = Math.abs(ax - outer(y)); const ox = outer(y) - ax;
+        if (ox > 0 && ox < 0.03) { if (Math.abs(ox - 0.013) < 0.0013 && fract(y / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; } if (ox < 0.0035) { f *= 0.78; } }
+        /* inseam */
+        const ins = 0.095 - (0.095 - 0.036) * Math.min(1, (y + 1.72) / 0.92);
+        if (y < -0.77 && Math.abs(ax - ins) < 0.003) f *= 0.82;
+        /* hem stitch */
+        if (y < -1.58 && Math.abs(y + 1.69) < 0.0013 && fract(x / 0.011) < 0.62) { r = topstitch[0]; g = topstitch[1]; b = topstitch[2]; f = 0.95; }
+      }
+      return { r: r * f, g: g * f, b: b * f, h: Math.min(1, h), rough };
+    };
   },
 };
 
@@ -157,7 +181,7 @@ const PAINT = {
  */
 export function paintFabric({ kind, color, poly, atlas, size = 768, normalK = 2.2, anisotropy = 8, rough = 0.9 }) {
   const paint = PAINT[kind](hex(color), poly);
-  const seams = kind === 'knit' ? null : edgeField(poly, ['seam', 'hang']);
+  const seams = kind === 'knit' || kind === 'jeans' ? null : edgeField(poly, ['seam', 'hang']);
   const N = size;
   const col = document.createElement('canvas'), nor = document.createElement('canvas'), orm = document.createElement('canvas');
   col.width = col.height = nor.width = nor.height = orm.width = orm.height = N;
