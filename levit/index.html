@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LEVIT — Womenswear</title>
+<meta name="description" content="LEVIT is womenswear made to feel light: waffle knits, ruched dresses, easy tailoring and everyday kurtas. Shop the AW26 edit.">
+<meta name="theme-color" content="#D8C2AA">
+<meta property="og:title" content="LEVIT — Womenswear">
+<meta property="og:description" content="Soft structure for every kind of day. Shop the AW26 edit.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/knit-rust.webp">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/playfair-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/levit.css">
+<script>document.documentElement.classList.add('js');</script>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
+</script>
+</head>
+<body>
+
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader__word"><span>L</span><span>E</span><span>V</span><span>I</span><span>T</span></div>
+  <p class="preloader__sub">Womenswear</p>
+</div>
+
+<a class="skip" href="#shop">Skip to the shop</a>
+
+<div class="announce" role="region" aria-label="Offers">
+  <div class="marquee" data-marquee>
+    <div class="marquee__track">
+      <span>Free shipping over ₹1,999</span><i>✦</i><span>7-day easy returns</span><i>✦</i><span>Cash on delivery available</span><i>✦</i><span>AW26 has landed</span><i>✦</i>
+      <span aria-hidden="true">Free shipping over ₹1,999</span><i aria-hidden="true">✦</i><span aria-hidden="true">7-day easy returns</span><i aria-hidden="true">✦</i><span aria-hidden="true">Cash on delivery available</span><i aria-hidden="true">✦</i><span aria-hidden="true">AW26 has landed</span><i aria-hidden="true">✦</i>
+    </div>
+  </div>
+</div>
+
+<header class="head" id="head">
+  <div class="head__l">
+    <button class="icon-btn menu-btn" data-open="menu" aria-label="Open menu"><span class="burger"><i></i><i></i></span></button>
+    <nav class="head__nav" aria-label="Primary">
+      <a href="#shop" data-filter="all">Shop</a>
+      <a href="#collections">Collections</a>
+      <a href="#story">Story</a>
+      <a href="#boutique">Boutique</a>
+    </nav>
+  </div>
+  <a class="logo" href="#top" aria-label="LEVIT — home">LEVIT</a>
+  <div class="head__r">
+    <button class="icon-btn" data-open="search" aria-label="Search">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+    </button>
+    <button class="icon-btn" id="wish-btn" data-open="wish" aria-label="Wishlist">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2Z"/></svg>
+      <b class="count" id="wish-count" hidden>0</b>
+    </button>
+    <button class="icon-btn bag-btn" data-open="bag" aria-label="Open bag">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M5 8h14l-1 12.5H6L5 8Z"/><path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"/></svg>
+      <b class="count" id="bag-count" hidden>0</b>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ───────────── HERO ───────────── -->
+  <section class="hero" id="hero" aria-label="LEVIT AW26">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <svg class="hero__arc" viewBox="0 0 1440 420" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-20 330 C 220 120, 520 60, 760 120 S 1260 300, 1460 90" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M-20 360 C 240 160, 520 100, 760 160 S 1260 340, 1460 130" fill="none" stroke="currentColor" stroke-width=".6" opacity=".6"/>
+    </svg>
+
+    <h1 class="hero__word" aria-label="LEVIT"><span aria-hidden="true">L</span><span aria-hidden="true">E</span><span aria-hidden="true">V</span><span aria-hidden="true">I</span><span aria-hidden="true">T</span></h1>
+
+    <canvas id="hero-canvas" role="img" aria-label="A rust waffle-knit top on a black hanger, swinging from a rail. Drag it."></canvas>
+    <img class="hero__fallback" src="img/knit-rust.webp" alt="Rust waffle-knit top on a hanger" width="1179" height="1663" fetchpriority="high">
+
+    <div class="hero__ui">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>AW26 · The Knit Edit</p>
+        <h2 class="hero__title">Effortlessly <em>elevated.</em></h2>
+        <p class="hero__lede">Soft structure for every kind of day. Waffle knits, easy tailoring and pieces that move when you do.</p>
+        <div class="hero__cta">
+          <a class="btn btn--ink" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--ghost" href="#collections" data-magnet><span>Collections</span></a>
+        </div>
+        <div class="hero__swatches" role="group" aria-label="Recolour the knit">
+          <span class="hero__swlabel">Colourway</span>
+          <button class="sw is-on" style="--c:#b8561f" data-hex="#b8561f" aria-label="Rust" aria-pressed="true"></button>
+          <button class="sw" style="--c:#6a4331" data-hex="#6a4331" aria-label="Mocha" aria-pressed="false"></button>
+          <button class="sw" style="--c:#c8b08f" data-hex="#c8b08f" aria-label="Sand" aria-pressed="false"></button>
+          <button class="sw" style="--c:#7b2d3a" data-hex="#7b2d3a" aria-label="Wine" aria-pressed="false"></button>
+        </div>
+      </div>
+
+      <div class="hero__aside">
+        <p class="hint"><span class="hint__icon" aria-hidden="true"></span><span class="hint__txt"><b>Grab it.</b> Drag, flick or brush past — the hanger swings, the knit follows.</span></p>
+        <p class="hero__no" aria-hidden="true">01<span>/05</span></p>
+      </div>
+
+      <button class="hotspot" id="hotspot" data-quick="rust-waffle-wrap-knit" aria-label="View Waffle Wrap Knit">
+        <span class="hotspot__dot"></span>
+        <span class="hotspot__card"><b>Waffle Wrap Knit</b><span>₹1,799 <s>₹2,299</s></span><em>View →</em></span>
+      </button>
+
+      <a class="scroll-cue" href="#collections" aria-label="Scroll to collections">
+        <span class="scroll-cue__ring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#ring">SCROLL · NEW ARRIVALS · SCROLL · NEW ARRIVALS ·</textPath></text></svg></span>
+        <svg class="scroll-cue__arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ───────────── TICKER ───────────── -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      <span>LEVIT</span><i></i><span><em>Womenswear</em></span><i></i><span>Made to feel light</span><i></i><span><em>AW26</em></span><i></i>
+      <span>LEVIT</span><i></i><span><em>Womenswear</em></span><i></i><span>Made to feel light</span><i></i><span><em>AW26</em></span><i></i>
+      <span>LEVIT</span><i></i><span><em>Womenswear</em></span><i></i><span>Made to feel light</span><i></i><span><em>AW26</em></span><i></i>
+    </div>
+  </div>
+
+  <!-- ───────────── COLLECTIONS ───────────── -->
+  <section class="sec collections" id="collections" aria-labelledby="col-title">
+    <div class="wrap">
+      <header class="sec__head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow__dot"></span>Shop by category</p>
+        <h2 class="display" id="col-title">Five ways to<br><em>wear light.</em></h2>
+      </header>
+      <ol class="index" id="index"></ol>
+    </div>
+    <div class="index__preview" id="index-preview" aria-hidden="true"></div>
+  </section>
+
+  <!-- ───────────── SHOP ───────────── -->
+  <section class="sec shop" id="shop" aria-labelledby="shop-title">
+    <div class="wrap">
+      <header class="shop__head">
+        <div data-reveal>
+          <p class="eyebrow"><span class="eyebrow__dot"></span>The edit</p>
+          <h2 class="display" id="shop-title">AW26 <em>essentials</em></h2>
+        </div>
+        <p class="shop__count" data-reveal><b id="shop-n">15</b> pieces</p>
+      </header>
+
+      <div class="filters" id="filters">
+        <div class="chips" role="tablist" aria-label="Category" id="chips"></div>
+        <label class="sort"><span>Sort</span>
+          <select id="sort">
+            <option value="featured">Featured</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+            <option value="new">New first</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid" id="grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ───────────── STORY / EDITORIAL ───────────── -->
+  <section class="sec story" id="story" aria-labelledby="story-title">
+    <div class="wrap story__grid">
+      <figure class="arch arch--tall" data-reveal="arch">
+        <img src="img/model-noir.webp" alt="Model in a black sparkle ruched dress over an ivory ribbed turtleneck, leaning on a spiral stair" width="1179" height="1268" loading="lazy" data-parallax="0.06">
+        <figcaption><span>Noir Shimmer Dress</span><button class="link" data-quick="noir-shimmer-ruched-dress">Shop the look →</button></figcaption>
+      </figure>
+      <div class="story__copy">
+        <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>The idea</p>
+        <h2 class="display" id="story-title" data-reveal>Quietly bold.<br><em>Never loud.</em></h2>
+        <p class="lead" data-reveal>LEVIT began with a simple question: why does getting dressed feel so heavy? We make clothes that sit lightly — in the fabric, in the fit, and on your day.</p>
+        <p data-reveal>Texture over noise. Warm neutrals that go with everything you already own. Cuts that flatter without fussing. Every piece is designed in-house and tested on real women, in real light, on real stairs.</p>
+        <blockquote class="pull" data-reveal><span>“</span>Dress like you've nothing to prove, and everything to enjoy.</blockquote>
+        <div class="story__stats" data-reveal>
+          <div><b data-count="15">0</b><span>pieces this season</span></div>
+          <div><b data-count="5">0</b><span>sizes, XS–XL</span></div>
+          <div><b data-count="7">0</b><span>day easy returns</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── CRAFT ───────────── -->
+  <section class="sec craft" id="craft" aria-labelledby="craft-title">
+    <div class="wrap craft__grid">
+      <div class="craft__swatch" data-reveal aria-hidden="true">
+        <div class="swatch"><span></span></div>
+        <svg class="craft__ring" viewBox="0 0 200 200"><defs><path id="ring2" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0"/></defs><text><textPath href="#ring2">WAFFLE KNIT · SOFT TO THE TOUCH · BUILT TO LAST · WAFFLE KNIT ·</textPath></text></svg>
+      </div>
+      <div>
+        <p class="eyebrow eyebrow--light" data-reveal><span class="eyebrow__dot"></span>Made to be lived in</p>
+        <h2 class="display display--light" id="craft-title" data-reveal>Soft by nature.<br><em>Structured by design.</em></h2>
+        <ul class="pillars">
+          <li data-reveal><span>01</span><div><h3>Feel</h3><p>Breathable viscose knits, cotton voile and crepe with real hand-feel. Nothing scratchy, nothing stiff.</p></div></li>
+          <li data-reveal><span>02</span><div><h3>Fit</h3><p>Cut for XS–XL with a little give where you need it. Not the right size? Swap it within 7 days.</p></div></li>
+          <li data-reveal><span>03</span><div><h3>Finish</h3><p>Elasticated hems that hold their shape, brass-tone hardware, and seams you'll never think about.</p></div></li>
+        </ul>
+        <ul class="perks" data-reveal>
+          <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg>Free shipping over ₹1,999</li>
+          <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5"/></svg>7-day easy exchange</li>
+          <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg>Cash on delivery</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── BOUTIQUE ───────────── -->
+  <section class="sec boutique" id="boutique" aria-labelledby="boutique-title">
+    <div class="wrap boutique__grid">
+      <div class="boutique__copy">
+        <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span>In person</p>
+        <h2 class="display" id="boutique-title" data-reveal>Come say<br><em>hello.</em></h2>
+        <p class="lead" data-reveal>Our boutique is the quietest way to meet the collection: racks you can touch, fabrics you can feel, and a stylist who won't hover.</p>
+        <div class="boutique__cta" data-reveal>
+          <a class="btn btn--ink" href="#join" data-magnet><span>Book a styling visit</span></a>
+          <a class="btn btn--ghost" href="#shop" data-magnet><span>Keep browsing</span></a>
+        </div>
+      </div>
+      <figure class="arch arch--wide" data-reveal="arch">
+        <img src="img/boutique.webp" alt="The LEVIT boutique: a glass storefront with the LEVIT sign lit in warm light, racks of clothing and mannequins inside" width="1179" height="1298" loading="lazy" data-parallax="0.05">
+      </figure>
+    </div>
+  </section>
+
+  <!-- ───────────── NEWSLETTER ───────────── -->
+  <section class="join" id="join" aria-labelledby="join-title">
+    <div class="wrap join__grid">
+      <div>
+        <h2 class="display display--light" id="join-title" data-reveal>Join the <em>list.</em></h2>
+        <p data-reveal>First look at new drops, quiet sales, and 10% off your first order.</p>
+      </div>
+      <form class="join__form" id="join-form" data-reveal novalidate>
+        <label for="join-email" class="sr">Email address</label>
+        <input id="join-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@email.com" required>
+        <button class="btn btn--sand" type="submit"><span>Subscribe</span></button>
+        <p class="join__msg" id="join-msg" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__grid">
+    <div class="foot__brand">
+      <a class="logo logo--foot" href="#top">LEVIT</a>
+      <p>Womenswear made to feel light.</p>
+    </div>
+    <nav aria-label="Shop"><h3>Shop</h3>
+      <a href="#shop" data-filter="all">All</a>
+      <a href="#shop" data-filter="knitwear">Knitwear</a>
+      <a href="#shop" data-filter="dresses">Dresses</a>
+      <a href="#shop" data-filter="tops">Tops</a>
+      <a href="#shop" data-filter="bottoms">Bottoms</a>
+      <a href="#shop" data-filter="kurtas">Kurtas</a>
+    </nav>
+    <nav aria-label="Help"><h3>Help</h3>
+      <button class="link" data-open="size">Size guide</button>
+      <a href="#craft">Shipping &amp; returns</a>
+      <a href="#boutique">Visit the boutique</a>
+      <a href="#join">Newsletter</a>
+    </nav>
+    <div><h3>Payments</h3><p class="foot__pay">UPI · Cards · Net banking · Cash on delivery</p></div>
+  </div>
+  <div class="foot__word" aria-hidden="true"><span>L</span><span>E</span><span>V</span><span>I</span><span>T</span></div>
+  <div class="wrap foot__legal">
+    <p>© <span id="yr">2026</span> LEVIT. All rights reserved.</p>
+    <p>Demo storefront — checkout is simulated and no payment is taken.</p>
+  </div>
+</footer>
+
+<!-- ═════════ dialogs ═════════ -->
+
+<dialog class="drawer" id="bag" aria-labelledby="bag-title">
+  <div class="drawer__panel">
+    <header class="drawer__head">
+      <h2 id="bag-title">Your bag <span id="bag-sub"></span></h2>
+      <button class="icon-btn" data-close aria-label="Close bag"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </header>
+    <div class="ship"><p id="ship-msg"></p><div class="ship__bar"><i id="ship-fill"></i></div></div>
+    <ul class="lines" id="lines"></ul>
+    <div class="drawer__empty" id="bag-empty" hidden>
+      <div class="empty-art" id="empty-art"></div>
+      <p>Your bag is empty.</p>
+      <button class="btn btn--ink" data-close data-goto="#shop"><span>Start shopping</span></button>
+    </div>
+    <footer class="drawer__foot" id="bag-foot">
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd id="sub">₹0</dd></div>
+        <div><dt>Shipping</dt><dd id="shipcost">—</dd></div>
+        <div class="totals__grand"><dt>Total</dt><dd id="grand">₹0</dd></div>
+      </dl>
+      <button class="btn btn--ink btn--block" id="checkout-btn"><span>Checkout</span></button>
+    </footer>
+  </div>
+</dialog>
+
+<dialog class="modal" id="quick" aria-labelledby="q-name">
+  <div class="modal__panel quick">
+    <button class="icon-btn modal__x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="quick__media" id="q-media"></div>
+    <div class="quick__info">
+      <p class="eyebrow" id="q-cat"></p>
+      <h2 id="q-name" class="quick__name"></h2>
+      <p class="quick__price" id="q-price"></p>
+      <p class="quick__blurb" id="q-blurb"></p>
+      <fieldset class="opt"><legend>Colour — <span id="q-colorname"></span></legend><div class="swatches swatches--lg" id="q-colors"></div></fieldset>
+      <fieldset class="opt"><legend>Size <button class="link" type="button" data-open="size">Size guide</button></legend><div class="sizes" id="q-sizes"></div><p class="opt__err" id="q-err" role="alert"></p></fieldset>
+      <div class="quick__actions">
+        <button class="btn btn--ink btn--grow" id="q-add"><span>Add to bag</span></button>
+        <button class="icon-btn icon-btn--bordered" id="q-wish" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2Z"/></svg></button>
+      </div>
+      <ul class="quick__details" id="q-details"></ul>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="modal modal--wide" id="checkout" aria-labelledby="co-title">
+  <div class="modal__panel checkout">
+    <button class="icon-btn modal__x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <form class="checkout__form" id="co-form" novalidate>
+      <h2 id="co-title" class="checkout__title">Checkout</h2>
+      <fieldset><legend>Contact</legend>
+        <div class="field"><label for="co-name">Full name</label><input id="co-name" name="name" autocomplete="name" required></div>
+        <div class="field-row">
+          <div class="field"><label for="co-email">Email</label><input id="co-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="co-phone">Phone</label><input id="co-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+\- ]{10,15}"></div>
+        </div>
+      </fieldset>
+      <fieldset><legend>Delivery</legend>
+        <div class="field"><label for="co-addr">Address</label><input id="co-addr" name="address" autocomplete="street-address" required></div>
+        <div class="field-row">
+          <div class="field"><label for="co-city">City</label><input id="co-city" name="city" autocomplete="address-level2" required></div>
+          <div class="field"><label for="co-pin">PIN code</label><input id="co-pin" name="pin" inputmode="numeric" autocomplete="postal-code" required pattern="[0-9]{6}" maxlength="6"></div>
+        </div>
+      </fieldset>
+      <fieldset class="pay"><legend>Payment</legend>
+        <label class="pay__opt"><input type="radio" name="pay" value="upi" checked><span><b>UPI</b><small>GPay, PhonePe, Paytm</small></span></label>
+        <label class="pay__opt"><input type="radio" name="pay" value="card"><span><b>Card</b><small>Credit or debit</small></span></label>
+        <label class="pay__opt"><input type="radio" name="pay" value="cod"><span><b>Cash on delivery</b><small>+ ₹49 handling</small></span></label>
+      </fieldset>
+      <button class="btn btn--ink btn--block" type="submit" id="co-submit"><span>Place order</span></button>
+      <p class="checkout__note">Demo store: no payment is taken and no order is placed.</p>
+    </form>
+    <aside class="checkout__sum" aria-label="Order summary">
+      <h3>Order summary</h3>
+      <ul id="co-lines"></ul>
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd id="co-sub"></dd></div>
+        <div><dt>Shipping</dt><dd id="co-ship"></dd></div>
+        <div id="co-cod-row" hidden><dt>COD handling</dt><dd>₹49</dd></div>
+        <div class="totals__grand"><dt>Total</dt><dd id="co-total"></dd></div>
+      </dl>
+    </aside>
+    <div class="done" id="co-done" hidden>
+      <div class="done__art" id="done-art"></div>
+      <h2>Thank you<span id="done-name"></span>.</h2>
+      <p>Order <b id="done-no"></b> is confirmed. We'll send the details to <b id="done-email"></b>.</p>
+      <button class="btn btn--ink" data-close><span>Continue shopping</span></button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="modal modal--search" id="search" aria-label="Search">
+  <div class="modal__panel searchp">
+    <div class="searchp__bar">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
+      <input id="search-input" type="search" placeholder="Search knits, dresses, kurtas…" autocomplete="off" aria-label="Search products">
+      <button class="icon-btn" data-close aria-label="Close search"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <ul class="searchp__res" id="search-res"></ul>
+  </div>
+</dialog>
+
+<dialog class="modal modal--sm" id="size" aria-labelledby="size-title">
+  <div class="modal__panel sizeg">
+    <button class="icon-btn modal__x" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h2 id="size-title" class="quick__name">Size guide</h2>
+    <p class="quick__blurb">Body measurements in inches. Between sizes? Size up for a relaxed fit.</p>
+    <table>
+      <thead><tr><th scope="col">Size</th><th scope="col">Bust</th><th scope="col">Waist</th><th scope="col">Hip</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">XS</th><td>32</td><td>26</td><td>35</td></tr>
+        <tr><th scope="row">S</th><td>34</td><td>28</td><td>37</td></tr>
+        <tr><th scope="row">M</th><td>36</td><td>30</td><td>39</td></tr>
+        <tr><th scope="row">L</th><td>38</td><td>32</td><td>41</td></tr>
+        <tr><th scope="row">XL</th><td>40</td><td>34</td><td>43</td></tr>
+      </tbody>
+    </table>
+  </div>
+</dialog>
+
+<dialog class="menu" id="menu" aria-label="Menu">
+  <div class="menu__panel">
+    <button class="icon-btn menu__x" data-close aria-label="Close menu"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <nav aria-label="Menu">
+      <a href="#shop" data-filter="all" data-close>Shop</a>
+      <a href="#collections" data-close>Collections</a>
+      <a href="#story" data-close>Story</a>
+      <a href="#boutique" data-close>Boutique</a>
+      <a href="#join" data-close>Newsletter</a>
+    </nav>
+    <p class="menu__foot">LEVIT — womenswear made to feel light.</p>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
