@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
 import { Cloth } from './cloth.js';
-import { paintFabric } from './fabrics.js';
+import { paintFabric, fiberTexture } from './fabrics.js';
 import { PATTERNS } from './patterns.js';
 
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -29,13 +29,13 @@ const RAIL_DIR = new THREE.Vector3(Math.cos(RAIL_ANGLE), 0, -Math.sin(RAIL_ANGLE
 
 const RACK = [
   { key: 'knit', pattern: 'knit', color: '#b8561f', s: 0, rotY: 0.0, hanger: 'black', size: 1024,
-    mat: { roughness: 0.94, sheen: 1, sheenRoughness: 0.5, sheenColor: 0xffc690, envMapIntensity: 0.55 }, normalK: 1.1, hot: [0.3, -0.5, 0.12] },
-  { key: 'dress', pattern: 'dress', color: '#15100d', s: 1.35, rotY: 0.2, hanger: 'pale', size: 768,
-    mat: { roughness: 0.38, sheen: 0.9, sheenRoughness: 0.3, sheenColor: 0xffffff, envMapIntensity: 1.1, metalness: 0.12 }, normalK: 1.4, hot: [0.1, -0.7, 0.1] },
+    mat: { roughness: 0.94, sheen: 1, sheenRoughness: 0.5, sheenColor: 0xffc690, envMapIntensity: 0.55 }, normalK: 1.1, bump: 0.9, hot: [0.3, -0.5, 0.12] },
+  { key: 'dress', pattern: 'dress', color: '#15100d', s: 1.35, rotY: 0.2, hanger: 'pale', size: 1024,
+    mat: { roughness: 0.4, sheen: 0.8, sheenRoughness: 0.3, sheenColor: 0xffffff, envMapIntensity: 1.3 }, normalK: 1.4, hot: [0.1, -0.7, 0.1] },
   { key: 'shacket', pattern: 'shacket', color: '#6b6a3c', s: 2.7, rotY: 0.24, hanger: 'wood', size: 768,
-    mat: { roughness: 0.92, sheen: 0.5, sheenRoughness: 0.6, sheenColor: 0xd8d6a0, envMapIntensity: 0.5 }, normalK: 2.2, hot: [-0.3, -0.5, 0.1] },
+    mat: { roughness: 0.92, sheen: 0.5, sheenRoughness: 0.6, sheenColor: 0xd8d6a0, envMapIntensity: 0.5 }, normalK: 2.2, bump: 0.7, hot: [-0.3, -0.5, 0.1] },
   { key: 'trouser', pattern: 'trouser', color: '#a58f78', s: 4.05, rotY: 0.28, hanger: 'clip', size: 640,
-    mat: { roughness: 0.86, sheen: 0.6, sheenRoughness: 0.55, sheenColor: 0xf0e2cc, envMapIntensity: 0.5 }, normalK: 1.6, hot: [0.2, -0.7, 0.1] },
+    mat: { roughness: 0.86, sheen: 0.6, sheenRoughness: 0.55, sheenColor: 0xf0e2cc, envMapIntensity: 0.5 }, normalK: 1.6, bump: 0.6, hot: [0.2, -0.7, 0.1] },
 ];
 
 /* ------------------------------------------------------------- hangers & hook */
@@ -61,6 +61,21 @@ function hookGeometry() {
   return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.5), 80, 0.0105, 12, false);
 }
 
+function woodTexture() {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+  const g = c.getContext('2d');
+  g.fillStyle = '#b98d5b'; g.fillRect(0, 0, 512, 256);
+  for (let i = 0; i < 90; i++) {
+    const y = Math.random() * 256, w = 0.6 + Math.random() * 2.4, a = 0.05 + Math.random() * 0.22;
+    g.strokeStyle = Math.random() < 0.7 ? `rgba(70,40,15,${a})` : `rgba(235,200,150,${a * 0.8})`;
+    g.lineWidth = w; g.beginPath(); g.moveTo(0, y);
+    for (let x = 0; x <= 512; x += 64) g.lineTo(x, y + Math.sin(x * 0.02 + i) * 2.2 + (Math.random() - 0.5) * 0.8);
+    g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4;
+  return t;
+}
+
 const matBrass = () => new THREE.MeshStandardMaterial({ color: 0xd9b46c, roughness: 0.26, metalness: 1, envMapIntensity: 1.3 });
 
 function buildHanger(type) {
@@ -80,10 +95,42 @@ function buildHanger(type) {
       pale: { color: 0xe6e0d6, rough: 0.5, depth: 0.026, half: 0.56, th: 0.036 },
       wood: { color: 0xb98d5b, rough: 0.5, depth: 0.04, half: 0.66, th: 0.054 },
     }[type];
-    add(arms(-0.19, cfg.half, cfg.th, cfg.depth), new THREE.MeshStandardMaterial({ color: cfg.color, roughness: cfg.rough, metalness: type === 'wood' ? 0 : 0.12 }));
+    const mat = type === 'wood'
+      ? new THREE.MeshPhysicalMaterial({ map: woodTexture(), roughness: 0.42, clearcoat: 0.5, clearcoatRoughness: 0.35 })
+      : type === 'pale'
+        ? new THREE.MeshPhysicalMaterial({ color: cfg.color, roughness: 0.95, sheen: 1, sheenRoughness: 0.4, sheenColor: new THREE.Color(0xffffff) })   // flocked velvet
+        : new THREE.MeshPhysicalMaterial({ color: cfg.color, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.08, metalness: 0.1 });  // black lacquer
+    add(arms(-0.19, cfg.half, cfg.th, cfg.depth), mat);
   }
   add(hookGeometry(), matBrass());
   return g;
+}
+
+/* ------------------------------------------------- contact-hardening shadows (PCSS)
+ * Shadows are sharp where the cloth is close to the wall or to itself and soften with distance, like a real
+ * soft light. Replaces the PCF branch of three's directional shadow lookup. */
+const PCSS_HELPERS = `
+float lvRand(vec2 co) { return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453); }
+vec2 lvDisk(int i, int n, float rot) { float r = sqrt((float(i) + 0.5) / float(n)); float a = float(i) * 2.39996323 + rot; return r * vec2(cos(a), sin(a)); }
+float lvPCSS(sampler2D map, vec2 uv, float zr, vec2 size) {
+  float rot = lvRand(uv * size) * 6.2831853;
+  float sum = 0.0, cnt = 0.0;
+  for (int i = 0; i < 14; i++) {
+    float d = unpackRGBAToDepth(texture2D(map, uv + lvDisk(i, 14, rot) * 0.0075));
+    if (d < zr - 0.0004) { sum += d; cnt += 1.0; }
+  }
+  if (cnt < 0.5) return 1.0;
+  float pen = clamp((zr - sum / cnt) * 0.1, 1.2 / size.x, 0.0062);
+  float lit = 0.0;
+  for (int i = 0; i < 20; i++) lit += step(zr, unpackRGBAToDepth(texture2D(map, uv + lvDisk(i, 20, rot + 1.7) * pen)));
+  return lit / 20.0;
+}
+float getShadow(`;
+let shadowChunk = THREE.ShaderChunk.shadowmap_pars_fragment;
+if (!shadowChunk.includes('lvPCSS')) {
+  shadowChunk = shadowChunk.replace('float getShadow(', PCSS_HELPERS)
+    .replace('#if defined( SHADOWMAP_TYPE_PCF )', '#if defined( SHADOWMAP_TYPE_PCF )\n shadow = lvPCSS(shadowMap, shadowCoord.xy, shadowCoord.z, shadowMapSize);\n#elif defined( LV_UNUSED_PCF )');
+  THREE.ShaderChunk.shadowmap_pars_fragment = shadowChunk;
 }
 
 /* ---------------------------------------------------------------- rendering */
@@ -115,7 +162,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;      // the lookup is replaced by PCSS above
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -126,7 +173,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   const key = new THREE.DirectionalLight(0xfff0dc, 2.7);
   key.position.set(-3.2, 3.4, 4.4);
   key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(3072, 3072);
   Object.assign(key.shadow.camera, { left: -5.5, right: 5.5, top: 3.4, bottom: -3.4, near: 1, far: 16 });
   key.shadow.bias = -0.0009; key.shadow.normalBias = 0.03; key.shadow.radius = 6;
   scene.add(key, key.target);
@@ -135,7 +182,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
 
   /* wall (shadow catcher) parallel to the rail */
   const nrm = new THREE.Vector3(Math.sin(RAIL_ANGLE), 0, Math.cos(RAIL_ANGLE));
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 16), new THREE.ShadowMaterial({ color: 0x3a2210, opacity: 0.2 }));
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 16), new THREE.ShadowMaterial({ color: 0x3a2210, opacity: 0.38 }));
   wall.position.copy(nrm).multiplyScalar(-0.95).setY(-0.9);
   wall.rotation.y = RAIL_ANGLE;
   wall.receiveShadow = true;
@@ -148,6 +195,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
 
   /* ---- garments ---- */
   const G = [];
+  const fiber = fiberTexture(256);
   const slipMat = new THREE.MeshPhysicalMaterial({ color: 0xf4efe6, roughness: 0.38, sheen: 0.6, sheenColor: new THREE.Color(0xffffff), side: THREE.DoubleSide, envMapIntensity: 0.8 });
   RACK.forEach((spec, k) => {
     const pat = PATTERNS[spec.pattern];
@@ -162,16 +210,17 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
       shrink: pat.shrink, iterations: pat.iterations, bend: pat.bend,
     });
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(cloth.pos32, 3).setUsage(THREE.DynamicDrawUsage));
-    geo.setAttribute('normal', new THREE.BufferAttribute(cloth.normals, 3).setUsage(THREE.DynamicDrawUsage));
-    geo.setAttribute('color', new THREE.BufferAttribute(cloth.ao, 3).setUsage(THREE.DynamicDrawUsage));
-    geo.setAttribute('uv', new THREE.BufferAttribute(cloth.uv, 2));
-    geo.setIndex(new THREE.BufferAttribute(cloth.index, 1));
+    geo.setAttribute('position', new THREE.BufferAttribute(cloth.rpos, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('normal', new THREE.BufferAttribute(cloth.rnorm, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('color', new THREE.BufferAttribute(cloth.rcol, 3).setUsage(THREE.DynamicDrawUsage));
+    geo.setAttribute('uv', new THREE.BufferAttribute(cloth.ruv, 2));
+    geo.setIndex(new THREE.BufferAttribute(cloth.rindex, 1));
     geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, -1, 0), 8);
     const material = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, side: THREE.DoubleSide, vertexColors: true, roughness: 0.9,
-      ...spec.mat, sheenColor: new THREE.Color(spec.mat.sheenColor),
+      color: 0xffffff, side: THREE.DoubleSide, vertexColors: true,
+      ...spec.mat, roughness: 1, metalness: 1, sheenColor: new THREE.Color(spec.mat.sheenColor),
     });
+    if (spec.bump) { material.bumpMap = fiber; material.bumpScale = spec.bump; }
     patchFabric(material);
     const mesh = new THREE.Mesh(geo, material);
     mesh.frustumCulled = false; mesh.castShadow = true; mesh.receiveShadow = true;
@@ -199,11 +248,12 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
     const spec = g.spec, pat = PATTERNS[spec.pattern];
     const tex = paintFabric({
       kind: spec.key === 'trouser' ? 'trouser' : spec.key, color: color || spec.color,
-      poly: pat.outline(true), atlas: g.cloth.atlas, size: spec.size, normalK: spec.normalK,
+      poly: pat.outline(true), atlas: g.cloth.atlas, size: spec.size, normalK: spec.normalK, rough: spec.mat.roughness,
       anisotropy: Math.min(8, renderer.capabilities.getMaxAnisotropy()),
     });
-    g.material.map?.dispose(); g.material.normalMap?.dispose();
+    g.material.map?.dispose(); g.material.normalMap?.dispose(); g.material.roughnessMap?.dispose();
     g.material.map = tex.map; g.material.normalMap = tex.normalMap;
+    g.material.roughnessMap = g.material.metalnessMap = tex.ormMap;
     g.material.normalScale = new THREE.Vector2(1, 1);
     g.material.needsUpdate = true;
   }
@@ -227,6 +277,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   let running = true, last = performance.now(), time = 0, acc = 0, frameNo = 0;
   let quality = 2;                                  // 2 = full, 1 = reduced solver, 0 = far garments frozen
   let slow = 0, simMs = 0;
+  let dprCap = matchMedia('(pointer: coarse)').matches ? 1.5 : 2;
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), tmpV = new THREE.Vector3();
   const hits = G.map((g) => g.hit);
   const view = { w: 1, h: 1, tan: Math.tan(THREE.MathUtils.degToRad(14)) };
@@ -234,7 +285,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
   function size() {
     const r = canvas.getBoundingClientRect();
     const w = Math.max(1, r.width), h = Math.max(1, r.height);
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, dprCap));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     const aspect = w / h, tan = view.tan;
@@ -368,7 +419,7 @@ export function initHero({ canvas, hotspots = [], hero, reduced = false }) {
     render();
     /* adapt: if the page can't hold ~45fps, lighten the solver, then stop animating the far garments */
     if (dt > 0.024) slow++; else slow = Math.max(0, slow - 1);
-    if (slow > 50 && quality > 0) { quality--; slow = 0; }
+    if (slow > 50) { slow = 0; if (quality > 0) quality--; else if (dprCap > 1) { dprCap = 1; size(); } }
   }
 
   prepareNext();

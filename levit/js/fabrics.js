@@ -50,7 +50,9 @@ const PAINT = {
     const bands = edgeField(poly, ['gather', 'neck']);
     const hem = edgeField(poly, ['hemg']);
     return (x, y) => {
-      let h = waffle(x, y), f = 0.7 + 0.3 * h + (hash((x * 900) | 0, (y * 900) | 0) - 0.5) * 0.07;
+      let h = waffle(x, y);
+      const cell = hash(Math.floor(x / 0.017), Math.floor(y / 0.017));
+      let f = 0.7 + 0.3 * h + (hash((x * 900) | 0, (y * 900) | 0) - 0.5) * 0.07 + (cell - 0.5) * 0.07 + (vnoise(x * 14, y * 14) - 0.5) * 0.09;
       const b = bands(x, y), o = hem(x, y);
       const isNeck = b.tag === 'neck';
       const w = isNeck ? 0.036 : 0.085;
@@ -73,16 +75,21 @@ const PAINT = {
       const wave = 0.5 + 0.5 * Math.sin(((y - 0.5 * (ax - 0.14)) / 0.058) * Math.PI * 2);
       h += zone * (wave - 0.5) * 0.55; f *= 1 - zone * (0.22 * (1 - wave));
     }
-    /* sparkle: scattered micro-sequins that catch the light */
-    const gx = Math.floor(x / 0.017), gy = Math.floor(y / 0.017);
+    /* sequins: tiny discs, each tilted differently so they glint as the cloth moves */
+    const gx = Math.floor(x / 0.02), gy = Math.floor(y / 0.02);
     const r = hash(gx, gy);
-    let spark = 0;
-    if (r > 0.82) {
-      const cx = (gx + 0.5) * 0.017 + (hash(gx + 7, gy) - 0.5) * 0.008, cy = (gy + 0.5) * 0.017 + (hash(gx, gy + 7) - 0.5) * 0.008;
-      const d = Math.hypot(x - cx, y - cy) / 0.0034;
-      if (d < 1) { spark = (1 - d * d) * (0.5 + 0.5 * hash(gx + 3, gy + 5)); h += spark * 0.5; }
+    let spark = 0, rough = 0.4, metal = 0, nx = 0, ny = 0;
+    if (r > 0.4) {
+      const cx = (gx + 0.5 + (hash(gx + 7, gy) - 0.5) * 0.4) * 0.02, cy = (gy + 0.5 + (hash(gx, gy + 7) - 0.5) * 0.4) * 0.02;
+      const d = Math.hypot(x - cx, y - cy) / 0.0072;
+      if (d < 1) {
+        spark = 1 - smooth(0.82, 1, d); rough = 0.14; metal = 0.9;
+        nx = (hash(gx + 3, gy + 5) - 0.5) * 1.5; ny = (hash(gx + 9, gy + 1) - 0.5) * 1.5;
+        h += 0.35;
+      }
     }
-    return { r: tint[0] * f + spark * 230, g: tint[1] * f + spark * 230, b: tint[2] * f + spark * 235, h: Math.min(1, h) };
+    const lum = 0.55 + 0.45 * hash(gx + 11, gy + 13);
+    return { r: tint[0] * f * (1 - spark) + spark * 205 * lum, g: tint[1] * f * (1 - spark) + spark * 200 * lum, b: tint[2] * f * (1 - spark) + spark * 195 * lum, h: Math.min(1, h), rough, metal, nx, ny };
   },
   blouse: (tint, poly) => {
     const bands = edgeField(poly, ['gather', 'neck']);
@@ -148,38 +155,68 @@ const PAINT = {
 /**
  * @returns {{map:THREE.CanvasTexture, normalMap:THREE.CanvasTexture}}
  */
-export function paintFabric({ kind, color, poly, atlas, size = 768, normalK = 2.2, anisotropy = 8 }) {
+export function paintFabric({ kind, color, poly, atlas, size = 768, normalK = 2.2, anisotropy = 8, rough = 0.9 }) {
   const paint = PAINT[kind](hex(color), poly);
+  const seams = kind === 'knit' ? null : edgeField(poly, ['seam', 'hang']);
   const N = size;
-  const col = document.createElement('canvas'), nor = document.createElement('canvas');
-  col.width = col.height = nor.width = nor.height = N;
-  const cc = col.getContext('2d'), nc = nor.getContext('2d');
-  const ci = cc.createImageData(N, N), ni = nc.createImageData(N, N);
-  const H = new Float32Array(N * N);
+  const col = document.createElement('canvas'), nor = document.createElement('canvas'), orm = document.createElement('canvas');
+  col.width = col.height = nor.width = nor.height = orm.width = orm.height = N;
+  const cc = col.getContext('2d'), nc = nor.getContext('2d'), oc = orm.getContext('2d');
+  const ci = cc.createImageData(N, N), ni = nc.createImageData(N, N), oi = oc.createImageData(N, N);
+  const H = new Float32Array(N * N), NX = new Float32Array(N * N), NY = new Float32Array(N * N);
   const px = (i) => atlas.x0 + ((i + 0.5) / N) * atlas.S;
   const py = (j) => atlas.y0 + atlas.S - ((j + 0.5) / N) * atlas.S;
   for (let j = 0; j < N; j++) {
     const y = py(j);
     for (let i = 0; i < N; i++) {
-      const o = paint(px(i), y);
+      const x = px(i);
+      const o = paint(x, y);
+      let f = 1, hh = o.h;
+      if (seams) {
+        const sd = seams(x, y);
+        if (sd.d < 0.02) {
+          const e = Math.abs(sd.d - 0.011);
+          if (e < 0.0013 && fract(sd.s / 0.0095) < 0.62) { f = 0.8; hh -= 0.25; }       // topstitch
+          if (sd.d < 0.0035) { f *= 0.9; hh -= 0.12; }                                    // seam allowance ridge
+        }
+      }
       const k = (j * N + i) * 4;
-      ci.data[k] = Math.min(255, o.r); ci.data[k + 1] = Math.min(255, o.g); ci.data[k + 2] = Math.min(255, o.b); ci.data[k + 3] = 255;
-      H[j * N + i] = o.h;
+      ci.data[k] = Math.min(255, o.r * f); ci.data[k + 1] = Math.min(255, o.g * f); ci.data[k + 2] = Math.min(255, o.b * f); ci.data[k + 3] = 255;
+      oi.data[k] = 255; oi.data[k + 1] = (o.rough ?? rough) * 255; oi.data[k + 2] = (o.metal ?? 0) * 255; oi.data[k + 3] = 255;
+      H[j * N + i] = hh; NX[j * N + i] = o.nx || 0; NY[j * N + i] = o.ny || 0;
     }
   }
   for (let j = 0; j < N; j++) {
     for (let i = 0; i < N; i++) {
-      const k = (j * N + i) * 4;
+      const k = (j * N + i) * 4, q = j * N + i;
       const dx = H[j * N + Math.min(N - 1, i + 1)] - H[j * N + Math.max(0, i - 1)];
       const dy = H[Math.min(N - 1, j + 1) * N + i] - H[Math.max(0, j - 1) * N + i];
-      let nx = -dx * normalK, ny = dy * normalK, nz = 1;
+      let nx = -dx * normalK + NX[q], ny = dy * normalK + NY[q], nz = 1;
       const l = Math.hypot(nx, ny, nz); nx /= l; ny /= l; nz /= l;
       ni.data[k] = (nx * 0.5 + 0.5) * 255; ni.data[k + 1] = (ny * 0.5 + 0.5) * 255; ni.data[k + 2] = (nz * 0.5 + 0.5) * 255; ni.data[k + 3] = 255;
     }
   }
-  cc.putImageData(ci, 0, 0); nc.putImageData(ni, 0, 0);
-  const map = new THREE.CanvasTexture(col), normalMap = new THREE.CanvasTexture(nor);
+  cc.putImageData(ci, 0, 0); nc.putImageData(ni, 0, 0); oc.putImageData(oi, 0, 0);
+  const map = new THREE.CanvasTexture(col), normalMap = new THREE.CanvasTexture(nor), ormMap = new THREE.CanvasTexture(orm);
   map.colorSpace = THREE.SRGBColorSpace;
-  for (const t of [map, normalMap]) { t.anisotropy = anisotropy; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.needsUpdate = true; }
-  return { map, normalMap };
+  for (const t of [map, normalMap, ormMap]) { t.anisotropy = anisotropy; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.needsUpdate = true; }
+  return { map, normalMap, ormMap };
+}
+
+/** a tiling fibre texture: fine strands and fuzz, layered over the weave as a bump map */
+export function fiberTexture(size = 256) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'), im = g.createImageData(size, size);
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const u = x / size, v = y / size;
+    const wrap = (n, f) => { const fx = u * f, fy = v * f; const ix = Math.floor(fx), iy = Math.floor(fy), tx = fx - ix, ty = fy - iy; const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty); const h = (a, b) => hash((a % f + f) % f + n * 31, (b % f + f) % f); return (h(ix, iy) * (1 - sx) + h(ix + 1, iy) * sx) * (1 - sy) + (h(ix, iy + 1) * (1 - sx) + h(ix + 1, iy + 1) * sx) * sy; };
+    let val = 0.45 * wrap(1, 16) + 0.3 * wrap(2, 48) + 0.25 * wrap(3, 128);
+    val += 0.1 * Math.sin((u * 64 + 3 * wrap(4, 8)) * Math.PI * 2);            // strand direction
+    const k = (y * size + x) * 4; const b = Math.max(0, Math.min(255, val * 200));
+    im.data[k] = im.data[k + 1] = im.data[k + 2] = b; im.data[k + 3] = 255;
+  }
+  g.putImageData(im, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(7, 7); t.anisotropy = 4; t.needsUpdate = true;
+  return t;
 }

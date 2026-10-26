@@ -61,7 +61,7 @@ function meshSheet(poly, h, b) {
       const c = closest(x, y, P);
       if (!ins && c.d > 1.0 * h) continue;
       let tag = null;
-      if (!ins) { x = c.x; y = c.y; tag = T[c.e]; } else if (c.d < 0.5 * h) tag = T[c.e];
+      if (!ins || c.d < 0.5 * h) { x = c.x; y = c.y; tag = T[c.e]; }
       id[j * nx + i] = verts.length;
       verts.push({ x, y, i, j, tag });
     }
@@ -138,7 +138,6 @@ export class Cloth {
     /* state */
     this.pos = new Float64Array(N * 3);
     this.prev = new Float64Array(N * 3);
-    this.pos32 = new Float32Array(N * 3);
     this.normals = new Float32Array(N * 3);
     this.ao = new Float32Array(N * 3).fill(1);
     this.inv = new Float32Array(N).fill(1);
@@ -225,9 +224,58 @@ export class Cloth {
     for (let p = 0; p < N; p++) { this.nbStart[p] = flat.length; flat.push(...nb[p]); }
     this.nbStart[N] = flat.length; this.nb = Int32Array.from(flat);
 
+    this.buildRender();
     this.iterations = o.iterations ?? 6;
     this.damp = o.damp ?? 0.992;
     this.time = 0;
+  }
+
+  /** the visible mesh is the simulation mesh subdivided once; new vertices sit on a curved (PN-style) edge */
+  buildRender() {
+    const { index, N } = this;
+    const map = new Map(), ea = [], eb = [], idx = [];
+    const mid = (a, b) => {
+      const lo = a < b ? a : b, hi = a < b ? b : a, k = lo * N + hi;
+      let m = map.get(k);
+      if (m === undefined) { m = N + ea.length; map.set(k, m); ea.push(lo); eb.push(hi); }
+      return m;
+    };
+    for (let t = 0; t < index.length; t += 3) {
+      const a = index[t], b = index[t + 1], c = index[t + 2];
+      const ab = mid(a, b), bc = mid(b, c), ca = mid(c, a);
+      idx.push(a, ab, ca, ab, b, bc, ca, bc, c, ab, bc, ca);
+    }
+    const E = ea.length, RN = N + E;
+    this.E = E; this.ea = Int32Array.from(ea); this.eb = Int32Array.from(eb);
+    this.rindex = Uint32Array.from(idx);
+    this.rpos = new Float32Array(RN * 3); this.rnorm = new Float32Array(RN * 3);
+    this.rcol = new Float32Array(RN * 3).fill(1); this.ruv = new Float32Array(RN * 2);
+    this.ruv.set(this.uv);
+    for (let e = 0; e < E; e++) {
+      this.ruv[(N + e) * 2] = (this.uv[ea[e] * 2] + this.uv[eb[e] * 2]) / 2;
+      this.ruv[(N + e) * 2 + 1] = (this.uv[ea[e] * 2 + 1] + this.uv[eb[e] * 2 + 1]) / 2;
+    }
+  }
+
+  fillRender() {
+    const { pos, normals, ao, N, E, ea, eb, rpos, rnorm, rcol } = this;
+    for (let i = 0; i < N * 3; i++) { rpos[i] = pos[i]; rnorm[i] = normals[i]; rcol[i] = ao[i]; }
+    for (let e = 0; e < E; e++) {
+      const a = ea[e] * 3, b = eb[e] * 3, o = (N + e) * 3;
+      const dx = pos[b] - pos[a], dy = pos[b + 1] - pos[a + 1], dz = pos[b + 2] - pos[a + 2];
+      const da = (dx * normals[a] + dy * normals[a + 1] + dz * normals[a + 2]) / 3;
+      const db = (dx * normals[b] + dy * normals[b + 1] + dz * normals[b + 2]) / 3;
+      for (let k = 0; k < 3; k++) {
+        const d = k === 0 ? dx : k === 1 ? dy : dz;
+        const p1 = pos[a + k] + d / 3 - da * normals[a + k];
+        const p2 = pos[b + k] - d / 3 + db * normals[b + k];
+        rpos[o + k] = (pos[a + k] + 3 * p1 + 3 * p2 + pos[b + k]) / 8;
+        rnorm[o + k] = normals[a + k] + normals[b + k];
+        rcol[o + k] = (ao[a + k] + ao[b + k]) / 2;
+      }
+      const l = Math.hypot(rnorm[o], rnorm[o + 1], rnorm[o + 2]) || 1;
+      rnorm[o] /= l; rnorm[o + 1] /= l; rnorm[o + 2] /= l;
+    }
   }
 
   /** place particles from the pattern, in the frame given by the 4x4 matrix `m` (column-major, three.js order) */
@@ -328,8 +376,7 @@ export class Cloth {
 
   /** normals + curvature occlusion, once per rendered frame */
   refresh() {
-    const { pos, normals, index, N, nb, nbStart, ao, pos32 } = this;
-    for (let i = 0; i < pos.length; i++) pos32[i] = pos[i];
+    const { pos, normals, index, N, nb, nbStart, ao } = this;
     normals.fill(0);
     for (let t = 0; t < index.length; t += 3) {
       const a = index[t] * 3, b = index[t + 1] * 3, c = index[t + 2] * 3;
@@ -354,5 +401,6 @@ export class Cloth {
         ao[k] = ao[k + 1] = ao[k + 2] = cur + (a - cur) * 0.5;
       }
     }
+    this.fillRender();
   }
 }

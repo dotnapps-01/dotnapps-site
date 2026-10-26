@@ -60,7 +60,7 @@ const thickDefault = (y) => 0.052 + 0.03 * Math.min(1, Math.max(0, (-0.15 - y) /
 export const PATTERNS = {
   knit: {
     outline: (front) => top({ neckDepth: 0.40, neckBack: 0.11, neckHalf: 0.17, shoulder: 0.56, sleeveL: 1.02, ang: 0.33, cuffW: 0.27, armpit: 0.40, side: 0.52, taper: 0.02, hemY: 0.95, hemTag: 'hemg' }, front),
-    hangY: armLine, h: 0.036, iterations: 6, thick: (x, y) => thickDefault(y), shrink: { gather: 0.52, hemg: 0.86 },
+    hangY: armLine, h: 0.032, iterations: 8, thick: (x, y) => thickDefault(y), shrink: { gather: 0.52, hemg: 0.86 },
   },
   shacket: {
     outline: (front) => top({ neckDepth: 0.22, neckBack: 0.08, neckHalf: 0.16, shoulder: 0.60, sleeveL: 1.04, ang: 0.20, cuffW: 0.31, armpit: 0.46, side: 0.60, taper: 0.0, hemY: 1.14, hemTag: 'open' }, front),
