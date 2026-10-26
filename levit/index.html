@@ -15,9 +15,6 @@
 <link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/levit.css">
 <script>document.documentElement.classList.add('js');</script>
-<script type="importmap">
-{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
-</script>
 </head>
 <body>
 
@@ -65,64 +62,52 @@
 
 <main id="top">
 
-  <!-- ───────────── HERO ───────────── -->
-  <section class="hero" id="hero" aria-label="LEVIT AW26">
-    <div class="hero__glow" aria-hidden="true"></div>
-    <svg class="hero__arc" viewBox="0 0 1440 420" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M-20 330 C 220 120, 520 60, 760 120 S 1260 300, 1460 90" fill="none" stroke="currentColor" stroke-width="1.2"/>
-      <path d="M-20 360 C 240 160, 520 100, 760 160 S 1260 340, 1460 130" fill="none" stroke="currentColor" stroke-width=".6" opacity=".6"/>
-    </svg>
+  <!-- ───────────── HERO: the boutique entrance ───────────── -->
+  <section class="entrance" id="hero" aria-label="LEVIT boutique entrance">
+    <div class="entrance__sticky" id="hero-sticky">
+      <div class="entrance__scene" id="scene">
+        <img class="entrance__img" src="img/boutique.webp" alt="The LEVIT boutique: a glass storefront with the LEVIT sign lit in warm gold, racks of clothes, denim shelves and three mannequins" width="1179" height="1298" fetchpriority="high" decoding="async">
+        <div class="entrance__glow" aria-hidden="true"></div>
+        <div class="entrance__spill" aria-hidden="true"></div>
+        <button class="hotspot" style="left:67%;top:65%" data-quick="brushed-fleece-hoodie" aria-label="View Brushed Fleece Hoodie">
+          <span class="hotspot__dot"></span>
+          <span class="hotspot__card"><b>Fleece Hoodie</b><span>₹2,199</span><em>View →</em></span>
+        </button>
+        <button class="hotspot" style="left:74.6%;top:66%" data-quick="polka-midi-dress" aria-label="View Polka Midi Dress">
+          <span class="hotspot__dot"></span>
+          <span class="hotspot__card"><b>Polka Midi Dress</b><span>₹2,199 <s>₹2,799</s></span><em>View →</em></span>
+        </button>
+        <button class="hotspot" style="left:80.5%;top:65.5%" data-flip data-quick="satin-slip-dress" aria-label="View Satin Slip Dress">
+          <span class="hotspot__dot"></span>
+          <span class="hotspot__card"><b>Satin Slip Dress</b><span>₹2,799</span><em>View →</em></span>
+        </button>
+        <button class="hotspot" style="left:48%;top:57.5%" data-quick="straight-jeans" aria-label="View Washed Straight Jeans">
+          <span class="hotspot__dot"></span>
+          <span class="hotspot__card"><b>Straight Jeans</b><span>₹1,599</span><em>View →</em></span>
+        </button>
+        <button class="hotspot" style="left:36%;top:73%" data-quick="puff-sleeve-blouse" aria-label="View Puff-Sleeve Blouse">
+          <span class="hotspot__dot"></span>
+          <span class="hotspot__card"><b>Puff-Sleeve Blouse</b><span>₹1,399</span><em>View →</em></span>
+        </button>
+      </div>
+      <div class="entrance__shade" aria-hidden="true"></div>
 
-    <h1 class="hero__word" aria-label="LEVIT"><span aria-hidden="true">L</span><span aria-hidden="true">E</span><span aria-hidden="true">V</span><span aria-hidden="true">I</span><span aria-hidden="true">T</span></h1>
-
-    <canvas id="hero-canvas" role="img" aria-label="A rust waffle-knit top on a black hanger, swinging from a rail. Drag it."></canvas>
-    <img class="hero__fallback" src="img/knit-rust.webp" alt="Rust waffle-knit top on a hanger" width="1179" height="1663" fetchpriority="high">
-
-    <div class="hero__ui">
-      <div class="hero__copy">
-        <div class="hero__head">
-          <p class="eyebrow"><span class="eyebrow__dot"></span>AW26 · The Studio Edit</p>
-          <h2 class="hero__title">Effortlessly <em>elevated.</em></h2>
-        </div>
-        <div class="hero__body">
-          <p class="hero__lede">Soft structure for every kind of day. Fleece hoodies, puffers, straight denim and our waffle knit, all made to move with you.</p>
-          <div class="hero__cta">
-            <a class="btn btn--ink" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="btn btn--ghost" href="#collections" data-magnet><span>Collections</span></a>
-          </div>
+      <div class="entrance__copy">
+        <p class="eyebrow"><span class="eyebrow__dot"></span>The LEVIT boutique · AW26</p>
+        <h1 class="entrance__title">Step inside.<br><em>Stay light.</em></h1>
+        <p class="entrance__lede">Racks you can touch, fabrics you can feel. Walk in, then keep scrolling to shop the whole AW26 edit.</p>
+        <div class="entrance__cta">
+          <a class="btn btn--sand" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--ghost-light" href="#boutique" data-magnet><span>Visit in store</span></a>
         </div>
       </div>
-      <div class="hero__swatches" role="group" aria-label="Recolour the waffle knit">
-        <span class="hero__swlabel">Knit colourway</span>
-        <button class="sw is-on" style="--c:#b8561f" data-hex="#b8561f" data-bg="#D8C2AA" aria-label="Rust" aria-pressed="true"></button>
-        <button class="sw" style="--c:#6a4331" data-hex="#6a4331" data-bg="#BCC7A6" aria-label="Mocha" aria-pressed="false"></button>
-        <button class="sw" style="--c:#c8b08f" data-hex="#c8b08f" data-bg="#EBC7BB" aria-label="Sand" aria-pressed="false"></button>
-        <button class="sw" style="--c:#7b2d3a" data-hex="#7b2d3a" data-bg="#D9D0E8" aria-label="Wine" aria-pressed="false"></button>
-      </div>
 
-      <p class="hint"><span class="hint__icon" aria-hidden="true"></span><span class="hint__txt"><b>Grab a hanger.</b> Drag, flick or brush past. The fabric moves like the real thing.</span></p>
-
-      <button class="hotspot" data-g="hoodie" data-quick="brushed-fleece-hoodie" aria-label="View Brushed Fleece Hoodie">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Fleece Hoodie</b><span>₹2,199</span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="puffer" data-quick="cropped-puffer-jacket" aria-label="View Cropped Puffer Jacket">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Cropped Puffer</b><span>₹3,999 <s>₹4,799</s></span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="jeans" data-quick="straight-jeans" aria-label="View Washed Straight Jeans">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Straight Jeans</b><span>₹1,599</span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="knit" data-flip data-quick="rust-waffle-wrap-knit" aria-label="View Waffle Wrap Knit">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Waffle Wrap Knit</b><span>₹1,799 <s>₹2,299</s></span><em>View →</em></span>
-      </button>
-
-      <a class="scroll-cue" href="#collections" aria-label="Scroll to collections">
-        <span class="scroll-cue__ring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#ring">SCROLL · NEW ARRIVALS · SCROLL · NEW ARRIVALS ·</textPath></text></svg></span>
+      <p class="entrance__tip">Tap a mannequin or rack to shop the look</p>
+      <a class="scroll-cue" href="#collections" aria-label="Scroll to step inside">
+        <span class="scroll-cue__ring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#ring">STEP INSIDE · SCROLL · STEP INSIDE · SCROLL ·</textPath></text></svg></span>
         <svg class="scroll-cue__arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
       </a>
+      <div class="entrance__flash" aria-hidden="true"></div>
     </div>
   </section>
 

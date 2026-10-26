@@ -14,12 +14,11 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- `js/hero3d.js` — Three.js hero: a straight chrome rail with four garments on slim black hangers (fleece hoodie, quilted puffer, straight jeans on a clip hanger, waffle knit). Each hangs on a hanger that swings as a damped pendulum; the clothes are real cloth, simulated per frame. Pointer sweeps brush the fabric, drag-and-flick grabs a hanger, scrolling and a breeze push everything. The solver degrades gracefully on slow devices and the photo replaces the scene when WebGL is unavailable.
-- `js/cloth.js` — position-based cloth: front and back pattern pieces stitched at the seams, pinned to the hanger, with stretch, shear, bend, thickness, elasticated cuffs, wind and fold-based ambient occlusion. The simulated mesh is subdivided with curved edges for the visible surface, so silhouettes and folds render smooth; quilted baffles are displaced along the surface normals
-- `js/patterns.js` — the sewing patterns (outline + edge tags); `js/fabrics.js` — procedural weaves painted in pattern space with colour, normal and roughness/metalness maps (heathered waffle knit with rib trims, brushed fleece with a kangaroo pocket, ripstop puffer shell with baffles, denim with fades and topstitching) plus a tiling fibre bump. Shadows use contact-hardening PCSS: sharp near the cloth, softer with distance
+- **Hero: the boutique entrance.** A sticky full-width photo of the storefront with a warm sign glow. Scrolling walks you towards the door (the scene scales into it, the headline fades, a flash of light hands over to the shop), the pointer shifts the shopfront slightly, and five hotspots on the mannequins and racks open product quick views. `--p` (scroll progress) is set in `js/app.js`; the rest is CSS. Reduced-motion users get a static hero.
+- `extras/rack-hero/` — the previous 3D hero, kept for reuse and not loaded by the page: a Three.js rail with four garments (hoodie, puffer, jeans, knit) driven by a position-based cloth solver (`cloth.js`), sewing patterns (`patterns.js`) and procedural fabrics (`fabrics.js`). To use it again, restore the import map and canvas markup from git history (the commit before "boutique entrance").
 - `js/garments.js` / `js/products.js` — catalogue (INR) and the tintable hanger illustrations used in the grid
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
-- `vendor/` — Three.js r160 (self-hosted), `fonts/` — self-hosted WOFF2
+- `fonts/` — self-hosted WOFF2 (Three.js r160 lives with the unused 3D hero in `extras/rack-hero/vendor/`)
 
 Checkout is a demo: no payment is taken and nothing is sent anywhere.
 Replace the illustrations with product photography by adding a `photo` path to a product in `products.js`.
