@@ -120,7 +120,12 @@ export async function initRack({ canvas, hero, hotspots = [], src, onProgress, r
   contact.rotation.x = -Math.PI / 2; contact.position.set(0, FLOOR_Y + 0.002, 0); contact.scale.set(4.6, 1.3, 1); scene.add(contact);
 
   /* ---- load the rack ---- */
-  const gltf = await new Promise((res, rej) => new GLTFLoader().load(src, res, (e) => e.total && onProgress?.(e.loaded / e.total), rej));
+  const loader = new GLTFLoader();
+  const gltf = await new Promise(async (res, rej) => {
+    if (src.endsWith('.json')) {                                   // hosts that don't serve .glb can ship it as {"b64": "..."}
+      try { const { b64 } = await (await fetch(src)).json(); const bin = atob(b64); const buf = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i); loader.parse(buf.buffer, '', res, rej); } catch (e) { rej(e); }
+    } else loader.load(src, res, (e) => e.total && onProgress?.(e.loaded / e.total), rej);
+  });
   const root = gltf.scene;
   scene.add(root);
   const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
