@@ -435,49 +435,63 @@ async function reveal() {
 }
 reveal();
 
-/* hero: full-screen looks. The next look opens out of an arch (the storefront's shape) over the last;
-   the blurred backdrop is the same photo, so it never needs a colour match. */
+/* hero: a magazine cover. Pages are looks; turning a page flips the cover around its spine to the next one. */
 (function hero() {
-  const hero = $('#hero'), box = $('#slides');
-  if (!box) return;
-  const looks = ['ruby-ruffle-dress', 'black-bell-sleeve-kurta', 'smocked-bow-top', 'tissue-dupatta-kurta', 'red-polka-midi', 'lace-crochet-top', 'navy-zip-jacket'].map(byId).filter(Boolean);
-  const DUR = 6000, pad = (n) => String(n).padStart(2, '0');
-  box.innerHTML = looks.map((p, k) => `<div class="fs__slide"><img class="fs__bg" src="${p.photo}" alt="" ${k ? 'loading="lazy" ' : ''}decoding="async"><figure class="fs__fg"><img src="${p.photo}" alt="${p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async"></figure></div>`).join('');
-  const slides = $$('.fs__slide', box), bar = $('#fs-bar');
-  $('#fs-t').textContent = pad(looks.length);
-  box.style.setProperty('--dur', DUR + 'ms'); hero.style.setProperty('--dur', DUR + 'ms');
-  let i = -1, timer = 0, paused = false, busy = false;
-  const label = (n) => {
-    const p = looks[n];
-    $('#fs-n').textContent = pad(n + 1); $('#fs-name').textContent = p.name; $('#fs-price').textContent = inr(p.price);
-    $('#fs-cap').dataset.quick = p.id;
-  };
-  const runBar = () => { bar.classList.remove('is-run'); void bar.offsetWidth; if (!reduced) bar.classList.add('is-run'); };
-  const show = (n) => {
-    if (busy) return;
-    const prev = slides[i], next = slides[(n + looks.length) % looks.length];
-    i = (n + looks.length) % looks.length; label(i); runBar();
-    if (reduced || !prev) { slides.forEach((s) => s.classList.remove('is-on', 'is-top')); next.classList.add('is-on'); return; }
-    busy = true;
-    next.classList.add('is-on', 'is-top');
-    setTimeout(() => { slides.forEach((s) => { if (s !== next) s.classList.remove('is-on'); }); next.classList.remove('is-top'); busy = false; }, 1550);
-  };
-  const arm = () => { clearTimeout(timer); if (!reduced && !paused && !document.hidden) timer = setTimeout(() => { show(i + 1); arm(); }, DUR); };
-  const step = (d) => { if (busy) return; show(i + d); arm(); };
-  $('#fs-next').addEventListener('click', () => step(1));
-  $('#fs-prev').addEventListener('click', () => step(-1));
+  const hero = $('#hero'), book = $('#book');
+  if (!book) return;
+  const TONE = { 'ruby-ruffle-dress': 'ink', 'smocked-bow-top': 'light', 'black-bell-sleeve-kurta': 'ink', 'tissue-dupatta-kurta': 'ink', 'red-polka-midi': 'light', 'lace-crochet-top': 'ink', 'navy-zip-jacket': 'light', 'ruby-cape-dress': 'ink' };
+  const looks = Object.keys(TONE).map(byId).filter(Boolean), N = looks.length;
+  const pad = (n) => String(n).padStart(2, '0');
+  const cat = (p) => CATEGORIES.find((c) => c.id === p.cat)?.name || '';
+  book.innerHTML = looks.map((p, k) => `<div class="mg__page"><div class="mg__face tone-${TONE[p.id]}">
+      <img class="mg__img" src="${p.photo}" alt="${p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async">
+      <div class="mg__wash"></div><div class="mg__gloss"></div><div class="mg__spine"></div>
+      <div class="mg__strip"><span>AW26 · Womenswear</span><span>Issue 01 · No. ${pad(k + 1)}</span></div>
+      <div class="mg__mast">LEVIT</div>
+      <ul class="mg__lines"><li>Soft structure, <em>every day.</em></li><li>${PRODUCTS.length} pieces<small>shot in our own boutique</small></li></ul>
+      <div class="mg__look"><small>${cat(p)} · the look</small><b>${p.name}</b><button type="button" data-quick="${p.id}">Shop inside · ${inr(p.price)}</button></div>
+      <div class="mg__code" aria-hidden="true"><i></i>LEVIT AW26</div><div class="mg__corner" aria-hidden="true"></div></div>
+      <div class="mg__back" aria-hidden="true"><span>LEVIT</span></div></div>`).join('');
+  const pages = $$('.mg__page', book);
+  $('#toc').innerHTML = looks.map((p, k) => `<li><button type="button" data-go="${k}"><i>${pad(k + 1)}</i><b>${p.name}</b><span>${inr(p.price)}</span></button></li>`).join('');
+  const toc = $$('#toc li');
+  const order = looks.map((_, k) => k);
+  const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
+  const z = () => order.forEach((k, pos) => { pages[k].style.zIndex = N - pos; });
+  const mark = (k) => toc.forEach((li, m) => li.classList.toggle('is-on', m === k));
+  let busy = false, timer = 0, paused = false;
+  z(); mark(0);
+  async function next() {
+    if (busy) return; busy = true;
+    const top = pages[order[0]];
+    mark(order[1]);
+    top.classList.add('is-flipped'); await wait(1400);
+    top.classList.add('is-gone'); await wait(300);
+    top.classList.add('no-anim'); top.classList.remove('is-flipped', 'is-gone');
+    order.push(order.shift()); z(); void top.offsetWidth; top.classList.remove('no-anim');
+    busy = false;
+  }
+  async function prev() {
+    if (busy) return; busy = true;
+    const last = order[N - 1], pg = pages[last];
+    pg.classList.add('no-anim', 'is-flipped'); order.unshift(order.pop()); z(); mark(last);
+    void pg.offsetWidth; pg.classList.remove('no-anim', 'is-flipped'); await wait(1400); busy = false;
+  }
+  const goTo = (t) => { if (busy || t === order[0]) return; order.splice(order.indexOf(t), 1); order.splice(1, 0, t); z(); next(); };
+  const arm = () => { clearTimeout(timer); if (!reduced && !paused && !document.hidden) timer = setTimeout(async () => { await next(); arm(); }, 5200); };
+  const act = (fn) => { clearTimeout(timer); Promise.resolve(fn()).then(() => setTimeout(arm, 1500)); };
+  $('#mg-next').addEventListener('click', () => act(next));
+  $('#toc').addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) act(() => goTo(+b.dataset.go)); });
   let x0 = null;
-  hero.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button')) x0 = e.clientX; });
-  hero.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); });
-  hero.addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    const r = hero.getBoundingClientRect();
-    hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5) * 2); hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5) * 2);
+  book.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+  book.addEventListener('pointerup', (e) => {
+    if (x0 === null) return; const dx = e.clientX - x0; x0 = null;
+    if (e.target.closest('button')) return;
+    if (Math.abs(dx) < 8) act(next); else act(dx < 0 ? next : prev);
   });
-  hero.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; clearTimeout(timer); hero.classList.add('is-paused'); } });
-  hero.addEventListener('pointerleave', () => { paused = false; hero.classList.remove('is-paused'); arm(); });
+  hero.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; clearTimeout(timer); } });
+  hero.addEventListener('pointerleave', () => { paused = false; arm(); });
   document.addEventListener('visibilitychange', () => (document.hidden ? clearTimeout(timer) : arm()));
-  show(0);
-  root.addEventListener('ready', arm, { once: true });
+  root.addEventListener('ready', () => setTimeout(arm, 600), { once: true });
   if (root.classList.contains('is-ready')) arm();
 })();

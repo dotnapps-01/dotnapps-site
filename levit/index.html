@@ -63,30 +63,19 @@
 <main id="top">
 
   <!-- ───────────── HERO ───────────── -->
-  <section class="fs" id="hero" aria-label="LEVIT AW26">
-    <div class="fs__slides" id="slides" role="group" aria-roledescription="carousel" aria-label="Featured looks"></div>
-    <div class="fs__shade" aria-hidden="true"></div>
-
-    <div class="fs__copy">
-      <p class="eyebrow fs__rise"><span class="eyebrow__dot"></span>AW26 · Womenswear</p>
-      <h1 class="fs__title">
-        <span class="fs__l"><span>Soft</span></span>
-        <span class="fs__l"><span>structure,</span></span>
-        <span class="fs__l"><span><em>every day.</em></span></span>
-      </h1>
-      <a class="fs__btn fs__rise" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-    </div>
-
-    <p class="fs__side fs__rise" aria-hidden="true">LEVIT &nbsp;·&nbsp; Womenswear &nbsp;·&nbsp; AW26</p>
-
-    <div class="fs__ui fs__rise" aria-live="polite">
-      <div class="fs__count"><b id="fs-n">01</b><span class="fs__bar"><i id="fs-bar"></i></span><span id="fs-t">07</span></div>
-      <button class="fs__cap" id="fs-cap" type="button"><b id="fs-name"></b><span id="fs-price"></span><u>Shop →</u></button>
-      <div class="fs__nav">
-        <button type="button" id="fs-prev" aria-label="Previous look"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
-        <button type="button" id="fs-next" aria-label="Next look"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      </div>
-    </div>
+  <section class="mg" id="hero" aria-label="LEVIT AW26 magazine">
+    <h1 class="mg__h1">LEVIT AW26: Soft structure, every day.</h1>
+    <aside class="mg__left mg__rise">
+      <p class="eyebrow"><span class="eyebrow__dot"></span>Issue 01 · AW26</p>
+      <p class="mg__lede">The new collection, shot in our own boutique. Turn the page to meet every look.</p>
+      <a class="btn btn--ink" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <button class="mg__turn" type="button" id="mg-next"><span>Turn the page</span><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></button>
+    </aside>
+    <div class="mg__stage"><div class="mg__book" id="book" role="group" aria-roledescription="carousel" aria-label="Magazine covers"></div></div>
+    <nav class="mg__toc mg__rise" aria-label="Inside this issue">
+      <p class="mg__toch">Inside this issue</p>
+      <ol id="toc"></ol>
+    </nav>
   </section>
 
   <!-- ───────────── TICKER ───────────── -->
