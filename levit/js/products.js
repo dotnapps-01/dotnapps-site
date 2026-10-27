@@ -21,6 +21,8 @@ const C = {
   wine: { name: 'Wine', hex: '#6f2230' },
   sage: { name: 'Sage', hex: '#7c8160' },
   charcoal: { name: 'Charcoal', hex: '#4f4844' },
+  camel: { name: 'Camel', hex: '#b07b5d' },
+  navy: { name: 'Navy', hex: '#2e3b55' },
   khaki: { name: 'Khaki', hex: '#807a55' },
   olive: { name: 'Olive', hex: '#6b6a3c' },
   denim: { name: 'Indigo', hex: '#3d5166' },
@@ -31,6 +33,13 @@ const C = {
 };
 
 export const PRODUCTS = [
+  {
+    id: 'wrap-collar-midi-dress', name: 'Wrap Midi Dress', cat: 'dresses', price: 2899, was: null, tag: 'New',
+    kind: 'midi', colors: [C.camel, C.sage, C.wine, C.navy], bg: '#F4EAE1',
+    photo: 'img/dress-camel-card.webp',
+    blurb: 'A collared wrap dress with puff sleeves, a banded waist with covered buttons and a pleated A-line skirt. Soft crepe that holds its shape and moves when you do.',
+    details: ['Soft stretch crepe', 'Collared wrap bodice', 'Puff sleeves with cuffs', 'Pleated midi skirt'],
+  },
   {
     id: 'brushed-fleece-hoodie', name: 'Brushed Fleece Hoodie', cat: 'tops', price: 2199, was: null, tag: 'New',
     kind: 'hoodie', colors: [C.charcoal, C.sand, C.ivory], bg: '#C6D5DD',

@@ -453,23 +453,20 @@ async function reveal() {
 }
 reveal();
 
-/* hero: the LEVIT wordmark as lit waffle knit (WebGL); a CSS version stands in if WebGL is unavailable */
+/* hero: the dress hangs on a physics-driven hanger (WebGL); the plain photo with a CSS sway stands in without it */
 (async function hero() {
   const canvas = $('#hero-canvas'), heroEl = $('#hero');
+  const setArch = (b) => heroEl.style.setProperty('--arch', b.dataset.arch);
+  const mark = (b) => $$('.dw__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
   try {
-    const { initWordmark } = await import('./hero-wordmark.js');
-    const wm = initWordmark({ canvas, hero: heroEl, reduced });
-    if (!wm) throw new Error('no webgl');
-    if (root.classList.contains('is-ready')) wm.start(); else root.addEventListener('ready', () => wm.start(), { once: true });
-    setTimeout(() => wm.start(), 4000);                       // never leave the letters hidden
-    $$('.wm__swatches .sw').forEach((b) => b.addEventListener('click', () => {
-      $$('.wm__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
-      wm.setColor(b.dataset.hex);
-      root.style.setProperty('--hero-bg', b.dataset.bg);
-    }));
+    const { initHang } = await import('./hero-hang.js');
+    const h = await initHang({ canvas, hero: heroEl, src: 'img/dress-camel.webp', hotspot: $('#hotspot'), reduced });
+    if (!h) throw new Error('no webgl');
+    $$('.dw__swatches .sw').forEach((b) => b.addEventListener('click', () => { mark(b); setArch(b); h.setTint(b.dataset.tint || null); h.nudge(); }));
   } catch (err) {
-    console.warn('Wordmark shader unavailable, using the CSS version.', err);
+    console.warn('Hanging dress unavailable, using the photo instead.', err);
     root.classList.add('no-webgl');
-    $$('.wm__swatches .sw').forEach((b) => b.addEventListener('click', () => root.style.setProperty('--hero-bg', b.dataset.bg)));
+    $('#hotspot')?.setAttribute('hidden', '');
+    $$('.dw__swatches .sw').forEach((b) => b.addEventListener('click', () => { mark(b); setArch(b); }));
   }
 })();
