@@ -14,11 +14,11 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero: the boutique entrance.** A sticky full-width photo of the storefront with a warm sign glow. Scrolling walks you towards the door (the scene scales into it, the headline fades, a flash of light hands over to the shop), the pointer shifts the shopfront slightly, and five hotspots on the mannequins and racks open product quick views. `--p` (scroll progress) is set in `js/app.js`; the rest is CSS. Reduced-motion users get a static hero.
-- `extras/rack-hero/` — the previous 3D hero, kept for reuse and not loaded by the page: a Three.js rail with four garments (hoodie, puffer, jeans, knit) driven by a position-based cloth solver (`cloth.js`), sewing patterns (`patterns.js`) and procedural fabrics (`fabrics.js`). To use it again, restore the import map and canvas markup from git history (the commit before "boutique entrance").
+- **Hero: the wordmark, knitted.** The giant LEVIT letters are a waffle-knit surface drawn by one WebGL fragment shader (`js/hero-wordmark.js`, no libraries): a point light follows the cursor, the letters are rounded into soft cushions, a press pinches the fabric, and a swatch changes the knit colour and the page tint. Portrait screens stack the letters in a column. Without WebGL a CSS knit pattern clipped to the text stands in.
+- `extras/3d-heroes/` — earlier hero experiments, kept and not loaded: the hanger rack (`hero3d.js`), the floating garments (`hero-float.js`), and the cloth solver, sewing patterns and procedural fabrics they share. To run one, restore the import map and canvas markup from git history and point the modules at `extras/3d-heroes/vendor` (Three.js r160).
 - `js/garments.js` / `js/products.js` — catalogue (INR) and the tintable hanger illustrations used in the grid
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
-- `fonts/` — self-hosted WOFF2 (Three.js r160 lives with the unused 3D hero in `extras/rack-hero/vendor/`)
+- `fonts/` — self-hosted WOFF2
 
 Checkout is a demo: no payment is taken and nothing is sent anywhere.
 Replace the illustrations with product photography by adding a `photo` path to a product in `products.js`.

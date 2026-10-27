@@ -449,27 +449,27 @@ $$('[data-reveal]').forEach(observeReveal);
 
 async function reveal() {
   await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1800))]);
-  setTimeout(() => root.classList.add('is-ready'), reduced ? 0 : 1400);
+  setTimeout(() => { root.classList.add('is-ready'); root.dispatchEvent(new Event('ready')); }, reduced ? 0 : 1400);
 }
 reveal();
 
-/* hero: Three.js loads on demand; the static photo is the fallback */
+/* hero: the LEVIT wordmark as lit waffle knit (WebGL); a CSS version stands in if WebGL is unavailable */
 (async function hero() {
   const canvas = $('#hero-canvas'), heroEl = $('#hero');
-  const gl = (() => { try { return !!(canvas.getContext('webgl2') || canvas.getContext('webgl')); } catch { return false; } })();
-  if (!gl) { root.classList.add('no-webgl'); return; }
   try {
-    const { initHero } = await import('./hero-float.js');
-    const h = initHero({ canvas, hero: heroEl, hotspots: $$('.hotspot'), reduced });
-    window.__levitHero = h;
-    $$('.float__swatches .sw').forEach((b) => b.addEventListener('click', () => {
-      $$('.float__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
-      h.setColor(b.dataset.hex);
+    const { initWordmark } = await import('./hero-wordmark.js');
+    const wm = initWordmark({ canvas, hero: heroEl, reduced });
+    if (!wm) throw new Error('no webgl');
+    if (root.classList.contains('is-ready')) wm.start(); else root.addEventListener('ready', () => wm.start(), { once: true });
+    setTimeout(() => wm.start(), 4000);                       // never leave the letters hidden
+    $$('.wm__swatches .sw').forEach((b) => b.addEventListener('click', () => {
+      $$('.wm__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
+      wm.setColor(b.dataset.hex);
       root.style.setProperty('--hero-bg', b.dataset.bg);
-      h.nudge();
     }));
   } catch (err) {
-    console.warn('3D hero unavailable, using the photo instead.', err);
+    console.warn('Wordmark shader unavailable, using the CSS version.', err);
     root.classList.add('no-webgl');
+    $$('.wm__swatches .sw').forEach((b) => b.addEventListener('click', () => root.style.setProperty('--hero-bg', b.dataset.bg)));
   }
 })();

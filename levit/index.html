@@ -14,9 +14,6 @@
 <link rel="preload" href="fonts/playfair-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/levit.css">
-<script type="importmap">
-{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
-</script>
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -65,55 +62,24 @@
 
 <main id="top">
 
-  <!-- ───────────── HERO: weightless ───────────── -->
-  <section class="float" id="hero" aria-label="LEVIT AW26">
-    <div class="float__bg" aria-hidden="true"><span class="float__glow"></span><span class="float__floor"></span></div>
-    <p class="float__word" aria-hidden="true"><span>L</span><span>E</span><span>V</span><span>I</span><span>T</span></p>
-
-    <canvas id="hero-canvas" role="img" aria-label="A waffle knit, a hoodie, a puffer jacket and jeans floating in the air above a studio floor. Move the cursor through them."></canvas>
-    <img class="float__fallback" src="img/knit-rust.webp" alt="Rust waffle-knit top on a hanger" width="1179" height="1663" fetchpriority="high">
-
-    <div class="float__ui">
-      <div class="float__copy">
-        <p class="eyebrow"><span class="eyebrow__dot"></span>AW26 · Weightless</p>
-        <h1 class="float__title">Made to <em>float.</em></h1>
-        <p class="float__lede">Knits, fleece, quilting and denim that sit lightly and move with you. Reach in and see.</p>
-        <div class="float__cta">
-          <a class="btn btn--ink" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a class="btn btn--ghost" href="#collections" data-magnet><span>Collections</span></a>
-        </div>
-        <div class="float__swatches" role="group" aria-label="Recolour the waffle knit">
-          <span class="float__swlabel">Knit colour</span>
-          <button class="sw is-on" style="--c:#b8561f" data-hex="#b8561f" data-bg="#D8C2AA" aria-label="Rust" aria-pressed="true"></button>
-          <button class="sw" style="--c:#6a4331" data-hex="#6a4331" data-bg="#BCC7A6" aria-label="Mocha" aria-pressed="false"></button>
-          <button class="sw" style="--c:#c8b08f" data-hex="#c8b08f" data-bg="#EBC7BB" aria-label="Sand" aria-pressed="false"></button>
-          <button class="sw" style="--c:#7b2d3a" data-hex="#7b2d3a" data-bg="#D9D0E8" aria-label="Wine" aria-pressed="false"></button>
-        </div>
+  <!-- ───────────── HERO: the wordmark, knitted ───────────── -->
+  <section class="wm" id="hero" aria-label="LEVIT AW26">
+    <p class="eyebrow wm__eyebrow"><span class="eyebrow__dot"></span>AW26 · Womenswear</p>
+    <div class="wm__stage">
+      <h1 class="sr">LEVIT: womenswear made to feel light</h1>
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <p class="wm__fallback" aria-hidden="true">LEVIT</p>
+    </div>
+    <div class="wm__foot">
+      <p class="wm__line">Soft structure for every kind of day.</p>
+      <div class="wm__swatches" role="group" aria-label="Knit colour">
+        <span class="wm__swlabel">Knit colour</span>
+        <button class="sw is-on" style="--c:#b8561f" data-hex="#b8561f" data-bg="#D8C2AA" aria-label="Rust" aria-pressed="true"></button>
+        <button class="sw" style="--c:#6a4331" data-hex="#6a4331" data-bg="#BCC7A6" aria-label="Mocha" aria-pressed="false"></button>
+        <button class="sw" style="--c:#c8b08f" data-hex="#c8b08f" data-bg="#EBC7BB" aria-label="Sand" aria-pressed="false"></button>
+        <button class="sw" style="--c:#7b2d3a" data-hex="#7b2d3a" data-bg="#D9D0E8" aria-label="Wine" aria-pressed="false"></button>
       </div>
-
-      <p class="hint"><span class="hint__icon" aria-hidden="true"></span><span class="hint__txt"><b>Move through them.</b> Your cursor is a breeze. Click one to toss it.</span></p>
-
-      <button class="hotspot" data-g="knit" data-quick="rust-waffle-wrap-knit" aria-label="View Waffle Wrap Knit">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Waffle Wrap Knit</b><span>₹1,799 <s>₹2,299</s></span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="hoodie" data-flip data-quick="brushed-fleece-hoodie" aria-label="View Brushed Fleece Hoodie">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Fleece Hoodie</b><span>₹2,199</span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="puffer" data-quick="cropped-puffer-jacket" aria-label="View Cropped Puffer Jacket">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Cropped Puffer</b><span>₹3,999 <s>₹4,799</s></span><em>View →</em></span>
-      </button>
-      <button class="hotspot" data-g="jeans" data-flip data-quick="straight-jeans" aria-label="View Washed Straight Jeans">
-        <span class="hotspot__dot"></span>
-        <span class="hotspot__card"><b>Straight Jeans</b><span>₹1,599</span><em>View →</em></span>
-      </button>
-
-      <a class="scroll-cue" href="#collections" aria-label="Scroll to collections">
-        <span class="scroll-cue__ring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ring" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#ring">SCROLL · NEW ARRIVALS · SCROLL · NEW ARRIVALS ·</textPath></text></svg></span>
-        <svg class="scroll-cue__arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-      </a>
+      <a class="btn btn--ink" href="#shop" data-magnet><span>Shop the edit</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
