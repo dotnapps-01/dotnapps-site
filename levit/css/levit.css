@@ -248,44 +248,36 @@ html.skip-pre.js:not(.is-ready) body { overflow: auto; }
 }
 @media (max-width: 699px) { .view { display: flex; } .view button { display: none; } .view button[data-view="1"][aria-pressed="false"] { display: none; } }
 
-.grid { --g: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px var(--g); margin-top: 18px; }
-@media (min-width: 760px) { .grid { --g: 22px; grid-template-columns: repeat(3, 1fr); gap: 10px var(--g); } }
-@media (min-width: 1180px) { .grid { --g: 28px; grid-template-columns: repeat(4, 1fr); } }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px 12px; margin-top: 22px; }
+@media (min-width: 760px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 52px 22px; } }
+@media (min-width: 1180px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 60px 26px; } }
 .grid[data-view="1"] { grid-template-columns: 1fr; max-width: 520px; margin-inline: auto; }
 .grid__empty { grid-column: 1 / -1; display: grid; justify-items: center; gap: 18px; padding: 56px 0; text-align: center; font: italic 1.3rem var(--serif); }
 
-.card { position: relative; display: grid; gap: 12px; align-content: start; padding-top: 30px; padding-bottom: 22px; }
-/* the rail segment above each card, drawn so neighbours join into one continuous tube */
-.card::before { content: ""; position: absolute; z-index: 0; top: 8px; left: calc(var(--g) / -2); right: calc(var(--g) / -2); height: 7px; border-radius: 4px; background: linear-gradient(#fff 0, #e5e8ed 22%, #a3a9b2 52%, #646a73 72%, #c6cbd2 100%); box-shadow: 0 6px 8px -4px rgba(60, 40, 15, .35); }
-.card::after { content: ""; position: absolute; z-index: 0; top: 11px; left: 50%; width: 16px; height: 24px; translate: -50% 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24'%3E%3Cpath d='M8 24V12c0-6 8-6 8-12' fill='none' stroke='%23697079' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M8 24V12c0-6 8-6 8-12' fill='none' stroke='%23eef0f3' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat; transform: scaleX(-1) translateX(50%); }
-.card__hang { position: relative; z-index: 1; transform-origin: 50% -22px; }
-.is-in .card__hang, .card.is-in .card__hang { animation: sway 2.6s cubic-bezier(.3, .5, .4, 1) both; animation-delay: calc(var(--i, 0) * 90ms + .1s); }
-.card:hover .card__hang, .card:focus-within .card__hang { animation: sway 3s cubic-bezier(.3, .5, .4, 1) both; }
-.card__stage { position: relative; overflow: clip; border-radius: 200px 200px 8px 8px; background: var(--bg, var(--sand-2)); box-shadow: 0 22px 26px -18px rgba(60, 40, 15, .5); }
-.card__media { position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; background: var(--bg); isolation: isolate; text-align: left; }
-.card__photo { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transition: scale 1.2s var(--ease); }
-@media (hover: hover) { .card:hover .card__photo { scale: 1.05; } }
-.card__tag { position: absolute; z-index: 3; left: 50%; top: 14px; translate: -50% 0; padding: 7px 12px; border-radius: 99px; background: var(--ink); color: var(--cream); font: 500 .6rem/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; white-space: nowrap; }
-.card__wish { position: absolute; z-index: 4; right: 8px; top: 38%; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--cream) 88%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: scale .25s var(--ease), background .25s; }
-.card__wish:hover { scale: 1.1; }
+/* clean gallery: the photo, then a name and a price. Everything else waits for a hover or a tap. */
+.card { position: relative; display: grid; gap: 12px; align-content: start; }
+.card__stage { position: relative; overflow: hidden; border-radius: 6px; background: var(--bg, var(--sand-2)); }
+.card__media { position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; background: var(--bg); text-align: left; }
+.card__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transition: scale 1.1s var(--ease); }
+@media (hover: hover) { .card:hover .card__photo { scale: 1.04; } }
+.card__tag { position: absolute; z-index: 3; left: 10px; top: 10px; padding: 6px 9px; border-radius: 3px; background: color-mix(in srgb, var(--cream) 92%, transparent); color: var(--ink); font: 500 .58rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+.card__wish { position: absolute; z-index: 4; right: 6px; top: 6px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; color: #fff; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .45)); transition: scale .25s var(--ease), opacity .3s; }
 .card__wish svg { fill: none; stroke: currentColor; transition: fill .3s; }
-.card__wish[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 .card__wish[aria-pressed="true"] svg { fill: currentColor; }
-.card__wish.pop { animation: bump .5s var(--ease); }
-.card__quick { position: absolute; z-index: 4; left: 8px; right: 8px; bottom: 8px; display: flex; gap: 6px; padding: 6px; border-radius: 99px; background: color-mix(in srgb, var(--cream) 94%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); translate: 0 140%; transition: translate .5s var(--ease); }
-.card__quick button { flex: 1; min-height: 38px; border-radius: 99px; font: 500 .74rem/1 var(--sans); letter-spacing: .1em; transition: background .2s, color .2s; }
-.card__quick button:hover { background: var(--ink); color: var(--cream); }
-@media (hover: hover) { .card:hover .card__quick, .card:focus-within .card__quick { translate: 0 0; } .card:hover .card__add { opacity: 0; } }
+.card__wish:hover { scale: 1.12; } .card__wish.pop { animation: bump .5s var(--ease); }
+/* on hover-capable screens the heart and the sizes appear with the pointer */
+.card__quick { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 4px; padding: 10px; background: linear-gradient(to top, rgba(11, 9, 7, .55), transparent); translate: 0 100%; transition: translate .45s var(--ease); }
+.card__quick span { margin-right: auto; padding-left: 4px; color: #fff; font: 500 .62rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; }
+.card__quick button { min-width: 34px; height: 34px; border-radius: 99px; background: rgba(255, 255, 255, .92); color: var(--ink); font: 500 .7rem/1 var(--sans); transition: background .2s, color .2s; } .card__quick button:hover { background: var(--ink); color: #fff; }
+@media (hover: hover) {
+  .card__wish { opacity: 0; } .card:hover .card__wish, .card:focus-within .card__wish, .card__wish[aria-pressed="true"] { opacity: 1; }
+  .card:hover .card__quick, .card:focus-within .card__quick { translate: 0 0; }
+}
 @media (hover: none) { .card__quick { display: none; } }
-.card__add { position: absolute; z-index: 4; right: 8px; bottom: 8px; min-height: 44px; padding: 0 16px; border-radius: 99px; background: var(--ink); color: var(--cream); font: 500 .7rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; transition: opacity .25s, scale .25s var(--ease); } .card__add:hover { scale: 1.05; } .card__add span { margin-left: 4px; }
-/* the price hangs off the photo like a tag */
-.card__price { position: absolute; z-index: 5; left: 6px; bottom: -14px; display: flex; align-items: baseline; gap: 6px; padding: 9px 14px 9px 22px; background: var(--cream); color: var(--ink); font: 500 .86rem/1 var(--sans); clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%); filter: drop-shadow(0 4px 6px rgba(60, 40, 15, .25)); white-space: nowrap; }
-.card__price::before { content: ""; position: absolute; left: 9px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: var(--sand-3); box-shadow: inset 0 0 0 1px rgba(60, 40, 15, .3); }
-.card__price s { opacity: .5; font-size: .78rem; font-weight: 400; } .card__price.is-sale { background: var(--rust); color: #fff; } .card__price.is-sale s { opacity: .75; }
-.card__meta { display: grid; gap: 3px; padding: 14px 2px 0; }
-.card__name { font: italic 800 1.08rem/1.2 var(--serif); letter-spacing: -.01em; }
-.card__cat { margin: 0; font: 500 .66rem/1.2 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); } .card__cat b { color: var(--rust); font-weight: 500; }
-.grid[data-view="1"] .card__name { font-size: 1.35rem; }
+.card__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.card__name { font: 500 .98rem/1.25 var(--sans); letter-spacing: 0; }
+.card__price { margin: 0; flex: none; font: 400 .95rem/1.25 var(--sans); color: var(--ink); white-space: nowrap; } .card__price s { margin-left: 6px; opacity: .45; font-size: .85em; } .card__price.is-sale { color: var(--rust); }
+.grid[data-view="1"] .card__name { font-size: 1.15rem; }
 .price { font: 500 .95rem/1.2 var(--sans); white-space: nowrap; }
 .price s { opacity: .5; margin-left: 6px; font-weight: 400; }
 .price .off { color: var(--rust); margin-left: 6px; }
@@ -604,5 +596,6 @@ body:has(dialog[open]) { overflow: hidden; }
 @media (hover: none) { .btn, .chip, .sizes button, .qty button { min-height: 44px; } .qty button { width: 44px; } .line__rm, .link { padding-block: 10px; } }
 input, select, textarea { font-size: max(16px, 1em); }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .card__hang { animation: none !important; } .sizes.shake { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sizes.shake { animation: none; } }
 .toast:not(:popover-open) { display: none; }
+@media (max-width: 699px) { .card__meta { flex-direction: column; gap: 2px; } .card__name { font-size: .92rem; } .card__price { font-size: .9rem; } }

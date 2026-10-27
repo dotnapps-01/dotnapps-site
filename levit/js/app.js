@@ -117,24 +117,18 @@ const heart = '<svg viewBox="0 0 24 24" width="20" height="20" stroke-width="1.5
 function cardHTML(p, i) {
   const sale = p.was ? Math.round((1 - p.price / p.was) * 100) : 0;
   const tag = p.tag && !(sale && p.tag.startsWith('-')) ? `<span class="card__tag">${p.tag}</span>` : '';
-  const cat = CATEGORIES.find((c) => c.id === p.cat)?.name || '';
   return `<article class="card" data-id="${p.id}" data-reveal style="--i:${i % 8}">
-    <div class="card__hang">
-      <div class="card__stage">
-        <button class="card__media" style="--bg:${p.bg}" data-quick="${p.id}" aria-label="${p.name}, ${inr(p.price)}. Open details">
-          <img class="card__photo" src="${p.photo}" alt="" loading="lazy" decoding="async">
-        </button>
-        ${tag}
-        <button class="card__wish" aria-pressed="${wish.has(p.id)}" aria-label="Save ${p.name} to wishlist" data-wish="${p.id}">${heart}</button>
-        <div class="card__quick" role="group" aria-label="Quick add ${p.name}">${SIZES.map((s) => `<button data-qadd="${p.id}" data-size="${s}" aria-label="Add size ${s} to bag">${s}</button>`).join('')}</div>
-        <button class="card__add" data-quick="${p.id}" aria-label="Choose a size for ${p.name}">Add <span aria-hidden="true">+</span></button>
-      </div>
-      <span class="card__price${sale ? ' is-sale' : ''}" aria-hidden="true">${inr(p.price)}${p.was ? ` <s>${inr(p.was)}</s>` : ''}</span>
+    <div class="card__stage">
+      <button class="card__media" style="--bg:${p.bg}" data-quick="${p.id}" aria-label="${p.name}, ${inr(p.price)}. Open details">
+        <img class="card__photo" src="${p.photo}" alt="" loading="lazy" decoding="async">
+      </button>
+      ${tag}
+      <button class="card__wish" aria-pressed="${wish.has(p.id)}" aria-label="Save ${p.name} to wishlist" data-wish="${p.id}">${heart}</button>
+      <div class="card__quick" role="group" aria-label="Quick add ${p.name}"><span>Add</span>${SIZES.map((s) => `<button data-qadd="${p.id}" data-size="${s}" aria-label="Add size ${s} to bag">${s}</button>`).join('')}</div>
     </div>
     <div class="card__meta">
       <h3 class="card__name">${p.name}</h3>
-      <p class="card__cat">${cat}${sale ? ` · <b>${sale}% off</b>` : ''}</p>
-      <p class="sr">${priceHTML(p)}</p>
+      <p class="card__price${sale ? ' is-sale' : ''}">${inr(p.price)}${p.was ? ` <s>${inr(p.was)}</s>` : ''}</p>
     </div>
   </article>`;
 }
