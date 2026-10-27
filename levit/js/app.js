@@ -501,11 +501,25 @@ if (fine && !reduced) {
 renderIndex(); renderChips(); renderGrid(); renderBag(); updateCounts();
 $$('[data-reveal]').forEach(observeReveal);
 
+/* intro: a hang tag swings on the rail while it counts up, then drops and the boutique doors open */
+const counter = (ms) => new Promise((done) => {
+  const pre = $('#preloader'), n = $('#pl-n');
+  if (!pre || reduced || root.classList.contains('skip-pre')) { done(); return; }
+  const t0 = performance.now();
+  const tick = (now) => {
+    const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 2.2);
+    const v = Math.round(e * 100);
+    n.textContent = v; pre.style.setProperty('--p', v);
+    k < 1 ? requestAnimationFrame(tick) : done();
+  };
+  requestAnimationFrame(tick);
+});
 async function reveal() {
   const seen = root.classList.contains('skip-pre');     // the intro plays once per visit, not on every page load
-  await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, seen ? 600 : 1800))]);
+  await Promise.all([Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, seen ? 600 : 1800))]), counter(1700)]);
   try { sessionStorage.setItem('levit.seen', '1'); } catch { /* storage unavailable */ }
-  setTimeout(() => { root.classList.add('is-ready'); root.dispatchEvent(new Event('ready')); }, reduced || seen ? 0 : 1400);
+  if (!reduced && !seen) { root.classList.add('pl-out'); await new Promise((r) => setTimeout(r, 480)); }
+  root.classList.add('is-ready'); root.dispatchEvent(new Event('ready'));
 }
 reveal();
 

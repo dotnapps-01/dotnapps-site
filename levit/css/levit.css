@@ -119,21 +119,39 @@ body::after {
 @keyframes bump { 40% { scale: 1.5; } }
 
 /* ─────────── preloader ─────────── */
-.preloader { position: fixed; inset: 0; z-index: 1000; display: none; place-content: center; justify-items: center; gap: 14px; background: var(--ink); color: var(--sand); clip-path: inset(0); }
-.js .preloader { display: grid; animation: pl-failsafe 0s 4.5s forwards; }
-.preloader__word { display: flex; font: 900 clamp(64px, 16vw, 190px)/1 var(--serif); letter-spacing: -.02em; overflow: hidden; padding: 0 .04em; }
-.preloader__word span { display: block; translate: 0 110%; animation: rise .9s var(--ease) forwards; }
-.preloader__word span:nth-child(2) { animation-delay: .07s; } .preloader__word span:nth-child(3) { animation-delay: .14s; }
-.preloader__word span:nth-child(4) { animation-delay: .21s; } .preloader__word span:nth-child(5) { animation-delay: .28s; }
-.preloader__sub { font: 400 italic 1.1rem/1 var(--serif); letter-spacing: .1em; opacity: 0; animation: fade .8s .7s forwards; }
-.is-ready .preloader { clip-path: inset(0 0 100% 0); transition: clip-path 1s var(--ease-io); pointer-events: none; }
+.preloader { --p: 0; position: fixed; inset: 0; z-index: 1000; display: none; overflow: hidden; visibility: visible; }
+.js .preloader { display: block; animation: pl-failsafe 0s 5s forwards; }
+.pl__door { position: absolute; top: 0; bottom: 0; width: 50.1%; background: repeating-linear-gradient(90deg, rgba(110, 80, 45, .07) 0 2px, transparent 2px 44px), linear-gradient(#e4d0b8, #d8c2aa 70%, #cdb597); transition: translate 1.1s var(--ease-io); }
+.pl__door--l { left: 0; box-shadow: 6px 0 24px rgba(60, 40, 15, .25); } .pl__door--r { right: 0; box-shadow: -6px 0 24px rgba(60, 40, 15, .25); }
+.pl__door::after { content: ""; position: absolute; top: 0; bottom: 0; width: 3px; background: linear-gradient(#f1d796, #b98a2f); } .pl__door--l::after { right: 0; } .pl__door--r::after { left: 0; }
+.pl__rail { position: absolute; left: 0; right: 0; top: 17vh; height: 12px; z-index: 2; background: linear-gradient(#fff 0, #e5e8ed 20%, #a3a9b2 50%, #62686f 70%, #c6cbd2 100%); box-shadow: 0 10px 12px -6px rgba(60, 40, 15, .4); transition: opacity .3s .1s; }
+.pl__stage { position: absolute; inset: 0; z-index: 3; pointer-events: none; transition: opacity .35s; }
+.pl__swing { position: absolute; left: 50%; top: calc(17vh + 6px); width: 0; transform-origin: 50% 0; animation: pl-swing 2.6s ease-in-out infinite alternate; }
+@keyframes pl-swing { from { rotate: 15deg; } to { rotate: -15deg; } }
+.pl__hook { position: absolute; left: -12px; top: -30px; }
+.pl__string { position: absolute; left: -1px; top: 8px; width: 2px; height: clamp(40px, 8vh, 80px); background: #14100d; }
+.pl__tag { position: absolute; left: calc(var(--tw) / -2); top: calc(8px + clamp(40px, 8vh, 80px)); --tw: clamp(190px, 52vw, 250px); width: var(--tw); padding: 46px 20px 22px; display: grid; justify-items: center; gap: 6px; text-align: center; background: #FFFAF2; color: var(--ink); clip-path: polygon(22% 0, 78% 0, 100% 15%, 100% 100%, 0 100%, 0 15%); filter: drop-shadow(0 18px 20px rgba(60, 40, 15, .35)); }
+.pl__hole { position: absolute; left: 50%; top: 14px; width: 16px; height: 16px; translate: -50% 0; border-radius: 50%; background: #d8c2aa; box-shadow: inset 0 2px 3px rgba(60, 40, 15, .45), 0 0 0 3px #e8d9c3; }
+.pl__tag small { font: 500 .6rem/1 var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--rust); }
+.pl__tag b { font: 900 clamp(2.6rem, 11vw, 3.6rem)/1 var(--serif); letter-spacing: .02em; }
+.pl__tag span { font: italic 400 .95rem/1.2 var(--serif); color: var(--muted); }
+.pl__price { display: flex; align-items: baseline; gap: 2px; margin-top: 14px; padding-top: 12px; border-top: 1.5px dashed rgba(11, 9, 7, .35); width: 100%; justify-content: center; font: 800 2.2rem/1 var(--serif); font-variant-numeric: tabular-nums; } .pl__price em { font-style: normal; min-width: 2ch; text-align: right; } .pl__price u { text-decoration: none; font-size: 1.3rem; }
+.pl__stitch { position: absolute; left: 50%; bottom: 16vh; translate: -50% 0; width: min(280px, 62vw); height: 3px; background: repeating-linear-gradient(90deg, rgba(11, 9, 7, .18) 0 9px, transparent 9px 15px); }
+.pl__stitch i { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, var(--ink) 0 9px, transparent 9px 15px); clip-path: inset(0 calc(100% - var(--p) * 1%) 0 0); }
+.pl__sub { position: absolute; left: 0; right: 0; bottom: calc(16vh - 34px); margin: 0; text-align: center; font: italic 400 1rem/1 var(--serif); letter-spacing: .06em; color: var(--ink); opacity: .75; }
+/* leaving: the tag drops off the rail, then the two doors swing apart onto the page */
+.pl-out .pl__swing { animation: pl-fall .55s cubic-bezier(.5, 0, 1, .6) forwards; }
+@keyframes pl-fall { to { translate: 0 110vh; rotate: 22deg; } }
+.pl-out .pl__stage { transition-delay: .25s; opacity: 0; }
+.is-ready .preloader { pointer-events: none; visibility: hidden; transition: visibility 0s 1.2s; }
+.is-ready .pl__door--l { translate: -101% 0; } .is-ready .pl__door--r { translate: 101% 0; } .is-ready .pl__rail { opacity: 0; }
 @keyframes rise { to { translate: 0 0; } }
 @keyframes fade { to { opacity: .8; } }
+@keyframes pl-failsafe { to { visibility: hidden; pointer-events: none; } }
+.js:not(.is-ready) body { overflow: hidden; }
 /* repeat visits skip the intro */
 .skip-pre .preloader { display: none !important; }
 html.skip-pre.js:not(.is-ready) body { overflow: auto; }
-@keyframes pl-failsafe { to { visibility: hidden; pointer-events: none; } }
-.js:not(.is-ready) body { overflow: hidden; }
 
 /* ─────────── announcement + header ─────────── */
 .announce { height: var(--announce-h); background: var(--forest); color: var(--sand); overflow: hidden; font: 500 .72rem/var(--announce-h) var(--sans); letter-spacing: .2em; text-transform: uppercase; }
@@ -519,7 +537,6 @@ body:has(dialog[open]) { overflow: hidden; }
   .preloader { display: none !important; }
   .js:not(.is-ready) body { overflow: auto; }
   .marquee__track, .ticker__track { animation: none; }
-  .preloader__word span { translate: 0 0; animation: none !important; }
   .js [data-reveal], .js .foot__word span { opacity: 1; translate: 0 0; transition: none; }
   .js [data-reveal="arch"] { clip-path: none; }
   .eyebrow__dot, .craft__ring, .swatch span,   .card:hover .garment__swing, .quick__stage .garment__swing { animation: none; }
