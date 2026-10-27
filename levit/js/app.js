@@ -453,18 +453,27 @@ async function reveal() {
 }
 reveal();
 
-/* hero: the glTF rack renders with Three.js (loaded on demand); a poster image stands in without WebGL */
-(async function hero() {
-  const canvas = $('#hero-canvas'), heroEl = $('#hero');
-  const gl = (() => { try { return !!(canvas.getContext('webgl2') || canvas.getContext('webgl')); } catch { return false; } })();
-  if (!gl) { root.classList.add('no-webgl'); heroEl.classList.add('is-loaded'); $$('.hotspot', heroEl).forEach((h) => h.setAttribute('hidden', '')); return; }
-  try {
-    const { initRack } = await import('./hero-rack.js');
-    window.__levitHero = await initRack({ canvas, hero: heroEl, hotspots: $$('.hotspot', heroEl), src: 'models/rack.glb', reduced });
-    heroEl.classList.add('is-loaded');
-  } catch (err) {
-    console.warn('3D rack unavailable, using the poster instead.', err);
-    root.classList.add('no-webgl'); heroEl.classList.add('is-loaded');
-    $$('.hotspot', heroEl).forEach((h) => h.setAttribute('hidden', ''));
-  }
+/* hero: a slow crossfade between three looks, paused on hover, off for reduced motion */
+(function hero() {
+  const slides = $$('#slides .hm__slide'), dots = $$('.hm__dots button'), cap = $('#cap');
+  if (!slides.length) return;
+  let i = 0, timer = 0;
+  const show = (n) => {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
+    dots.forEach((d, k) => { d.classList.toggle('is-on', k === i); d.toggleAttribute('aria-current', k === i); });
+    const s = slides[i], q = s.dataset.quick;
+    $('#cap-name').textContent = s.dataset.name; $('#cap-price').textContent = s.dataset.price || '';
+    $('#cap-price').hidden = !s.dataset.price;
+    cap.setAttribute('href', s.dataset.href || '#shop');
+    cap.dataset.quick = q || '';
+    if (!q) cap.removeAttribute('data-quick');
+  };
+  cap.addEventListener('click', (e) => { if (cap.dataset.quick) e.preventDefault(); });
+  const play = () => { clearInterval(timer); if (!reduced) timer = setInterval(() => show(i + 1), 5600); };
+  dots.forEach((d, k) => d.addEventListener('click', () => { show(k); play(); }));
+  $('#hero').addEventListener('pointerenter', () => clearInterval(timer));
+  $('#hero').addEventListener('pointerleave', play);
+  document.addEventListener('visibilitychange', () => (document.hidden ? clearInterval(timer) : play()));
+  show(0); play();
 })();
