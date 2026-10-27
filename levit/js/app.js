@@ -384,7 +384,17 @@ $('#join-form').addEventListener('submit', (e) => {
 
 /* ───────────────────────── page chrome ───────────────────────── */
 const head = $('#head');
-const onScroll = () => head.classList.toggle('is-stuck', scrollY > 8);
+const heroEl = $('#hero'), tabbar = $('#tabbar');
+let lastY = scrollY;
+const onScroll = () => {
+  head.classList.toggle('is-stuck', scrollY > 8);
+  // the header (and dock) sit over the hero photo and change look once you scroll past it
+  const over = scrollY + head.offsetHeight < heroEl.offsetTop + heroEl.offsetHeight - 6;
+  head.classList.toggle('on-hero', over); root.classList.toggle('over-hero', over);
+  // the dock slides away while reading downwards and returns the moment you scroll up
+  const dy = scrollY - lastY;
+  if (Math.abs(dy) > 6) { tabbar.classList.toggle('is-away', dy > 0 && scrollY > 320); lastY = scrollY; }
+};
 const totop = $('#totop');
 const onScroll2 = () => { totop.hidden = scrollY < 1400; };
 addEventListener('scroll', () => { onScroll(); onScroll2(); }, { passive: true }); onScroll(); onScroll2();

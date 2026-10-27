@@ -1,4 +1,4 @@
-:root { --hh: calc(100svh - var(--head-h) - var(--announce-h)); }
+:root { --hh: calc(100svh - var(--announce-h)); }
 .hero { position: relative; }
 .hero .eyebrow, .hero h1 { margin: 0; }
 
@@ -43,3 +43,15 @@
   .rf__col { grid-column: 2; width: 100%; } .rf__h { display: none; } .rf__skip { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .rf__cue i { animation: none; } .rf__bg img { transition: none; } }
+
+/* the reel runs under the transparent header, so it uses the whole screen */
+.rf { margin-top: calc(var(--head-h) * -1); max-height: none; min-height: 560px; }
+.rf__h { top: calc(var(--head-h) + 6px); }
+.rf__skip { top: calc(var(--head-h) + 10px); }
+.rf__shade { background: linear-gradient(rgba(0, 0, 0, .45), transparent 26%), linear-gradient(to top, rgba(0, 0, 0, .7), transparent 46%); }
+@media (max-width: 699px) {
+  .rf__info { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .rf__heart { bottom: calc(94px + env(safe-area-inset-bottom)); }
+  .rf__cue { bottom: calc(190px + env(safe-area-inset-bottom)); }
+  .rf__dots { top: 54%; }
+}
