@@ -435,43 +435,61 @@ async function reveal() {
 }
 reveal();
 
-/* hero: a boutique door. The glass doors swing open on a look, close, and open on the next */
+/* hero: moving the pointer leaves a trail of real photos that pop in, drift and fade.
+   With no pointer (touch, or idle) a ghost cursor wanders so the page is never still. */
 (function hero() {
-  const hero = $('#hero'), scene = $('#scene');
-  if (!scene) return;
-  const looks = ['ruby-ruffle-dress', 'smocked-bow-top', 'black-bell-sleeve-kurta', 'lace-crochet-top', 'red-polka-midi', 'tissue-dupatta-kurta', 'navy-zip-jacket', 'mocha-colourblock-shirt'].map(byId).filter(Boolean);
-  scene.innerHTML = looks.map((p, k) => `<img src="${p.photo}" alt="${p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async">`).join('');
-  const imgs = $$('img', scene), pad = (n) => String(n).padStart(2, '0');
-  $('#dr-t').textContent = pad(looks.length);
-  const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
-  let i = -1, busy = false, timer = 0, paused = false;
-  const paint = (n) => {
-    i = (n + looks.length) % looks.length;
-    imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
-    const p = looks[i];
-    $('#dr-n').textContent = pad(i + 1); $('#dr-name').textContent = p.name; $('#dr-price').textContent = inr(p.price);
-    $('#dr-shop').dataset.quick = p.id;
+  const hero = $('#hero'), field = $('#field');
+  if (!field) return;
+  const looks = PRODUCTS.filter((p) => p.photo);
+  let n = 0, lx = -999, ly = -999, live = [], lastMove = 0;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const ph = (p, x, y, cls = '') => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'tr__ph' + cls; el.dataset.quick = p.id; el.tabIndex = -1;
+    el.setAttribute('aria-label', `${p.name}, ${inr(p.price)}`);
+    el.innerHTML = `<img src="${p.photo}" alt="" draggable="false">`;
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    return el;
   };
-  async function go(n) {
-    if (busy) return; busy = true;
-    if (i >= 0) {
-      hero.classList.remove('is-open'); hero.classList.add('is-swap');
-      await wait(1300); paint(n); hero.classList.remove('is-swap'); await wait(250);
-    } else paint(n);
-    hero.classList.add('is-open'); await wait(1300); busy = false;
+  if (reduced) {
+    [[.14, .38], [.27, .66], [.4, .3], [.6, .7], [.73, .32], [.86, .62]].forEach(([fx, fy], k) => {
+      const el = ph(looks[k * 3 % looks.length], hero.clientWidth * fx, hero.clientHeight * fy, ' tr__ph--static');
+      el.style.rotate = rnd(-8, 8) + 'deg'; field.append(el);
+    });
+    return;
   }
-  const arm = () => { clearTimeout(timer); if (!reduced && !paused && !document.hidden) timer = setTimeout(async () => { await go(i + 1); arm(); }, 4200); };
-  const step = async (d) => { clearTimeout(timer); await go(i + d); arm(); };
-  $('#dr-next').addEventListener('click', () => step(1));
-  $('#dr-prev').addEventListener('click', () => step(-1));
-  let x0 = null;
-  const room = $('#room');
-  room.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
-  room.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; step(Math.abs(dx) < 10 ? 1 : dx < 0 ? 1 : -1); });
-  hero.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; clearTimeout(timer); } });
-  hero.addEventListener('pointerleave', () => { paused = false; arm(); });
-  document.addEventListener('visibilitychange', () => (document.hidden ? clearTimeout(timer) : arm()));
-  paint(0);
-  root.addEventListener('ready', () => setTimeout(async () => { i = -1; await go(0); arm(); }, 900), { once: true });
-  if (root.classList.contains('is-ready')) { i = -1; go(0).then(arm); }
+  const spawn = (x, y, dx, dy) => {
+    const p = looks[n++ % looks.length];
+    const el = ph(p, x, y, n % 3 === 0 ? ' tr__ph--arch' : '');
+    el.style.setProperty('--r', rnd(-9, 9) + 'deg');
+    el.style.setProperty('--dx', dx * 0.9 + 'px'); el.style.setProperty('--dy', dy * 0.9 + 'px');
+    field.append(el); live.push(el);
+    el.addEventListener('animationend', () => { el.remove(); live = live.filter((q) => q !== el); });
+    while (live.length > 13) live.shift().remove();
+  };
+  const move = (x, y) => {
+    hero.style.setProperty('--mx', x + 'px'); hero.style.setProperty('--my', y + 'px');
+    const gap = Math.max(84, hero.clientWidth * 0.07), ddx = x - lx, ddy = y - ly, d = Math.hypot(ddx, ddy);
+    if (d < gap) return;
+    const k = 70 / d;
+    spawn(x, y, ddx * k, ddy * k); lx = x; ly = y;
+  };
+  hero.addEventListener('pointermove', (e) => {
+    lastMove = performance.now();
+    const r = hero.getBoundingClientRect();
+    move(e.clientX - r.left, e.clientY - r.top);
+  });
+  hero.addEventListener('pointerleave', () => { lx = ly = -999; });
+  // ghost cursor
+  let t = 0, onScreen = true;
+  new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; }).observe(hero);
+  setInterval(() => {
+    if (!onScreen || document.hidden || !root.classList.contains('is-ready') || performance.now() - lastMove < 2200) return;
+    t += 0.085;
+    move(hero.clientWidth * (0.5 + 0.38 * Math.sin(t * 0.8)), hero.clientHeight * (0.5 + 0.3 * Math.sin(t * 1.3 + 1)));
+  }, 70);
+  const hint = $('#hint span');
+  if (hint && matchMedia('(hover: none)').matches) hint.textContent = 'Drag your finger';
+  // warm the cache so the first photos do not pop in late
+  root.addEventListener('ready', () => looks.slice(0, 8).forEach((p) => { new Image().src = p.photo; }), { once: true });
 })();

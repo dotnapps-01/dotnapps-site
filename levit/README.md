@@ -14,7 +14,7 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero: the boutique door.** A lit LEVIT sign (the letters flicker on at load) above a tall arched doorway with two glass doors. The doors swing open on a real photo, close, and open on the next look (8 in all, listed in the `hero()` block of `js/app.js`). The side panel names the look and opens its quick view. Use the arrows, click or swipe the door to move on; it pauses on hover and is static (doors open, no swinging) for reduced motion.
+- **Hero: photo trail.** A huge LEVIT on white with a soft glow that follows the pointer. Moving the mouse (or a finger) leaves a trail of your real photos that pop in at a slight tilt, drift along the direction of travel and fade; hover one to hold it, click to open the product. When nobody is moving a pointer a ghost cursor wanders so the hero is never still. Reduced motion shows a static scatter instead. It is the `hero()` block in `js/app.js`, drawing from every product that has a photo.
 - `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
