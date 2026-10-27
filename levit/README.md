@@ -31,3 +31,6 @@ To add a piece: drop its photo in `img/p/` and add an entry with a `photo` path 
 - **Bag**: removing an item offers Undo (the toast now sits above open drawers).
 - **Search** opens with recent and popular searches and trending pieces.
 - **Intro**: on a dark screen, real photos flash through an arch while a huge serif counter climbs 0 to 100%; at 100% the arch lands on the first look and grows until it fills the screen, then dissolves into the page. It plays once per visit (and is skipped for reduced motion); the photos in `index.html` (`#pl-photos`) are the same ones the hero uses, so it doubles as a preload.
+
+## Deploying to Vercel
+The site is static, so there is no build step. Create a **new** Vercel project from the repository and set **Root Directory** to `levit`, Framework Preset **Other**, and leave Build Command and Output Directory empty. `levit/vercel.json` adds clean URLs, security headers and caching (fonts are immutable, images cache for a day, HTML/CSS/JS always revalidate). Use a separate project from the Dotnapps site, because that site's root `vercel.json` turns off trailing slashes, which would break this site's relative asset paths if it were served from `/levit/`.
