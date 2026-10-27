@@ -436,8 +436,7 @@ async function reveal() {
 }
 reveal();
 
-/* hero: eight styles to try, switched with the pill at the bottom of the page (js/heroes/) */
+/* hero: the swipe-up reel (js/heroes/) */
 initHeroes();
 document.addEventListener('levit:quick', (e) => openQuick(e.detail));
 document.addEventListener('levit:wish', (e) => { if (byId(e.detail) && !wish.has(e.detail)) toggleWish(e.detail); });
-document.addEventListener('levit:add', (e) => { const { id, size } = e.detail || {}; if (byId(id) && size) addToBag(id, size, 0, 1, { open: false }); });

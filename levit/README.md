@@ -14,17 +14,7 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero styles to try (phone-first, 9).** The control at the bottom of the page (a slim dock on desktop) switches between them; `?hero=3` and Alt+1..9 also work and the choice is remembered. Pick one, then delete the rest and `js/heroes/index.js`. Each lives in `js/heroes/<name>.js` with styles in `css/heroes.css`.
-  1. **Swipe deck** (`deck.js`): swipe a look right to save it to the wishlist, left to skip; Love/Skip stamps fade in, buttons do the same.
-  2. **Reel feed** (`reel.js`): each look fills the screen, swipe up for the next; heart, price and Shop sit under the thumb; ends on a Shop the edit panel.
-  3. **Tilt to peek** (`tilt.js`): layers shift as you tilt the phone (asks permission on iPhone) or move the mouse; swipe for the next look.
-  4. **Bottom sheet** (`sheet.js`): full-screen look with a sheet you drag up to pick a size and add to the bag without leaving the hero.
-  5. **Scratch to reveal** (`scratch.js`): scratch a sand-coloured LEVIT card to reveal the look; a ghost finger shows how.
-  6. **Look pins** (`pins.js`): tap pulsing dots on the photo to read the product details.
-  7. **Flick stack** (`flick.js`): prints piled up; flick the top one away with its momentum.
-  8. **Thumb dial** (`dial.js`): spin a dial at the bottom with your thumb to change the look.
-  9. **Story reel** (`stories.js`): the Instagram-style reel.
-  Earlier desktop-oriented styles (magazine, runway, windows, rail, etc.) are in git history.
+- **Hero: swipe-up reel.** Only the hero is a reel; the rest of the page is the normal shop. Each of eight real looks fills the frame and you swipe up (or scroll) for the next, with the price and Shop this look under your thumb, a heart that saves to the wishlist, a progress rail, a Swipe up cue, and a Skip to shop pill. The last panel hands the visitor on to the collection. On desktop the reel is a phone-width column with the headline beside it over a blurred copy of the current photo. Code: `js/heroes/reel.js` (looks listed in `LOOK_IDS` in `js/heroes/util.js`), styles in `css/heroes.css`. The other hero styles tried are in git history.
 - `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
