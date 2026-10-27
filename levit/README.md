@@ -14,7 +14,7 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero styles to try (8).** The hero is built by `js/heroes/` and styled in `css/heroes.css` (the magazine's CSS is in `levit.css`). The dock on the left edge of the page (a small pill at the bottom right on phones) switches between them; `?hero=3` or Alt+1..8 also work, and the choice is remembered. Once you pick one, delete the dock (`js/heroes/index.js`) and the other modules.
+- **Hero styles to try (14).** The hero is built by `js/heroes/` and styled in `css/heroes.css` (the magazine's CSS is in `levit.css`). The dock on the left edge of the page (a small pill at the bottom right on phones) switches between them; `?hero=3` or Alt+1..9 also work, and the choice is remembered. Once you pick one, delete the dock (`js/heroes/index.js`) and the other modules.
   1. **Sand curtain**: LEVIT is printed across two curtain halves that part as you scroll, onto a look and the headline.
   2. **Runway scroll**: the hero pins while the looks walk across a huge LEVIT; the one nearest the middle steps forward.
   3. **Wordmark windows**: each letter of LEVIT is a window on its own slow cycle of photos; hover to hold one, click to open it.
@@ -23,6 +23,12 @@ cd levit && python3 -m http.server 8080
   6. **Fly through**: photos in a corridor, the camera drifting forward; wheel, drag or mouse height changes the speed.
   7. **Story reel**: a phone frame with progress bars, tap or hold, and highlight rings.
   8. **Draggable prints**: prints on a tabletop to pick up, throw and shuffle.
+  9. **Venetian blinds**: a tall arched frame of nine slats that flip one after another to the next look.
+  10. **Bento grid**: photo tiles that each change on their own beat, beside a colour block and a shop tile.
+  11. **Spotlight**: the looks sit in the dark; move the light to reveal them (it wanders by itself when idle).
+  12. **Cylinder**: the looks stand on a slowly turning 3D ring; drag to spin it.
+  13. **Photo booth**: a machine prints strips of four looks that drop onto the table; press the button for another.
+  14. **Collage**: a big editorial headline with taped photos at different depths that shift with the mouse.
 - `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2

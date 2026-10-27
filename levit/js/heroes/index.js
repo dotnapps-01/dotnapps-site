@@ -7,8 +7,14 @@ import * as rail from './rail.js';
 import * as flythrough from './flythrough.js';
 import * as stories from './stories.js';
 import * as pile from './pile.js';
+import * as slats from './slats.js';
+import * as bento from './bento.js';
+import * as spotlight from './spotlight.js';
+import * as cylinder from './cylinder.js';
+import * as booth from './booth.js';
+import * as collage from './collage.js';
 
-/* Eight hero styles to try. The pill at the bottom of the page switches between them (also ?hero=1..8). */
+/* Fourteen hero styles to try. The pill at the bottom of the page switches between them (also ?hero=1..14). */
 export const HEROES = [
   { id: 'curtain', name: 'Sand curtain', mod: curtain },
   { id: 'runway', name: 'Runway scroll', mod: runway },
@@ -18,6 +24,12 @@ export const HEROES = [
   { id: 'fly', name: 'Fly through', mod: flythrough },
   { id: 'stories', name: 'Story reel', mod: stories },
   { id: 'pile', name: 'Draggable prints', mod: pile },
+  { id: 'slats', name: 'Venetian blinds', mod: slats },
+  { id: 'bento', name: 'Bento grid', mod: bento },
+  { id: 'spotlight', name: 'Spotlight', mod: spotlight },
+  { id: 'cylinder', name: 'Cylinder', mod: cylinder },
+  { id: 'booth', name: 'Photo booth', mod: booth },
+  { id: 'collage', name: 'Collage', mod: collage },
 ];
 
 export function initHeroes() {
@@ -25,7 +37,7 @@ export function initHeroes() {
   if (!host) return;
   let cur = -1, destroy = null;
   const store = { get: () => { try { return localStorage.getItem('levit-hero'); } catch { return null; } }, set: (v) => { try { localStorage.setItem('levit-hero', v); } catch { /* ignore */ } } };
-  const want = () => { const q = new URLSearchParams(location.search).get('hero'); const n = parseInt(q || store.get() || '4', 10); return Number.isFinite(n) ? Math.min(8, Math.max(1, n)) - 1 : 3; };
+  const want = () => { const q = new URLSearchParams(location.search).get('hero'); const n = parseInt(q || store.get() || '4', 10); return Number.isFinite(n) ? Math.min(HEROES.length, Math.max(1, n)) - 1 : 3; };
 
   const pill = document.createElement('nav');
   pill.className = 'hsw'; pill.setAttribute('aria-label', 'Hero style');
@@ -49,6 +61,6 @@ export function initHeroes() {
     const b = e.target.closest('[data-h]'); if (b) go(+b.dataset.h, true);
     const s = e.target.closest('[data-step]'); if (s) { go((cur + +s.dataset.step + HEROES.length) % HEROES.length, true); pill.classList.add('is-peek'); setTimeout(() => pill.classList.remove('is-peek'), 1600); }
   });
-  addEventListener('keydown', (e) => { if (e.altKey && /^[1-8]$/.test(e.key)) { go(+e.key - 1, true); e.preventDefault(); } });
+  addEventListener('keydown', (e) => { if (e.altKey && /^[1-9]$/.test(e.key)) { go(+e.key - 1, true); e.preventDefault(); } });
   go(want(), false);
 }
