@@ -435,23 +435,43 @@ async function reveal() {
 }
 reveal();
 
-/* hero: three tilted columns of real photos drifting in opposite directions; each opens the quick view */
+/* hero: a boutique door. The glass doors swing open on a look, close, and open on the next */
 (function hero() {
-  const stage = $('#wall');
-  if (!stage) return;
-  const COLS = [
-    ['ruby-ruffle-dress', 'black-bell-sleeve-kurta', 'lace-crochet-top', 'red-polka-midi', 'navy-zip-jacket', 'grey-colourblock-shirt'],
-    ['smocked-bow-top', 'ruby-cape-dress', 'red-check-shirt', 'embroidered-flare-set', 'striped-crop-shirt', 'web-print-tee'],
-    ['tissue-dupatta-kurta', 'polka-tie-blouse', 'mocha-colourblock-shirt', 'gingham-pinafore-top', 'polka-lace-set', 'lime-gingham-top', 'sky-crop-shirt'],
-  ];
-  const shot = (p, k) => `<button class="hw__ph" data-quick="${p.id}" aria-label="${p.name}, ${inr(p.price)}"${k ? ' tabindex="-1" aria-hidden="true"' : ''}>` +
-    `<img src="${p.photo}" alt="${k ? '' : p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async">` +
-    `<span class="hw__tag"><b>${p.name}</b><i>${inr(p.price)}</i></span></button>`;
-  stage.innerHTML = '<div class="hw__cols">' + COLS.map((ids, c) => {
-    const list = ids.map(byId).filter(Boolean);
-    return `<div class="hw__col${c === 1 ? ' hw__col--down' : ''}"><div class="hw__track" style="--t:${[64, 78, 70][c]}s">` +
-      list.map((p) => shot(p, 0)).join('') + list.map((p) => shot(p, 1)).join('') + '</div></div>';
-  }).join('') + '</div>';
-  const hero = $('#hero');
-  document.addEventListener('visibilitychange', () => hero.classList.toggle('is-paused', document.hidden));
+  const hero = $('#hero'), scene = $('#scene');
+  if (!scene) return;
+  const looks = ['ruby-ruffle-dress', 'smocked-bow-top', 'black-bell-sleeve-kurta', 'lace-crochet-top', 'red-polka-midi', 'tissue-dupatta-kurta', 'navy-zip-jacket', 'mocha-colourblock-shirt'].map(byId).filter(Boolean);
+  scene.innerHTML = looks.map((p, k) => `<img src="${p.photo}" alt="${p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async">`).join('');
+  const imgs = $$('img', scene), pad = (n) => String(n).padStart(2, '0');
+  $('#dr-t').textContent = pad(looks.length);
+  const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
+  let i = -1, busy = false, timer = 0, paused = false;
+  const paint = (n) => {
+    i = (n + looks.length) % looks.length;
+    imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
+    const p = looks[i];
+    $('#dr-n').textContent = pad(i + 1); $('#dr-name').textContent = p.name; $('#dr-price').textContent = inr(p.price);
+    $('#dr-shop').dataset.quick = p.id;
+  };
+  async function go(n) {
+    if (busy) return; busy = true;
+    if (i >= 0) {
+      hero.classList.remove('is-open'); hero.classList.add('is-swap');
+      await wait(1300); paint(n); hero.classList.remove('is-swap'); await wait(250);
+    } else paint(n);
+    hero.classList.add('is-open'); await wait(1300); busy = false;
+  }
+  const arm = () => { clearTimeout(timer); if (!reduced && !paused && !document.hidden) timer = setTimeout(async () => { await go(i + 1); arm(); }, 4200); };
+  const step = async (d) => { clearTimeout(timer); await go(i + d); arm(); };
+  $('#dr-next').addEventListener('click', () => step(1));
+  $('#dr-prev').addEventListener('click', () => step(-1));
+  let x0 = null;
+  const room = $('#room');
+  room.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+  room.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; step(Math.abs(dx) < 10 ? 1 : dx < 0 ? 1 : -1); });
+  hero.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; clearTimeout(timer); } });
+  hero.addEventListener('pointerleave', () => { paused = false; arm(); });
+  document.addEventListener('visibilitychange', () => (document.hidden ? clearTimeout(timer) : arm()));
+  paint(0);
+  root.addEventListener('ready', () => setTimeout(async () => { i = -1; await go(0); arm(); }, 900), { once: true });
+  if (root.classList.contains('is-ready')) { i = -1; go(0).then(arm); }
 })();
