@@ -453,27 +453,39 @@ async function reveal() {
 }
 reveal();
 
-/* hero: a slow crossfade between three looks, paused on hover, off for reduced motion */
+/* hero: a lookbook strip; the active panel opens wide, advancing on its own unless hovered or reduced motion */
 (function hero() {
-  const slides = $$('#slides .hm__slide'), dots = $$('.hm__dots button'), cap = $('#cap');
-  if (!slides.length) return;
+  const strip = $('#strip');
+  if (!strip) return;
+  const panels = $$('.lb__p', strip), hero = $('#hero');
+  panels.forEach((el) => {
+    const p = byId(el.dataset.id);
+    if (!p) return;
+    if ('art' in el.dataset) el.insertAdjacentHTML('afterbegin', `<div class="lb__art">${art(p, 0)}</div>`);
+    el.insertAdjacentHTML('beforeend',
+      `<span class="lb__tab"><b>${p.name}</b>${CATEGORIES.find((c) => c.id === p.cat)?.name || ''}</span>` +
+      `<div class="lb__cap"><span><strong>${p.name}</strong><small>${inr(p.price)}</small></span><button type="button" data-quick="${p.id}">Shop</button></div>` +
+      (reduced ? '' : '<i class="lb__bar"></i>'));
+  });
   let i = 0, timer = 0;
+  const DUR = 5200;
+  strip.style.setProperty('--dur', DUR + 'ms');
   const show = (n) => {
-    i = (n + slides.length) % slides.length;
-    slides.forEach((s, k) => s.classList.toggle('is-on', k === i));
-    dots.forEach((d, k) => { d.classList.toggle('is-on', k === i); d.toggleAttribute('aria-current', k === i); });
-    const s = slides[i], q = s.dataset.quick;
-    $('#cap-name').textContent = s.dataset.name; $('#cap-price').textContent = s.dataset.price || '';
-    $('#cap-price').hidden = !s.dataset.price;
-    cap.setAttribute('href', s.dataset.href || '#shop');
-    cap.dataset.quick = q || '';
-    if (!q) cap.removeAttribute('data-quick');
+    i = (n + panels.length) % panels.length;
+    panels.forEach((el, k) => {
+      el.classList.toggle('is-on', k === i);
+      el.setAttribute('aria-expanded', k === i);
+    });
   };
-  cap.addEventListener('click', (e) => { if (cap.dataset.quick) e.preventDefault(); });
-  const play = () => { clearInterval(timer); if (!reduced) timer = setInterval(() => show(i + 1), 5600); };
-  dots.forEach((d, k) => d.addEventListener('click', () => { show(k); play(); }));
-  $('#hero').addEventListener('pointerenter', () => clearInterval(timer));
-  $('#hero').addEventListener('pointerleave', play);
-  document.addEventListener('visibilitychange', () => (document.hidden ? clearInterval(timer) : play()));
+  const play = () => { clearInterval(timer); hero.classList.remove('is-paused'); if (!reduced) timer = setInterval(() => show(i + 1), DUR); };
+  const pause = () => { clearInterval(timer); hero.classList.add('is-paused'); };
+  panels.forEach((el, k) => {
+    el.addEventListener('click', (e) => { if (k !== i && !e.target.closest('[data-quick]')) { show(k); pause(); } });
+    el.addEventListener('focus', () => { if (k !== i) { show(k); pause(); } });
+    el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && k !== i) { show(k); } });
+  });
+  strip.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
+  strip.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') play(); });
+  document.addEventListener('visibilitychange', () => (document.hidden ? pause() : play()));
   show(0); play();
 })();

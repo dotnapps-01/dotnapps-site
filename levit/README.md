@@ -14,7 +14,7 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero: minimal.** A white hero with a short headline, one button and a tall arch of your photos that crossfades slowly between three looks (each links to its product, or to the boutique). On load the headline lines rise out of their masks and the arch opens; the images drift in slowly and a small badge turns. It is plain HTML and CSS with a few lines of JS in `js/app.js` for the slideshow (pauses on hover and when the tab is hidden, and is static for reduced motion). Swap the looks by editing the three `.hm__slide` figures in `index.html`.
+- **Hero: colour-block lookbook.** A white hero with a short headline and five tall coloured arches (black, lilac, rust, sage, camel), each holding one look: your photos, or a hanger illustration of a shop product. The active arch opens wide and shows its name, price and a Shop button (quick view); the others fold into slim strips with a vertical label. It advances on its own with a thin progress line, pauses on hover and when the tab is hidden, and any arch can be opened by hover, click or keyboard focus. Plain HTML/CSS plus a short script in `js/app.js` (the `hero()` block); change the looks by editing the `.lb__p` articles in `index.html` (`data-id` is a product id).
 - `js/garments.js` / `js/products.js` — catalogue (INR) and the tintable hanger illustrations used in the grid
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
