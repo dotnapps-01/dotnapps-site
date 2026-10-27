@@ -14,7 +14,15 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero: the magazine cover.** The hero is a cover of the LEVIT AW26 issue: a giant LEVIT masthead over a real photo, cover lines, the look's name with a Shop inside button, a barcode and a folded corner, standing on a warm desk with a stack of pages behind it. Turning the page flips the cover around its spine (a real 3D page turn) to the next of 8 looks. Use the Turn the page link, click or swipe the cover, or pick a look from the Inside this issue list. It turns by itself every few seconds, pauses on hover, and with reduced motion just swaps. The looks and the light/dark masthead tone for each photo are in the `hero()` block of `js/app.js`.
+- **Hero styles to try (8).** The hero is built by `js/heroes/` and styled in `css/heroes.css` (the magazine's CSS is in `levit.css`). The dock on the left edge of the page (a small pill at the bottom right on phones) switches between them; `?hero=3` or Alt+1..8 also work, and the choice is remembered. Once you pick one, delete the dock (`js/heroes/index.js`) and the other modules.
+  1. **Sand curtain**: LEVIT is printed across two curtain halves that part as you scroll, onto a look and the headline.
+  2. **Runway scroll**: the hero pins while the looks walk across a huge LEVIT; the one nearest the middle steps forward.
+  3. **Wordmark windows**: each letter of LEVIT is a window on its own slow cycle of photos; hover to hold one, click to open it.
+  4. **Magazine cover**: a 3D page turn between 8 covers, with an Inside this issue list.
+  5. **Clothes rail**: photos hang from hangers on a brass rail; drag it and they swing like pendulums.
+  6. **Fly through**: photos in a corridor, the camera drifting forward; wheel, drag or mouse height changes the speed.
+  7. **Story reel**: a phone frame with progress bars, tap or hold, and highlight rings.
+  8. **Draggable prints**: prints on a tabletop to pick up, throw and shuffle.
 - `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
