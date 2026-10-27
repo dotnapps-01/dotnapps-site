@@ -35,13 +35,6 @@ const C = {
 
 export const PRODUCTS = [
   {
-    id: 'wrap-collar-midi-dress', name: 'Wrap Midi Dress', cat: 'dresses', price: 2899, was: null, tag: 'New',
-    kind: 'midi', colors: [C.camel, C.sage, C.wine, C.navy], bg: '#F4EAE1',
-    photo: 'img/dress-camel-card.webp',
-    blurb: 'A collared wrap dress with puff sleeves, a banded waist with covered buttons and a pleated A-line skirt. Soft crepe that holds its shape and moves when you do.',
-    details: ['Soft stretch crepe', 'Collared wrap bodice', 'Puff sleeves with cuffs', 'Pleated midi skirt'],
-  },
-  {
     id: 'rust-waffle-wrap-knit', name: 'Waffle Wrap Knit', cat: 'knitwear', price: 1799, was: 2299, tag: 'New',
     kind: 'knit', colors: [C.rust, C.mocha, C.sand], bg: '#C5CFAE',
     photo: 'img/knit-rust.webp', hero: true,
