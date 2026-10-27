@@ -15,9 +15,9 @@ cd levit && python3 -m http.server 8080
 
 ## What's inside
 - **Hero: drifting photo wall.** A white hero with a three-line headline and a tilted wall of three photo columns that drift slowly in opposite directions over soft blush and lilac glows. Every photo is a real shot from the boutique; each has a name and price pill and opens the product quick view. The wall pauses on hover and when the tab is hidden, and is static for reduced motion. It is built in the `hero()` block of `js/app.js` from the `COLS` id lists (any product with a `photo`); the images live in `img/p/`. The shop is photographed pieces only (22): the hanger-illustration products were removed, and categories with nothing in them drop out automatically.
-- `js/garments.js` / `js/products.js` — catalogue (INR) and the tintable hanger illustrations used in the grid
+- `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
 
 Checkout is a demo: no payment is taken and nothing is sent anywhere.
-Replace the illustrations with product photography by adding a `photo` path to a product in `products.js`.
+To add a piece: drop its photo in `img/p/` and add an entry with a `photo` path to `products.js`.
