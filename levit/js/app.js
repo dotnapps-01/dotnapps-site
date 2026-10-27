@@ -24,7 +24,6 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('on'), 2600);
 }
 
-const art = (p, ci = 0) => garmentSVG(p.kind, { c: p.colors[ci].hex, pat: p.pat, c2: p.c2 });
 const priceHTML = (p) => `${inr(p.price)}${p.was ? ` <s>${inr(p.was)}</s>` : ''}`;
 const FREE_SHIP = 1999, SHIP = 99, COD = 49;
 
@@ -104,7 +103,6 @@ function cardHTML(p, i) {
   return `<article class="card${p.real ? ' card--real' : ''}" data-id="${p.id}" data-reveal style="--i:${i % 8}">
     <div class="card__stage">
     <button class="card__media" style="--bg:${p.bg}" data-quick="${p.id}" aria-label="Quick view — ${p.name}">
-      <span class="card__art">${art(p, ci)}</span>
       ${p.photo ? `<img class="card__photo" src="${p.photo}" alt="" loading="lazy" decoding="async">` : ''}
     </button>
     ${tag}
@@ -115,7 +113,6 @@ function cardHTML(p, i) {
     <div class="card__meta">
       <h3 class="card__name">${p.name}</h3>
       <p class="price">${priceHTML(p)}</p>
-      <div class="swatches" role="group" aria-label="Colour">${p.colors.map((c, k) => `<button style="--c:${c.hex}" data-swatch="${p.id}" data-ci="${k}" aria-label="${c.name}" aria-pressed="${k === ci}"></button>`).join('')}</div>
     </div>
   </article>`;
 }
@@ -147,15 +144,6 @@ document.addEventListener('click', (e) => {
 });
 
 $('#grid').addEventListener('click', (e) => {
-  const sw = e.target.closest('[data-swatch]');
-  if (sw) {
-    const p = byId(sw.dataset.swatch), ci = +sw.dataset.ci;
-    colorOf[p.id] = ci;
-    const card = sw.closest('.card');
-    $('.card__art', card).innerHTML = art(p, ci);
-    $$('[data-swatch]', card).forEach((b) => b.setAttribute('aria-pressed', b === sw));
-    return;
-  }
   const w = e.target.closest('[data-wish]');
   if (w) { toggleWish(w.dataset.wish, w); return; }
   const q = e.target.closest('[data-qadd]');
@@ -178,7 +166,7 @@ const Q = { id: null, ci: 0, size: null, shot: 'art' };
 function openQuick(id) {
   const p = byId(id);
   if (!p) return;
-  Q.id = id; Q.ci = colorOf[id] ?? 0; Q.size = null; Q.shot = p.photo ? 'photo' : 'art';
+  Q.id = id; Q.ci = colorOf[id] ?? 0; Q.size = null;
   $('#q-cat').textContent = CATEGORIES.find((c) => c.id === p.cat).name;
   $('#q-name').textContent = p.name;
   const sale = p.was ? Math.round((1 - p.price / p.was) * 100) : 0;
@@ -198,20 +186,14 @@ function drawQuickColors() {
 }
 function drawQuickMedia() {
   const p = byId(Q.id);
-  const stage = Q.shot === 'photo' && p.photo ? `<img src="${p.photo}" alt="${p.name}">` : art(p, Q.ci);
-  const thumbs = p.photo ? `<div class="quick__thumbs">
-      <button data-shot="photo" aria-pressed="${Q.shot === 'photo'}" aria-label="Photo"><img src="${p.photo}" alt=""></button>
-      <button data-shot="art" aria-pressed="${Q.shot === 'art'}" aria-label="Illustration">${art(p, Q.ci)}</button></div>` : '<div></div>';
   $('#q-media').style.setProperty('--bg', p.bg);
-  $('#q-media').innerHTML = `<div class="quick__stage">${stage}</div>${thumbs}`;
+  $('#q-media').innerHTML = `<div class="quick__stage"><img src="${p.photo}" alt="${p.name}"></div>`;
 }
 $('#quick').addEventListener('click', (e) => {
   const c = e.target.closest('[data-qcolor]');
-  if (c) { Q.ci = +c.dataset.qcolor; if (Q.shot === 'photo') Q.shot = 'art'; drawQuickColors(); drawQuickMedia(); return; }
+  if (c) { Q.ci = +c.dataset.qcolor; drawQuickColors(); return; }
   const s = e.target.closest('[data-qsize]');
   if (s) { Q.size = s.dataset.qsize; $$('#q-sizes button').forEach((b) => b.setAttribute('aria-pressed', b === s)); $('#q-err').textContent = ''; return; }
-  const sh = e.target.closest('[data-shot]');
-  if (sh) { Q.shot = sh.dataset.shot; drawQuickMedia(); }
 });
 $('#q-add').addEventListener('click', () => {
   if (!Q.size) { $('#q-err').textContent = 'Please choose a size.'; $('#q-sizes button').focus(); return; }
@@ -242,7 +224,7 @@ function updateCounts() {
   wc.hidden = !wish.size; wc.textContent = wish.size;
 }
 
-function lineArt(p, ci) { return `<span class="line__art" style="--bg:${p.bg}">${art(p, ci)}</span>`; }
+function lineArt(p) { return `<span class="line__art" style="--bg:${p.bg}"><img src="${p.photo}" alt=""></span>`; }
 
 function renderBag() {
   const sub = subtotal(), empty = !bag.length;
@@ -434,7 +416,7 @@ if (fine && !reduced) {
       shown = a.dataset.cat;
       const p = PRODUCTS.find((x) => x.cat === shown);
       prev.style.background = p.bg;
-      prev.innerHTML = art(p, 0);
+      prev.innerHTML = `<img src="${p.photo}" alt="">`;
       prev.classList.remove('is-on'); void prev.offsetWidth;
     }
     prev.classList.add('is-on');
