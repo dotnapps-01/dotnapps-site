@@ -101,7 +101,7 @@ function cardHTML(p, i) {
   const ci = colorOf[p.id] ?? 0;
   const sale = p.was ? Math.round((1 - p.price / p.was) * 100) : 0;
   const tag = p.tag ? `<span class="card__tag ${sale && p.tag.startsWith('-') ? 'card__tag--sale' : ''}">${p.tag}</span>` : '';
-  return `<article class="card" data-id="${p.id}" data-reveal style="--i:${i % 8}">
+  return `<article class="card${p.real ? ' card--real' : ''}" data-id="${p.id}" data-reveal style="--i:${i % 8}">
     <div class="card__stage">
     <button class="card__media" style="--bg:${p.bg}" data-quick="${p.id}" aria-label="Quick view — ${p.name}">
       <span class="card__art">${art(p, ci)}</span>
@@ -453,39 +453,23 @@ async function reveal() {
 }
 reveal();
 
-/* hero: a lookbook strip; the active panel opens wide, advancing on its own unless hovered or reduced motion */
+/* hero: three tilted columns of real photos drifting in opposite directions; each opens the quick view */
 (function hero() {
-  const strip = $('#strip');
-  if (!strip) return;
-  const panels = $$('.lb__p', strip), hero = $('#hero');
-  panels.forEach((el) => {
-    const p = byId(el.dataset.id);
-    if (!p) return;
-    if ('art' in el.dataset) el.insertAdjacentHTML('afterbegin', `<div class="lb__art">${art(p, 0)}</div>`);
-    el.insertAdjacentHTML('beforeend',
-      `<span class="lb__tab"><b>${p.name}</b>${CATEGORIES.find((c) => c.id === p.cat)?.name || ''}</span>` +
-      `<div class="lb__cap"><span><strong>${p.name}</strong><small>${inr(p.price)}</small></span><button type="button" data-quick="${p.id}">Shop</button></div>` +
-      (reduced ? '' : '<i class="lb__bar"></i>'));
-  });
-  let i = 0, timer = 0;
-  const DUR = 5200;
-  strip.style.setProperty('--dur', DUR + 'ms');
-  const show = (n) => {
-    i = (n + panels.length) % panels.length;
-    panels.forEach((el, k) => {
-      el.classList.toggle('is-on', k === i);
-      el.setAttribute('aria-expanded', k === i);
-    });
-  };
-  const play = () => { clearInterval(timer); hero.classList.remove('is-paused'); if (!reduced) timer = setInterval(() => show(i + 1), DUR); };
-  const pause = () => { clearInterval(timer); hero.classList.add('is-paused'); };
-  panels.forEach((el, k) => {
-    el.addEventListener('click', (e) => { if (k !== i && !e.target.closest('[data-quick]')) { show(k); pause(); } });
-    el.addEventListener('focus', () => { if (k !== i) { show(k); pause(); } });
-    el.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && k !== i) { show(k); } });
-  });
-  strip.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') pause(); });
-  strip.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') play(); });
-  document.addEventListener('visibilitychange', () => (document.hidden ? pause() : play()));
-  show(0); play();
+  const stage = $('#wall');
+  if (!stage) return;
+  const COLS = [
+    ['ruby-ruffle-dress', 'black-bell-sleeve-kurta', 'lace-crochet-top', 'red-polka-midi', 'navy-zip-jacket', 'grey-colourblock-shirt'],
+    ['smocked-bow-top', 'ruby-cape-dress', 'red-check-shirt', 'embroidered-flare-set', 'striped-crop-shirt', 'web-print-tee'],
+    ['tissue-dupatta-kurta', 'polka-tie-blouse', 'mocha-colourblock-shirt', 'gingham-pinafore-top', 'polka-lace-set', 'lime-gingham-top', 'sky-crop-shirt'],
+  ];
+  const shot = (p, k) => `<button class="hw__ph" data-quick="${p.id}" aria-label="${p.name}, ${inr(p.price)}"${k ? ' tabindex="-1" aria-hidden="true"' : ''}>` +
+    `<img src="${p.photo}" alt="${k ? '' : p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async">` +
+    `<span class="hw__tag"><b>${p.name}</b><i>${inr(p.price)}</i></span></button>`;
+  stage.innerHTML = '<div class="hw__cols">' + COLS.map((ids, c) => {
+    const list = ids.map(byId).filter(Boolean);
+    return `<div class="hw__col${c === 1 ? ' hw__col--down' : ''}"><div class="hw__track" style="--t:${[64, 78, 70][c]}s">` +
+      list.map((p) => shot(p, 0)).join('') + list.map((p) => shot(p, 1)).join('') + '</div></div>';
+  }).join('') + '</div>';
+  const hero = $('#hero');
+  document.addEventListener('visibilitychange', () => hero.classList.toggle('is-paused', document.hidden));
 })();
