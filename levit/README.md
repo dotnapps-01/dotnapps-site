@@ -21,3 +21,13 @@ cd levit && python3 -m http.server 8080
 
 Checkout is a demo: no payment is taken and nothing is sent anywhere.
 To add a piece: drop its photo in `img/p/` and add an entry with a `photo` path to `products.js`.
+
+
+## Shop design and ease of use
+- **The shop is a boutique rail.** Each row of garments hangs from a chrome rail (the rail segments join across the grid), every card is an arch that swings on its hook as it scrolls into view, and the price is a hang tag on the photo (rust for sale prices). Name in italic serif with the category beneath. 2 per row on phones, 3 or 4 on larger screens, and a 1 per row view (toggle on desktop; on phones it follows the saved layout).
+- **Sticky filter bar** with category chips that centre the active one, a sort control (a native picker on phones) and a clear "Showing 6 pieces in Dresses · Clear" line.
+- **Phone tab bar** (Home, Shop, Search, Saved, Bag with live counts, current section highlighted) replaces the header icons on small screens; a back-to-top button appears after the hero.
+- **Quick view is a bottom sheet on phones**: big tap targets, a sticky "Select a size" / "Add to bag" button that shakes the size row if you forget, your last size remembered and preselected, a PIN-code delivery check, and short return/COD/shipping promises. The colour dots were removed because they did not change the photo; it now says which colour is shown and which others exist.
+- **Bag**: removing an item offers Undo (the toast now sits above open drawers).
+- **Search** opens with recent and popular searches and trending pieces.
+- **Intro** plays once per visit instead of on every page load; inputs are 16px (no iOS zoom); focus rings and 44px touch targets throughout.

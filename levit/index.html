@@ -15,7 +15,7 @@
 <link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/levit.css">
 <link rel="stylesheet" href="css/heroes.css">
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('levit.seen'))document.documentElement.classList.add('skip-pre');}catch(e){}</script>
 </head>
 <body>
 
@@ -93,22 +93,30 @@
       <header class="shop__head">
         <div data-reveal>
           <p class="eyebrow"><span class="eyebrow__dot"></span>The edit</p>
-          <h2 class="display" id="shop-title">AW26 <em>essentials</em></h2>
+          <h2 class="display" id="shop-title">Off the <em>rail</em></h2>
         </div>
-        <p class="shop__count" data-reveal><b id="shop-n">15</b> pieces</p>
+        <p class="shop__count" data-reveal><b id="shop-n">22</b> pieces, shot in our boutique</p>
       </header>
 
       <div class="filters" id="filters">
         <div class="chips" role="tablist" aria-label="Category" id="chips"></div>
-        <label class="sort"><span>Sort</span>
-          <select id="sort">
-            <option value="featured">Featured</option>
-            <option value="low">Price: low to high</option>
-            <option value="high">Price: high to low</option>
-            <option value="new">New first</option>
-          </select>
-        </label>
+        <div class="tools">
+          <label class="sort"><span class="sort__t">Sort</span>
+            <svg class="sort__ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg>
+            <select id="sort" aria-label="Sort products">
+              <option value="featured">Featured</option>
+              <option value="low">Price: low to high</option>
+              <option value="high">Price: high to low</option>
+              <option value="new">New first</option>
+            </select>
+          </label>
+          <div class="view" role="group" aria-label="Layout">
+            <button type="button" data-view="2" aria-pressed="true" aria-label="Two per row"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="7" height="16" rx="1.5"/><rect x="13" y="4" width="7" height="16" rx="1.5"/></svg></button>
+            <button type="button" data-view="1" aria-pressed="false" aria-label="One per row"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="4" width="14" height="16" rx="1.5"/></svg></button>
+          </div>
+        </div>
       </div>
+      <p class="shop__result" id="shop-result" aria-live="polite"></p>
 
       <div class="grid" id="grid" aria-live="polite"></div>
     </div>
@@ -259,12 +267,14 @@
       <h2 id="q-name" class="quick__name"></h2>
       <p class="quick__price" id="q-price"></p>
       <p class="quick__blurb" id="q-blurb"></p>
-      <fieldset class="opt"><legend>Colour — <span id="q-colorname"></span></legend><div class="swatches swatches--lg" id="q-colors"></div></fieldset>
-      <fieldset class="opt"><legend>Size <button class="link" type="button" data-open="size">Size guide</button></legend><div class="sizes" id="q-sizes"></div><p class="opt__err" id="q-err" role="alert"></p></fieldset>
+      <p class="quick__shown" id="q-shown"></p>
+      <fieldset class="opt"><legend>Size <button class="link" type="button" data-open="size">Size guide</button></legend><div class="sizes" id="q-sizes"></div><p class="opt__err" id="q-err" role="alert"></p><p class="opt__tip" id="q-tip"></p></fieldset>
       <div class="quick__actions">
         <button class="btn btn--ink btn--grow" id="q-add"><span>Add to bag</span></button>
         <button class="icon-btn icon-btn--bordered" id="q-wish" aria-pressed="false" aria-label="Save to wishlist"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2Z"/></svg></button>
       </div>
+      <ul class="trust" aria-label="Our promises"><li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg><span>Free shipping<small>over ₹1,999</small></span></li><li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg><span>7-day returns<small>easy and free</small></span></li><li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/></svg><span>Cash on delivery<small>pay when it arrives</small></span></li></ul>
+      <form class="pin" id="q-pin" novalidate><label for="q-pin-in">Check delivery</label><div><input id="q-pin-in" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="postal-code" placeholder="Enter PIN code"><button type="submit">Check</button></div><p id="q-pin-msg" role="status"></p></form>
       <ul class="quick__details" id="q-details"></ul>
     </div>
   </div>
@@ -320,9 +330,10 @@
   <div class="modal__panel searchp">
     <div class="searchp__bar">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg>
-      <input id="search-input" type="search" placeholder="Search knits, dresses, kurtas…" autocomplete="off" aria-label="Search products">
+      <input id="search-input" type="search" enterkeyhint="search" placeholder="Search knits, dresses, kurtas…" autocomplete="off" aria-label="Search products">
       <button class="icon-btn" data-close aria-label="Close search"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
+    <div class="searchp__sug" id="search-sug"></div>
     <ul class="searchp__res" id="search-res"></ul>
   </div>
 </dialog>
@@ -359,7 +370,15 @@
   </div>
 </dialog>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<nav class="tabbar" id="tabbar" aria-label="Quick navigation">
+  <a href="#top" data-tab="home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg><span>Home</span></a>
+  <a href="#shop" data-tab="shop" data-filter="all"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5.5v-1a2 2 0 1 1 2 2L12 8M12 8 3.5 15.5c-1 .9-.4 2.5 1 2.5h15c1.4 0 2-1.6 1-2.5L12 8Z"/></svg><span>Shop</span></a>
+  <button type="button" data-open="search" data-tab="search"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>Search</span></button>
+  <button type="button" data-open="wish" data-tab="wish"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2Z"/></svg><span>Saved</span><b class="count" id="tab-wish" hidden>0</b></button>
+  <button type="button" data-open="bag" data-tab="bag"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M5 8h14l-1 12.5H6L5 8Z"/><path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"/></svg><span>Bag</span><b class="count" id="tab-bag" hidden>0</b></button>
+</nav>
+<button class="totop" id="totop" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<div class="toast" id="toast" popover="manual" role="status" aria-live="polite"></div>
 <div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
 
 <script type="module" src="js/app.js"></script>
