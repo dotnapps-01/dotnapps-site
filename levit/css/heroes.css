@@ -3,7 +3,7 @@
 .hero .eyebrow, .hero h1 { margin: 0; }
 
 /* ═══ Hero: story reel ═══ */
-.st { height: var(--hh); min-height: 620px; max-height: 940px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(20px, 4vw, 72px); padding: clamp(14px, 2.6svh, 26px) var(--gut); background: radial-gradient(60% 70% at 50% 50%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(#fbf6ee, #f1e6d4); overflow: hidden; }
+.st { position: relative; isolation: isolate; overflow: hidden; height: var(--hh); min-height: 620px; max-height: 940px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(20px, 4vw, 72px); padding: clamp(14px, 2.6svh, 26px) var(--gut); background: radial-gradient(60% 70% at 50% 50%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(#fbf6ee, #f1e6d4); overflow: hidden; }
 .st__copy { justify-self: end; display: grid; gap: 16px; justify-items: start; max-width: 360px; }
 .st__copy h1 { font: 800 clamp(2.4rem, 4.6vw, 4.8rem)/.98 var(--serif); letter-spacing: -.03em; } .st__copy em { font-weight: 400; color: var(--rust); }
 .st__lede { color: var(--muted); max-width: 30ch; }
@@ -34,10 +34,36 @@
 @keyframes heart { 0% { opacity: 0; translate: 0 0; } 15% { opacity: 1; } 100% { opacity: 0; translate: var(--dx, 0px) -170px; } }
 .st__zone { bottom: 150px; }
 @media (prefers-reduced-motion: reduce) { .st__heart { animation: none; } .st__slide img { transition: none; scale: 1; } }
+
+/* — extra story details — */
+.st__glow { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.st__glow img { position: absolute; left: 50%; top: 50%; width: min(60vw, 80svh); height: min(60vw, 80svh); translate: -50% -50%; object-fit: cover; border-radius: 50%; filter: blur(90px) saturate(1.7); opacity: 0; transition: opacity 1.4s ease; }
+.st__glow img.is-on { opacity: .5; }
+.st__phone { transform: perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .35s var(--ease); }
+.st__glare { position: absolute; inset: 0; z-index: 6; pointer-events: none; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .2), transparent 46%); mix-blend-mode: soft-light; }
+.st__say { position: absolute; z-index: 5; left: 14px; top: 78px; max-width: 70%; pointer-events: none; }
+.st__say p { margin: 0; font: italic 600 1.22rem/1.5 var(--serif); }
+.st__say span { display: inline; padding: 2px 8px; background: rgba(11, 9, 7, .55); box-decoration-break: clone; -webkit-box-decoration-break: clone; opacity: 0; }
+.st__say.go span { animation: say .45s var(--ease) both; animation-delay: calc(var(--w) * 60ms + 250ms); }
+@keyframes say { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+.st__size { position: absolute; z-index: 5; right: 12px; top: 40%; display: none; flex-direction: column; align-items: center; gap: 6px; min-width: 56px; padding: 10px 8px; border-radius: 28px; background: rgba(255, 255, 255, .94); color: var(--ink); box-shadow: 0 10px 26px rgba(0, 0, 0, .35); }
+.st__phone.has-size .st__size { display: flex; animation: pop .5s var(--ease) both; }
+@keyframes pop { from { opacity: 0; scale: .8; } to { opacity: 1; scale: 1; } }
+.st__size small { white-space: nowrap; font: 500 .52rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--rust); margin-bottom: 2px; }
+.st__size button { width: 34px; height: 34px; border-radius: 50%; font: 500 .7rem/1 var(--sans); border: 1px solid rgba(11, 9, 7, .25); transition: background .25s, color .25s; } .st__size button:hover { background: rgba(11, 9, 7, .08); } .st__size button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.st__swipe { position: absolute; z-index: 5; right: 16px; bottom: 76px; margin: 0; display: none; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; font: 500 .56rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0, 0, 0, .5); }
+.st__phone.show-swipe .st__swipe { display: flex; }
+.st__swipe i { width: 11px; height: 11px; border-left: 2px solid #fff; border-top: 2px solid #fff; rotate: 45deg; opacity: 0; animation: chev 1.5s ease-in-out infinite; } .st__swipe i:nth-child(2) { animation-delay: .25s; margin-top: -4px; } .st__swipe span { margin-top: 6px; }
+@keyframes chev { 0% { opacity: 0; translate: 0 8px; } 50% { opacity: 1; } 100% { opacity: 0; translate: 0 -6px; } }
+.st__paused { position: absolute; z-index: 5; left: 50%; top: 62px; translate: -50% -6px; margin: 0; padding: 6px 12px; border-radius: 99px; background: rgba(11, 9, 7, .6); font: 500 .6rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; opacity: 0; pointer-events: none; transition: opacity .25s, translate .3s var(--ease); }
+.st__phone.is-held .st__paused { opacity: 1; translate: -50% 0; }
+.st__rings button.is-seen { background: conic-gradient(var(--gold), var(--rust), var(--gold)); }
+.st__rings button.is-on { background: conic-gradient(var(--rust) calc(var(--p, 0) * 1%), var(--line) 0); }
+@media (prefers-reduced-motion: reduce) { .st__phone { transition: none; } .st__say span { opacity: 1; animation: none !important; } .st__swipe i, .st__phone.has-size .st__size { animation: none; } .st__swipe i { opacity: 1; } }
 @media (max-width: 899px) {
   .st { grid-template-columns: 1fr; grid-template-rows: auto auto auto; height: auto; max-height: none; justify-items: center; padding: 16px var(--gut) 90px; gap: 14px; }
   .st__copy { justify-self: start; max-width: none; gap: 10px; } .st__copy h1 { font-size: clamp(2rem, 9.5vw, 2.8rem); } .st__copy .eyebrow, .st__lede, .st__copy .btn { display: none; }
-  .st__phone { height: min(66svh, 560px); }
+  .st__phone { height: min(66svh, 560px); } .st__say p { font-size: 1.05rem; } .st__glow img { width: 90vw; height: 90vw; }
   .st__rings { justify-self: stretch; display: flex; overflow-x: auto; gap: 12px; padding-bottom: 4px; } .st__rings li { flex: none; }
 }
 

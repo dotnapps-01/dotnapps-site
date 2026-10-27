@@ -176,6 +176,8 @@ function openQuick(id) {
   $('#q-details').innerHTML = p.details.map((d) => `<li>${d}</li>`).join('');
   $('#q-sizes').innerHTML = SIZES.map((s) => `<button type="button" data-qsize="${s}" aria-pressed="false">${s}</button>`).join('');
   $('#q-err').textContent = '';
+  let saved = null; try { saved = localStorage.getItem('levit.size'); } catch { /* storage unavailable */ }
+  if (saved && SIZES.includes(saved)) { Q.size = saved; $$('#q-sizes button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.qsize === saved)); }
   const w = $('#q-wish'); w.dataset.id = id; w.setAttribute('aria-pressed', wish.has(id));
   drawQuickColors(); drawQuickMedia();
   openDialog('quick');
@@ -439,3 +441,4 @@ reveal();
 /* hero: eight styles to try, switched with the pill at the bottom of the page (js/heroes/) */
 initHeroes();
 document.addEventListener('levit:quick', (e) => openQuick(e.detail));
+document.addEventListener('levit:toast', (e) => toast(e.detail));
