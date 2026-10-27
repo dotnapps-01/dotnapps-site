@@ -14,6 +14,9 @@
 <link rel="preload" href="fonts/playfair-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/levit.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/" } }
+</script>
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -62,33 +65,32 @@
 
 <main id="top">
 
-  <!-- ───────────── HERO: the dress on a rail ───────────── -->
+  <!-- ───────────── HERO: the rack ───────────── -->
   <section class="dw" id="hero" aria-label="LEVIT AW26">
-    <div class="dw__arch" aria-hidden="true"></div>
-    <div class="dw__rail" aria-hidden="true"></div>
-    <canvas id="hero-canvas" role="img" aria-label="A camel wrap dress with puff sleeves and a pleated skirt, hanging from a hanger on a rail. Drag it to swing it."></canvas>
-    <img class="dw__fallback" src="img/dress-camel.webp" alt="Camel wrap midi dress with a collar, puff sleeves and a pleated skirt" width="759" height="1352" fetchpriority="high">
+    <canvas id="hero-canvas" role="img" aria-label="A clothing rack with five garments on wooden hangers: a black shirt, a taupe wrap dress, a burgundy tunic, a navy floral dress and a blush floral shirt. Drag a hanger to swing it."></canvas>
+    <img class="dw__fallback" src="img/rack-poster.webp" alt="Five garments on wooden hangers on a rack" width="1021" height="602" fetchpriority="high">
+    <p class="dw__loading" id="hero-loading" role="status">Loading the rack…</p>
 
-    <div class="dw__copy">
-      <p class="eyebrow"><span class="eyebrow__dot"></span>AW26 · New in</p>
-      <h1 class="dw__title">Wrapped in <em>ease.</em></h1>
-      <p class="dw__lede">A collared wrap dress with puff sleeves and a pleated skirt that swings when you do.</p>
-      <div class="dw__cta">
-        <button class="btn btn--ink" data-quick="wrap-collar-midi-dress" data-magnet><span>Shop the dress</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <a class="btn btn--ghost" href="#shop" data-magnet><span>Shop all</span></a>
-      </div>
-      <div class="dw__swatches" role="group" aria-label="Dress colour">
-        <span class="dw__swlabel">Colour</span>
-        <button class="sw is-on" style="--c:#b07b5d" data-tint="" data-arch="#F4EAE1" aria-label="Camel" aria-pressed="true"></button>
-        <button class="sw" style="--c:#7c8160" data-tint="#7c8160" data-arch="#E8EDDF" aria-label="Sage" aria-pressed="false"></button>
-        <button class="sw" style="--c:#6f2230" data-tint="#6f2230" data-arch="#F1DFE3" aria-label="Wine" aria-pressed="false"></button>
-        <button class="sw" style="--c:#2e3b55" data-tint="#2e3b55" data-arch="#E0E6F0" aria-label="Navy" aria-pressed="false"></button>
-      </div>
-    </div>
-    <p class="dw__hint"><span class="dw__hintdot" aria-hidden="true"></span>Drag the dress to swing it</p>
-    <button class="hotspot" id="hotspot" data-quick="wrap-collar-midi-dress" aria-label="View Wrap Midi Dress">
+    <h1 class="sr">LEVIT: womenswear AW26 on the rack</h1>
+    <button class="hotspot" data-g="black-shirt" data-quick="black-oxford-shirt" aria-label="View Black Oxford Shirt">
+      <span class="hotspot__dot"></span>
+      <span class="hotspot__card"><b>Black Oxford Shirt</b><span>₹1,499</span><em>View →</em></span>
+    </button>
+    <button class="hotspot" data-g="taupe-wrap-dress" data-quick="wrap-collar-midi-dress" aria-label="View Wrap Midi Dress">
       <span class="hotspot__dot"></span>
       <span class="hotspot__card"><b>Wrap Midi Dress</b><span>₹2,899</span><em>View →</em></span>
+    </button>
+    <button class="hotspot" data-g="burgundy-tunic" data-quick="burgundy-tunic" aria-label="View Burgundy Tunic">
+      <span class="hotspot__dot"></span>
+      <span class="hotspot__card"><b>Burgundy Tunic</b><span>₹1,699</span><em>View →</em></span>
+    </button>
+    <button class="hotspot" data-g="navy-floral-dress" data-flip data-quick="navy-floral-dress" aria-label="View Navy Floral Dress">
+      <span class="hotspot__dot"></span>
+      <span class="hotspot__card"><b>Navy Floral Dress</b><span>₹2,499</span><em>View →</em></span>
+    </button>
+    <button class="hotspot" data-g="blush-floral-shirt" data-flip data-quick="blush-floral-shirt" aria-label="View Blush Floral Shirt">
+      <span class="hotspot__dot"></span>
+      <span class="hotspot__card"><b>Blush Floral Shirt</b><span>₹1,399</span><em>View →</em></span>
     </button>
   </section>
 
@@ -154,7 +156,7 @@
         <p data-reveal>Texture over noise. Warm neutrals that go with everything you already own. Cuts that flatter without fussing. Every piece is designed in-house and tested on real women, in real light, on real stairs.</p>
         <blockquote class="pull" data-reveal><span>“</span>Dress like you've nothing to prove, and everything to enjoy.</blockquote>
         <div class="story__stats" data-reveal>
-          <div><b data-count="18">0</b><span>pieces this season</span></div>
+          <div><b data-count="22">0</b><span>pieces this season</span></div>
           <div><b data-count="5">0</b><span>sizes, XS–XL</span></div>
           <div><b data-count="7">0</b><span>day easy returns</span></div>
         </div>

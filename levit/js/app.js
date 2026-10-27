@@ -453,20 +453,18 @@ async function reveal() {
 }
 reveal();
 
-/* hero: the dress hangs on a physics-driven hanger (WebGL); the plain photo with a CSS sway stands in without it */
+/* hero: the glTF rack renders with Three.js (loaded on demand); a poster image stands in without WebGL */
 (async function hero() {
   const canvas = $('#hero-canvas'), heroEl = $('#hero');
-  const setArch = (b) => heroEl.style.setProperty('--arch', b.dataset.arch);
-  const mark = (b) => $$('.dw__swatches .sw').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-pressed', x === b); });
+  const gl = (() => { try { return !!(canvas.getContext('webgl2') || canvas.getContext('webgl')); } catch { return false; } })();
+  if (!gl) { root.classList.add('no-webgl'); heroEl.classList.add('is-loaded'); $$('.hotspot', heroEl).forEach((h) => h.setAttribute('hidden', '')); return; }
   try {
-    const { initHang } = await import('./hero-hang.js');
-    const h = await initHang({ canvas, hero: heroEl, src: 'img/dress-camel.webp', hotspot: $('#hotspot'), reduced });
-    if (!h) throw new Error('no webgl');
-    $$('.dw__swatches .sw').forEach((b) => b.addEventListener('click', () => { mark(b); setArch(b); h.setTint(b.dataset.tint || null); h.nudge(); }));
+    const { initRack } = await import('./hero-rack.js');
+    window.__levitHero = await initRack({ canvas, hero: heroEl, hotspots: $$('.hotspot', heroEl), src: 'models/rack.glb', reduced });
+    heroEl.classList.add('is-loaded');
   } catch (err) {
-    console.warn('Hanging dress unavailable, using the photo instead.', err);
-    root.classList.add('no-webgl');
-    $('#hotspot')?.setAttribute('hidden', '');
-    $$('.dw__swatches .sw').forEach((b) => b.addEventListener('click', () => { mark(b); setArch(b); }));
+    console.warn('3D rack unavailable, using the poster instead.', err);
+    root.classList.add('no-webgl'); heroEl.classList.add('is-loaded');
+    $$('.hotspot', heroEl).forEach((h) => h.setAttribute('hidden', ''));
   }
 })();

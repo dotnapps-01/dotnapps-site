@@ -23,6 +23,7 @@ const C = {
   charcoal: { name: 'Charcoal', hex: '#4f4844' },
   camel: { name: 'Camel', hex: '#b07b5d' },
   navy: { name: 'Navy', hex: '#2e3b55' },
+  taupe2: { name: 'Taupe', hex: '#6e4a36' },
   khaki: { name: 'Khaki', hex: '#807a55' },
   olive: { name: 'Olive', hex: '#6b6a3c' },
   denim: { name: 'Indigo', hex: '#3d5166' },
@@ -33,6 +34,30 @@ const C = {
 };
 
 export const PRODUCTS = [
+  {
+    id: 'black-oxford-shirt', name: 'Black Oxford Shirt', cat: 'tops', price: 1499, was: null, tag: 'New',
+    kind: 'blouse', colors: [C.black, C.cream, C.denim], bg: '#E4E7EF',
+    blurb: 'A sharp, relaxed shirt in soft Oxford cotton with a folded collar and sewn buttons. Wear it tucked, loose or open over a tee.',
+    details: ['Oxford cotton', 'Relaxed fit', 'Folded collar', 'Curved hem'],
+  },
+  {
+    id: 'burgundy-tunic', name: 'Burgundy Tunic', cat: 'kurtas', price: 1699, was: null, tag: null,
+    kind: 'kurta', colors: [C.wine, C.mocha, C.sage], bg: '#F1DFE3',
+    blurb: 'A clean, straight tunic with long sleeves and turned cuffs. Easy over denim or trousers.',
+    details: ['Woven cotton blend', 'Straight fit', 'Turned cuffs', 'Hip length'],
+  },
+  {
+    id: 'navy-floral-dress', name: 'Navy Floral Dress', cat: 'dresses', price: 2499, was: 2999, tag: '-17%',
+    kind: 'midi', pat: 'lv-floral', colors: [C.navy, C.wine], bg: '#E0E6F0',
+    blurb: 'A banded-waist midi in a small-scale floral on navy, with long sleeves and a skirt that moves.',
+    details: ['Printed viscose crepe', 'Banded waist', 'Long sleeves', 'Midi length'],
+  },
+  {
+    id: 'blush-floral-shirt', name: 'Blush Floral Shirt', cat: 'tops', price: 1399, was: null, tag: null,
+    kind: 'blouse', pat: 'lv-floral', colors: [C.blush, C.sage], bg: '#F6E8E4',
+    blurb: 'A soft, loose shirt in a blush floral print with a folded collar and a covered placket.',
+    details: ['Printed cotton voile', 'Loose fit', 'Folded collar', 'Sewn buttons'],
+  },
   {
     id: 'wrap-collar-midi-dress', name: 'Wrap Midi Dress', cat: 'dresses', price: 2899, was: null, tag: 'New',
     kind: 'midi', colors: [C.camel, C.sage, C.wine, C.navy], bg: '#F4EAE1',
