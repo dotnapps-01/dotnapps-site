@@ -435,61 +435,49 @@ async function reveal() {
 }
 reveal();
 
-/* hero: moving the pointer leaves a trail of real photos that pop in, drift and fade.
-   With no pointer (touch, or idle) a ghost cursor wanders so the page is never still. */
+/* hero: full-screen looks. The next look opens out of an arch (the storefront's shape) over the last;
+   the blurred backdrop is the same photo, so it never needs a colour match. */
 (function hero() {
-  const hero = $('#hero'), field = $('#field');
-  if (!field) return;
-  const looks = PRODUCTS.filter((p) => p.photo);
-  let n = 0, lx = -999, ly = -999, live = [], lastMove = 0;
-  const rnd = (a, b) => a + Math.random() * (b - a);
-  const ph = (p, x, y, cls = '') => {
-    const el = document.createElement('button');
-    el.type = 'button'; el.className = 'tr__ph' + cls; el.dataset.quick = p.id; el.tabIndex = -1;
-    el.setAttribute('aria-label', `${p.name}, ${inr(p.price)}`);
-    el.innerHTML = `<img src="${p.photo}" alt="" draggable="false">`;
-    el.style.left = x + 'px'; el.style.top = y + 'px';
-    return el;
+  const hero = $('#hero'), box = $('#slides');
+  if (!box) return;
+  const looks = ['ruby-ruffle-dress', 'black-bell-sleeve-kurta', 'smocked-bow-top', 'tissue-dupatta-kurta', 'red-polka-midi', 'lace-crochet-top', 'navy-zip-jacket'].map(byId).filter(Boolean);
+  const DUR = 6000, pad = (n) => String(n).padStart(2, '0');
+  box.innerHTML = looks.map((p, k) => `<div class="fs__slide"><img class="fs__bg" src="${p.photo}" alt="" ${k ? 'loading="lazy" ' : ''}decoding="async"><figure class="fs__fg"><img src="${p.photo}" alt="${p.name}" ${k ? 'loading="lazy" ' : ''}decoding="async"></figure></div>`).join('');
+  const slides = $$('.fs__slide', box), bar = $('#fs-bar');
+  $('#fs-t').textContent = pad(looks.length);
+  box.style.setProperty('--dur', DUR + 'ms'); hero.style.setProperty('--dur', DUR + 'ms');
+  let i = -1, timer = 0, paused = false, busy = false;
+  const label = (n) => {
+    const p = looks[n];
+    $('#fs-n').textContent = pad(n + 1); $('#fs-name').textContent = p.name; $('#fs-price').textContent = inr(p.price);
+    $('#fs-cap').dataset.quick = p.id;
   };
-  if (reduced) {
-    [[.14, .38], [.27, .66], [.4, .3], [.6, .7], [.73, .32], [.86, .62]].forEach(([fx, fy], k) => {
-      const el = ph(looks[k * 3 % looks.length], hero.clientWidth * fx, hero.clientHeight * fy, ' tr__ph--static');
-      el.style.rotate = rnd(-8, 8) + 'deg'; field.append(el);
-    });
-    return;
-  }
-  const spawn = (x, y, dx, dy) => {
-    const p = looks[n++ % looks.length];
-    const el = ph(p, x, y, n % 3 === 0 ? ' tr__ph--arch' : '');
-    el.style.setProperty('--r', rnd(-9, 9) + 'deg');
-    el.style.setProperty('--dx', dx * 0.9 + 'px'); el.style.setProperty('--dy', dy * 0.9 + 'px');
-    field.append(el); live.push(el);
-    el.addEventListener('animationend', () => { el.remove(); live = live.filter((q) => q !== el); });
-    while (live.length > 13) live.shift().remove();
+  const runBar = () => { bar.classList.remove('is-run'); void bar.offsetWidth; if (!reduced) bar.classList.add('is-run'); };
+  const show = (n) => {
+    if (busy) return;
+    const prev = slides[i], next = slides[(n + looks.length) % looks.length];
+    i = (n + looks.length) % looks.length; label(i); runBar();
+    if (reduced || !prev) { slides.forEach((s) => s.classList.remove('is-on', 'is-top')); next.classList.add('is-on'); return; }
+    busy = true;
+    next.classList.add('is-on', 'is-top');
+    setTimeout(() => { slides.forEach((s) => { if (s !== next) s.classList.remove('is-on'); }); next.classList.remove('is-top'); busy = false; }, 1550);
   };
-  const move = (x, y) => {
-    hero.style.setProperty('--mx', x + 'px'); hero.style.setProperty('--my', y + 'px');
-    const gap = Math.max(84, hero.clientWidth * 0.07), ddx = x - lx, ddy = y - ly, d = Math.hypot(ddx, ddy);
-    if (d < gap) return;
-    const k = 70 / d;
-    spawn(x, y, ddx * k, ddy * k); lx = x; ly = y;
-  };
+  const arm = () => { clearTimeout(timer); if (!reduced && !paused && !document.hidden) timer = setTimeout(() => { show(i + 1); arm(); }, DUR); };
+  const step = (d) => { if (busy) return; show(i + d); arm(); };
+  $('#fs-next').addEventListener('click', () => step(1));
+  $('#fs-prev').addEventListener('click', () => step(-1));
+  let x0 = null;
+  hero.addEventListener('pointerdown', (e) => { if (!e.target.closest('a, button')) x0 = e.clientX; });
+  hero.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1); });
   hero.addEventListener('pointermove', (e) => {
-    lastMove = performance.now();
+    if (e.pointerType !== 'mouse') return;
     const r = hero.getBoundingClientRect();
-    move(e.clientX - r.left, e.clientY - r.top);
+    hero.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5) * 2); hero.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5) * 2);
   });
-  hero.addEventListener('pointerleave', () => { lx = ly = -999; });
-  // ghost cursor
-  let t = 0, onScreen = true;
-  new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; }).observe(hero);
-  setInterval(() => {
-    if (!onScreen || document.hidden || !root.classList.contains('is-ready') || performance.now() - lastMove < 2200) return;
-    t += 0.085;
-    move(hero.clientWidth * (0.5 + 0.38 * Math.sin(t * 0.8)), hero.clientHeight * (0.5 + 0.3 * Math.sin(t * 1.3 + 1)));
-  }, 70);
-  const hint = $('#hint span');
-  if (hint && matchMedia('(hover: none)').matches) hint.textContent = 'Drag your finger';
-  // warm the cache so the first photos do not pop in late
-  root.addEventListener('ready', () => looks.slice(0, 8).forEach((p) => { new Image().src = p.photo; }), { once: true });
+  hero.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { paused = true; clearTimeout(timer); hero.classList.add('is-paused'); } });
+  hero.addEventListener('pointerleave', () => { paused = false; hero.classList.remove('is-paused'); arm(); });
+  document.addEventListener('visibilitychange', () => (document.hidden ? clearTimeout(timer) : arm()));
+  show(0);
+  root.addEventListener('ready', arm, { once: true });
+  if (root.classList.contains('is-ready')) arm();
 })();
