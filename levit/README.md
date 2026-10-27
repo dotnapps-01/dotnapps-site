@@ -14,7 +14,17 @@ cd levit && python3 -m http.server 8080
 - Arch frames echo the alcoves in the lookbook photography
 
 ## What's inside
-- **Hero: story reel.** The hero is an Instagram-style story of eight looks in a phone-shaped frame: segmented progress bars, a levit.womenswear header with a gradient avatar ring, a sticker with the look's name and price (tap to open the quick view), a heart that bursts, and a Shop this look pill. Tap the left or right side (or use the arrow keys) to move, hold to pause; round rings beside it jump to any look. It advances every five seconds and is static for reduced motion. It lives in `js/heroes/stories.js` with its styles in `css/heroes.css`; the looks are the eight in `LOOK_IDS` (`js/heroes/util.js`). Thirteen other hero styles were tried (curtain, runway, wordmark windows, magazine cover, clothes rail, fly-through, draggable prints, blinds, bento, spotlight, cylinder, photo booth, collage) and are in git history.
+- **Hero styles to try (phone-first, 9).** The control at the bottom of the page (a slim dock on desktop) switches between them; `?hero=3` and Alt+1..9 also work and the choice is remembered. Pick one, then delete the rest and `js/heroes/index.js`. Each lives in `js/heroes/<name>.js` with styles in `css/heroes.css`.
+  1. **Swipe deck** (`deck.js`): swipe a look right to save it to the wishlist, left to skip; Love/Skip stamps fade in, buttons do the same.
+  2. **Reel feed** (`reel.js`): each look fills the screen, swipe up for the next; heart, price and Shop sit under the thumb; ends on a Shop the edit panel.
+  3. **Tilt to peek** (`tilt.js`): layers shift as you tilt the phone (asks permission on iPhone) or move the mouse; swipe for the next look.
+  4. **Bottom sheet** (`sheet.js`): full-screen look with a sheet you drag up to pick a size and add to the bag without leaving the hero.
+  5. **Scratch to reveal** (`scratch.js`): scratch a sand-coloured LEVIT card to reveal the look; a ghost finger shows how.
+  6. **Look pins** (`pins.js`): tap pulsing dots on the photo to read the product details.
+  7. **Flick stack** (`flick.js`): prints piled up; flick the top one away with its momentum.
+  8. **Thumb dial** (`dial.js`): spin a dial at the bottom with your thumb to change the look.
+  9. **Story reel** (`stories.js`): the Instagram-style reel.
+  Earlier desktop-oriented styles (magazine, runway, windows, rail, etc.) are in git history.
 - `js/products.js` — the catalogue (INR), every product with a real photo; `js/garments.js` holds the small hanger drawing used only on the empty-bag and order-confirmed screens
 - `js/app.js` — filters, quick view, bag drawer, simulated checkout, search, wishlist (bag and wishlist persist in `localStorage`)
 - `fonts/` — self-hosted WOFF2
