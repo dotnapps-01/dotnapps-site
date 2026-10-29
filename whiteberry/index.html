@@ -6,7 +6,7 @@
 
 <title>Whiteberry — Elegance in every stitch</title>
 <meta name="description" content="Whiteberry — half sarees, pavadai sets, anarkalis with kalamkari dupattas and kurta sets, tailored for the days that matter. Elegance in every stitch.">
-<meta name="theme-color" content="#F8F5EF">
+<meta name="theme-color" content="#0E1546">
 
 <link rel="icon" href="/whiteberry/favicon.svg" type="image/svg+xml">
 
@@ -17,17 +17,16 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap">
 <link rel="stylesheet" href="/whiteberry/style.css">
 </head>
 <body>
 <script>document.documentElement.classList.add('js');document.body.classList.add('is-loading');</script>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  
   <symbol id="bloom" viewBox="0 0 40 40">
-    <g fill="currentColor">
-      <circle cx="20" cy="9.5" r="8.5"/><circle cx="30" cy="16.8" r="8.5"/><circle cx="26.2" cy="28.5" r="8.5"/><circle cx="13.8" cy="28.5" r="8.5"/><circle cx="10" cy="16.8" r="8.5"/>
-    </g>
+    <g fill="currentColor"><circle cx="20" cy="9.5" r="8.5"/><circle cx="30" cy="16.8" r="8.5"/><circle cx="26.2" cy="28.5" r="8.5"/><circle cx="13.8" cy="28.5" r="8.5"/><circle cx="10" cy="16.8" r="8.5"/></g>
     <circle cx="20" cy="20" r="3.2" style="fill:var(--eye,#D05C86)"/>
   </symbol>
   <symbol id="arrow" viewBox="0 0 40 12"><path d="M0 6h37M32 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -35,69 +34,98 @@
 
 <!-- Intro: the roundel appears, a running stitch is sewn with three blossoms, the veil lifts -->
 <div class="loader" aria-hidden="true">
-  <div class="loader-in">
-    <img class="loader-logo" src="/whiteberry/img/logo.png" width="132" height="132" alt="">
-    <div class="stitch"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></div>
-  </div>
+  <div class="loader-in"><span class="logo logo--loader"><span class="lg-st"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></span><span class="lg-nm"><span>W</span><span>H</span><span>I</span><span>T</span><span>E</span><span>B</span><span>E</span><span>R</span><span>R</span><span>Y</span></span><span class="lg-tg">Elegance in every stitch</span><i class="lg-ln"></i></span></div>
 </div>
 
 <div class="thread" aria-hidden="true"><i></i></div>
 
 <header class="nav" id="nav">
-  <a class="brand" href="#top" aria-label="Whiteberry — home"><img class="brand-logo" src="/whiteberry/img/logo.png" width="56" height="56" alt=""></a>
+  <a class="brand" href="#top" aria-label="Whiteberry — home"><span class="logo logo--nav"><span class="lg-st"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></span><span class="lg-nm">WHITEBERRY</span><span class="lg-tg">Elegance in every stitch</span><i class="lg-ln"></i></span></a>
   <nav class="nav-links" id="navmenu" aria-label="Primary">
-    <div class="grp"><a href="#collections">Collections</a><a href="#lookbook">Lookbook</a><a href="#atelier">Atelier</a></div>
-    <div class="grp"><a href="#occasions">Occasions</a><a href="#contact">Visit</a><a href="#contact" class="nav-cta" data-enquire="">Enquire</a></div>
+    <div class="grp"><a href="#collections">Collections</a><a href="#weaves">Weaves</a><a href="#lookbook">Lookbook</a></div>
+    <div class="grp"><a href="#atelier">Atelier</a><a href="#contact">Visit</a><a href="#contact" class="nav-cta" data-enquire="">Enquire</a></div>
   </nav>
   <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navmenu"><i></i><i></i></button>
 </header>
 
 <main id="top">
 
-<!-- ───────────── HERO ───────────── -->
-<section class="hero" id="hero">
+<!-- ───────────── HERO (deep navy, gold temple arches) ───────────── -->
+<section class="hero dark" id="hero">
+  <i class="jali" aria-hidden="true"></i>
+  <i class="glow" aria-hidden="true"></i>
+  <canvas class="sparkles" id="sparkles" aria-hidden="true"></canvas>
+
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="kicker" data-reveal><i></i>Traditional wear · Made to measure</p>
-      <h1 class="display" data-split>Elegance in every <em>stitch</em></h1>
+      <p class="kicker kicker--lt" data-reveal><i></i>Traditional wear · Made to measure</p>
+      <h1 class="display" data-split>Elegance in every <em class="foil">stitch</em></h1>
       <p class="lede" data-reveal style="--d:.3">Half sarees, pleated pavadai sets and flowing anarkalis with painted kalamkari dupattas — chosen for the way they fall, finished for the days you’ll remember.</p>
       <div class="hero-cta" data-reveal style="--d:.45">
-        <a class="btn btn--solid" href="#collections"><span>Explore the collection</span></a>
-        <a class="link" href="#contact" data-enquire=""><span>Enquire on WhatsApp</span><svg class="arr"><use href="#arrow"/></svg></a>
+        <a class="btn btn--gold" href="#collections"><span>Explore the collection</span></a>
+        <a class="link link--lt" href="#contact" data-enquire=""><span>Enquire on WhatsApp</span><svg class="arr"><use href="#arrow"/></svg></a>
       </div>
+      <dl class="hero-stats" data-reveal style="--d:.6">
+        <div><dt data-to="15">0</dt><dd>Designs in the lookbook</dd></div>
+        <div><dt data-to="4">0</dt><dd>Collections</dd></div>
+        <div><dt data-to="6">0</dt><dd>Colour families</dd></div>
+      </dl>
     </div>
 
     <div class="hero-art">
-      <div class="arch-wrap" data-depth="0.016">
-        <div class="arch frame" style="--bg:var(--ivory)">
-          <img src="/whiteberry/img/anarkali-navy.jpg" alt="Navy gold-check anarkali with a red-bordered kalamkari dupatta" width="900" height="1311" fetchpriority="high" data-parallax>
-        </div>
-        <p class="cap cap--main">N° 05 — Navy check anarkali</p>
+      <div class="tri tri--l" data-depth="0.03">
+        <svg class="fin" viewBox="0 0 28 46"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M14 46V28"/><path d="M14 28C5 23 5 11 14 2C23 11 23 23 14 28Z"/><path d="M3 33C8 33 12 31 14 28C16 31 20 33 25 33"/></g><circle cx="14" cy="2.4" r="1.6" fill="currentColor"/></svg>
+        <div class="tri-in"><div class="arch frame" style="--bg:var(--navy);--d:.5"><img src="/whiteberry/img/anarkali-saffron.jpg" alt="Saffron anarkali with a peacock kalamkari dupatta" width="900" height="1276" loading="eager"></div></div>
       </div>
-      <div class="inset-wrap" data-depth="0.04">
-        <div class="inset frame" style="--bg:var(--ivory);--d:.35">
-          <img src="/whiteberry/img/anarkali-saffron.jpg" alt="Saffron anarkali with a peacock kalamkari dupatta" width="900" height="1276" loading="eager">
-        </div>
+      <div class="tri tri--c" data-depth="0.012">
+        <svg class="fin" viewBox="0 0 28 46"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M14 46V28"/><path d="M14 28C5 23 5 11 14 2C23 11 23 23 14 28Z"/><path d="M3 33C8 33 12 31 14 28C16 31 20 33 25 33"/></g><circle cx="14" cy="2.4" r="1.6" fill="currentColor"/></svg>
+        <div class="tri-in"><div class="arch frame" style="--bg:var(--navy);--d:.2"><img src="/whiteberry/img/anarkali-navy.jpg" alt="Navy gold-check anarkali with a red-bordered kalamkari dupatta" width="900" height="1311" fetchpriority="high" data-parallax></div></div>
       </div>
+      <div class="tri tri--r" data-depth="0.045">
+        <svg class="fin" viewBox="0 0 28 46"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M14 46V28"/><path d="M14 28C5 23 5 11 14 2C23 11 23 23 14 28Z"/><path d="M3 33C8 33 12 31 14 28C16 31 20 33 25 33"/></g><circle cx="14" cy="2.4" r="1.6" fill="currentColor"/></svg>
+        <div class="tri-in"><div class="arch frame" style="--bg:var(--navy);--d:.7"><img src="/whiteberry/img/anarkali-magenta.jpg" alt="Magenta anarkali with a sky-blue kalamkari dupatta" width="760" height="1061" loading="eager"></div></div>
+      </div>
+      <div class="hang hang--hero" aria-hidden="true"><div class="hang-body"><span class="logo logo--tag"><span class="lg-st"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></span><span class="lg-nm">WHITEBERRY</span><span class="lg-tg">Elegance in every stitch</span><i class="lg-ln"></i></span></div></div>
     </div>
   </div>
+
   <a class="scroll-cue" href="#intro" aria-label="Scroll down"><span>Scroll</span><i></i></a>
+  <div class="hero-edge" aria-hidden="true"></div>
 </section>
 
-<!-- ───────────── MARQUEE ───────────── -->
-<section class="band" aria-label="What Whiteberry makes">
+<!-- ───────────── DOUBLE MARQUEE: words + faces ───────────── -->
+<section class="band2" aria-label="What Whiteberry makes">
   <div class="band-track">
     <div class="band-set"><span>Half sarees</span><svg class="bloom"><use href="#bloom"/></svg><span>Pavadai sets</span><svg class="bloom"><use href="#bloom"/></svg><span>Anarkali sets</span><svg class="bloom"><use href="#bloom"/></svg><span>Kalamkari dupattas</span><svg class="bloom"><use href="#bloom"/></svg><span>Kurta &amp; palazzo</span><svg class="bloom"><use href="#bloom"/></svg><span>Made to measure</span><svg class="bloom"><use href="#bloom"/></svg></div>
     <div class="band-set" aria-hidden="true"><span>Half sarees</span><svg class="bloom"><use href="#bloom"/></svg><span>Pavadai sets</span><svg class="bloom"><use href="#bloom"/></svg><span>Anarkali sets</span><svg class="bloom"><use href="#bloom"/></svg><span>Kalamkari dupattas</span><svg class="bloom"><use href="#bloom"/></svg><span>Kurta &amp; palazzo</span><svg class="bloom"><use href="#bloom"/></svg><span>Made to measure</span><svg class="bloom"><use href="#bloom"/></svg></div>
   </div>
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track"><div class="rb-set"><figure class="rb"><img src="/whiteberry/img/halfsaree-pose.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-navy.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-red.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-saffron.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/skirt-olive.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-teal.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-mint.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-magenta.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/set-navy.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-temple.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-green.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-wine.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/set-mint.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-olive.jpg" alt="" loading="lazy"></figure></div><div class="rb-set"><figure class="rb"><img src="/whiteberry/img/halfsaree-pose.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-navy.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-red.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-saffron.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/skirt-olive.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-teal.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-mint.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-magenta.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/set-navy.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-temple.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-green.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/anarkali-wine.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/set-mint.jpg" alt="" loading="lazy"></figure><figure class="rb"><img src="/whiteberry/img/kurta-olive.jpg" alt="" loading="lazy"></figure></div></div>
+  </div>
 </section>
 
-<!-- ───────────── STATEMENT ───────────── -->
+<!-- ───────────── STATEMENT + VALUES ───────────── -->
 <section class="section statement" id="intro">
+  <i class="jali jali--light" aria-hidden="true"></i>
   <div class="wrap">
     <p class="kicker kicker--c" data-reveal><i></i>The house of Whiteberry<i></i></p>
     <p class="scrub" data-scrub>Whiteberry dresses the days that matter — the first half saree, the wedding morning, the festival evening — in weaves and prints chosen for how they fall, and stitched to your measure.</p>
-    <div class="stitch stitch--c" data-reveal><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></div>
+    <div class="vine-wrap" data-reveal><svg class="vine" viewBox="0 0 640 44" aria-hidden="true"><g><path class="vp" pathLength="1" d="M296 22C270 22 262 8 238 8C214 8 206 30 182 30C158 30 150 10 126 12C102 14 94 32 70 30C46 28 38 14 12 18"/><path class="lf" d="M238 8c-3-9 6-13 12-9-2 8-6 10-12 9z"/><path class="lf" d="M182 30c3 9-6 12-12 8 2-8 6-10 12-8z"/><path class="lf" d="M126 12c-3-9 6-13 12-9-2 8-6 10-12 9z"/><path class="lf" d="M70 30c3 9-6 12-12 8 2-8 6-10 12-8z"/><circle class="dt" cx="8" cy="18" r="2"/></g><g transform="translate(640 0) scale(-1 1)"><path class="vp" pathLength="1" d="M296 22C270 22 262 8 238 8C214 8 206 30 182 30C158 30 150 10 126 12C102 14 94 32 70 30C46 28 38 14 12 18"/><path class="lf" d="M238 8c-3-9 6-13 12-9-2 8-6 10-12 9z"/><path class="lf" d="M182 30c3 9-6 12-12 8 2-8 6-10 12-8z"/><path class="lf" d="M126 12c-3-9 6-13 12-9-2 8-6 10-12 9z"/><path class="lf" d="M70 30c3 9-6 12-12 8 2-8 6-10 12-8z"/><circle class="dt" cx="8" cy="18" r="2"/></g><use class="vb" href="#bloom" x="306" y="8" width="28" height="28"/></svg></div>
+
+    <ul class="values">
+      <li data-reveal>
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M10 56 L50 8"/><path pathLength="1" d="M46 13 a3 3 0 1 1 5 -4"/><path pathLength="1" d="M50 8 C62 4 62 24 48 26 S28 44 14 40"/></svg>
+        <h3>Made to measure</h3><p>Cut to your measure so the fall, the pleats and the fit are exactly right.</p>
+      </li>
+      <li data-reveal style="--d:.12">
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" x="6" y="20" width="52" height="24" rx="3"/><path pathLength="1" d="M16 20v9M24 20v6M32 20v9M40 20v6M48 20v9"/><circle pathLength="1" cx="14" cy="38" r="2.5"/></svg>
+        <h3>Finished with care</h3><p>Scalloped necklines, puffed sleeves and neat pleats — details you notice up close.</p>
+      </li>
+      <li data-reveal style="--d:.24">
+        <svg class="ico" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M32 6 L37 27 L58 32 L37 37 L32 58 L27 37 L6 32 L27 27 Z"/><circle pathLength="1" cx="32" cy="32" r="4"/></svg>
+        <h3>Festive-ready</h3><p>Colours and prints for weddings, pooja, Pongal, Diwali and every day between.</p>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -131,18 +159,71 @@
             <div class="coll-inline frame" style="--bg:var(--ivory)"><img src="/whiteberry/img/kurta-red.jpg" alt="Kurta &amp; Palazzo Sets" width="760" height="1018" loading="lazy"></div></div>
         </li>
       </ul>
-      <div class="coll-stage frame" id="collStage" style="--bg:var(--ivory)" aria-hidden="true">
+      <div class="coll-art">
+        <svg class="fin" viewBox="0 0 28 46"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M14 46V28"/><path d="M14 28C5 23 5 11 14 2C23 11 23 23 14 28Z"/><path d="M3 33C8 33 12 31 14 28C16 31 20 33 25 33"/></g><circle cx="14" cy="2.4" r="1.6" fill="currentColor"/></svg>
+        <div class="coll-stage frame" id="collStage" style="--bg:var(--ivory)" aria-hidden="true">
         <img class="on" src="/whiteberry/img/halfsaree-front.jpg" alt="" width="900" height="1298" loading="eager">
         <img class="" src="/whiteberry/img/skirt-olive.jpg" alt="" width="760" height="1144" loading="lazy">
         <img class="" src="/whiteberry/img/anarkali-teal.jpg" alt="" width="760" height="1039" loading="lazy">
         <img class="" src="/whiteberry/img/kurta-red.jpg" alt="" width="760" height="1018" loading="lazy">
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ───────────── WEAVES & PRINTS (carousel) ───────────── -->
+<section class="section section--sand" id="weaves">
+  <i class="jali jali--light" aria-hidden="true"></i>
+  <div class="wrap">
+    <header class="sec-head sec-head--row">
+      <div>
+        <p class="kicker" data-reveal><i></i>Weaves &amp; prints</p>
+        <h2 class="h2" data-split>The cloth <em>tells the story</em></h2>
+      </div>
+      <div class="car-ctl" data-reveal>
+        <button type="button" class="car-btn" id="carPrev" aria-label="Previous"><svg class="arr arr--l"><use href="#arrow"/></svg></button>
+        <button type="button" class="car-btn" id="carNext" aria-label="Next"><svg class="arr"><use href="#arrow"/></svg></button>
+      </div>
+    </header>
+  </div>
+  <div class="car" id="car" tabindex="0" aria-label="Weaves and prints">
+    <div class="car-track">
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-kalamkari.jpg" alt="Kalamkari close-up" width="680" height="920" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 01</span><h3>Kalamkari</h3><p class="wv-sub">Painted vines, peacocks &amp; lotuses</p><p class="wv-d">A centuries-old tradition of painting and printing cloth with natural dyes, born in Andhra Pradesh. Every dupatta tells its own story.</p><p class="wv-found">Found in · Anarkali dupattas</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-check.jpg" alt="Zari check close-up" width="420" height="480" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 02</span><h3>Zari check</h3><p class="wv-sub">Gold lines through the cloth</p><p class="wv-d">Fine gold threads woven into a check — subtle by day, luminous under lamplight.</p><p class="wv-found">Found in · Half sarees &amp; blouses</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-temple.jpg" alt="Temple border close-up" width="460" height="460" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 03</span><h3>Temple border</h3><p class="wv-sub">The gopuram zig-zag</p><p class="wv-d">Rows of temple-tower points woven in zari, framing necklines, sleeves and hems.</p><p class="wv-found">Found in · Anarkali yokes &amp; hems</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-lotus.jpg" alt="Lotus &amp; peacock close-up" width="630" height="730" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 04</span><h3>Lotus &amp; peacock</h3><p class="wv-sub">Nature, hand-drawn</p><p class="wv-d">Pink lotuses and preening peacocks on an olive ground — the classic kalamkari pairing.</p><p class="wv-found">Found in · Kalamkari dupattas</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-butta.jpg" alt="Butta close-up" width="440" height="570" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 05</span><h3>Butta</h3><p class="wv-sub">Scattered woven motifs</p><p class="wv-d">Tiny paisleys, dots and blossoms woven across the cloth, like stars on a saffron sky.</p><p class="wv-found">Found in · Anarkalis &amp; kurtas</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-block.jpg" alt="Block print close-up" width="270" height="240" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 06</span><h3>Block print</h3><p class="wv-sub">Ogee &amp; paisley in indigo</p><p class="wv-d">Rhythmic ogee and paisley blocks in indigo, rust and plum — made for easy palazzos.</p><p class="wv-found">Found in · Palazzo pants</p></div>
+      </article>
+      <article class="wv">
+        <div class="wv-media frame" style="--bg:var(--sand)"><img src="/whiteberry/img/detail-scallop.jpg" alt="Scalloped edge close-up" width="310" height="260" loading="lazy" draggable="false"></div>
+        <div class="wv-info"><span class="wv-n">N° 07</span><h3>Scalloped edge</h3><p class="wv-sub">A soft wave at the neck</p><p class="wv-d">A gentle scallop cut into necklines and sleeves — a detail we love to repeat.</p><p class="wv-found">Found in · Kurtas, blouses &amp; anarkalis</p></div>
+      </article>
+    </div>
+  </div>
+  <div class="wrap"><div class="car-bar" aria-hidden="true"><i id="carBar"></i></div></div>
+</section>
+
 <!-- ───────────── LOOKBOOK ───────────── -->
-<section class="section section--sand" id="lookbook">
+<section class="section" id="lookbook">
   <div class="wrap">
     <header class="sec-head sec-head--row">
       <div>
@@ -324,29 +405,46 @@
   </div>
 </section>
 
-<!-- ───────────── ATELIER ───────────── -->
-<section class="section section--navy" id="atelier">
+<!-- ───────────── ATELIER (scroll-driven) ───────────── -->
+<section class="section section--navy dark" id="atelier">
+  <i class="jali" aria-hidden="true"></i>
   <div class="wrap">
-    <header class="sec-head sec-head--split">
-      <div>
-        <p class="kicker kicker--lt" data-reveal><i></i>The atelier</p>
-        <h2 class="h2 h2--lt" data-split>Stitched with <em>intention</em></h2>
-      </div>
-      <p class="sub sub--lt" data-reveal>Every Whiteberry piece begins with a fabric we love and ends with details you notice up close.</p>
+    <header class="sec-head">
+      <p class="kicker kicker--lt" data-reveal><i></i>The atelier</p>
+      <h2 class="h2 h2--lt" data-split>Stitched with <em class="foil">intention</em></h2>
     </header>
-
-    <div class="gallery">
-      <figure><div class="frame g-frame" style="--bg:var(--navy)"><img src="/whiteberry/img/detail-kalamkari.jpg" alt="Close-up of an orange kalamkari dupatta painted with peacocks, flowers and vines" width="680" height="920" loading="lazy" data-parallax></div><figcaption>Kalamkari vines</figcaption></figure>
-      <figure><div class="frame g-frame" style="--bg:var(--navy);--d:.15"><img src="/whiteberry/img/detail-temple.jpg" alt="Magenta and gold temple border on the yoke of a green anarkali" width="460" height="460" loading="lazy" data-parallax></div><figcaption>Temple border</figcaption></figure>
-      <figure><div class="frame g-frame" style="--bg:var(--navy);--d:.3"><img src="/whiteberry/img/detail-lotus.jpg" alt="Olive kalamkari dupatta with pink lotuses and peacocks" width="630" height="730" loading="lazy" data-parallax></div><figcaption>Lotus &amp; peacock</figcaption></figure>
+    <div class="atl">
+      <ol class="steps" id="steps" data-progress>
+        <li class="step is-on"><span class="step-n">I</span><div><h3>Choose your fabric &amp; print</h3><p>Gold checks, kalamkari prints and temple borders in colours made to be paired.</p></div></li>
+        <li class="step"><span class="step-n">II</span><div><h3>Share your measure</h3><p>Blouse, skirt or anarkali is cut to you, so the fall, the pleats and the fit are right.</p></div></li>
+        <li class="step"><span class="step-n">III</span><div><h3>Stitched &amp; finished</h3><p>Scalloped necklines, puffed sleeves and pleats set with care — nothing rushed.</p></div></li>
+        <li class="step"><span class="step-n">IV</span><div><h3>Wear it to remember</h3><p>Ready for the function, the festival or the photograph that stays on the wall.</p></div></li>
+      </ol>
+      <div class="atl-art">
+        <svg class="fin" viewBox="0 0 28 46"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M14 46V28"/><path d="M14 28C5 23 5 11 14 2C23 11 23 23 14 28Z"/><path d="M3 33C8 33 12 31 14 28C16 31 20 33 25 33"/></g><circle cx="14" cy="2.4" r="1.6" fill="currentColor"/></svg>
+        <div class="atl-stage frame" id="atlStage" style="--bg:var(--navy)" aria-hidden="true">
+          <img class="on" src="/whiteberry/img/anarkali-wine.jpg" alt="" width="760" height="1049" loading="lazy">
+          <img src="/whiteberry/img/skirt-olive.jpg" alt="" width="760" height="1144" loading="lazy">
+          <img src="/whiteberry/img/set-mint.jpg" alt="" width="900" height="1366" loading="lazy">
+          <img src="/whiteberry/img/halfsaree-front.jpg" alt="" width="900" height="1298" loading="lazy">
+        </div>
+        <p class="atl-cap" id="atlCap">N° I — Fabric &amp; print</p>
+      </div>
     </div>
+  </div>
+</section>
 
-    <ol class="steps" data-progress>
-      <li data-reveal><span class="step-n">I</span><h3>Choose your fabric &amp; print</h3><p>Gold checks, kalamkari prints and temple borders in colours made to be paired.</p></li>
-      <li data-reveal style="--d:.1"><span class="step-n">II</span><h3>Share your measure</h3><p>Blouse, skirt or anarkali is cut to you, so the fall, the pleats and the fit are right.</p></li>
-      <li data-reveal style="--d:.2"><span class="step-n">III</span><h3>Stitched &amp; finished</h3><p>Scalloped necklines, puffed sleeves and pleats set with care — nothing rushed.</p></li>
-      <li data-reveal style="--d:.3"><span class="step-n">IV</span><h3>Wear it to remember</h3><p>Ready for the function, the festival or the photograph that stays on the wall.</p></li>
-    </ol>
+<!-- ───────────── GALLERY WALL ───────────── -->
+<section class="section section--sand wall-sec" id="gallery">
+  <div class="wrap">
+    <header class="sec-head sec-head--row">
+      <div>
+        <p class="kicker" data-reveal><i></i>Worn well</p>
+        <h2 class="h2" data-split>A wall of <em>Whiteberry</em></h2>
+      </div>
+      <p class="sub" data-reveal>Colour, cloth and character — a few of the looks we love.</p>
+    </header>
+    <div class="wall" id="wall"><div class="wcol" data-speed="-60"><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/halfsaree-front.jpg" alt="Half saree" width="900" height="1298" loading="lazy"></div><figcaption>Half saree</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/kurta-green.jpg" alt="Kurta set" width="760" height="1117" loading="lazy"></div><figcaption>Kurta set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/anarkali-wine.jpg" alt="Anarkali set" width="760" height="1049" loading="lazy"></div><figcaption>Anarkali set</figcaption></figure></div><div class="wcol" data-speed="50"><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/anarkali-navy.jpg" alt="Anarkali set" width="900" height="1311" loading="lazy"></div><figcaption>Anarkali set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/skirt-olive.jpg" alt="Skirt set" width="760" height="1144" loading="lazy"></div><figcaption>Skirt set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/kurta-olive.jpg" alt="Kurta set" width="760" height="1120" loading="lazy"></div><figcaption>Kurta set</figcaption></figure></div><div class="wcol" data-speed="-90"><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/anarkali-saffron.jpg" alt="Anarkali set" width="900" height="1276" loading="lazy"></div><figcaption>Anarkali set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/kurta-red.jpg" alt="Kurta set" width="760" height="1018" loading="lazy"></div><figcaption>Kurta set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/set-navy.jpg" alt="Skirt set" width="900" height="1369" loading="lazy"></div><figcaption>Skirt set</figcaption></figure></div><div class="wcol" data-speed="40"><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/anarkali-magenta.jpg" alt="Anarkali set" width="760" height="1061" loading="lazy"></div><figcaption>Anarkali set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/set-mint.jpg" alt="Skirt set" width="900" height="1366" loading="lazy"></div><figcaption>Skirt set</figcaption></figure><figure class="wf"><div class="frame" style="--bg:var(--sand)"><img src="/whiteberry/img/kurta-maroon.jpg" alt="Kurta set" width="760" height="1073" loading="lazy"></div><figcaption>Kurta set</figcaption></figure></div></div>
   </div>
 </section>
 
@@ -368,8 +466,21 @@
   <div class="occ-preview" id="occPreview" aria-hidden="true"><img alt="" src=""></div>
 </section>
 
+<!-- ───────────── FAQ ───────────── -->
+<section class="section section--sand" id="faq">
+  <div class="wrap faq-grid">
+    <div>
+      <p class="kicker" data-reveal><i></i>Questions</p>
+      <h2 class="h2" data-split>Good to <em>know</em></h2>
+      <p class="sub" data-reveal>Can’t find your answer? Message us — we reply personally.</p>
+    </div>
+    <div class="faq" data-reveal><details class="qa" open><summary><span>How do I place an order?</span><i></i></summary><div class="qa-a"><p>Pick a piece from the lookbook and tap <b>Enquire</b> — it opens a WhatsApp message with your choice filled in. We reply with fabric options, colours and timelines.</p></div></details><details class="qa"><summary><span>Can pieces be stitched to my measurements?</span><i></i></summary><div class="qa-a"><p>That’s what Whiteberry is about — blouses, skirts and anarkalis are cut to your measure. Share your measurements when you enquire, or ask us how to take them.</p></div></details><details class="qa"><summary><span>Can I change the colour or the dupatta?</span><i></i></summary><div class="qa-a"><p>Often, yes. Tell us what you have in mind — a different dupatta, a contrast blouse, another colour of the same print — and we’ll confirm what’s possible.</p></div></details><details class="qa"><summary><span>How long will it take?</span><i></i></summary><div class="qa-a"><p>It depends on the piece and your date. Share the occasion date when you enquire and we’ll confirm a realistic timeline before you commit.</p></div></details><details class="qa"><summary><span>Do you deliver outside the city?</span><i></i></summary><div class="qa-a"><p>Ask us on WhatsApp — we’ll confirm delivery options for your location.</p></div></details></div>
+  </div>
+</section>
+
 <!-- ───────────── CONTACT ───────────── -->
-<section class="section section--sand" id="contact">
+<section class="section" id="contact">
+  <i class="jali jali--light" aria-hidden="true"></i>
   <div class="wrap contact-grid">
     <div class="contact-copy">
       <p class="kicker" data-reveal><i></i>Visit &amp; enquire</p>
@@ -381,9 +492,12 @@
         <li data-cfg="email"><span>Email</span><a href="#" data-cfg-link></a></li>
         <li data-cfg="address"><span>Studio</span><b data-cfg-text></b></li>
       </ul>
+      <div class="hang hang--contact" aria-hidden="true"><div class="hang-body"><span class="logo logo--tag"><span class="lg-st"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></span><span class="lg-nm">WHITEBERRY</span><span class="lg-tg">Elegance in every stitch</span><i class="lg-ln"></i></span></div></div>
     </div>
 
     <form class="form" id="enquiry" data-reveal novalidate>
+      <i class="corner corner--tl"></i><i class="corner corner--tr"></i><i class="corner corner--bl"></i><i class="corner corner--br"></i>
+      <h3 class="form-title">Send an enquiry</h3>
       <div class="field"><input id="f-name" name="name" type="text" placeholder=" " autocomplete="name" required><label for="f-name">Your name</label></div>
       <div class="field"><input id="f-phone" name="phone" type="tel" placeholder=" " autocomplete="tel"><label for="f-phone">Phone (optional)</label></div>
       <div class="field field--select">
@@ -412,19 +526,19 @@
 
 </main>
 
-<footer class="foot">
+<footer class="foot dark">
+  <i class="jali" aria-hidden="true"></i>
+  <div class="foot-edge" aria-hidden="true"></div>
   <div class="wrap">
-    <img class="foot-logo" src="/whiteberry/img/logo.png" width="96" height="96" alt="Whiteberry — Elegance in every stitch" loading="lazy">
-    <p class="foot-tag">Elegance in every stitch</p>
-    <div class="stitch stitch--c stitch--foot" data-reveal><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></div>
+    <div class="foot-logo"><span class="logo logo--foot"><span class="lg-st"><i class="dash dash--l"></i><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><svg class="bloom"><use href="#bloom"/></svg><i class="dash dash--r"></i></span><span class="lg-nm">WHITEBERRY</span><span class="lg-tg">Elegance in every stitch</span><i class="lg-ln"></i></span></div>
     <nav class="foot-nav" aria-label="Footer">
-      <a href="#collections">Collections</a><a href="#lookbook">Lookbook</a><a href="#atelier">Atelier</a><a href="#occasions">Occasions</a><a href="#contact">Visit</a>
+      <a href="#collections">Collections</a><a href="#weaves">Weaves</a><a href="#lookbook">Lookbook</a><a href="#atelier">Atelier</a><a href="#occasions">Occasions</a><a href="#faq">FAQ</a><a href="#contact">Visit</a>
     </nav>
     <p class="foot-copy">© <span id="yr">2026</span> Whiteberry. All rights reserved.</p>
   </div>
 </footer>
 
-<a class="fab" href="#contact" data-enquire="" aria-label="Enquire"><span>Enquire</span></a>
+<a class="fab" href="#contact" data-enquire="" aria-label="Enquire"><svg class="bloom"><use href="#bloom"/></svg><span>Enquire</span></a>
 
 <script src="/whiteberry/app.js" defer></script>
 </body>

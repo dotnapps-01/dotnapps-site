@@ -13,7 +13,7 @@ python3 -m http.server 8080   # then open http://localhost:8080/whiteberry/
 ## Design notes
 - Quiet-luxury editorial: warm ivory, deep navy `#0E1546`, champagne-gold hairlines. The logo's royal blue
   `#142194` is used sparingly (italic accents, hover states) and its pink `#D05C86` dot sits in the blossoms.
-  The dresses' own colours are left to the photos. Real logo roundel is `img/logo.png`.
+  The dresses' own colours are left to the photos. The logo is rebuilt as a non-round lockup (stitch + three blossoms, name, tagline, stitch) in CSS/HTML — no image file.
 - Type: Cormorant Garamond (light, large) + Jost (small tracked caps).
 - Signature motif: a gold running stitch with three blossoms (the logo's idea, reworked) used in the intro,
   statement and footer. Temple-arch frames appear only on the hero and the collections stage.
