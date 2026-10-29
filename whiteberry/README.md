@@ -4,11 +4,14 @@ Boutique site for **Whiteberry** — half sarees, pavadai sets, anarkalis with k
 *Elegance in every stitch.*
 
 Static, no build step: `index.html`, `style.css`, `app.js`, `img/`.
-Asset paths are absolute (`/whiteberry/...`), so serve from the repo root:
+Asset paths are relative, so the folder is self-contained:
 
 ```bash
-python3 -m http.server 8080   # then open http://localhost:8080/whiteberry/
+cd whiteberry && python3 -m http.server 8080   # open http://localhost:8080
 ```
+
+## Deploy on Vercel
+Import the repo, set **Root Directory** to `whiteberry`, Framework Preset **Other**, leave build/output empty. Config is in `vercel.json`.
 
 ## Design notes
 - Quiet-luxury editorial: warm ivory, deep navy `#0E1546`, champagne-gold hairlines. The logo's royal blue
