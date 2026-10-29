@@ -11,13 +11,16 @@ python3 -m http.server 8080   # then open http://localhost:8080/whiteberry/
 ```
 
 ## Design notes
-- Palette is the logo's: royal blue `#142194`, butter yellow `#F7E271`, white blossoms with a pink `#D05C86` eye,
-  on crisp white. The dresses' own colours are left to the photos. Real logo roundel is `img/logo.png`.
-- Motifs: temple-arch photo frames, scalloped edges (blouse necklines), gold zari triangle border,
-  and a running stitch with three blossoms (the logo's idea, reworked).
-- Motion: stitch-sewing intro, word-by-word headline reveals, falling petals & sparkles,
-  mouse-parallax arches, scroll-drawn stitch line, marquee, 3D card tilt, colour filter,
-  cursor-following preview, magnetic buttons, type + colour filter on the lookbook. All of it respects `prefers-reduced-motion`.
+- Quiet-luxury editorial: warm ivory, deep navy `#0E1546`, champagne-gold hairlines. The logo's royal blue
+  `#142194` is used sparingly (italic accents, hover states) and its pink `#D05C86` dot sits in the blossoms.
+  The dresses' own colours are left to the photos. Real logo roundel is `img/logo.png`.
+- Type: Cormorant Garamond (light, large) + Jost (small tracked caps).
+- Signature motif: a gold running stitch with three blossoms (the logo's idea, reworked) used in the intro,
+  statement and footer. Temple-arch frames appear only on the hero and the collections stage.
+- Motion (all off under `prefers-reduced-motion`): intro veil, image curtains that lift, words that rise,
+  a statement whose words brighten as you scroll, collections list that drives one large photograph
+  (auto-advances), type + colour filter on the lookbook, a stitch line that draws across the atelier steps,
+  cursor-following photo on the occasions list, gentle parallax.
 
 ## To finish
 Fill in `CONFIG` at the top of `app.js` (WhatsApp number, Instagram handle, email, address).

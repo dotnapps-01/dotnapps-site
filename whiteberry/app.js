@@ -16,9 +16,9 @@
   const body = document.body;
   const root = document.documentElement;
 
-  /* ─── split headings into words for the mask-rise reveal ─── */
-  function split(el) {
-    const label = el.textContent.trim();
+  /* ─── split text into words (headlines rise; the statement brightens) ─── */
+  function split(el, cls, wrap) {
+    const label = el.textContent.trim().replace(/\s+/g, ' ');
     let i = 0;
     const walk = (node) => {
       [...node.childNodes].forEach((n) => {
@@ -27,14 +27,16 @@
           n.textContent.split(/(\s+)/).forEach((t) => {
             if (!t) return;
             if (/^\s+$/.test(t)) { frag.append(' '); return; }
-            const w = document.createElement('span');
-            w.className = 'w';
-            const wi = document.createElement('span');
-            wi.className = 'wi';
-            wi.style.setProperty('--i', i++);
-            wi.textContent = t;
-            w.append(wi);
-            frag.append(w);
+            const inner = document.createElement('span');
+            inner.className = cls;
+            inner.textContent = t;
+            if (wrap) {
+              inner.style.setProperty('--i', i++);
+              const w = document.createElement('span');
+              w.className = 'w';
+              w.append(inner);
+              frag.append(w);
+            } else frag.append(inner);
           });
           n.replaceWith(frag);
         } else if (n.nodeType === 1) walk(n);
@@ -43,47 +45,43 @@
     walk(el);
     el.setAttribute('aria-label', label);
   }
-  $$('[data-split]').forEach(split);
+  $$('[data-split]').forEach((el) => split(el, 'wi', true));
+  $$('[data-scrub]').forEach((el) => split(el, 'sc', false));
 
-  /* ─── intro curtain, then everything reveals ─── */
+  /* ─── intro veil, then everything reveals ─── */
   let seen = false;
-  try { seen = !!sessionStorage.getItem('wb-intro'); } catch (e) {}
+  try { seen = !!sessionStorage.getItem('wb-intro-v2'); } catch (e) {}
   function startSite() {
     if (body.classList.contains('is-ready')) return;
     body.classList.remove('is-loading');
     body.classList.add('is-ready');
-    try { sessionStorage.setItem('wb-intro', '1'); } catch (e) {}
-    setTimeout(() => body.classList.add('is-done'), 1400);
-    setTimeout(initReveal, reduce ? 0 : 450);
+    try { sessionStorage.setItem('wb-intro-v2', '1'); } catch (e) {}
+    setTimeout(() => body.classList.add('is-done'), 1500);
+    setTimeout(initReveal, reduce ? 0 : 500);
   }
-  setTimeout(startSite, reduce ? 0 : seen ? 250 : 3000);
+  setTimeout(startSite, reduce ? 0 : seen ? 250 : 2900);
 
   /* ─── reveal on scroll ─── */
   function initReveal() {
-    const items = $$('[data-reveal],[data-split],[data-reveal-frame]');
+    const items = $$('[data-reveal],[data-split],.frame');
     if (!('IntersectionObserver' in window)) { items.forEach((e) => e.classList.add('in')); return; }
-    // A fully clipped element never "intersects", so frames are watched through their parent.
-    const targets = new Map();
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         if (!en.isIntersecting) return;
-        (targets.get(en.target) || []).forEach((el) => el.classList.add('in'));
+        en.target.classList.add('in');
         io.unobserve(en.target);
       });
-    }, { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
-    items.forEach((e) => {
-      const t = e.hasAttribute('data-reveal-frame') ? e.parentElement : e;
-      targets.set(t, [...(targets.get(t) || []), e]);
-    });
-    targets.forEach((_, t) => io.observe(t));
+    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+    items.forEach((e) => io.observe(e));
   }
 
-  /* ─── scroll-linked: nav, thread, fab, parallax, stitch progress ─── */
+  /* ─── scroll-linked: nav, thread, fab, parallax, scrub, stitch progress ─── */
   const nav = $('#nav');
   const thread = $('.thread');
   const fab = $('.fab');
   const par = $$('[data-parallax]');
   const prog = $$('[data-progress]');
+  const scrubs = $$('[data-scrub]').map((el) => ({ el, words: $$('.sc', el) }));
   let ticking = false;
 
   function onScroll() {
@@ -93,23 +91,29 @@
     nav.classList.toggle('stuck', y > 40);
     const max = root.scrollHeight - vh;
     thread.style.setProperty('--p', max > 0 ? clamp(y / max, 0, 1).toFixed(4) : 0);
-    fab.classList.toggle('show', y > vh * 0.75);
+    fab.classList.toggle('show', y > vh * 0.8);
 
     if (!reduce) {
       par.forEach((img) => {
         const box = img.parentElement.getBoundingClientRect();
-        if (box.bottom < -50 || box.top > vh + 50) return;
+        if (box.bottom < -60 || box.top > vh + 60) return;
         const p = clamp((box.top + box.height) / (vh + box.height), 0, 1);
         const extra = Math.max(0, img.offsetHeight - box.height);
         img.style.setProperty('--py', (-(1 - p) * extra).toFixed(1) + 'px');
       });
     }
+    scrubs.forEach(({ el, words }) => {
+      const r = el.getBoundingClientRect();
+      const p = reduce ? 1 : clamp((vh * 0.85 - r.top) / (vh * 0.4 + r.height), 0, 1);
+      const lit = p * words.length;
+      words.forEach((w, i) => { w.style.opacity = (0.15 + 0.85 * clamp(lit - i, 0, 1)).toFixed(2); });
+    });
     prog.forEach((el) => {
       const r = el.getBoundingClientRect();
-      el.style.setProperty('--p', clamp((vh * 0.62 - r.top) / r.height, 0, 1).toFixed(3));
+      el.style.setProperty('--p', clamp((vh * 0.78 - r.top) / (r.height * 0.7), 0, 1).toFixed(3));
       $$('li', el).forEach((li) => {
         const lr = li.getBoundingClientRect();
-        li.classList.toggle('in', lr.top < vh * 0.62);
+        li.classList.toggle('lit', lr.top < vh * 0.78);
       });
     });
   }
@@ -132,10 +136,9 @@
   $$('a', menu).forEach((a) => a.addEventListener('click', () => setMenu(false)));
   addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
-  /* ─── hero: mouse parallax between the layered arches ─── */
-  const heroArt = $('#heroArt');
-  if (heroArt && fine && !reduce) {
-    const layers = $$('.layer', heroArt);
+  /* ─── hero: the two photographs drift gently against the cursor ─── */
+  if (fine && !reduce) {
+    const layers = $$('[data-depth]');
     $('#hero').addEventListener('pointermove', (e) => {
       const nx = e.clientX / innerWidth - 0.5;
       const ny = e.clientY / innerHeight - 0.5;
@@ -146,117 +149,32 @@
     });
   }
 
-  /* ─── 3D tilt on cards, magnetic buttons, trailing ring cursor ─── */
-  if (fine && !reduce) {
-    $$('[data-tilt]').forEach((el) => {
-      el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        el.style.transform = `perspective(900px) rotateY(${(px * 7).toFixed(2)}deg) rotateX(${(-py * 7).toFixed(2)}deg)`;
-      });
-      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  /* ─── collections: the list drives one large photograph ─── */
+  (function collections() {
+    const rows = $$('.coll-row');
+    const imgs = $$('#collStage img');
+    if (!rows.length) return;
+    let cur = 0, timer = null, hovering = false;
+    const show = (i) => {
+      cur = i;
+      rows.forEach((r, k) => r.classList.toggle('is-on', k === i));
+      imgs.forEach((m, k) => m.classList.toggle('on', k === i));
+    };
+    rows.forEach((r, i) => {
+      r.addEventListener('pointerenter', () => { if (fine) { hovering = true; show(i); } });
+      r.addEventListener('pointerleave', () => { hovering = false; });
+      r.addEventListener('focus', () => show(i));
+      r.addEventListener('click', () => show(i));
     });
-    $$('.btn--solid,.btn--line').forEach((b) => {
-      b.addEventListener('pointermove', (e) => {
-        const r = b.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) * 0.22;
-        const dy = (e.clientY - (r.top + r.height / 2)) * 0.32;
-        b.style.transform = `translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px)`;
-      });
-      b.addEventListener('pointerleave', () => { b.style.transform = ''; });
-    });
-
-    const cur = $('.cursor');
-    let cx = 0, cy = 0, tx = 0, ty = 0;
-    addEventListener('pointermove', (e) => {
-      tx = e.clientX; ty = e.clientY;
-      cur.classList.add('on');
-      cur.classList.toggle('big', !!e.target.closest('a,button,select,[data-tilt]'));
-    }, { passive: true });
-    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
-    (function loop() {
-      cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-      cur.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0)`;
-      requestAnimationFrame(loop);
-    })();
-  }
-
-  /* ─── falling jasmine, rose petals & gold sparkles in the hero ─── */
-  (function petals() {
-    const cv = $('#petals');
-    if (!cv || reduce) return;
-    const ctx = cv.getContext('2d');
-    let w = 0, h = 0, parts = [], visible = true, t = 0;
-    const rnd = (a, b) => a + Math.random() * (b - a);
-
-    const make = (initial) => {
-      const k = Math.random();
-      const type = k < 0.55 ? 0 : k < 0.8 ? 1 : 2;
-      return {
-        type, x: rnd(0, w), y: initial ? rnd(-20, h) : rnd(-50, -10),
-        s: type === 2 ? rnd(4, 9) : rnd(9, 17), r: rnd(0, 6.28), vr: rnd(-0.02, 0.02),
-        vy: rnd(0.25, 0.75), ph: rnd(0, 6.28), sw: rnd(0.5, 1.2), a: rnd(0.6, 0.95)
-      };
-    };
-    const size = () => {
-      const r = cv.parentElement.getBoundingClientRect();
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      w = r.width; h = r.height;
-      cv.width = w * dpr; cv.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = clamp(Math.round(w / 48), 12, 30);
-      parts = Array.from({ length: n }, () => make(true));
-    };
-    const petal = (p) => {
-      const flip = Math.cos(t * 0.02 * p.sw + p.ph);
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.r);
-      ctx.scale(Math.max(0.25, Math.abs(flip)), 1);
-      ctx.globalAlpha = p.a;
-      ctx.beginPath();
-      ctx.moveTo(0, -p.s);
-      ctx.bezierCurveTo(p.s * 0.95, -p.s * 0.5, p.s * 0.7, p.s * 0.75, 0, p.s);
-      ctx.bezierCurveTo(-p.s * 0.7, p.s * 0.75, -p.s * 0.95, -p.s * 0.5, 0, -p.s);
-      if (p.type === 0) {
-        ctx.shadowColor = 'rgba(20,33,148,.3)'; ctx.shadowBlur = 7; ctx.shadowOffsetY = 2;
-        ctx.fillStyle = '#FFFFFF'; ctx.fill();
-        ctx.shadowColor = 'transparent';
-        ctx.strokeStyle = 'rgba(20,33,148,.35)'; ctx.lineWidth = 0.8; ctx.stroke();
-      } else {
-        ctx.fillStyle = p.s % 2 > 1 ? 'rgba(226,100,142,.8)' : 'rgba(247,226,113,.95)'; ctx.fill();
-      }
-      ctx.restore();
-    };
-    const spark = (p) => {
-      const a = 0.35 + 0.65 * Math.abs(Math.sin(t * 0.03 * p.sw + p.ph));
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.r * 0.3);
-      ctx.globalAlpha = a * p.a;
-      ctx.fillStyle = '#E3B505';
-      const s = p.s * (0.6 + 0.4 * a);
-      ctx.beginPath();
-      ctx.moveTo(0, -s); ctx.quadraticCurveTo(0, 0, s, 0); ctx.quadraticCurveTo(0, 0, 0, s);
-      ctx.quadraticCurveTo(0, 0, -s, 0); ctx.quadraticCurveTo(0, 0, 0, -s);
-      ctx.fill();
-      ctx.restore();
-    };
-    (function frame() {
-      requestAnimationFrame(frame);
-      if (!visible || document.hidden) return;
-      t++;
-      ctx.clearRect(0, 0, w, h);
-      parts.forEach((p, i) => {
-        p.y += p.vy; p.x += Math.sin(t * 0.012 * p.sw + p.ph) * 0.7; p.r += p.vr;
-        if (p.y > h + 24) parts[i] = make(false);
-        p.type === 2 ? spark(p) : petal(p);
-      });
-    })();
-    size();
-    addEventListener('resize', size);
-    new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(cv.parentElement);
+    if (!reduce) {
+      const list = $('#collList');
+      const tick = () => { if (!hovering && !document.hidden) show((cur + 1) % rows.length); };
+      new IntersectionObserver((e) => {
+        clearInterval(timer);
+        if (e[0].isIntersecting) timer = setInterval(tick, 5200);
+      }, { threshold: 0.35 }).observe(list);
+      list.addEventListener('pointerdown', () => clearInterval(timer));
+    }
   })();
 
   /* ─── lookbook: filter by type (tabs) and by colour (swatches) ─── */
@@ -265,7 +183,6 @@
   const pieces = $$('.piece');
   const note = $('#filterNote');
   const state = { cat: 'all', colour: 'all' };
-  const labelOf = (el) => $('span', el).textContent;
 
   tabs.forEach((t) => {
     const n = t.dataset.cat === 'all' ? pieces.length : pieces.filter((p) => p.dataset.cat === t.dataset.cat).length;
@@ -283,12 +200,14 @@
       if (inCat) {
         shown++;
         p.classList.add('in');
+        $$('.frame', p).forEach((f) => f.classList.add('in'));
         if (animate && was) { p.classList.remove('pop'); void p.offsetWidth; p.classList.add('pop'); }
       }
     });
     const lit = pieces.filter((p) => !p.classList.contains('gone') && !p.classList.contains('dim')).length;
     note.textContent = state.colour === 'all' ? '' :
-      lit ? `${lit} of ${shown} pieces in ${labelOf($('.sw.is-on')).toLowerCase()}` : 'Nothing in this colour here yet — ask us, we can make it.';
+      lit ? `${lit} of ${shown} pieces in ${$('span', $('.sw.is-on')).textContent.toLowerCase()}` :
+        'Nothing in this colour here yet — ask us, we can make it.';
   }
   function setCat(cat, animate = true) {
     state.cat = cat;
@@ -301,10 +220,9 @@
     sws.forEach((s) => s.classList.toggle('is-on', s === sw));
     applyFilter(false);
   }));
-  // collection cards jump to the lookbook with that type selected
-  $$('#collections [data-cat]').forEach((a) => a.addEventListener('click', () => setCat(a.dataset.cat)));
+  $$('#collections a[data-cat]').forEach((a) => a.addEventListener('click', () => setCat(a.dataset.cat)));
 
-  // enquiry form: piece list comes straight from the lookbook
+  // enquiry form: the piece list comes straight from the lookbook
   (function fillPieces() {
     const sel = $('#f-piece');
     const custom = sel.lastElementChild;
@@ -315,7 +233,7 @@
     });
   })();
 
-  /* ─── occasions: a floating arch preview follows the cursor ─── */
+  /* ─── occasions: a photograph follows the cursor ─── */
   (function occasions() {
     const list = $('#occ');
     const prev = $('#occPreview');
@@ -334,9 +252,8 @@
     (function loop() {
       requestAnimationFrame(loop);
       if (!on) return;
-      x += (tx - x) * 0.14; y += (ty - y) * 0.14;
-      const tilt = clamp((tx - x) * 0.12, -10, 10);
-      prev.style.transform = `translate3d(${(x + 36).toFixed(1)}px,${(y - 150).toFixed(1)}px,0) rotate(${tilt.toFixed(1)}deg)`;
+      x += (tx - x) * 0.12; y += (ty - y) * 0.12;
+      prev.style.transform = `translate3d(${(x + 40).toFixed(1)}px,${(y - 150).toFixed(1)}px,0)`;
     })();
   })();
 
