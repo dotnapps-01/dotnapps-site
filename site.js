@@ -930,7 +930,7 @@ window.dnConfig = (function () {
     setTimeout(function () {
       d.classList.add("pl-out");
       setTimeout(function () { d.classList.remove("pl", "pl-out"); }, 520);
-    }, Math.max(0, 2300 - performance.now()));
+    }, Math.max(0, 2000 - performance.now()));
   }
   if (document.readyState === "complete") out(); else addEventListener("load", out);
   setTimeout(out, 3500);
