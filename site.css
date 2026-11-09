@@ -2261,3 +2261,21 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .nav .nav-toggle { width: 46px; min-width: 46px; padding: 0; gap: 0; justify-content: center; }
   .nav .nav-toggle .nt-label { display: none; }
 }
+
+/* Phones: the hero background rings were too faint and too slow. They now start at the top-right corner (clear of the left-aligned text), are clearly visible while small, move about twice as fast, and fade out before they grow across the headline. */
+@media (max-width: 820px) {
+  .hero-rings::before { left: 80%; top: 26%; width: 90%; background: radial-gradient(closest-side, color-mix(in srgb, var(--text) 8%, transparent), transparent); }
+  .hero-rings i {
+    left: 80%; top: 26%; width: clamp(420px, 125%, 700px);
+    border-width: 1.5px; border-color: color-mix(in srgb, var(--text) 42%, transparent);
+    background: linear-gradient(160deg, color-mix(in srgb, var(--text) 8%, transparent), transparent 62%);
+    animation: ringOutM 7s cubic-bezier(.3, .35, .25, 1) infinite; animation-delay: calc(var(--i) * -2.33s);
+  }
+}
+@keyframes ringOutM {
+  0%   { transform: translate(-50%, -50%) scale(.05) rotate(0deg);  opacity: 0; }
+  10%  { opacity: 1; }
+  45%  { opacity: .6; }
+  85%, 100% { transform: translate(-50%, -50%) scale(1) rotate(40deg); opacity: 0; }
+}
+@media (max-width: 820px) and (prefers-reduced-motion: reduce) { .hero-rings i { animation: none; opacity: .5; transform: translate(-50%, -50%) scale(calc(.25 + var(--i) * .2)); } }
