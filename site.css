@@ -2178,3 +2178,19 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 .dn-banner { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 70; display: flex; align-items: center; gap: .6rem; max-width: calc(100% - 28px); padding: .6rem .7rem .6rem 1rem; border-radius: 999px; background: var(--ink); color: var(--frame); font-size: .82rem; line-height: 1.35; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .5); }
 .dn-banner a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .dn-banner button { flex: none; width: 24px; height: 24px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--frame) 22%, transparent); color: inherit; font: inherit; line-height: 1; cursor: pointer; }
+
+/* Services page: ready-made cards + collapsible custom-build practices */
+.rm > li { gap: 0; }
+.rm .rm-line { margin: 0; font-size: .9rem; line-height: 1.58; color: var(--muted); }
+.rm .rm-actions { margin-top: auto; padding-top: 1.3rem; display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }
+.rm .rm-more { font-size: .82rem; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px; }
+.rm .rm-more:hover { color: var(--text); border-color: var(--ink); }
+.svc-wrap > details.svc-group { border-top: 1px solid var(--hairline); padding: 0; }
+.svc-wrap > details.svc-group:last-child { border-bottom: 1px solid var(--hairline); }
+details.svc-group > summary.svc-gh { cursor: pointer; list-style: none; padding: 1.1rem 0; margin: 0; align-items: center; -webkit-tap-highlight-color: transparent; }
+details.svc-group > summary.svc-gh::-webkit-details-marker { display: none; }
+details.svc-group > summary.svc-gh::after { content: "+"; font: 400 1.1rem/1 var(--mono, "Space Mono", monospace); color: var(--muted); margin-left: .9rem; }
+details.svc-group[open] > summary.svc-gh::after { content: "\2013"; }
+details.svc-group[open] > summary.svc-gh { padding-bottom: .8rem; }
+details.svc-group[open] > .sg { margin-bottom: 1.4rem; }
+details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }

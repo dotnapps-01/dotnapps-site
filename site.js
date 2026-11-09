@@ -160,6 +160,11 @@
         btn.addEventListener("click", function (e) {
           e.preventDefault();
           openModal(btn.getAttribute("data-modal"), btn);
+          var pf = btn.getAttribute("data-prefill");
+          if (pf) {
+            var ta = fm.querySelector(".mform:not([hidden]) textarea");
+            if (ta) { ta.value = pf + "\n\n"; try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (er) {} }
+          }
         });
       });
       fm.querySelectorAll("[data-modal-close]").forEach(function (b) {
@@ -863,4 +868,15 @@ window.dnConfig = (function () {
   function go(c) { start(pick(c)); started = true; }
   var wait = setTimeout(function () { go(null); }, 350);
   window.dnConfig.then(function (c) { clearTimeout(wait); if (!started) go(c); else if (c) start(pick(c)); });
+})();
+
+/* services page: open the collapsed practice that a link or the address points at */
+(function () {
+  if (!document.querySelector("details.svc-group")) return;
+  function openFor() {
+    var h = ""; try { h = decodeURIComponent(location.hash.slice(1)); } catch (e) {}
+    var el = h && document.getElementById(h), g = el && el.closest("details.svc-group");
+    if (g && !g.open) { g.open = true; setTimeout(function () { el.scrollIntoView(); }, 30); }
+  }
+  openFor(); window.addEventListener("hashchange", openFor);
 })();
