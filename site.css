@@ -2200,3 +2200,6 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 
 /* Hero intro line: a little smaller on phones */
 @media (max-width: 620px) { .hero .hero-inner > p { font-size: .92rem; line-height: 1.55; } }
+
+/* Hero headline (the rotating taglines): a little larger on phones */
+@media (max-width: 620px) { body .hero h1 { font-size: clamp(2.6rem, 11.8vw, 3.3rem); } }
