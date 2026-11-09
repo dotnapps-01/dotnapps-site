@@ -2194,3 +2194,6 @@ details.svc-group[open] > summary.svc-gh::after { content: "\2013"; }
 details.svc-group[open] > summary.svc-gh { padding-bottom: .8rem; }
 details.svc-group[open] > .sg { margin-bottom: 1.4rem; }
 details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+/* Hero on phones and tablets: bring the headline closer to its label */
+@media (max-width: 1099px) { .hero .sec-row { margin-bottom: .95rem; } }
