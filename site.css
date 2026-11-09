@@ -2173,3 +2173,8 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 @keyframes heroFlipOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: perspective(400px) rotateX(90deg); } }
 .reduce-motion .hero-rot .slide { opacity: 1 !important; }
 @media (prefers-reduced-motion: reduce) { .hero-rot .c { opacity: 1; animation: none !important; } }
+
+/* admin-controlled banner */
+.dn-banner { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 70; display: flex; align-items: center; gap: .6rem; max-width: calc(100% - 28px); padding: .6rem .7rem .6rem 1rem; border-radius: 999px; background: var(--ink); color: var(--frame); font-size: .82rem; line-height: 1.35; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .5); }
+.dn-banner a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.dn-banner button { flex: none; width: 24px; height: 24px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--frame) 22%, transparent); color: inherit; font: inherit; line-height: 1; cursor: pointer; }

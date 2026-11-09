@@ -35,3 +35,22 @@ no build step. `robots.txt` / `sitemap.xml` / `og.png` / `favicon.svg` are
 served from the repo root.
 
 Any static host works too — it's a single `index.html`.
+
+## Admin (`/admin`)
+
+A private admin for leads, hero taglines, page copy and settings. It runs on Vercel serverless functions in `api/`.
+
+**To switch it on** (Vercel → Project → Settings → Environment Variables, then redeploy):
+
+1. `ADMIN_PASSWORD` — the password you type at `/admin`. Changing it signs everyone out. (Optional: `ADMIN_SECRET`, any long random string, to sign sessions.)
+2. A Redis store — add **Upstash for Redis** from the Vercel Marketplace. It sets `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (Vercel KV's `KV_REST_API_URL` / `KV_REST_API_TOKEN` also work).
+
+Until both are set, `/admin` shows a setup checklist and the site behaves as before (forms open an email).
+
+**What it does**
+
+- **Leads** — every form on the site posts to `/api/lead` and is saved. Status, notes, search, CSV export.
+- **CRM** — Settings → CRM integration forwards each new lead to a webhook (JSON or form fields, optional auth header). The secret is stored server-side only. Webhook URLs must be `https` and not point at private addresses.
+- **Hero / Content / Settings** — taglines, Services and Products copy, social links, contact email and a site notice. Saved to the store and read by the site from `/api/config` (changes show within about 15 seconds).
+
+**Local testing without a real store:** `DN_STORE=memory ADMIN_PASSWORD=test vercel dev` keeps data in memory only.

@@ -85,21 +85,45 @@
       });
     }
 
-    /* brief form -> mailto */
+    /* lead capture: post to /api/lead (saved in the admin, forwarded to the CRM). If that is not available, fall back to opening an email. */
+    function sendLead(form, source, d) {
+      var hp = form.querySelector('input[name="website"]');
+      var p = {
+        source: source, page: location.pathname,
+        name: d.get("name") || "", email: d.get("email") || "",
+        message: d.get("message") || d.get("detail") || d.get("note") || "",
+        company: d.get("company") || "", role: d.get("role") || "", link: d.get("link") || "",
+        website: hp ? hp.value : ""
+      };
+      return fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) })
+        .then(function (r) { return r.ok; }).catch(function () { return false; });
+    }
+    function addHoneypot(form) {
+      var i = document.createElement("input");
+      i.type = "text"; i.name = "website"; i.tabIndex = -1; i.autocomplete = "off"; i.setAttribute("aria-hidden", "true");
+      i.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;opacity:0";
+      form.appendChild(i);
+    }
+    var DN_MAIL = function () { return window.__DN_EMAIL || "hello@dotnapps.com"; };
+
+    /* brief form */
     var bf = document.getElementById("brief-form");
     if (bf) {
+      addHoneypot(bf);
       bf.addEventListener("submit", function (e) {
         e.preventDefault();
-        var d = new FormData(bf);
-        var body = "Name: " + (d.get("name") || "") +
-          "\nEmail: " + (d.get("email") || "") +
-          "\n\nWhat they're building:\n" + (d.get("detail") || "");
-        var href = "mailto:hello@dotnapps.com?subject=" +
-          encodeURIComponent("Project brief — " + (d.get("name") || "new")) +
-          "&body=" + encodeURIComponent(body);
-        var done = document.getElementById("brief-done");
-        if (done) done.hidden = false;
-        window.location.href = href;
+        var d = new FormData(bf), done = document.getElementById("brief-done"), keep = done ? done.innerHTML : "";
+        sendLead(bf, "brief", d).then(function (ok) {
+          if (ok) {
+            if (done) { done.textContent = "Thanks \u2014 we\u2019ve got your brief and will reply by email soon."; done.hidden = false; }
+            bf.reset();
+            return;
+          }
+          var body = "Name: " + (d.get("name") || "") + "\nEmail: " + (d.get("email") || "") + "\n\nWhat they're building:\n" + (d.get("detail") || "");
+          var href = "mailto:" + DN_MAIL() + "?subject=" + encodeURIComponent("Project brief \u2014 " + (d.get("name") || "new")) + "&body=" + encodeURIComponent(body);
+          if (done) { done.innerHTML = keep; done.hidden = false; }
+          window.location.href = href;
+        });
       });
     }
 
@@ -145,19 +169,20 @@
       fm.addEventListener("close", function () { if (mTrigger) { try { mTrigger.focus(); } catch (e) {} } });
 
       mPanels.forEach(function (form) {
+        addHoneypot(form);
         form.addEventListener("submit", function (e) {
           e.preventDefault();
-          var cfg = FORMS[form.getAttribute("data-form")];
-          var d = new FormData(form);
-          var lines = [];
-          d.forEach(function (v, k) {
-            if (v) lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v);
+          var key = form.getAttribute("data-form"), cfg = FORMS[key];
+          var d = new FormData(form), doneEl = form.querySelector(".mform-done"), keep = doneEl.innerHTML;
+          sendLead(form, key, d).then(function (ok) {
+            if (ok) { doneEl.textContent = "Thanks \u2014 we\u2019ve got it and will reply by email soon."; doneEl.hidden = false; form.reset(); return; }
+            var lines = [];
+            d.forEach(function (v, k) { if (v && k !== "website") lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v); });
+            var to = key === "careers" ? cfg.to : DN_MAIL();
+            var href = "mailto:" + to + "?subject=" + encodeURIComponent(cfg.subj(d)) + "&body=" + encodeURIComponent(lines.join("\n"));
+            doneEl.innerHTML = keep; doneEl.hidden = false;
+            window.location.href = href;
           });
-          var href = "mailto:" + cfg.to +
-            "?subject=" + encodeURIComponent(cfg.subj(d)) +
-            "&body=" + encodeURIComponent(lines.join("\n"));
-          form.querySelector(".mform-done").hidden = false;
-          window.location.href = href;
         });
       });
     }
@@ -753,32 +778,75 @@
   });
 })();
 
-/* hero taglines: a slideshow — the letters of one sentence tilt back and drop away one by one, and the next sentence's letters rise in behind them */
+/* live settings from /api/config — taglines, copy edits, links, banner. The page is complete without it; this only layers edits on top. */
+window.dnConfig = (function () {
+  var ctl = typeof AbortController !== "undefined" ? new AbortController() : null, to = setTimeout(function () { if (ctl) ctl.abort(); }, 3500);
+  function txt(el, t) { if (el && typeof t === "string" && t) el.textContent = t; }
+  function slugs(c) {
+    var sv = c.services || {}, pr = c.products || {};
+    Object.keys(sv).forEach(function (k) {
+      var li = document.getElementById(k); if (!li || !li.querySelector(".svc-lead")) return;
+      var s = sv[k]; txt(li.querySelector(".svc-lead"), s.lead);
+      if (s.inc && s.inc.length) { var ul = li.querySelector(".svc-inc"); if (ul) { ul.innerHTML = ""; s.inc.forEach(function (x) { var l = document.createElement("li"); l.textContent = x; ul.appendChild(l); }); } }
+      if (s.fit) { var f = li.querySelector(".svc-fit"); if (f) { var b = f.querySelector("b"); f.textContent = ""; if (b) f.appendChild(b); f.appendChild(document.createTextNode(s.fit)); } }
+    });
+    Object.keys(pr).forEach(function (k) { var card = document.getElementById(k); if (card && card.classList.contains("pc")) txt(card.querySelector("p"), pr[k].desc); });
+  }
+  function apply(c) {
+    var s = c.settings || {};
+    if (s.email) { window.__DN_EMAIL = s.email; document.querySelectorAll(".menu-mail").forEach(function (m) { m.textContent = s.email; }); }
+    var soc = s.social || {}, map = { instagram: "Instagram", linkedin: "LinkedIn", whatsapp: "WhatsApp", pinterest: "Pinterest" };
+    Object.keys(map).forEach(function (k) { if (soc[k]) document.querySelectorAll('.foot-social a[aria-label$="' + map[k] + '"]').forEach(function (a) { a.href = soc[k]; }); });
+    var b = s.banner;
+    if (b && b.on && b.text) {
+      var seen = ""; try { seen = sessionStorage.getItem("dn-banner") || ""; } catch (e) {}
+      if (seen !== b.text) {
+        var bar = document.createElement("div"); bar.className = "dn-banner"; bar.setAttribute("role", "status");
+        var span = document.createElement("span"); span.textContent = b.text;
+        if (b.link) { var a = document.createElement("a"); a.href = b.link; a.appendChild(span); bar.appendChild(a); } else bar.appendChild(span);
+        var x = document.createElement("button"); x.type = "button"; x.setAttribute("aria-label", "Dismiss"); x.textContent = "×";
+        x.onclick = function () { bar.remove(); try { sessionStorage.setItem("dn-banner", b.text); } catch (e) {} };
+        bar.appendChild(x); document.body.appendChild(bar);
+      }
+    }
+    slugs(c);
+  }
+  return fetch("/api/config", { headers: { Accept: "application/json" }, signal: ctl ? ctl.signal : undefined })
+    .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+    .then(function (c) { clearTimeout(to); if (c && typeof c === "object" && !Array.isArray(c) && Object.keys(c).length) { try { apply(c); } catch (e) { if (window.console) console.warn("dnConfig apply failed:", e && e.message); } return c; } return null; });
+})();
+
+/* hero taglines: a slideshow — the letters of one sentence flip over one by one, then the next sentence's letters flip in. Taglines come from the admin when set. */
 (function () {
   var h1 = document.querySelector(".hero-rot");
   if (!h1) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var T = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
-  var hero = document.querySelector(".hero"), slides = [], cur = 0, held = false, i;
+  var DEFAULT = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
+  var hero = document.querySelector(".hero"), T = DEFAULT, slides = [], cur = 0, held = false, timer = 0, sig = "";
   function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function words(t, n) {
-    return t.split(" ").map(function (w) {
+    return t.split(" ").filter(Boolean).map(function (w) {
       return '<span class="w">' + w.split("").map(function (ch) { return '<span class="c" aria-hidden="true" style="--i:' + (n.v++) + '">' + esc(ch) + '</span>'; }).join("") + '</span>';
     }).join(" ");
   }
-  function build(n) {
-    var c = { v: 0 };
-    return words(T[n][0], c) + ' <span class="h1-end">' + words(T[n][1], c) + '</span>';
+  function build(n) { var c = { v: 0 }; return words(T[n][0], c) + (T[n][1] ? ' <span class="h1-end">' + words(T[n][1], c) + '</span>' : ""); }
+  function pick(c) {
+    var l = c && c.taglines;
+    if (!l || !l.length) return DEFAULT;
+    var on = l.filter(function (t) { return t && t.on !== false && (t.a || t.b); }).map(function (t) { return [t.a || "", t.b || ""]; });
+    return on.length ? on : DEFAULT;
   }
-  var first = h1.querySelector(".slide");
-  for (i = 0; i < T.length; i++) {
-    var s = i === 0 ? first : document.createElement("span");
-    s.className = "slide has-c" + (i === 0 ? " is-active" : "");
-    s.setAttribute("aria-label", T[i][0] + " " + T[i][1]);
-    if (i) s.setAttribute("aria-hidden", "true");
-    s.innerHTML = build(i);
-    if (i) h1.appendChild(s);
-    slides.push(s);
+  function start(list) {
+    var s2 = JSON.stringify(list); if (s2 === sig) return; sig = s2;
+    T = list; slides = []; cur = 0; clearInterval(timer); h1.innerHTML = "";
+    for (var i = 0; i < T.length; i++) {
+      var s = document.createElement("span");
+      s.className = "slide has-c" + (i === 0 ? " is-active" : "");
+      s.setAttribute("aria-label", (T[i][0] + " " + T[i][1]).trim());
+      if (i) s.setAttribute("aria-hidden", "true");
+      s.innerHTML = build(i); h1.appendChild(s); slides.push(s);
+    }
+    if (T.length > 1) timer = setInterval(next, 5000);
   }
   function next() {
     if (held || document.hidden || (hero && hero.classList.contains("is-off"))) return;
@@ -788,7 +856,11 @@
     nx.classList.remove("is-out"); nx.classList.add("is-active"); nx.removeAttribute("aria-hidden");
     cur = n;
   }
-  setInterval(next, 5000);
   h1.addEventListener("mouseenter", function () { held = true; });
   h1.addEventListener("mouseleave", function () { held = false; });
+  /* give the settings a moment to arrive so the first sentence is the right one; if they are slow, start with the defaults and swap quietly */
+  var started = false;
+  function go(c) { start(pick(c)); started = true; }
+  var wait = setTimeout(function () { go(null); }, 350);
+  window.dnConfig.then(function (c) { clearTimeout(wait); if (!started) go(c); else if (c) start(pick(c)); });
 })();
