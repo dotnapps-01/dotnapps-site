@@ -2203,3 +2203,10 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 
 /* Hero headline (the rotating taglines): a little larger on phones */
 @media (max-width: 620px) { body .hero h1 { font-size: clamp(2.6rem, 11.8vw, 3.3rem); } }
+
+/* Phones: the logo gets the same outlined badge as desktop (a circle that opens into a pill with the name) */
+@media (max-width: 820px) {
+  .nav > .brand { width: auto; min-width: 46px; height: 46px; padding: 0 12px; margin-left: 0; display: flex; justify-content: center; align-items: center; border-radius: 999px; background: var(--frame); border: 1px solid var(--card-line); }
+  .nav > .brand svg { width: 21px; height: 21px; flex: none; }
+  .nav > .brand .brand-name { font-size: 1.02rem; }
+}
