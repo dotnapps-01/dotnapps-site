@@ -2159,12 +2159,17 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 }
 @media (min-width: 821px) and (prefers-reduced-motion: reduce) { .nav > .brand .brand-name { animation: none !important; display: none; } }
 
-/* ---------- Hero tagline slideshow: fade and rise ---------- */
+/* ---------- Hero tagline slideshow: letters flip over like a departures board ---------- */
 .hero-rot { display: grid; }
-.hero-rot .slide { grid-area: 1 / 1; display: block; opacity: 0; pointer-events: none; }
-.hero-rot .slide.is-active { pointer-events: auto; animation: heroFin .75s ease both; }
-.hero-rot .slide.is-out { animation: heroFout .45s ease both; }
+.hero-rot .slide { grid-area: 1 / 1; display: block; pointer-events: none; }
+.hero-rot .slide.is-active { pointer-events: auto; }
 .hero-rot .h1-end { display: block; }
-@keyframes heroFin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes heroFout { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-14px); } }
-@media (prefers-reduced-motion: reduce) { .hero-rot .slide.is-active { animation: none; opacity: 1; } }
+.js .hero-rot .slide:not(.has-c) { opacity: 0; }
+.hero-rot .w { display: inline-block; white-space: nowrap; }
+.hero-rot .c { display: inline-block; white-space: pre; opacity: 0; will-change: transform, opacity; }
+.hero-rot .slide.is-active .c { animation: heroFlipIn .42s ease-out both; animation-delay: calc(var(--i) * 20ms + 200ms); }
+.hero-rot .slide.is-out .c { animation: heroFlipOut .3s ease-in both; animation-delay: calc(var(--i) * 14ms); }
+@keyframes heroFlipIn { from { opacity: 0; transform: perspective(400px) rotateX(-90deg); } to { opacity: 1; transform: none; } }
+@keyframes heroFlipOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: perspective(400px) rotateX(90deg); } }
+.reduce-motion .hero-rot .slide { opacity: 1 !important; }
+@media (prefers-reduced-motion: reduce) { .hero-rot .c { opacity: 1; animation: none !important; } }
