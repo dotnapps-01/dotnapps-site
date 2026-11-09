@@ -2261,21 +2261,3 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .nav .nav-toggle { width: 46px; min-width: 46px; padding: 0; gap: 0; justify-content: center; }
   .nav .nav-toggle .nt-label { display: none; }
 }
-
-/* Preloader (first visit in a tab only): a framed grid draws in with plus marks at the crossings, the logo appears in the middle cell, then the page fades in. Skipped for reduced motion. */
-#preloader { display: none; }
-html.pl #preloader {
-  display: flex; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;
-  background: var(--frame); transition: opacity .65s ease;
-}
-html.pl.pl-out #preloader { opacity: 0; pointer-events: none; }
-html.pl body { overflow: hidden; }
-.pl-grid { width: min(210px, 56vw); height: auto; overflow: visible; transition: transform .65s cubic-bezier(.4, 0, .2, 1); }
-html.pl-out .pl-grid { transform: scale(1.12); }
-.pl-grid .pg { fill: none; stroke: color-mix(in srgb, var(--ink) 32%, transparent); stroke-width: .6; stroke-dasharray: 1; stroke-dashoffset: 1; animation: plDraw .8s cubic-bezier(.5, 0, .2, 1) both; animation-delay: calc(var(--i) * .14s + .1s); }
-.pl-grid .pp { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: center; animation: plPop .4s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * .08s + .75s); }
-.pl-grid .pl-logo { opacity: 0; transform-box: fill-box; transform-origin: center; animation: plLogoIn .55s cubic-bezier(.2, .8, .2, 1) 1.2s both; }
-.pl-grid .pl-logo path { fill: var(--ink); }
-@keyframes plDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes plPop { from { opacity: 0; transform: scale(.2) rotate(-45deg); } to { opacity: 1; transform: none; } }
-@keyframes plLogoIn { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }

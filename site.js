@@ -919,19 +919,3 @@ window.dnConfig = (function () {
   }
   openFor(); window.addEventListener("hashchange", openFor);
 })();
-
-/* preloader: hold for at least a moment so the animation can play, then fade out once the page has loaded (never longer than 3.5s) */
-(function () {
-  var d = document.documentElement;
-  if (!d.classList.contains("pl")) return;
-  var done = false;
-  function out() {
-    if (done) return; done = true;
-    setTimeout(function () {
-      d.classList.add("pl-out");
-      setTimeout(function () { d.classList.remove("pl", "pl-out"); }, 680);
-    }, Math.max(0, 2400 - performance.now()));
-  }
-  if (document.readyState === "complete") out(); else addEventListener("load", out);
-  setTimeout(out, 3500);
-})();
