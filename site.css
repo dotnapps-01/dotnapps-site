@@ -2261,3 +2261,26 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .nav .nav-toggle { width: 46px; min-width: 46px; padding: 0; gap: 0; justify-content: center; }
   .nav .nav-toggle .nt-label { display: none; }
 }
+
+/* Preloader (first visit in a tab only): a plus mark spins in and turns into the logo, then the page fades in. Skipped for reduced motion. */
+#preloader { display: none; }
+html.pl #preloader {
+  display: flex; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;
+  background: var(--frame); transition: opacity .5s ease;
+}
+html.pl.pl-out #preloader { opacity: 0; pointer-events: none; }
+html.pl body { overflow: hidden; }
+.pl-mark { position: relative; width: 56px; height: 56px; }
+.pl-plus { position: absolute; inset: 0; animation: plPlus 1.5s cubic-bezier(.6, 0, .2, 1) both; }
+.pl-plus b { position: absolute; left: 50%; top: 50%; background: var(--ink); border-radius: 1px; transform: translate(-50%, -50%); }
+.pl-plus b:first-child { width: 48px; height: 5px; }
+.pl-plus b:last-child { width: 5px; height: 48px; }
+.pl-logo { position: absolute; inset: 3px; width: 50px; height: 50px; opacity: 0; animation: plLogo 1.5s ease both; }
+.pl-logo path { fill: var(--ink); }
+@keyframes plPlus {
+  0% { transform: rotate(-90deg) scale(.4); opacity: 0; }
+  30% { opacity: 1; }
+  60% { transform: rotate(0) scale(1); opacity: 1; }
+  82%, 100% { transform: rotate(90deg) scale(.6); opacity: 0; }
+}
+@keyframes plLogo { 0%, 62% { opacity: 0; transform: scale(.7); } 90%, 100% { opacity: 1; transform: none; } }
