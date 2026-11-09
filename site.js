@@ -929,8 +929,8 @@ window.dnConfig = (function () {
     if (done) return; done = true;
     setTimeout(function () {
       d.classList.add("pl-out");
-      setTimeout(function () { d.classList.remove("pl", "pl-out"); }, 520);
-    }, Math.max(0, 2000 - performance.now()));
+      setTimeout(function () { d.classList.remove("pl", "pl-out"); }, 680);
+    }, Math.max(0, 2400 - performance.now()));
   }
   if (document.readyState === "complete") out(); else addEventListener("load", out);
   setTimeout(out, 3500);
