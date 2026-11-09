@@ -752,3 +752,29 @@
     });
   });
 })();
+
+/* hero taglines: a slideshow — each tagline fades in with a small lift, then the next takes over */
+(function () {
+  var h1 = document.querySelector(".hero-rot");
+  if (!h1) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var T = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
+  var slides = [h1.querySelector(".slide")], hero = document.querySelector(".hero"), cur = 0, held = false, i;
+  function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  for (i = 1; i < T.length; i++) {
+    var s = document.createElement("span"); s.className = "slide"; s.setAttribute("aria-hidden", "true");
+    s.innerHTML = esc(T[i][0]) + ' <span class="h1-end">' + esc(T[i][1]) + '</span>';
+    h1.appendChild(s); slides.push(s);
+  }
+  function next() {
+    if (held || document.hidden || (hero && hero.classList.contains("is-off"))) return;
+    var old = slides[cur], n = (cur + 1) % slides.length, nx = slides[n];
+    old.classList.remove("is-active"); old.classList.add("is-out"); old.setAttribute("aria-hidden", "true");
+    setTimeout(function () { old.classList.remove("is-out"); }, 600);
+    nx.classList.remove("is-out"); nx.classList.add("is-active"); nx.removeAttribute("aria-hidden");
+    cur = n;
+  }
+  setInterval(next, 4400);
+  h1.addEventListener("mouseenter", function () { held = true; });
+  h1.addEventListener("mouseleave", function () { held = false; });
+})();
