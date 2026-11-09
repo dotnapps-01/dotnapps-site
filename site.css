@@ -2218,3 +2218,6 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 /* Phones: each tagline is set as three fixed lines (words in a grey part are tinted per word) */
 .hero-rot .ln { display: block; white-space: nowrap; }
 .hero-rot .w.g { color: var(--muted); }
+
+/* Phones: less space between the "Studio & product company" label and the headline */
+@media (max-width: 620px) { .hero .sec-row { margin-bottom: .2rem; } }
