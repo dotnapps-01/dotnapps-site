@@ -51,6 +51,7 @@ Until both are set, `/admin` shows a setup checklist and the site behaves as bef
 
 - **Leads** — every form on the site posts to `/api/lead` and is saved. Status, notes, search, CSV export.
 - **CRM** — Settings → CRM integration forwards each new lead to a webhook (JSON or form fields, optional auth header). The secret is stored server-side only. Webhook URLs must be `https` and not point at private addresses.
+  - **Dotnapps CRM (workspace.dotnapps.com):** use the *Quick setup* box — enter the workspace slug and the secret from the CRM's `INBOUND_LEAD_KEYS`. It fills in `https://workspace.dotnapps.com/api/inbound/leads?org=<slug>` and an `Authorization: Bearer …` header. New leads arrive as `WEBSITE` leads with the message as a note; repeat emails add a note instead of a duplicate; careers applications are not sent (you can choose which forms go). Needs the matching endpoint deployed in `apps/crm` (see its `docs/OPERATIONS.md`).
 - **Hero / Content / Settings** — taglines, Services and Products copy, social links, contact email and a site notice. Saved to the store and read by the site from `/api/config` (changes show within about 15 seconds).
 
 **Local testing without a real store:** `DN_STORE=memory ADMIN_PASSWORD=test vercel dev` keeps data in memory only.

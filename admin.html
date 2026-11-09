@@ -233,6 +233,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     S.pub.settings = S.pub.settings || {}; S.pub.settings.social = S.pub.settings.social || {}; S.pub.settings.banner = S.pub.settings.banner || {};
     S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {};
     S.priv.crm = S.priv.crm || { enabled: false, url: "", format: "json", headerName: "", secret: "" };
+    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "contact", "businessos"];
     if (!S.pub.taglines || !S.pub.taglines.length) S.pub.taglines = DEF_TAGS.map(function (t) { return { a: t[0], b: t[1], on: true }; });
   }
   /* defaults for the content editor come from the live pages themselves */
@@ -300,6 +301,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     var s = l.crm && l.crm.status;
     if (s === "sent") return '<span class="chip sent" title="Sent to CRM ' + esc(fmt(l.crm.at)) + '">CRM ✓</span>';
     if (s === "failed") return '<span class="chip failed" title="' + esc((l.crm && l.crm.error) || "failed") + '">CRM failed</span>';
+    if (s === "skipped") return '<span class="chip" title="This form is not sent to the CRM (Settings → CRM integration)">CRM skipped</span>';
     return '<span class="chip">CRM off</span>';
   }
   function leadHtml(l) {
@@ -332,7 +334,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       var t = e.target.closest("[data-act]"); if (!t) return;
       var art = t.closest(".lead"), id = art.dataset.id, l = S.leads.filter(function (x) { return x.id === id; })[0], act = t.dataset.act;
       if (act === "toggle") { S.open = S.open === id ? null : id; list.innerHTML = listHtml(); }
-      if (act === "resend") { t.disabled = true; api("/api/leads", { method: "POST", body: { action: "resend", id: id } }).then(function (r) { if (r.ok) { Object.assign(l, r.data.lead); recount(); list.innerHTML = listHtml(); toast(l.crm.status === "sent" ? "Sent to your CRM" : l.crm.status === "off" ? "CRM is switched off in Settings" : "CRM said: " + (l.crm.error || "failed"), l.crm.status === "failed"); } else toast("Couldn't send", true); }); }
+      if (act === "resend") { t.disabled = true; api("/api/leads", { method: "POST", body: { action: "resend", id: id } }).then(function (r) { if (r.ok) { Object.assign(l, r.data.lead); recount(); list.innerHTML = listHtml(); toast(l.crm.status === "sent" ? "Sent to your CRM" : l.crm.status === "off" ? "CRM is switched off in Settings" : l.crm.status === "skipped" ? "This form is set not to go to the CRM" : "CRM said: " + (l.crm.error || "failed"), l.crm.status === "failed"); } else toast("Couldn't send", true); }); }
       if (act === "del" && confirm("Delete " + l.name + "? This can't be undone.")) api("/api/leads?id=" + id, { method: "DELETE" }).then(function (r) { if (r.ok) { S.leads = S.leads.filter(function (x) { return x.id !== id; }); S.open = null; recount(); viewLeads(v); toast("Deleted"); } else toast("Couldn't delete", true); });
     });
     list.addEventListener("change", function (e) {
@@ -430,9 +432,11 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<div class="card"><h2>Site notice</h2><p class="sub">A small pill at the bottom of every page. Visitors can dismiss it.</p><label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="pub.settings.banner.on"' + (P.banner.on ? " checked" : "") + '><span></span></span><span>Show the notice</span></label><div class="grid2">' + fld("Text", "pub.settings.banner.text", "We're closed on Friday") + fld("Link (optional)", "pub.settings.banner.link", "https://… or /services", "text") + '</div></div>' +
       '<div class="card"><h2>CRM integration</h2><p class="sub">Every new lead is saved here <b>and</b> sent to your CRM by webhook. Works with any CRM or automation tool that accepts a POST (HubSpot, Zoho, Pipedrive, Zapier, Make, n8n…). The secret never reaches the website.</p>' +
       '<label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="priv.crm.enabled"' + (C.enabled ? " checked" : "") + '><span></span></span><span>Send new leads to my CRM</span></label>' +
+      '<div class="card" style="background:var(--sunken);margin:0 0 1rem"><h2>Quick setup: Dotnapps CRM</h2><p class="sub" style="margin-bottom:.7rem">For the CRM at workspace.dotnapps.com. Enter your workspace slug and the secret from the CRM\'s <span class="mono">INBOUND_LEAD_KEYS</span>, then press Fill in.</p><div class="grid2"><label class="f">Workspace slug<input type="text" id="qs-slug" placeholder="dotnapps" autocomplete="off"></label><label class="f">Secret<input type="password" id="qs-secret" autocomplete="off" placeholder="from INBOUND_LEAD_KEYS"></label></div><div class="row" style="margin-top:.8rem"><button class="btn ghost sm" type="button" id="qs-fill">Fill in the fields below</button><span id="qs-msg" class="hint" style="margin:0"></span></div></div>' +
       '<div class="grid2">' + fld("Webhook URL", "priv.crm.url", "https://hooks.example.com/…", "url", "Must be https.") +
       '<label class="f">Format<select data-bind="priv.crm.format"><option value="json"' + (C.format !== "form" ? " selected" : "") + '>JSON</option><option value="form"' + (C.format === "form" ? " selected" : "") + '>Form fields (x-www-form-urlencoded)</option></select></label>' +
       fld("Auth header name (optional)", "priv.crm.headerName", "Authorization", "text", "For example Authorization or X-Api-Key.") + fld("Auth header value (optional)", "priv.crm.secret", "Bearer …", "password", "Stored on the server and shown masked.") + '</div>' +
+      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["contact", "Say hello"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
       '<div class="row" style="margin-top:1rem"><button class="btn ghost" id="crmtest" type="button">Send a test lead</button><span id="crmres" class="hint" style="margin:0"></span></div>' +
       '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p></div>';
     v.addEventListener("input", bind); v.addEventListener("change", bind);
@@ -441,6 +445,21 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       var val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
       var root = k.slice(0, 3) === "pub" ? S.pub : S.priv; setp(root, k.replace(/^(pub|priv)\./, ""), val); markDirty();
     }
+    $("#srcs").addEventListener("change", function (e) {
+      var k = e.target.dataset.src; if (!k) return;
+      var list = (S.priv.crm.sources || []).filter(function (x) { return x !== k; });
+      if (e.target.checked) list.push(k);
+      S.priv.crm.sources = list; markDirty();
+    });
+    $("#qs-fill").addEventListener("click", function () {
+      var slug = $("#qs-slug").value.trim().toLowerCase(), sec = $("#qs-secret").value.trim(), msg = $("#qs-msg");
+      if (!/^[a-z0-9][a-z0-9_-]{0,60}$/.test(slug)) { msg.textContent = "Enter the workspace slug (letters, numbers, dashes)."; msg.style.color = "var(--bad)"; return; }
+      if (sec.length < 24) { msg.textContent = "The secret should be at least 24 characters."; msg.style.color = "var(--bad)"; return; }
+      var c = S.priv.crm;
+      c.enabled = true; c.format = "json"; c.url = "https://workspace.dotnapps.com/api/inbound/leads?org=" + encodeURIComponent(slug);
+      c.headerName = "Authorization"; c.secret = "Bearer " + sec; markDirty(); viewSettings(v);
+      toast("Filled in. Send a test lead, then Save changes.");
+    });
     $("#crmtest").addEventListener("click", function () {
       var out = $("#crmres"); if (!S.priv.crm.url) { out.textContent = "Add the webhook URL first."; return; }
       out.textContent = "Sending…";

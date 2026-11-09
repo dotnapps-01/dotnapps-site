@@ -194,6 +194,7 @@ function cleanPublic(p) {
   return out;
 }
 const MASK = '********';
+const FORMS = ['brief', 'contact', 'businessos', 'careers'];
 function cleanPrivate(p, prev) {
   p = p && typeof p === 'object' ? p : {};
   const c = p.crm && typeof p.crm === 'object' ? p.crm : {};
@@ -205,14 +206,15 @@ function cleanPrivate(p, prev) {
       url: urlOk(str(c.url, 500)) || (devOk(str(c.url, 500)) ? str(c.url, 500) : ''),
       format: c.format === 'form' ? 'form' : 'json',
       headerName: header,
-      secret: c.secret === MASK ? (old.secret || '') : str(c.secret, 400)
+      secret: c.secret === MASK ? (old.secret || '') : str(c.secret, 400),
+      sources: Array.isArray(c.sources) ? c.sources.filter((s) => FORMS.indexOf(s) >= 0).filter((s, i, a) => a.indexOf(s) === i) : undefined
     }
   };
 }
 function devOk(u) { return process.env.DN_STORE === 'memory' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//.test(u); }
 function maskPrivate(p) {
   const c = (p && p.crm) || {};
-  return { crm: { enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '' } };
+  return { crm: { enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '', sources: Array.isArray(c.sources) ? c.sources : undefined } };
 }
 
 /* ---------------- CRM webhook ---------------- */
@@ -225,6 +227,7 @@ function blockedHost(host) {
 async function forward(crm, lead, event) {
   const at = new Date().toISOString();
   if (!crm || !crm.enabled || !crm.url) return { status: 'off', at };
+  if (event !== 'lead.test' && Array.isArray(crm.sources) && crm.sources.indexOf(lead.source) < 0) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
   let u;
   try { u = new URL(crm.url); } catch (e) { return { status: 'failed', error: 'bad url', at }; }
   if (!devOk(crm.url) && (u.protocol !== 'https:' || blockedHost(u.hostname))) return { status: 'failed', error: 'url not allowed', at };
