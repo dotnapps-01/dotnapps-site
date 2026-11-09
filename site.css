@@ -2204,8 +2204,7 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 /* Hero headline (the rotating taglines) larger on phones; the small tag words under the buttons smaller.
    The headline grows with the screen up to the size at which "digital potential" still fits on one line. */
 @media (max-width: 620px) {
-  body .hero h1 { font-size: clamp(2.4rem, calc((100vw - 48px) / 7.2), 3.4rem); }
-  .hero-rot .slide { font-size: calc(1em * var(--fit, 1)); }
+  body .hero h1 { font-size: calc(clamp(2.4rem, calc((100vw - 48px) / 7.2), 3.4rem) * var(--fit, 1)); }
   .hero .hero-caps { font-size: .64rem; letter-spacing: .14em; }
 }
 
