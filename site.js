@@ -860,13 +860,17 @@ window.dnConfig = (function () {
     }
     return words(T[n][0], c) + (T[n][1] ? ' <span class="h1-end">' + words(T[n][1], c) + '</span>' : "");
   }
-  /* if the widest line is wider than the screen, shrink the headline just enough that no line wraps to a fourth */
+  /* each tagline is scaled to run the full width of the column (the shorter ones grow, up to a cap), and shrunk if a line would overflow */
   function fit() {
-    h1.style.removeProperty("--fit");
+    slides.forEach(function (s) { s.style.removeProperty("--fit"); });
     if (!mq.matches) return;
-    var cw = h1.clientWidth, widest = 0;
-    [].forEach.call(h1.querySelectorAll(".ln"), function (l) { if (l.scrollWidth > widest) widest = l.scrollWidth; });
-    if (cw > 0 && widest > cw) h1.style.setProperty("--fit", Math.max(0.5, (cw / widest) * 0.99).toFixed(3));
+    var cw = h1.clientWidth;
+    if (cw <= 0) return;
+    slides.forEach(function (s) {
+      var widest = 0;
+      [].forEach.call(s.querySelectorAll(".ln"), function (l) { var r = document.createRange(); r.selectNodeContents(l); var w = r.getBoundingClientRect().width; if (w > widest) widest = w; });
+      if (widest > 0) s.style.setProperty("--fit", Math.min(1.25, Math.max(0.5, (cw / widest) * 0.97)).toFixed(3));
+    });
   }
   function pick(c) {
     var l = c && c.taglines;
