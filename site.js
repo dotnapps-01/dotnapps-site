@@ -821,20 +821,53 @@ window.dnConfig = (function () {
     .then(function (c) { clearTimeout(to); if (c && typeof c === "object" && !Array.isArray(c) && Object.keys(c).length) { try { apply(c); } catch (e) { if (window.console) console.warn("dnConfig apply failed:", e && e.message); } return c; } return null; });
 })();
 
-/* hero taglines: a slideshow — the letters of one sentence flip over one by one, then the next sentence's letters flip in. Taglines come from the admin when set. */
+/* hero taglines: a slideshow — the letters of one sentence flip over one by one, then the next sentence's letters flip in.
+   Taglines come from the admin when set. On phones every tagline is set on exactly three lines. */
 (function () {
   var h1 = document.querySelector(".hero-rot");
   if (!h1) return;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var DEFAULT = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
   var hero = document.querySelector(".hero"), T = DEFAULT, slides = [], cur = 0, held = false, timer = 0, sig = "";
+  var mq = window.matchMedia ? window.matchMedia("(max-width: 620px)") : { matches: false };
   function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
-  function words(t, n) {
-    return t.split(" ").filter(Boolean).map(function (w) {
-      return '<span class="w">' + w.split("").map(function (ch) { return '<span class="c" aria-hidden="true" style="--i:' + (n.v++) + '">' + esc(ch) + '</span>'; }).join("") + '</span>';
-    }).join(" ");
+  function word(w, n, grey) {
+    return '<span class="w' + (grey ? " g" : "") + '">' + w.split("").map(function (ch) { return '<span class="c" aria-hidden="true" style="--i:' + (n.v++) + '">' + esc(ch) + '</span>'; }).join("") + '</span>';
   }
-  function build(n) { var c = { v: 0 }; return words(T[n][0], c) + (T[n][1] ? ' <span class="h1-end">' + words(T[n][1], c) + '</span>' : ""); }
+  function words(t, n) { return t.split(" ").filter(Boolean).map(function (w) { return word(w, n, false); }).join(" "); }
+  /* split the words into exactly three lines: even widths, grey part starting on its own line where it can, no stray one-word scraps */
+  function threeLines(a, b) {
+    var ws = a.split(" ").filter(Boolean).map(function (t) { return { t: t, g: false }; })
+      .concat(b.split(" ").filter(Boolean).map(function (t) { return { t: t, g: true }; }));
+    if (ws.length < 3) return null;
+    var best = null;
+    for (var i = 1; i < ws.length - 1; i++) for (var j = i + 1; j < ws.length; j++) {
+      var g = [ws.slice(0, i), ws.slice(i, j), ws.slice(j)];
+      var len = g.map(function (l) { return l.map(function (w) { return w.t; }).join(" ").length; });
+      var mixed = g.filter(function (l) { return l.some(function (w) { return w.g; }) && l.some(function (w) { return !w.g; }); }).length;
+      var scraps = len.filter(function (x) { return x <= 4; }).length;
+      var mx = Math.max.apply(null, len), mn = Math.min.apply(null, len);
+      var score = mx + (mx - mn) * 0.25 + mixed * 6 + scraps * 4;
+      if (!best || score < best.score) best = { score: score, g: g };
+    }
+    return best.g;
+  }
+  function build(n) {
+    var c = { v: 0 };
+    if (mq.matches) {
+      var g = threeLines(T[n][0], T[n][1]);
+      if (g) return g.map(function (line) { return '<span class="ln">' + line.map(function (w) { return word(w.t, c, w.g); }).join(" ") + '</span>'; }).join("");
+    }
+    return words(T[n][0], c) + (T[n][1] ? ' <span class="h1-end">' + words(T[n][1], c) + '</span>' : "");
+  }
+  /* if the widest line is wider than the screen, shrink the headline just enough that no line wraps to a fourth */
+  function fit() {
+    h1.style.removeProperty("--fit");
+    if (!mq.matches) return;
+    var cw = h1.clientWidth, widest = 0;
+    [].forEach.call(h1.querySelectorAll(".ln"), function (l) { if (l.scrollWidth > widest) widest = l.scrollWidth; });
+    if (cw > 0 && widest > cw) h1.style.setProperty("--fit", Math.max(0.5, (cw / widest) * 0.99).toFixed(3));
+  }
   function pick(c) {
     var l = c && c.taglines;
     if (!l || !l.length) return DEFAULT;
@@ -842,7 +875,7 @@ window.dnConfig = (function () {
     return on.length ? on : DEFAULT;
   }
   function start(list) {
-    var s2 = JSON.stringify(list); if (s2 === sig) return; sig = s2;
+    var s2 = JSON.stringify(list) + (mq.matches ? "|phone" : "|wide"); if (s2 === sig) return; sig = s2;
     T = list; slides = []; cur = 0; clearInterval(timer); h1.innerHTML = "";
     for (var i = 0; i < T.length; i++) {
       var s = document.createElement("span");
@@ -851,6 +884,7 @@ window.dnConfig = (function () {
       if (i) s.setAttribute("aria-hidden", "true");
       s.innerHTML = build(i); h1.appendChild(s); slides.push(s);
     }
+    fit();
     if (T.length > 1) timer = setInterval(next, 5000);
   }
   function next() {
@@ -863,6 +897,9 @@ window.dnConfig = (function () {
   }
   h1.addEventListener("mouseenter", function () { held = true; });
   h1.addEventListener("mouseleave", function () { held = false; });
+  var rz = 0;
+  window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(function () { start(T); fit(); }, 160); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   /* give the settings a moment to arrive so the first sentence is the right one; if they are slow, start with the defaults and swap quietly */
   var started = false;
   function go(c) { start(pick(c)); started = true; }
