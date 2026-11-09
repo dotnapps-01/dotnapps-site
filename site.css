@@ -2201,11 +2201,11 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 /* Hero intro line: a little smaller on phones */
 @media (max-width: 620px) { .hero .hero-inner > p { font-size: .92rem; line-height: 1.55; } }
 
-/* Hero headline (the rotating taglines) and the small tag words: larger on phones.
+/* Hero headline (the rotating taglines) larger on phones; the small tag words under the buttons smaller.
    The headline grows with the screen up to the size at which "digital potential" still fits on one line. */
 @media (max-width: 620px) {
   body .hero h1 { font-size: clamp(2.4rem, calc((100vw - 48px) / 7.2), 3.4rem); }
-  .hero .hero-caps { font-size: .76rem; letter-spacing: .13em; }
+  .hero .hero-caps { font-size: .64rem; letter-spacing: .14em; }
 }
 
 /* Phones: the logo gets the same outlined badge as desktop (a circle that opens into a pill with the name) */
