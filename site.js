@@ -231,6 +231,8 @@
       nav.querySelectorAll(".nav-links a").forEach(function (a) {
         a.addEventListener("click", closeMenu);
       });
+      /* tapping the dimmed page beside the drawer closes it */
+      nav.addEventListener("click", function (e) { if (e.target === nav && nav.classList.contains("open")) closeMenu(); });
       var menuClose = nav.querySelector(".menu-close");
       if (menuClose) menuClose.addEventListener("click", function (e) {
         e.stopPropagation();
