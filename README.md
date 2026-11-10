@@ -27,7 +27,10 @@ human handoff ("Talk to a human").
 
 - `chat.js` / `chat.css`: the widget (follows the light/dark theme). The bot is
   **BLOOP**; its face is drawn in `chat.js` (`face()`) from the same shapes as
-  `bloop.svg`, with idle (blinking), typing and happy expressions.
+  `bloop.svg`. It has 15 expressions (idle, happy, excited, wink, love, cool,
+  thinking, typing, help, success, error, alert, online, processing, offline) and
+  reacts to the chat: typing while it waits, thinking after 4s, love for thanks,
+  error/alert when something fails, asleep when the visitor's connection drops.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
   `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
   whose key isn't set.

@@ -85,19 +85,76 @@
     if (parent) parent.appendChild(n);
     return n;
   }
+  /*
+   * Expressions (see the BLOOP sheet): idle, typing, happy, excited, wink, love,
+   * cool, thinking, help, success, error, alert, offline, processing, online.
+   * Each is a <g class="g g-NAME">; CSS shows the one(s) matching data-state.
+   * Several states (thinking, help, success, error, alert, online) reuse the
+   * idle eyes ("g-eyes") and add a badge or dot on top.
+   */
+  var MOODS = ["idle", "typing", "happy", "excited", "wink", "love", "cool", "thinking", "help", "success", "error", "alert", "offline", "processing", "online"];
   function face(cls) {
     var s = sv("svg", { "class": "dn-face " + (cls || ""), viewBox: "0 0 100 100", "aria-hidden": "true", focusable: "false", "data-state": "idle" });
     sv("path", { "class": "dn-fb", d: BODY }, s);
-    var idle = sv("g", { "class": "s-idle" }, s);
-    sv("rect", { "class": "dn-fe", x: 30, y: 47, width: 7, height: 25, rx: 3.5 }, idle);
-    sv("rect", { "class": "dn-fe", x: 63, y: 47, width: 7, height: 25, rx: 3.5 }, idle);
-    var typ = sv("g", { "class": "s-typing" }, s);
-    sv("rect", { "class": "dn-fe", x: 30, y: 45, width: 7, height: 16, rx: 3.5 }, typ);
-    sv("rect", { "class": "dn-fe", x: 63, y: 45, width: 7, height: 16, rx: 3.5 }, typ);
+    function grp(name) { return sv("g", { "class": "g g-" + name }, s); }
+    function pill(parent, x, y, h) { return sv("rect", { "class": "dn-fe", x: x, y: y, width: 7, height: h, rx: 3.5 }, parent); }
+    function line(parent, d, cls) { return sv("path", { "class": cls || "dn-arc", d: d }, parent); }
+
+    var eyes = grp("eyes");
+    pill(eyes, 30, 47, 25); pill(eyes, 63, 47, 25);
+
+    var typ = grp("typing");
+    pill(typ, 30, 45, 16); pill(typ, 63, 45, 16);
     [41, 50, 59].forEach(function (cx, i) { sv("circle", { "class": "dn-fe dn-td dn-td" + i, cx: cx, cy: 74, r: 2.6 }, typ); });
-    var hap = sv("g", { "class": "s-happy" }, s);
-    sv("path", { "class": "dn-arc", d: "M29 64Q33.5 54 38 64" }, hap);
-    sv("path", { "class": "dn-arc", d: "M62 64Q66.5 54 71 64" }, hap);
+
+    var hap = grp("happy");
+    line(hap, "M27 67Q33.5 51 40 67"); line(hap, "M60 67Q66.5 51 73 67");
+
+    var exc = grp("excited");
+    line(exc, "M27 52L39 60L27 68"); line(exc, "M73 52L61 60L73 68");
+    line(exc, "M79 4L83 -5", "dn-spark"); line(exc, "M88 8L96 2", "dn-spark"); line(exc, "M91 17L99 16", "dn-spark");
+
+    var wnk = grp("wink");
+    pill(wnk, 30, 47, 25);
+    sv("rect", { "class": "dn-fe", x: 60, y: 58, width: 14, height: 6, rx: 3 }, wnk);
+
+    var lov = grp("love");
+    var heart = "M0-2C-2-8-10-6-10 0C-10 5-4 8 0 12C4 8 10 5 10 0C10-6 2-8 0-2Z";
+    sv("path", { "class": "dn-fe", d: heart, transform: "translate(34 57) scale(.9)" }, lov);
+    sv("path", { "class": "dn-fe", d: heart, transform: "translate(66 57) scale(.9)" }, lov);
+
+    var col = grp("cool");
+    sv("path", { "class": "dn-fe", d: "M20 46H47V57Q47 67 38 67H29Q20 67 20 57Z" }, col);
+    sv("path", { "class": "dn-fe", d: "M53 46H80V57Q80 67 71 67H62Q53 67 53 57Z" }, col);
+    sv("rect", { "class": "dn-fe", x: 46, y: 46, width: 8, height: 5 }, col);
+
+    // speech-bubble badges (top right): thinking, help, success, error, alert
+    function badge(name, draw) {
+      var g = grp(name);
+      sv("path", { "class": "dn-bt", d: "M73 20L66 33L83 26Z" }, g);
+      sv("circle", { "class": "dn-bt", cx: 85, cy: 12, r: 15 }, g);
+      draw(g);
+    }
+    badge("thinking", function (g) { [78, 85, 92].forEach(function (cx) { sv("circle", { "class": "dn-bg-f", cx: cx, cy: 12, r: 2.3 }, g); }); });
+    badge("help", function (g) { line(g, "M80 7Q80 2 85 2Q90 2 90 7Q90 10.5 85 12.5V15", "dn-bg"); sv("circle", { "class": "dn-bg-f", cx: 85, cy: 21, r: 2 }, g); });
+    badge("success", function (g) { line(g, "M78 12.5L83 17.5L92 6.5", "dn-bg"); });
+    badge("error", function (g) { line(g, "M79 6L91 18M91 6L79 18", "dn-bg"); });
+    badge("alert", function (g) { line(g, "M85 3.5V13.5", "dn-bg"); sv("circle", { "class": "dn-bg-f", cx: 85, cy: 20, r: 2.3 }, g); });
+
+    var off = grp("offline");
+    sv("rect", { "class": "dn-fe", x: 27, y: 59, width: 12, height: 6, rx: 3 }, off);
+    sv("rect", { "class": "dn-fe", x: 61, y: 59, width: 12, height: 6, rx: 3 }, off);
+    line(off, "M72 3H79L72 11H79", "dn-spark"); line(off, "M84 -9H95L84 5H95", "dn-spark");
+
+    var prc = grp("processing");
+    var ring = sv("g", { "class": "dn-spin" }, prc);
+    for (var i = 0; i < 8; i++) {
+      var a = i * Math.PI / 4;
+      sv("circle", { "class": "dn-fe", cx: (50 + 12 * Math.cos(a)).toFixed(1), cy: (62 + 12 * Math.sin(a)).toFixed(1), r: i % 2 ? 1.9 : 2.6 }, ring);
+    }
+
+    var onl = grp("online");
+    sv("circle", { "class": "dn-fe", cx: 80, cy: 79, r: 4.5 }, onl);
     return s;
   }
   // The Dotnapps mark (favicon.svg), shown while a human is on the chat.
@@ -106,12 +163,21 @@
     sv("path", { d: "M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z" }, s);
     return s;
   }
-  var headFace, moodTimer = 0;
+  var headFace, launchFace, moodTimer = 0;
+  // Show an expression on the header face; with `ms` it returns to idle afterwards.
   function setMood(state, ms) {
-    if (!headFace) return;
+    if (!headFace || MOODS.indexOf(state) < 0) return;
     headFace.setAttribute("data-state", state);
     clearTimeout(moodTimer);
-    if (ms) moodTimer = setTimeout(function () { headFace.setAttribute("data-state", "idle"); }, ms);
+    if (ms) moodTimer = setTimeout(function () { if (headFace) headFace.setAttribute("data-state", "idle"); }, ms);
+  }
+  // Small easter eggs: how BLOOP reacts to what the visitor said / what it replied.
+  function moodFor(said, reply) {
+    if (/\b(thanks?|thank you|thx|appreciate)/i.test(said)) return "love";
+    if (/\b(cool|awesome|great|nice|amazing|perfect)\b/i.test(said)) return "cool";
+    if (/^\s*(hi|hello|hey|hola|namaste)\b/i.test(said)) return "wink";
+    if (/not sure|don.t know|couldn.t find|not certain/i.test(reply)) return "help";
+    return "happy";
   }
 
   var launch = el("button", "dn-launch");
@@ -120,7 +186,8 @@
   launch.setAttribute("aria-label", "Chat with BLOOP, the Dotnapps assistant");
   launch.setAttribute("aria-expanded", "false");
   launch.setAttribute("aria-controls", "dn-chat-panel");
-  launch.appendChild(face("dn-lface"));
+  launchFace = face("dn-lface");
+  launch.appendChild(launchFace);
   launch.appendChild(el("span", "dn-dot"));
 
   var panel = el("section", "dn-panel");
@@ -280,6 +347,7 @@
     title.firstChild.nodeValue = on ? "Dotnapps team" : "BLOOP";
     avatar.textContent = "";
     if (on) {
+      headFace = null;
       avatar.appendChild(teamMark());
     } else {
       headFace = face("dn-hface");
@@ -302,11 +370,14 @@
   }
 
   // ---- behaviour ----------------------------------------------------------
+  var greeted = false;
   function setOpen(open) {
     panel.hidden = !open;
     launch.setAttribute("aria-expanded", open ? "true" : "false");
     if (open) {
       launch.removeAttribute("data-unread");
+      launchFace.setAttribute("data-state", "idle");
+      if (!msgs.length && !greeted) { greeted = true; setMood("excited", 1800); }
       log.scrollTop = log.scrollHeight;
       input.focus({ preventScroll: true });
       if (live) poll();
@@ -336,6 +407,8 @@
     setBusy(true);
     var wait = typing();
     setMood("typing");
+    var thinkT = setTimeout(function () { setMood("thinking"); }, 4000);
+    var slowT = setTimeout(function () { setMood("processing"); }, 9000);
 
     var ctl = new AbortController();
     var timer = setTimeout(function () { ctl.abort(); }, 30000);
@@ -346,25 +419,27 @@
       signal: ctl.signal
     })
       .then(function (r) {
-        return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; });
+        return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d, status: r.status }; });
       })
       .then(function (x) {
+        clearTimeout(thinkT); clearTimeout(slowT);
         wait.remove();
         if (x.ok && x.d && x.d.reply) {
           msgs.push({ role: "assistant", content: x.d.reply });
           persist();
           bubble("assistant", x.d.reply);
-          setMood("happy", 1600);
+          setMood(moodFor(text, x.d.reply), 2000);
         } else {
-          setMood("idle");
+          setMood(x.status === 429 ? "alert" : "error", 3500);
           var m = (x.d && x.d.error) || "Sorry, something went wrong.";
           var b = bubble("assistant", m + " Tap “Talk to a human” below to reach our team.", "dn-err");
           emailFallback(b);
         }
       })
       .catch(function () {
+        clearTimeout(thinkT); clearTimeout(slowT);
         wait.remove();
-        setMood("idle");
+        setMood("error", 3500);
         var b = bubble("assistant", "I couldn’t reach the assistant. Please try again, or tap “Talk to a human” below.", "dn-err");
         emailFallback(b);
       })
@@ -391,12 +466,13 @@
     bubble("assistant", text, null, "sys");
   }
 
-  function endLive(text) {
+  function endLive(text, mood) {
     live = null;
     clearTimeout(pollTimer);
     if (text) addSys(text);
     persist();
     setLiveUi();
+    if (mood) setMood(mood, 2500); // BLOOP is back: wave the result
   }
 
   // Inline form: collects an email so the team can follow up if the visitor leaves.
@@ -445,6 +521,7 @@
       if (!mailI.checkValidity()) { errP.textContent = "Please enter a valid email address."; mailI.focus(); return; }
       go.disabled = true;
       go.textContent = "Connecting…";
+      setMood("processing");
       postLive({
         action: "start",
         name: nameI.value,
@@ -465,12 +542,14 @@
         } else {
           go.disabled = false;
           go.textContent = "Start live chat";
+          setMood("error", 3500);
           errP.textContent = d.error || "Couldn’t connect you right now.";
           if (!errP.querySelector("a")) emailFallback(errP);
         }
       }).catch(function () {
         go.disabled = false;
         go.textContent = "Start live chat";
+        setMood("error", 3500);
         errP.textContent = "Couldn’t connect you right now.";
         if (!errP.querySelector("a")) emailFallback(errP);
       });
@@ -490,7 +569,7 @@
       msgs.pop();
       persist();
       if (d.closed || d.gone) {
-        endLive(d.closed ? "This live chat has ended. You’re back with the AI assistant." : "That live chat has expired. You’re back with the AI assistant.");
+        endLive(d.closed ? "This live chat has ended. You’re back with the AI assistant." : "That live chat has expired. You’re back with the AI assistant.", d.closed ? "success" : "alert");
       } else {
         var e = bubble("assistant", (d.error || "Your message wasn’t sent.") + " Please try again.", "dn-err");
         input.value = text;
@@ -526,7 +605,7 @@
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { d._status = r.status; return d; }); })
       .then(function (d) {
         if (!live || live.id !== id) return;
-        if (d._status === 404) return endLive("That live chat has expired. You’re back with the AI assistant.");
+        if (d._status === 404) return endLive("That live chat has expired. You’re back with the AI assistant.", "alert");
         if (!d.messages) return;
         var gotAgent = false;
         d.messages.forEach(function (m) {
@@ -537,8 +616,8 @@
           }
         });
         live.next = d.next;
-        if (gotAgent && panel.hidden) launch.setAttribute("data-unread", "1");
-        if (d.status === "closed") return endLive("Our team ended this chat. You’re back with the AI assistant.");
+        if (gotAgent && panel.hidden) { launch.setAttribute("data-unread", "1"); launchFace.setAttribute("data-state", "excited"); }
+        if (d.status === "closed") return endLive("Our team ended this chat. You’re back with the AI assistant.", "success");
         persist();
       })
       .catch(function () {})
@@ -547,6 +626,9 @@
   document.addEventListener("visibilitychange", function () {
     if (!document.hidden && live) poll();
   });
+  // BLOOP naps when the visitor's connection drops, and waves when it's back.
+  window.addEventListener("offline", function () { clearTimeout(moodTimer); if (headFace) headFace.setAttribute("data-state", "offline"); });
+  window.addEventListener("online", function () { setMood("online", 1800); });
 
   human.addEventListener("click", function () {
     if (!live) {
@@ -557,7 +639,7 @@
     if (!window.confirm("End the live chat with our team?")) return;
     var id = live.id;
     postLive({ action: "end", id: id }).catch(function () {});
-    endLive("You ended the live chat. You’re back with the AI assistant.");
+    endLive("You ended the live chat. You’re back with the AI assistant.", "success");
   });
 
   function grow() {

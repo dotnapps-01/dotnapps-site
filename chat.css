@@ -162,9 +162,38 @@
 .dn-face .dn-fb { fill: var(--face-fill); stroke: var(--face-fill); stroke-width: 5; stroke-linejoin: round; }
 .dn-face .dn-fe { fill: var(--face-eye); }
 .dn-face .dn-arc { fill: none; stroke: var(--face-eye); stroke-width: 5; stroke-linecap: round; }
-.dn-face .s-idle, .dn-face .s-typing, .dn-face .s-happy { display: none; }
-.dn-face[data-state="idle"] .s-idle, .dn-face[data-state="typing"] .s-typing, .dn-face[data-state="happy"] .s-happy { display: inline; }
-.dn-face .s-idle { transform-box: fill-box; transform-origin: center; animation: dn-blink 5.5s infinite; }
+.dn-face .g { display: none; }
+.dn-face[data-state="idle"] .g-eyes,
+.dn-face[data-state="thinking"] .g-eyes,
+.dn-face[data-state="help"] .g-eyes,
+.dn-face[data-state="success"] .g-eyes,
+.dn-face[data-state="error"] .g-eyes,
+.dn-face[data-state="alert"] .g-eyes,
+.dn-face[data-state="online"] .g-eyes { display: inline; }
+.dn-face[data-state="typing"] .g-typing,
+.dn-face[data-state="happy"] .g-happy,
+.dn-face[data-state="excited"] .g-excited,
+.dn-face[data-state="wink"] .g-wink,
+.dn-face[data-state="love"] .g-love,
+.dn-face[data-state="cool"] .g-cool,
+.dn-face[data-state="thinking"] .g-thinking,
+.dn-face[data-state="help"] .g-help,
+.dn-face[data-state="success"] .g-success,
+.dn-face[data-state="error"] .g-error,
+.dn-face[data-state="alert"] .g-alert,
+.dn-face[data-state="offline"] .g-offline,
+.dn-face[data-state="processing"] .g-processing,
+.dn-face[data-state="online"] .g-online { display: inline; }
+.dn-face .g-eyes { transform-box: fill-box; transform-origin: center; animation: dn-blink 5.5s infinite; }
+/* sparks / zzz sit outside the body, so they take the body colour; speech-bubble badges are inverted with an outline */
+.dn-face .dn-spark { fill: none; stroke: var(--face-fill); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.dn-face .dn-bt { fill: var(--face-eye); stroke: var(--face-fill); stroke-width: 3.5; stroke-linejoin: round; }
+.dn-face .dn-bg { fill: none; stroke: var(--face-fill); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.dn-face .dn-bg-f { fill: var(--face-fill); }
+.dn-face .dn-spin { transform-box: fill-box; transform-origin: center; animation: dn-spin 1.1s linear infinite; }
+@keyframes dn-spin { to { transform: rotate(360deg); } }
+.dn-face[data-state="excited"] .g-excited .dn-spark { animation: dn-spark .7s ease-in-out infinite alternate; }
+@keyframes dn-spark { from { opacity: .35; } to { opacity: 1; } }
 @keyframes dn-blink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.1); } }
 .dn-face .dn-td { animation: dn-td 1s infinite ease-in-out; }
 .dn-face .dn-td1 { animation-delay: .17s; }
@@ -194,6 +223,6 @@
 .dn-row .dn-msg { max-width: calc(100% - 32px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .dn-face .s-idle, .dn-face .dn-td { animation: none; }
+  .dn-face .g-eyes, .dn-face .dn-td, .dn-face .dn-spin, .dn-face .g-excited .dn-spark { animation: none !important; }
   .dn-face .dn-td { opacity: .7; }
 }
