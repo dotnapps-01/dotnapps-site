@@ -20,6 +20,27 @@ dependencies — open it in a browser or serve the folder statically.
   `prefers-reduced-motion`
 - Responsive from ~320px up
 
+## Chat assistant
+
+A floating chat widget on every page, backed by free LLM tiers.
+
+- `chat.js` / `chat.css`: the widget (follows the light/dark theme). Set
+  `WHATSAPP` at the top of `chat.js` to show a WhatsApp handoff link.
+- `api/chat.js`: Vercel serverless function (`POST /api/chat`). Tries Groq
+  (`GROQ_MODEL`, then `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`),
+  and skips any provider whose key isn't set.
+- `api/_knowledge.js`: the system prompt and company facts. **Edit this to
+  change what the bot says** (add pricing, hours, new services).
+
+Setup: create free keys at console.groq.com and aistudio.google.com, then in
+Vercel -> Settings -> Environment Variables add `GROQ_API_KEY` and
+(optionally) `GEMINI_API_KEY`, and redeploy. Keys never reach the browser.
+Optional overrides: `GROQ_MODEL`, `GROQ_FALLBACK_MODEL`, `GEMINI_MODEL`.
+
+Test locally with `npx vercel dev` (the plain `http.server` preview has no
+`/api`; the widget then shows its "contact us" fallback). Per-IP rate limits
+are in-memory, so best-effort only.
+
 ## Local preview
 
 ```bash
