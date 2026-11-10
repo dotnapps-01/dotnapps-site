@@ -25,7 +25,9 @@ dependencies — open it in a browser or serve the folder statically.
 A floating chat widget on every page: an AI assistant first, with a live
 human handoff ("Talk to a human").
 
-- `chat.js` / `chat.css`: the widget (follows the light/dark theme).
+- `chat.js` / `chat.css`: the widget (follows the light/dark theme). The bot is
+  **BLOOP**; its face is drawn in `chat.js` (`face()`) from the same shapes as
+  `bloop.svg`, with idle (blinking), typing and happy expressions.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
   `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
   whose key isn't set.

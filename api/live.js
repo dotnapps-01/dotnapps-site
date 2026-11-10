@@ -88,7 +88,7 @@ module.exports = async function handler(req, res) {
         ["EXISTS", "dn:agent:seen"]
       ]);
 
-      const lines = ctx.map((m) => (m.f === "visitor" ? "Visitor: " : "AI: ") + m.t).join("\n");
+      const lines = ctx.map((m) => (m.f === "visitor" ? "Visitor: " : "BLOOP (AI): ") + m.t).join("\n");
       await L.notifyTeam({
         subject: "New live chat on dotnapps.com" + (name ? " - " + name : ""),
         text:

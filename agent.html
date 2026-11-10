@@ -166,7 +166,7 @@
   // ---- thread ----
   function add(m) {
     var b = el("div", "m " + m.f);
-    var label = { visitor: "Visitor", bot: "AI assistant", agent: "You" }[m.f];
+    var label = { visitor: "Visitor", bot: "BLOOP (AI)", agent: "You" }[m.f];
     if (label) b.appendChild(el("small", null, label + " · " + new Date(m.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })));
     b.appendChild(document.createTextNode(m.t));
     $("log").appendChild(b);

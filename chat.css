@@ -14,16 +14,15 @@
   position: fixed; z-index: 40;
   right: max(16px, env(safe-area-inset-right));
   bottom: max(16px, env(safe-area-inset-bottom));
-  width: 56px; height: 56px; padding: 0;
+  width: 60px; height: 60px; padding: 0;
   display: grid; place-items: center;
-  border: 0; border-radius: 50%; cursor: pointer;
+  border: 0; border-radius: 20px; cursor: pointer; /* squircle, like BLOOP's app icon */
   background: var(--ink); color: var(--frame);
   box-shadow: var(--shadow-card);
   transition: transform .18s ease, opacity .18s ease;
 }
 .dn-launch:hover { transform: scale(1.06); }
 .dn-launch:active { transform: scale(.97); }
-.dn-launch svg { width: 24px; height: 24px; display: block; }
 .dn-launch:focus-visible, .dn-panel button:focus-visible, .dn-panel textarea:focus-visible, .dn-panel a:focus-visible {
   outline: 2px solid var(--focus); outline-offset: 2px;
 }
@@ -156,4 +155,45 @@
 .dn-launch[data-unread]::after {
   content: ""; position: absolute; top: 2px; right: 2px; width: 14px; height: 14px;
   border-radius: 50%; background: #FF3B30; border: 2px solid var(--frame);
+}
+
+/* ---- BLOOP, the bot's face (bloop.svg) ---- */
+.dn-face { display: block; overflow: visible; flex: none; }
+.dn-face .dn-fb { fill: var(--face-fill); stroke: var(--face-fill); stroke-width: 5; stroke-linejoin: round; }
+.dn-face .dn-fe { fill: var(--face-eye); }
+.dn-face .dn-arc { fill: none; stroke: var(--face-eye); stroke-width: 5; stroke-linecap: round; }
+.dn-face .s-idle, .dn-face .s-typing, .dn-face .s-happy { display: none; }
+.dn-face[data-state="idle"] .s-idle, .dn-face[data-state="typing"] .s-typing, .dn-face[data-state="happy"] .s-happy { display: inline; }
+.dn-face .s-idle { transform-box: fill-box; transform-origin: center; animation: dn-blink 5.5s infinite; }
+@keyframes dn-blink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.1); } }
+.dn-face .dn-td { animation: dn-td 1s infinite ease-in-out; }
+.dn-face .dn-td1 { animation-delay: .17s; }
+.dn-face .dn-td2 { animation-delay: .34s; }
+@keyframes dn-td { 0%, 100% { opacity: .25; } 40% { opacity: 1; } }
+
+.dn-lface { width: 34px; height: 34px; --face-fill: var(--frame); --face-eye: var(--ink); }
+.dn-hface { width: 26px; height: 26px; --face-fill: var(--ink); --face-eye: var(--raise); }
+.dn-mini { width: 24px; height: 24px; --face-fill: var(--ink); --face-eye: var(--raise); }
+.dn-sp { flex: none; width: 24px; }
+
+.dn-dot { position: absolute; right: 5px; bottom: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--frame); } /* "online" */
+
+.dn-avatar {
+  position: relative; flex: none; width: 42px; height: 42px;
+  display: grid; place-items: center; border-radius: 14px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.dn-avatar::after {
+  content: ""; position: absolute; right: -2px; bottom: -2px; width: 11px; height: 11px;
+  border-radius: 50%; background: var(--ink); border: 2px solid var(--raise);
+}
+.dn-team { width: 24px; height: 24px; display: block; }
+.dn-team path { fill: var(--ink); }
+
+.dn-row { display: flex; align-items: flex-end; gap: 8px; align-self: flex-start; max-width: 94%; }
+.dn-row .dn-msg { max-width: calc(100% - 32px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .dn-face .s-idle, .dn-face .dn-td { animation: none; }
+  .dn-face .dn-td { opacity: .7; }
 }
