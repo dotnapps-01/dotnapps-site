@@ -22,24 +22,43 @@ dependencies — open it in a browser or serve the folder statically.
 
 ## Chat assistant
 
-A floating chat widget on every page, backed by free LLM tiers.
+A floating chat widget on every page: an AI assistant first, with a live
+human handoff ("Talk to a human").
 
-- `chat.js` / `chat.css`: the widget (follows the light/dark theme). Set
-  `WHATSAPP` at the top of `chat.js` to show a WhatsApp handoff link.
-- `api/chat.js`: Vercel serverless function (`POST /api/chat`). Tries Groq
-  (`GROQ_MODEL`, then `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`),
-  and skips any provider whose key isn't set.
-- `api/_knowledge.js`: the system prompt and company facts. **Edit this to
-  change what the bot says** (add pricing, hours, new services).
+- `chat.js` / `chat.css`: the widget (follows the light/dark theme).
+- `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
+  `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
+  whose key isn't set.
+- `api/_knowledge.js`: the AI's system prompt and company facts. **Edit this
+  to change what the bot says** (pricing, hours, new services).
+- `api/live.js`: visitor side of human chat. The visitor leaves an email, the
+  team is emailed, and replies appear in the same chat box (the widget polls).
+- `api/agent.js` + `agent.html`: the team's private inbox at **/agent**
+  (sign in with `AGENT_TOKEN`). Reply, end chats, see the AI transcript.
+  Opening the link in the notification email jumps to that conversation.
+- `api/_lib.js`: shared helpers (Upstash Redis over REST, Resend email, limits).
 
-Setup: create free keys at console.groq.com and aistudio.google.com, then in
-Vercel -> Settings -> Environment Variables add `GROQ_API_KEY` and
-(optionally) `GEMINI_API_KEY`, and redeploy. Keys never reach the browser.
-Optional overrides: `GROQ_MODEL`, `GROQ_FALLBACK_MODEL`, `GEMINI_MODEL`.
+All free tiers, no npm dependencies. Environment variables (Vercel ->
+Settings -> Environment Variables), then redeploy:
+
+| Variable | Purpose |
+|---|---|
+| `GROQ_API_KEY` / `GEMINI_API_KEY` | AI replies (set at least one). Keys: console.groq.com, aistudio.google.com |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Stores live chats. Free database at upstash.com, or Vercel Marketplace -> Upstash Redis (that sets `KV_REST_API_URL` / `KV_REST_API_TOKEN`, which also work) |
+| `AGENT_TOKEN` | Password for /agent. Use a long random string |
+| `RESEND_API_KEY` | Sends the "new chat" email (resend.com, free) |
+| `NOTIFY_EMAIL` | Where notifications go (default `hello@dotnapps.com`) |
+| `RESEND_FROM` | Sender, e.g. `Dotnapps Chat <chat@dotnapps.com>`. Needs a domain verified in Resend. Without it, Resend only delivers to your own Resend-account email |
+| `SITE_URL` | Base URL for links in emails (default `https://www.dotnapps.com`) |
+| `GROQ_MODEL`, `GROQ_FALLBACK_MODEL`, `GEMINI_MODEL` | Optional model overrides |
+
+Without Redis, "Talk to a human" shows an email fallback instead. Chats are
+deleted 3 days after the last message. Emails are capped at 20/hour and
+60/day, and one per chat per 3 minutes. Rate limits on the chat endpoints
+are in-memory, so best-effort only.
 
 Test locally with `npx vercel dev` (the plain `http.server` preview has no
-`/api`; the widget then shows its "contact us" fallback). Per-IP rate limits
-are in-memory, so best-effort only.
+`/api`).
 
 ## Local preview
 

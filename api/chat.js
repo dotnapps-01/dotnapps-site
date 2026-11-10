@@ -20,6 +20,7 @@
  */
 
 const { SYSTEM_PROMPT } = require("./_knowledge");
+const { clientIp, originAllowed, limiter } = require("./_lib");
 
 const MAX_HISTORY = 8; // messages sent to the model (keeps token use low)
 const MAX_CHARS = 500; // per user message
@@ -27,44 +28,8 @@ const MAX_OUT_TOKENS = 400;
 const ATTEMPT_TIMEOUT_MS = 8000;
 const DEADLINE_MS = 25000;
 
-// Per-IP limits. In-memory, so best-effort only: each serverless instance
-// keeps its own counters. Enough to stop casual abuse of a free quota.
-const PER_MINUTE = 10;
-const PER_DAY = 80;
-const hits = new Map(); // ip -> { min: number[], day: number[] }
-
-const ALLOWED_HOSTS = /^(www\.dotnapps\.com|dotnapps\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?|[a-z0-9-]+\.vercel\.app)$/i;
-
-function clientIp(req) {
-  const xf = req.headers["x-forwarded-for"];
-  if (xf) return String(xf).split(",")[0].trim();
-  return req.headers["x-real-ip"] || (req.socket && req.socket.remoteAddress) || "unknown";
-}
-
-function rateLimited(ip) {
-  const now = Date.now();
-  if (hits.size > 5000) hits.clear();
-  const h = hits.get(ip) || { min: [], day: [] };
-  h.min = h.min.filter((t) => now - t < 60 * 1000);
-  h.day = h.day.filter((t) => now - t < 24 * 60 * 60 * 1000);
-  const limited = h.min.length >= PER_MINUTE || h.day.length >= PER_DAY;
-  if (!limited) {
-    h.min.push(now);
-    h.day.push(now);
-  }
-  hits.set(ip, h);
-  return limited;
-}
-
-function originAllowed(req) {
-  const origin = req.headers.origin;
-  if (!origin) return false;
-  try {
-    return ALLOWED_HOSTS.test(new URL(origin).host);
-  } catch (e) {
-    return false;
-  }
-}
+// Per-IP limits (in-memory, best-effort: each serverless instance counts separately).
+const limited = limiter([[60 * 1000, 10], [24 * 60 * 60 * 1000, 80]]);
 
 // Validate and trim the client-supplied conversation.
 function cleanMessages(raw) {
@@ -157,7 +122,7 @@ module.exports = async function handler(req, res) {
     return send(405, { error: "Method not allowed." });
   }
   if (!originAllowed(req)) return send(403, { error: "Not allowed." });
-  if (rateLimited(clientIp(req))) {
+  if (limited(clientIp(req))) {
     res.setHeader("Retry-After", "60");
     return send(429, { error: "You're sending messages quickly. Please wait a minute and try again." });
   }

@@ -3,7 +3,15 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/chat.js": { "maxDuration": 30 }
+    "api/chat.js": {
+      "maxDuration": 30
+    },
+    "api/live.js": {
+      "maxDuration": 15
+    },
+    "api/agent.js": {
+      "maxDuration": 15
+    }
   },
   "headers": [
     {
@@ -51,6 +59,19 @@
         {
           "key": "Cache-Control",
           "value": "no-store, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/agent",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }

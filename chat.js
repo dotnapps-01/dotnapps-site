@@ -1,15 +1,22 @@
-/* Dotnapps chat widget. Talks to /api/chat (see api/chat.js). */
+/* Dotnapps chat widget.
+   - AI assistant:   POST /api/chat   (api/chat.js)
+   - Live human chat: /api/live       (api/live.js) — the team replies from /agent */
 (function () {
   "use strict";
 
   // ---- config -------------------------------------------------------------
-  var EMAIL = "hello@dotnapps.com";
-  var WHATSAPP = ""; // digits only with country code, e.g. "919876543210". Empty hides the link.
+  var EMAIL = "hello@dotnapps.com"; // shown only if live chat is unavailable
   var ENDPOINT = "/api/chat";
+  var LIVE = "/api/live";
   var STORE = "dotnapps-chat-v1";
+  var LIVE_STORE = "dotnapps-chat-live-v1";
   var MAX_CHARS = 500;
   var SEND_HISTORY = 8;
   var GREETING = "Hi! I'm the Dotnapps assistant. Ask me about our services, Business OS, or how we work.";
+  var SUB_AI = "AI chat · usually replies in seconds";
+  var SUB_LIVE = "Live chat with our team";
+  var NOTE_AI = "AI can make mistakes. Don’t share passwords or sensitive data.";
+  var NOTE_LIVE = "You’re talking to our team. Messages are emailed to us.";
   var CHIPS = [
     ["Our services", "What services does Dotnapps offer?"],
     ["Business OS", "What is Business OS?"],
@@ -19,18 +26,31 @@
   if (!window.fetch || document.getElementById("dn-chat-launch")) return;
 
   // ---- state --------------------------------------------------------------
-  var msgs = []; // {role, content} — the greeting is display-only
+  // msgs: {role:"user"|"assistant", content, who?:"agent"|"sys"}. Only entries
+  // without `who` are AI-chat turns. The greeting is display-only.
+  var msgs = [];
+  var live = null; // {id, next} while a human chat is active
   try {
     var saved = JSON.parse(sessionStorage.getItem(STORE) || "[]");
     if (Array.isArray(saved)) {
       msgs = saved.filter(function (m) {
         return m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string";
-      }).slice(-20);
+      }).slice(-40);
     }
+    var sl = JSON.parse(sessionStorage.getItem(LIVE_STORE) || "null");
+    if (sl && /^[a-f0-9]{32}$/.test(sl.id) && typeof sl.next === "number") live = { id: sl.id, next: sl.next };
   } catch (e) {}
-  function persist() { try { sessionStorage.setItem(STORE, JSON.stringify(msgs.slice(-20))); } catch (e) {} }
+  function persist() {
+    try {
+      sessionStorage.setItem(STORE, JSON.stringify(msgs.slice(-40)));
+      if (live) sessionStorage.setItem(LIVE_STORE, JSON.stringify(live));
+      else sessionStorage.removeItem(LIVE_STORE);
+    } catch (e) {}
+  }
+  function aiTurns() { return msgs.filter(function (m) { return !m.who; }); }
 
   var busy = false;
+  var pollTimer = 0;
 
   // ---- DOM ----------------------------------------------------------------
   function el(tag, cls, text) {
@@ -75,7 +95,8 @@
   var title = el("h2", "dn-title");
   title.id = "dn-chat-title";
   title.appendChild(document.createTextNode("Dotnapps assistant"));
-  title.appendChild(el("span", "dn-sub", "AI chat · usually replies in seconds"));
+  var sub = el("span", "dn-sub", SUB_AI);
+  title.appendChild(sub);
   var close = el("button", "dn-close");
   close.type = "button";
   close.setAttribute("aria-label", "Close chat");
@@ -109,17 +130,11 @@
   form.appendChild(send);
 
   var foot = el("div", "dn-foot");
-  var note = el("span", null, "AI can make mistakes. Don’t share passwords or sensitive data.");
-  var human = el("a", null, "Talk to a human");
-  human.href = "mailto:" + EMAIL;
+  var note = el("span", null, NOTE_AI);
+  var human = el("button", "dn-link", "Talk to a human");
+  human.type = "button";
   foot.appendChild(note);
   foot.appendChild(human);
-  if (WHATSAPP) {
-    var wa = el("a", null, "WhatsApp");
-    wa.target = "_blank";
-    wa.rel = "noopener";
-    foot.appendChild(wa);
-  }
 
   panel.appendChild(head);
   panel.appendChild(log);
@@ -146,8 +161,10 @@
     if (last < line.length) p.appendChild(document.createTextNode(line.slice(last)));
   }
 
-  function bubble(role, text, extra) {
-    var b = el("div", "dn-msg " + (role === "user" ? "dn-me" : "dn-bot") + (extra ? " " + extra : ""));
+  function bubble(role, text, extra, who) {
+    var cls = who === "sys" ? "dn-msg dn-note" : "dn-msg " + (role === "user" ? "dn-me" : who === "agent" ? "dn-bot dn-agent" : "dn-bot");
+    var b = el("div", cls + (extra ? " " + extra : ""));
+    if (who === "agent") b.appendChild(el("span", "dn-who", "Dotnapps team"));
     String(text).split(/\n+/).forEach(function (line) {
       if (!line.trim()) return;
       var p = el("p");
@@ -175,8 +192,8 @@
 
   function renderChips() {
     chips.textContent = "";
-    chips.hidden = msgs.length > 0;
-    if (msgs.length) return;
+    chips.hidden = msgs.length > 0 || !!live;
+    if (chips.hidden) return;
     CHIPS.forEach(function (c) {
       var b = el("button", "dn-chip", c[0]);
       b.type = "button";
@@ -185,22 +202,39 @@
     });
   }
 
-  // "Talk to a human" carries the conversation along in the email body.
-  function updateHandoff() {
-    var t = msgs.map(function (m) { return (m.role === "user" ? "Me: " : "Assistant: ") + m.content; }).join("\n\n");
+  // Fallback when live chat can't be reached: email with the chat attached.
+  function mailtoHref() {
+    var t = aiTurns().map(function (m) { return (m.role === "user" ? "Me: " : "Assistant: ") + m.content; }).join("\n\n");
     var body = "Hi Dotnapps team,\n\nI'd like to talk to someone.\n" + (t ? "\n--- chat so far ---\n" + t.slice(-1200) : "");
-    human.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent("Enquiry from dotnapps.com chat") + "&body=" + encodeURIComponent(body);
-    if (WHATSAPP) {
-      wa.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent("Hi Dotnapps, I'd like to talk to someone." + (t ? "\n\n" + t.slice(-600) : ""));
-    }
+    return "mailto:" + EMAIL + "?subject=" + encodeURIComponent("Enquiry from dotnapps.com chat") + "&body=" + encodeURIComponent(body);
+  }
+  function emailFallback(parent) {
+    var p = el("p");
+    p.appendChild(document.createTextNode("You can still reach us: "));
+    var a = el("a", null, "email the team");
+    a.href = mailtoHref();
+    p.appendChild(a);
+    p.appendChild(document.createTextNode("."));
+    parent.appendChild(p);
+  }
+
+  function setLiveUi() {
+    var on = !!live;
+    title.firstChild.nodeValue = on ? "Dotnapps team" : "Dotnapps assistant";
+    sub.textContent = on ? SUB_LIVE : SUB_AI;
+    note.textContent = on ? NOTE_LIVE : NOTE_AI;
+    human.textContent = on ? "End live chat" : "Talk to a human";
+    input.placeholder = on ? "Message our team…" : "Type your question…";
+    input.maxLength = on ? 1000 : MAX_CHARS;
+    renderChips();
   }
 
   function restore() {
     log.textContent = "";
     bubble("assistant", GREETING);
-    msgs.forEach(function (m) { bubble(m.role, m.content); });
-    renderChips();
-    updateHandoff();
+    msgs.forEach(function (m) { bubble(m.role, m.content, null, m.who); });
+    setLiveUi();
+    if (live) poll();
   }
 
   // ---- behaviour ----------------------------------------------------------
@@ -208,11 +242,14 @@
     panel.hidden = !open;
     launch.setAttribute("aria-expanded", open ? "true" : "false");
     if (open) {
+      launch.removeAttribute("data-unread");
       log.scrollTop = log.scrollHeight;
       input.focus({ preventScroll: true });
+      if (live) poll();
     } else if (panel.contains(document.activeElement)) {
       launch.focus({ preventScroll: true });
     }
+    schedulePoll();
   }
 
   function setBusy(v) {
@@ -222,13 +259,14 @@
   }
 
   function ask(text) {
-    text = String(text || "").trim().slice(0, MAX_CHARS);
+    text = String(text || "").trim().slice(0, live ? 1000 : MAX_CHARS);
     if (!text || busy) return;
+    if (live) return sendLive(text);
+
     msgs.push({ role: "user", content: text });
     persist();
     bubble("user", text);
     renderChips();
-    updateHandoff();
     input.value = "";
     grow();
     setBusy(true);
@@ -239,7 +277,7 @@
     fetch(ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: msgs.slice(-SEND_HISTORY) }),
+      body: JSON.stringify({ messages: aiTurns().slice(-SEND_HISTORY).map(function (m) { return { role: m.role, content: m.content }; }) }),
       signal: ctl.signal
     })
       .then(function (r) {
@@ -253,20 +291,206 @@
           bubble("assistant", x.d.reply);
         } else {
           var m = (x.d && x.d.error) || "Sorry, something went wrong.";
-          bubble("assistant", m + " You can email us at " + EMAIL + " or use “Talk to a human” below.", "dn-err");
+          var b = bubble("assistant", m + " Tap “Talk to a human” below to reach our team.", "dn-err");
+          emailFallback(b);
         }
       })
       .catch(function () {
         wait.remove();
-        bubble("assistant", "I couldn’t reach the assistant. Please try again, or email us at " + EMAIL + ".", "dn-err");
+        var b = bubble("assistant", "I couldn’t reach the assistant. Please try again, or tap “Talk to a human” below.", "dn-err");
+        emailFallback(b);
       })
       .then(function () {
         clearTimeout(timer);
         setBusy(false);
-        updateHandoff();
         input.focus({ preventScroll: true });
       });
   }
+
+  // ---- live human chat ----------------------------------------------------
+  function postLive(payload) {
+    return fetch(LIVE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) { d._ok = r.ok; d._status = r.status; return d; });
+    });
+  }
+
+  function addSys(text) {
+    msgs.push({ role: "assistant", content: text, who: "sys" });
+    bubble("assistant", text, null, "sys");
+  }
+
+  function endLive(text) {
+    live = null;
+    clearTimeout(pollTimer);
+    if (text) addSys(text);
+    persist();
+    setLiveUi();
+  }
+
+  // Inline form: collects an email so the team can follow up if the visitor leaves.
+  function showHandoff() {
+    if (live) return;
+    var old = document.getElementById("dn-handoff");
+    if (old) { old.querySelector("input").focus(); return; }
+    var f = el("form", "dn-msg dn-bot dn-hand");
+    f.id = "dn-handoff";
+    f.setAttribute("aria-label", "Contact details for live chat");
+    f.appendChild(el("p", null, "Happy to connect you with our team. Leave your email so they can reach you if you step away."));
+    function field(id, text, type, auto, req) {
+      var l = el("label", "dn-lab", text);
+      l.setAttribute("for", id);
+      var i = el("input", "dn-field");
+      i.id = id;
+      i.type = type;
+      i.autocomplete = auto;
+      i.required = !!req;
+      i.maxLength = 120;
+      f.appendChild(l);
+      f.appendChild(i);
+      return i;
+    }
+    var nameI = field("dn-h-name", "Name (optional)", "text", "name", false);
+    var mailI = field("dn-h-email", "Email", "email", "email", true);
+    var errP = el("p", "dn-ferr");
+    errP.setAttribute("role", "alert");
+    var row = el("div", "dn-hrow");
+    var go = el("button", "dn-hbtn", "Start live chat");
+    go.type = "submit";
+    var cancel = el("button", "dn-hbtn dn-ghost", "Cancel");
+    cancel.type = "button";
+    row.appendChild(go);
+    row.appendChild(cancel);
+    f.appendChild(errP);
+    f.appendChild(row);
+    log.appendChild(f);
+    log.scrollTop = log.scrollHeight;
+    mailI.focus({ preventScroll: true });
+
+    cancel.addEventListener("click", function () { f.remove(); input.focus({ preventScroll: true }); });
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      errP.textContent = "";
+      if (!mailI.checkValidity()) { errP.textContent = "Please enter a valid email address."; mailI.focus(); return; }
+      go.disabled = true;
+      go.textContent = "Connecting…";
+      postLive({
+        action: "start",
+        name: nameI.value,
+        email: mailI.value,
+        page: location.pathname,
+        transcript: aiTurns().slice(-10).map(function (m) { return { role: m.role, content: m.content }; })
+      }).then(function (d) {
+        if (d._ok && d.id) {
+          f.remove();
+          live = { id: d.id, next: d.next || 0 };
+          addSys(d.online
+            ? "You’re connected. A team member will reply here shortly."
+            : "You’re connected. Our team has been notified and will reply here, or by email if you leave.");
+          persist();
+          setLiveUi();
+          schedulePoll();
+          input.focus({ preventScroll: true });
+        } else {
+          go.disabled = false;
+          go.textContent = "Start live chat";
+          errP.textContent = d.error || "Couldn’t connect you right now.";
+          if (!errP.querySelector("a")) emailFallback(errP);
+        }
+      }).catch(function () {
+        go.disabled = false;
+        go.textContent = "Start live chat";
+        errP.textContent = "Couldn’t connect you right now.";
+        if (!errP.querySelector("a")) emailFallback(errP);
+      });
+    });
+  }
+
+  function sendLive(text) {
+    msgs.push({ role: "user", content: text });
+    persist();
+    var b = bubble("user", text);
+    input.value = "";
+    grow();
+    setBusy(true);
+    postLive({ action: "send", id: live.id, text: text }).then(function (d) {
+      if (d._ok) return;
+      b.classList.add("dn-failed");
+      msgs.pop();
+      persist();
+      if (d.closed || d.gone) {
+        endLive(d.closed ? "This live chat has ended. You’re back with the AI assistant." : "That live chat has expired. You’re back with the AI assistant.");
+      } else {
+        var e = bubble("assistant", (d.error || "Your message wasn’t sent.") + " Please try again.", "dn-err");
+        input.value = text;
+        grow();
+        void e;
+      }
+    }).catch(function () {
+      b.classList.add("dn-failed");
+      msgs.pop();
+      persist();
+      bubble("assistant", "Your message wasn’t sent. Check your connection and try again.", "dn-err");
+      input.value = text;
+      grow();
+    }).then(function () {
+      setBusy(false);
+      input.focus({ preventScroll: true });
+    });
+  }
+
+  // Poll for the team's replies: quickly while the panel is open, slowly when
+  // it's closed (so the launcher can show an unread dot), never when hidden.
+  function schedulePoll() {
+    clearTimeout(pollTimer);
+    if (!live || document.hidden) return;
+    pollTimer = setTimeout(poll, panel.hidden ? 20000 : 4000);
+  }
+  var polling = false;
+  function poll() {
+    if (!live || polling) return;
+    polling = true;
+    var id = live.id;
+    fetch(LIVE + "?id=" + id + "&after=" + live.next, { cache: "no-store" })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { d._status = r.status; return d; }); })
+      .then(function (d) {
+        if (!live || live.id !== id) return;
+        if (d._status === 404) return endLive("That live chat has expired. You’re back with the AI assistant.");
+        if (!d.messages) return;
+        var gotAgent = false;
+        d.messages.forEach(function (m) {
+          if (m.f === "agent") {
+            msgs.push({ role: "assistant", content: m.t, who: "agent" });
+            bubble("assistant", m.t, null, "agent");
+            gotAgent = true;
+          }
+        });
+        live.next = d.next;
+        if (gotAgent && panel.hidden) launch.setAttribute("data-unread", "1");
+        if (d.status === "closed") return endLive("Our team ended this chat. You’re back with the AI assistant.");
+        persist();
+      })
+      .catch(function () {})
+      .then(function () { polling = false; schedulePoll(); });
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && live) poll();
+  });
+
+  human.addEventListener("click", function () {
+    if (!live) {
+      if (panel.hidden) setOpen(true);
+      showHandoff();
+      return;
+    }
+    if (!window.confirm("End the live chat with our team?")) return;
+    var id = live.id;
+    postLive({ action: "end", id: id }).catch(function () {});
+    endLive("You ended the live chat. You’re back with the AI assistant.");
+  });
 
   function grow() {
     input.style.height = "auto";
