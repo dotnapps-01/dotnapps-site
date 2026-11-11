@@ -2,17 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "functions": {
-    "api/chat.js": {
-      "maxDuration": 30
-    },
-    "api/live.js": {
-      "maxDuration": 15
-    },
-    "api/agent.js": {
-      "maxDuration": 15
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
@@ -63,6 +52,36 @@
       ]
     },
     {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
       "source": "/agent",
       "headers": [
         {
@@ -75,5 +94,16 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 30
+    },
+    "api/live.js": {
+      "maxDuration": 15
+    },
+    "api/agent.js": {
+      "maxDuration": 15
+    }
+  }
 }

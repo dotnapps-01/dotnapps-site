@@ -41,7 +41,7 @@ human handoff ("Talk to a human").
 - `api/agent.js` + `agent.html`: the team's private inbox at **/agent**
   (sign in with `AGENT_TOKEN`). Reply, end chats, see the AI transcript.
   Opening the link in the notification email jumps to that conversation.
-- `api/_lib.js`: shared helpers (Upstash Redis over REST, Resend email, limits).
+- `api/_chatlib.js`: shared chat helpers (Upstash Redis over REST, Resend email, limits).
 
 All free tiers, no npm dependencies. Environment variables (Vercel ->
 Settings -> Environment Variables), then redeploy:
@@ -80,3 +80,23 @@ no build step. `robots.txt` / `sitemap.xml` / `og.png` / `favicon.svg` are
 served from the repo root.
 
 Any static host works too — it's a single `index.html`.
+
+## Admin (`/admin`)
+
+A private admin for leads, hero taglines, page copy and settings. It runs on Vercel serverless functions in `api/`.
+
+**To switch it on** (Vercel → Project → Settings → Environment Variables, then redeploy):
+
+1. `ADMIN_PASSWORD` — the password you type at `/admin`. Changing it signs everyone out. (Optional: `ADMIN_SECRET`, any long random string, to sign sessions.)
+2. A Redis store — add **Upstash for Redis** from the Vercel Marketplace. It sets `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (Vercel KV's `KV_REST_API_URL` / `KV_REST_API_TOKEN` also work).
+
+Until both are set, `/admin` shows a setup checklist and the site behaves as before (forms open an email).
+
+**What it does**
+
+- **Leads** — every form on the site posts to `/api/lead` and is saved. Status, notes, search, CSV export.
+- **CRM** — Settings → CRM integration forwards each new lead to a webhook (JSON or form fields, optional auth header). The secret is stored server-side only. Webhook URLs must be `https` and not point at private addresses.
+  - **Dotnapps CRM (workspace.dotnapps.com):** use the *Quick setup* box — enter the workspace slug and the secret from the CRM's `INBOUND_LEAD_KEYS`. It fills in `https://workspace.dotnapps.com/api/inbound/leads?org=<slug>` and an `Authorization: Bearer …` header. New leads arrive as `WEBSITE` leads with the message as a note; repeat emails add a note instead of a duplicate; careers applications are not sent (you can choose which forms go). Needs the matching endpoint deployed in `apps/crm` (see its `docs/OPERATIONS.md`).
+- **Hero / Content / Settings** — taglines, Services and Products copy, social links, contact email and a site notice. Saved to the store and read by the site from `/api/config` (changes show within about 15 seconds).
+
+**Local testing without a real store:** `DN_STORE=memory ADMIN_PASSWORD=test vercel dev` keeps data in memory only.

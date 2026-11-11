@@ -13,7 +13,7 @@
  * described in live.js.
  */
 
-const L = require("./_lib");
+const L = require("./_chatlib");
 
 const failLimited = L.limiter([[15 * 60 * 1000, 10]]);
 const mKey = (id) => "dn:m:" + id;

@@ -20,7 +20,7 @@
  */
 
 const { SYSTEM_PROMPT } = require("./_knowledge");
-const { clientIp, originAllowed, limiter } = require("./_lib");
+const { clientIp, originAllowed, limiter } = require("./_chatlib");
 
 const MAX_HISTORY = 8; // messages sent to the model (keeps token use low)
 const MAX_CHARS = 500; // per user message

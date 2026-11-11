@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Dotnapps</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F5F5F7">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+:root { --bg:#F5F5F7; --frame:#fff; --sunken:#F0F0F2; --text:#111; --muted:#6B6B70; --faint:#A1A1A6; --line:rgba(0,0,0,.1); --line2:rgba(0,0,0,.18); --ink:#000; --focus:#2563eb; --ok:#1d7a46; --bad:#b3261e; --warn:#8a5a00;
+  --mono:"Space Mono", ui-monospace, "SF Mono", Menlo, monospace; --sans:"Space Grotesk", ui-sans-serif, system-ui, sans-serif; }
+@media (prefers-color-scheme: dark) { :root { --bg:#000; --frame:#0b0b0c; --sunken:#17171a; --text:#F5F5F7; --muted:#9a9aa0; --faint:#6b6b70; --line:rgba(255,255,255,.12); --line2:rgba(255,255,255,.22); --ink:#F5F5F7; --ok:#52c685; --bad:#ff7a70; --warn:#e0b04c; } }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+.mono { font-family: var(--mono); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1rem; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--frame); font-weight: 500; font-size: .86rem; text-decoration: none; line-height: 1.2; white-space: nowrap; }
+.btn:hover { opacity: .88; }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--line2); }
+.btn.ghost:hover { border-color: var(--ink); opacity: 1; }
+.btn.danger { background: transparent; color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.btn[disabled] { opacity: .4; cursor: default; }
+.btn.sm { padding: .35rem .75rem; font-size: .78rem; }
+
+/* fields */
+input[type=text], input[type=url], input[type=email], input[type=password], input[type=search], select, textarea {
+  width: 100%; padding: .6rem .75rem; border: 1px solid var(--line2); border-radius: 10px; background: var(--frame); font-size: .92rem; }
+textarea { resize: vertical; min-height: 5.5rem; line-height: 1.5; }
+label.f { display: flex; flex-direction: column; gap: .35rem; font-size: .78rem; color: var(--muted); font-family: var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+label.f input, label.f select, label.f textarea { text-transform: none; letter-spacing: 0; font-family: var(--sans); color: var(--text); }
+.hint { font-size: .8rem; color: var(--muted); margin: .3rem 0 0; font-family: var(--sans); text-transform: none; letter-spacing: 0; }
+
+/* shell */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1180px; margin: 0 auto; padding: .7rem 1.1rem; display: flex; align-items: center; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: .55rem; font-weight: 700; letter-spacing: -.02em; }
+.brand svg { width: 22px; height: 22px; }
+.brand small { font: 400 .62rem var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line2); border-radius: 999px; padding: .15rem .5rem; margin-left: .2rem; }
+.grow { flex: 1; }
+.store { font: 400 .62rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.dirty { font-size: .8rem; color: var(--warn); }
+@media (max-width: 700px) { .store, .brand small { display: none; } .top-in { flex-wrap: wrap; gap: .5rem .6rem; } .top-in .grow { flex-basis: 100%; height: 0; order: 5; } .dirty { order: 6; } #save { order: 7; } .top-in a.btn { order: 8; } #out { order: 9; } .brand { margin-right: auto; } }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 1.2rem 1.1rem 5rem; display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+@media (min-width: 900px) { .wrap { grid-template-columns: 200px minmax(0, 1fr); gap: 2rem; padding-top: 1.8rem; } }
+.tabs { display: flex; gap: .3rem; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: .2rem; }
+.tabs button { border: 1px solid transparent; background: none; padding: .5rem .9rem; border-radius: 999px; font-size: .9rem; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: .45rem; }
+.tabs button[aria-selected=true] { background: var(--ink); color: var(--frame); }
+.tabs .n { font: 400 .65rem var(--mono); background: var(--sunken); color: var(--text); border-radius: 999px; padding: .05rem .4rem; }
+.tabs button[aria-selected=true] .n { background: color-mix(in srgb, var(--frame) 25%, transparent); color: var(--frame); }
+@media (min-width: 900px) { .tabs { flex-direction: column; overflow: visible; position: sticky; top: 4.6rem; align-self: start; } .tabs button { border-radius: 10px; justify-content: space-between; } }
+h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.03em; }
+.sub { margin: 0 0 1.2rem; color: var(--muted); font-size: .9rem; max-width: 40rem; }
+.card { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem; }
+.card + .card { margin-top: 1rem; }
+.card h2 { margin: 0 0 .15rem; font-size: 1rem; font-weight: 500; letter-spacing: -.01em; }
+.card .sub { margin-bottom: .9rem; }
+.grid2 { display: grid; gap: .9rem; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+.row { display: flex; gap: .6rem; align-items: center; flex-wrap: wrap; }
+
+/* leads */
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; margin-bottom: 1rem; }
+@media (min-width: 700px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+.tile { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; padding: .8rem .9rem; }
+.tile small { display: block; font: 400 .6rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.tile b { display: block; margin-top: .3rem; font-size: 1.7rem; font-weight: 500; letter-spacing: -.04em; line-height: 1; }
+.bar { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-bottom: .8rem; }
+.bar input[type=search] { flex: 1 1 14rem; width: auto; }
+.bar select { width: auto; }
+.lead { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; margin-bottom: .5rem; overflow: hidden; }
+.lead-row { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: .3rem .8rem; align-items: center; padding: .8rem 1rem; border: 0; background: none; text-align: left; }
+@media (min-width: 760px) { .lead-row { grid-template-columns: 9.5rem minmax(0, 1fr) auto auto auto; } }
+.lead-row .d { font: 400 .72rem var(--mono); color: var(--muted); }
+.lead-row .who { min-width: 0; }
+.lead-row .who b { display: block; font-weight: 500; }
+.lead-row .who i { display: block; font-style: normal; color: var(--muted); font-size: .84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chips { display: flex; gap: .35rem; flex-wrap: wrap; grid-column: 1 / -1; }
+@media (min-width: 760px) { .chips { display: contents; } }
+.chip { font: 400 .62rem var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line2); border-radius: 999px; padding: .15rem .55rem; color: var(--muted); white-space: nowrap; }
+.chip.new { background: var(--ink); color: var(--frame); border-color: var(--ink); }
+.chip.won { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); }
+.chip.lost, .chip.spam, .chip.failed { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.chip.sent { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); }
+.lead-body { border-top: 1px solid var(--line); padding: 1rem; display: grid; gap: 1rem; }
+.lead-body .msg { white-space: pre-wrap; background: var(--sunken); border-radius: 10px; padding: .8rem .9rem; font-size: .92rem; }
+.meta { display: flex; gap: .4rem 1.4rem; flex-wrap: wrap; font-size: .84rem; color: var(--muted); }
+.meta b { color: var(--text); font-weight: 500; }
+.empty { text-align: center; padding: 2.5rem 1rem; color: var(--muted); border: 1px dashed var(--line2); border-radius: 12px; }
+
+/* hero editor */
+.trow { display: grid; grid-template-columns: auto 1fr; gap: .5rem .7rem; align-items: center; padding: .7rem 0; border-top: 1px solid var(--line); }
+.trow:first-child { border-top: 0; }
+.trow .inputs { display: grid; gap: .5rem; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .trow { grid-template-columns: auto 1fr auto; } .trow .inputs { grid-template-columns: 1fr 1fr; } }
+.mv { display: flex; gap: .3rem; grid-column: 2; }
+@media (min-width: 760px) { .mv { grid-column: auto; } }
+.mv button { width: 34px; height: 34px; border: 1px solid var(--line2); background: none; border-radius: 8px; }
+.mv button:hover { border-color: var(--ink); }
+.sw { position: relative; width: 38px; height: 22px; flex: none; }
+.sw input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
+.sw span { position: absolute; inset: 0; background: var(--line2); border-radius: 999px; transition: background .2s; }
+.sw span::after { content: ""; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--frame); transition: transform .2s; }
+.sw input:checked + span { background: var(--ink); }
+.sw input:checked + span::after { transform: translateX(16px); }
+.sw input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+.prev { background: var(--sunken); border-radius: 12px; padding: 1.4rem 1.2rem; margin-bottom: 1rem; min-height: 7.5rem; display: flex; flex-direction: column; justify-content: center; }
+.prev .a { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.08; }
+.prev .b { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.08; color: var(--muted); }
+.prev small { font: 400 .6rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin-bottom: .6rem; }
+
+/* content editor */
+.seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 999px; padding: 3px; margin-bottom: 1rem; }
+.seg button { border: 0; background: none; padding: .4rem 1rem; border-radius: 999px; font-size: .86rem; color: var(--muted); }
+.seg button[aria-selected=true] { background: var(--ink); color: var(--frame); }
+.grp { margin: 1.2rem 0 .5rem; font: 400 .66rem var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+details.it { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; margin-bottom: .45rem; }
+details.it > summary { list-style: none; cursor: pointer; padding: .75rem 1rem; display: flex; align-items: center; gap: .7rem; font-weight: 500; }
+details.it > summary::-webkit-details-marker { display: none; }
+details.it > summary .n { font: 400 .68rem var(--mono); color: var(--faint); }
+details.it > summary::after { content: "+"; margin-left: auto; color: var(--muted); font-weight: 400; }
+details.it[open] > summary::after { content: "–"; }
+details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
+.badge { font: 400 .58rem var(--mono); letter-spacing: .12em; text-transform: uppercase; border: 1px solid var(--line2); border-radius: 999px; padding: .1rem .5rem; color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.prow { display: grid; grid-template-columns: 7.5rem 1fr; gap: .7rem; align-items: center; padding: .5rem 0; border-top: 1px solid var(--line); }
+.prow:first-child { border-top: 0; }
+.prow b { font-weight: 500; }
+
+/* login + setup */
+.center { min-height: 100vh; display: grid; place-items: center; padding: 1.2rem; }
+.box { width: 100%; max-width: 26rem; }
+.box h1 { font-size: 1.6rem; margin-top: 1rem; }
+.checks { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.checks li { display: flex; gap: .6rem; align-items: flex-start; font-size: .9rem; }
+.checks code { font-family: var(--mono); font-size: .8rem; background: var(--sunken); padding: .1rem .4rem; border-radius: 6px; }
+.dot { flex: none; width: 18px; height: 18px; border-radius: 50%; margin-top: 2px; display: grid; place-items: center; font-size: .7rem; color: var(--frame); background: var(--bad); }
+.dot.ok { background: var(--ok); }
+.err { color: var(--bad); font-size: .86rem; min-height: 1.2rem; margin: .5rem 0 0; }
+
+/* toast */
+.toast { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 20px); opacity: 0; transition: .25s; background: var(--ink); color: var(--frame); padding: .6rem 1rem; border-radius: 999px; font-size: .86rem; z-index: 50; pointer-events: none; max-width: calc(100% - 28px); text-align: center; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.toast.bad { background: var(--bad); color: #fff; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var LOGO = '<svg viewBox="26 27.4 48 45.1" aria-hidden="true"><path fill="currentColor" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>';
+  var DEF_TAGS = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
+  var STATUSES = ["new", "contacted", "qualified", "won", "lost", "spam"];
+  var SOURCES = { brief: "Project brief", contact: "Say hello", businessos: "Business OS", careers: "Careers" };
+  var S = { tab: "leads", leads: [], counts: {}, f: { q: "", status: "", source: "" }, open: null, pub: {}, priv: {}, def: null, cv: "services", dirty: false, store: "" };
+
+  /* ---------- helpers ---------- */
+  function api(path, opt) {
+    opt = opt || {};
+    var h = { "x-dn-admin": "1" }, body;
+    if (opt.body !== undefined) { h["content-type"] = "application/json"; body = JSON.stringify(opt.body); }
+    return fetch(path, { method: opt.method || "GET", headers: h, body: body, credentials: "same-origin" }).then(function (r) {
+      return r.text().then(function (t) { var j = null; try { j = JSON.parse(t); } catch (e) {} return { ok: r.ok, status: r.status, data: j, text: t }; });
+    }).catch(function () { return { ok: false, status: 0, data: null, text: "" }; });
+  }
+  var toastT = 0;
+  function toast(msg, bad) { var t = $("#toast"); t.textContent = msg; t.className = "toast on" + (bad ? " bad" : ""); clearTimeout(toastT); toastT = setTimeout(function () { t.className = "toast"; }, bad ? 4200 : 2600); }
+  function fmt(iso) { try { return new Date(iso).toLocaleString([], { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return iso; } }
+  function getp(o, path) { return path.split(".").reduce(function (a, k) { return a && a[k] !== undefined ? a[k] : undefined; }, o); }
+  function setp(o, path, v) { var ks = path.split("."), l = ks.pop(); ks.forEach(function (k) { if (!o[k] || typeof o[k] !== "object") o[k] = {}; o = o[k]; }); o[l] = v; }
+  function markDirty() { S.dirty = true; var d = $("#dirty"), b = $("#save"); if (d) d.hidden = false; if (b) b.disabled = false; }
+  window.addEventListener("beforeunload", function (e) { if (S.dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+  /* ---------- login / setup screens ---------- */
+  function setupView(d) {
+    d = d || {};
+    $("#app").innerHTML = '<div class="center"><div class="box"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><h1>Finish the setup</h1><p class="sub">The admin needs two things on Vercel before it can sign you in. Add them under Project Settings → Environment Variables, then redeploy.</p><div class="card"><ul class="checks">' +
+      '<li><span class="dot ' + (d.password ? "ok" : "") + '">' + (d.password ? "✓" : "!") + '</span><div><b>Admin password</b><br>Environment variable <code>ADMIN_PASSWORD</code> — the password you will type here.</div></li>' +
+      '<li><span class="dot ' + (d.store ? "ok" : "") + '">' + (d.store ? "✓" : "!") + '</span><div><b>A place to save data</b><br>Add <b>Upstash for Redis</b> from the Vercel Marketplace. It sets <code>UPSTASH_REDIS_REST_URL</code> and <code>UPSTASH_REDIS_REST_TOKEN</code> for you (Vercel KV works too).</div></li>' +
+      '</ul></div><p class="hint" style="margin-top:1rem">Until then the website keeps working as before: forms open an email instead of saving.</p><p style="margin-top:1rem"><a class="btn ghost" href="">Check again</a></p></div></div>';
+  }
+  function offlineView() {
+    $("#app").innerHTML = '<div class="center"><div class="box"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><h1>Backend not reachable</h1><p class="sub">The admin needs the site\'s <code class="mono">/api</code> functions. They run on Vercel; a plain static preview cannot run them. Open this page on the deployed site, or run it with <code class="mono">vercel dev</code>.</p><p><a class="btn ghost" href="">Try again</a></p></div></div>';
+  }
+  function loginView(msg) {
+    $("#app").innerHTML = '<div class="center"><form class="box" id="login" autocomplete="on"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><h1>Sign in</h1><p class="sub">Leads, hero text, site copy and settings.</p>' +
+      '<label class="f">Password<input type="password" id="pw" name="password" autocomplete="current-password" required autofocus></label><p class="err" id="lerr" role="alert">' + esc(msg || "") + '</p><button class="btn" type="submit" style="margin-top:.4rem">Sign in</button></form></div>';
+    $("#login").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var b = $("#login button"); b.disabled = true;
+      api("/api/auth", { method: "POST", body: { password: $("#pw").value } }).then(function (r) {
+        b.disabled = false;
+        if (r.ok) return boot();
+        if (r.status === 503 && r.data) return setupView(r.data);
+        if (r.status === 429) return loginView("Too many attempts. Try again in ten minutes.");
+        if (r.status === 0 || !r.data) return offlineView();
+        loginView("That password isn't right.");
+      });
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function boot() {
+    api("/api/auth").then(function (r) {
+      if (r.status === 503 && r.data) return setupView(r.data);
+      if (r.status === 401 && r.data) return loginView();
+      if (!r.ok || !r.data) return offlineView();
+      S.store = r.data.store;
+      Promise.all([api("/api/admin"), api("/api/leads"), loadDefaults()]).then(function (a) {
+        if (!a[0].ok || !a[1].ok) return loginView();
+        S.pub = a[0].data.public || {}; S.priv = a[0].data.private || {};
+        S.leads = a[1].data.leads; S.counts = a[1].data.counts;
+        ensure(); shell();
+      });
+    });
+  }
+  function ensure() {
+    S.pub.settings = S.pub.settings || {}; S.pub.settings.social = S.pub.settings.social || {}; S.pub.settings.banner = S.pub.settings.banner || {};
+    S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {};
+    S.priv.crm = S.priv.crm || { enabled: false, url: "", format: "json", headerName: "", secret: "" };
+    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "contact", "businessos"];
+    if (!S.pub.taglines || !S.pub.taglines.length) S.pub.taglines = DEF_TAGS.map(function (t) { return { a: t[0], b: t[1], on: true }; });
+  }
+  /* defaults for the content editor come from the live pages themselves */
+  function loadDefaults() {
+    if (S.def) return Promise.resolve();
+    function page(u) { return fetch(u, { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (t) { return new DOMParser().parseFromString(t, "text/html"); }).catch(function () { return null; }); }
+    return Promise.all([page("/services"), page("/products")]).then(function (p) {
+      var groups = [], prods = [];
+      if (p[0]) $$(".svc-group", p[0]).forEach(function (g) {
+        var items = $$(".sg > li", g).map(function (li) {
+          var fit = $(".svc-fit", li), b = fit && $("b", fit);
+          return { slug: li.id, n: ($(".pf-n", li) || {}).textContent || "", title: $("h3", li).textContent, lead: $(".svc-lead", li).textContent.trim(), inc: $$(".svc-inc li", li).map(function (x) { return x.textContent.trim(); }), fit: fit ? fit.textContent.replace(b ? b.textContent : "", "").trim() : "" };
+        });
+        groups.push({ letter: ($(".svc-gh .l", g) || {}).textContent || "", name: ($(".svc-gh h2", g) || {}).textContent || "", items: items });
+      });
+      if (p[1]) $$(".pc", p[1]).forEach(function (c) { prods.push({ slug: c.id, n: ($(".pc-n", c) || {}).textContent || "", title: $("h3", c).textContent, desc: $("p", c).textContent.trim() }); });
+      S.def = { groups: groups, products: prods };
+    });
+  }
+
+  /* ---------- shell ---------- */
+  function shell() {
+    $("#app").innerHTML =
+      '<header class="top"><div class="top-in"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><span class="grow"></span>' +
+      '<span class="store">Storage · ' + esc(S.store === "memory" ? "memory (testing)" : "connected") + '</span><span class="dirty" id="dirty" hidden>Unsaved changes</span>' +
+      '<button class="btn sm" id="save" disabled>Save changes</button><a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site ↗</a><button class="btn ghost sm" id="out">Sign out</button></div></header>' +
+      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
+    $$(".tabs button").forEach(function (b) { b.addEventListener("click", function () { S.tab = b.dataset.t; S.open = null; shell(); }); });
+    $("#save").addEventListener("click", save);
+    $("#save").disabled = !S.dirty; $("#dirty").hidden = !S.dirty;
+    $("#out").addEventListener("click", function () { api("/api/auth", { method: "DELETE" }).then(function () { S.dirty = false; loginView(); }); });
+    var v = $("#view");
+    ({ leads: viewLeads, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
+  }
+  function tabBtn(t, label, n) { return '<button role="tab" data-t="' + t + '" aria-selected="' + (S.tab === t) + '">' + label + (n ? '<span class="n">' + n + '</span>' : "") + '</button>'; }
+
+  function save() {
+    var b = $("#save"); b.disabled = true; b.textContent = "Saving…";
+    api("/api/admin", { method: "PUT", body: { public: S.pub, private: S.priv } }).then(function (r) {
+      b.textContent = "Save changes";
+      if (!r.ok) { b.disabled = false; return toast(r.data && r.data.error === "crm_url_needed" ? "Add the CRM webhook URL first, or switch the CRM off." : "Couldn't save. Check your connection and try again.", true); }
+      S.pub = r.data.public; S.priv = r.data.private; ensure(); S.dirty = false;
+      var d = $("#dirty"); if (d) d.hidden = true;
+      toast("Saved. The site picks changes up within about 15 seconds.");
+      shell();
+    });
+  }
+
+  /* ---------- Leads ---------- */
+  function filtered() {
+    var q = S.f.q.toLowerCase();
+    return S.leads.filter(function (l) {
+      if (S.f.status && l.status !== S.f.status) return false;
+      if (S.f.source && l.source !== S.f.source) return false;
+      return !q || (l.name + " " + l.email + " " + l.message + " " + (l.company || "")).toLowerCase().indexOf(q) >= 0;
+    });
+  }
+  function recount() {
+    var w = Date.now() - 7 * 864e5;
+    S.counts = { total: S.leads.length, new: S.leads.filter(function (l) { return l.status === "new"; }).length, week: S.leads.filter(function (l) { return Date.parse(l.createdAt) > w; }).length, crm: S.leads.filter(function (l) { return l.crm && l.crm.status === "sent"; }).length };    var tb = $('.tabs button[data-t="leads"]');
+    if (tb) { var nb = $(".n", tb), v = S.counts.new; if (v) { if (!nb) { nb = document.createElement("span"); nb.className = "n"; tb.appendChild(nb); } nb.textContent = v; } else if (nb) nb.remove(); }
+  }
+  function tile(l, n) { return '<div class="tile"><small>' + l + '</small><b>' + (n || 0) + '</b></div>'; }
+  function crmChip(l) {
+    var s = l.crm && l.crm.status;
+    if (s === "sent") return '<span class="chip sent" title="Sent to CRM ' + esc(fmt(l.crm.at)) + '">CRM ✓</span>';
+    if (s === "failed") return '<span class="chip failed" title="' + esc((l.crm && l.crm.error) || "failed") + '">CRM failed</span>';
+    if (s === "skipped") return '<span class="chip" title="This form is not sent to the CRM (Settings → CRM integration)">CRM skipped</span>';
+    return '<span class="chip">CRM off</span>';
+  }
+  function leadHtml(l) {
+    var open = S.open === l.id;
+    var meta = [["Source", SOURCES[l.source] || l.source], l.company && ["Company", l.company], l.role && ["Role", l.role], l.link && ["Link", '<a href="' + esc(l.link) + '" target="_blank" rel="noopener noreferrer">' + esc(l.link) + '</a>'], l.page && ["Page", l.page]].filter(Boolean);
+    return '<article class="lead" data-id="' + l.id + '"><button class="lead-row" aria-expanded="' + open + '" data-act="toggle"><span class="d">' + esc(fmt(l.createdAt)) + '</span><span class="who"><b>' + esc(l.name) + '</b><i>' + esc(l.email) + '</i></span><span class="chips"><span class="chip ' + esc(l.status) + '">' + esc(l.status) + '</span><span class="chip">' + esc(SOURCES[l.source] || l.source) + '</span>' + crmChip(l) + '</span></button>' +
+      (open ? '<div class="lead-body"><div class="msg">' + esc(l.message) + '</div><div class="meta">' + meta.map(function (m) { return '<span>' + m[0] + ' · <b>' + (m[0] === "Link" ? m[1] : esc(m[1])) + '</b></span>'; }).join("") + '</div>' +
+      '<div class="grid2"><label class="f">Status<select data-act="status">' + STATUSES.map(function (s) { return '<option ' + (s === l.status ? "selected" : "") + '>' + s + '</option>'; }).join("") + '</select></label>' +
+      '<label class="f">Notes (only you see these)<textarea data-act="notes" rows="3" placeholder="Called, wants a demo…">' + esc(l.notes || "") + '</textarea></label></div>' +
+      '<div class="row"><a class="btn sm" href="mailto:' + esc(l.email) + '?subject=' + encodeURIComponent("Re: your message to Dotnapps") + '">Reply by email</a><button class="btn ghost sm" data-act="resend">Send to CRM again</button><span class="grow"></span><button class="btn danger sm" data-act="del">Delete</button></div></div>' : "") + '</article>';
+  }
+  function listHtml() {
+    var a = filtered();
+    if (!S.leads.length) return '<div class="empty"><b>No leads yet</b><br>New project briefs, Business OS requests and applications from the site will appear here.</div>';
+    return a.length ? a.map(leadHtml).join("") : '<div class="empty">No leads match these filters.</div>';
+  }
+  function viewLeads(v) {
+    var c = S.counts;
+    v.innerHTML = '<h1>Leads</h1><p class="sub">Everything sent through the site\'s forms. Each one is also forwarded to your CRM when that is switched on in Settings.</p>' +
+      '<div class="tiles">' + tile("New", c.new) + tile("Total", c.total) + tile("Last 7 days", c.week) + tile("Sent to CRM", c.crm) + '</div>' +
+      '<div class="bar"><input type="search" id="q" placeholder="Search name, email or message" value="' + esc(S.f.q) + '" aria-label="Search leads"><select id="fs" aria-label="Status"><option value="">All statuses</option>' + STATUSES.map(function (s) { return '<option ' + (S.f.status === s ? "selected" : "") + '>' + s + '</option>'; }).join("") + '</select>' +
+      '<select id="fsrc" aria-label="Source"><option value="">All sources</option>' + Object.keys(SOURCES).map(function (k) { return '<option value="' + k + '" ' + (S.f.source === k ? "selected" : "") + '>' + SOURCES[k] + '</option>'; }).join("") + '</select>' +
+      '<button class="btn ghost sm" id="refresh">Refresh</button><a class="btn ghost sm" href="/api/leads?format=csv">Export CSV</a></div><div id="list">' + listHtml() + '</div>';
+    $("#q").addEventListener("input", function (e) { S.f.q = e.target.value; $("#list").innerHTML = listHtml(); });
+    $("#fs").addEventListener("change", function (e) { S.f.status = e.target.value; $("#list").innerHTML = listHtml(); });
+    $("#fsrc").addEventListener("change", function (e) { S.f.source = e.target.value; $("#list").innerHTML = listHtml(); });
+    $("#refresh").addEventListener("click", function () { api("/api/leads").then(function (r) { if (r.ok) { S.leads = r.data.leads; S.counts = r.data.counts; viewLeads(v); toast("Up to date"); } else toast("Couldn't refresh", true); }); });
+    var list = $("#list");
+    list.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-act]"); if (!t) return;
+      var art = t.closest(".lead"), id = art.dataset.id, l = S.leads.filter(function (x) { return x.id === id; })[0], act = t.dataset.act;
+      if (act === "toggle") { S.open = S.open === id ? null : id; list.innerHTML = listHtml(); }
+      if (act === "resend") { t.disabled = true; api("/api/leads", { method: "POST", body: { action: "resend", id: id } }).then(function (r) { if (r.ok) { Object.assign(l, r.data.lead); recount(); list.innerHTML = listHtml(); toast(l.crm.status === "sent" ? "Sent to your CRM" : l.crm.status === "off" ? "CRM is switched off in Settings" : l.crm.status === "skipped" ? "This form is set not to go to the CRM" : "CRM said: " + (l.crm.error || "failed"), l.crm.status === "failed"); } else toast("Couldn't send", true); }); }
+      if (act === "del" && confirm("Delete " + l.name + "? This can't be undone.")) api("/api/leads?id=" + id, { method: "DELETE" }).then(function (r) { if (r.ok) { S.leads = S.leads.filter(function (x) { return x.id !== id; }); S.open = null; recount(); viewLeads(v); toast("Deleted"); } else toast("Couldn't delete", true); });
+    });
+    list.addEventListener("change", function (e) {
+      if (e.target.dataset.act !== "status") return;
+      var id = e.target.closest(".lead").dataset.id, l = S.leads.filter(function (x) { return x.id === id; })[0];
+      api("/api/leads", { method: "PATCH", body: { id: id, status: e.target.value } }).then(function (r) { if (r.ok) { l.status = e.target.value; recount(); S.open = id; viewLeads(v); toast("Status updated"); } else toast("Couldn't update", true); });
+    });
+    list.addEventListener("focusout", function (e) {
+      if (e.target.dataset.act !== "notes") return;
+      var id = e.target.closest(".lead").dataset.id, l = S.leads.filter(function (x) { return x.id === id; })[0];
+      if ((l.notes || "") === e.target.value) return;
+      api("/api/leads", { method: "PATCH", body: { id: id, notes: e.target.value } }).then(function (r) { if (r.ok) { l.notes = e.target.value; toast("Notes saved"); } else toast("Couldn't save notes", true); });
+    });
+  }
+
+  /* ---------- Hero ---------- */
+  function viewHero(v) {
+    var t = S.pub.taglines;
+    v.innerHTML = '<h1>Hero taglines</h1><p class="sub">The headline on the home page flips through these in order, about every five seconds. Write the black part first and the grey part second. Switch one off to hide it without deleting it.</p>' +
+      '<div class="prev" aria-live="polite"><small>Preview</small><div class="a" id="pa"></div><div class="b" id="pb"></div></div>' +
+      '<div class="card" id="rows">' + t.map(function (x, i) { return rowHtml(x, i); }).join("") + '</div>' +
+      '<div class="row" style="margin-top:1rem"><button class="btn ghost" id="add">Add a tagline</button><button class="btn ghost" id="reset">Reset to the original five</button></div>' +
+      '<p class="hint">Keep each part short — about 30 characters or fewer reads best on a phone.</p>';
+    var first = t.filter(function (x) { return x.on; })[0] || t[0]; prev(first);
+    var rows = $("#rows");
+    rows.addEventListener("input", function (e) { var r = e.target.closest(".trow"), i = +r.dataset.i, k = e.target.dataset.k; if (!k) return; t[i][k] = e.target.type === "checkbox" ? e.target.checked : e.target.value; prev(t[i]); markDirty(); });
+    rows.addEventListener("focusin", function (e) { var r = e.target.closest(".trow"); if (r) prev(t[+r.dataset.i]); });
+    rows.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-m]"); if (!b) return; var i = +b.closest(".trow").dataset.i, m = b.dataset.m;
+      if (m === "del") { if (t.length <= 1) return toast("Keep at least one tagline", true); t.splice(i, 1); }
+      if (m === "up" && i > 0) t.splice(i - 1, 0, t.splice(i, 1)[0]);
+      if (m === "down" && i < t.length - 1) t.splice(i + 1, 0, t.splice(i, 1)[0]);
+      markDirty(); viewHero(v);
+    });
+    $("#add").addEventListener("click", function () { t.push({ a: "", b: "", on: true }); markDirty(); viewHero(v); var ins = $$("#rows .trow:last-child input[data-k=a]"); if (ins[0]) ins[0].focus(); });
+    $("#reset").addEventListener("click", function () { if (!confirm("Replace the list with the original five taglines?")) return; S.pub.taglines = DEF_TAGS.map(function (x) { return { a: x[0], b: x[1], on: true }; }); markDirty(); viewHero(v); });
+  }
+  function rowHtml(x, i) {
+    return '<div class="trow" data-i="' + i + '"><label class="sw" title="Show this tagline"><input type="checkbox" data-k="on" aria-label="Show tagline ' + (i + 1) + '"' + (x.on ? " checked" : "") + '><span></span></label><div class="inputs"><input type="text" data-k="a" maxlength="90" placeholder="First part (black)" value="' + esc(x.a) + '" aria-label="Tagline ' + (i + 1) + ' first part"><input type="text" data-k="b" maxlength="90" placeholder="Second part (grey)" value="' + esc(x.b) + '" aria-label="Tagline ' + (i + 1) + ' second part"></div>' +
+      '<div class="mv"><button type="button" data-m="up" aria-label="Move up">↑</button><button type="button" data-m="down" aria-label="Move down">↓</button><button type="button" data-m="del" aria-label="Delete">✕</button></div></div>';
+  }
+  function prev(x) { var a = $("#pa"), b = $("#pb"); if (a) a.textContent = (x && x.a) || "—"; if (b) b.textContent = (x && x.b) || ""; }
+
+  /* ---------- Content ---------- */
+  function viewContent(v) {
+    if (!S.def) return loadDefaults().then(function () { viewContent(v); });
+    v.innerHTML = '<h1>Content</h1><p class="sub">Edit the wording of the Services page and the Products page. Anything you change is marked <span class="badge">Edited</span>; clear it with Reset to go back to the original text.</p>' +
+      '<div class="seg" role="tablist"><button role="tab" data-c="services" aria-selected="' + (S.cv === "services") + '">Services (24)</button><button role="tab" data-c="products" aria-selected="' + (S.cv === "products") + '">Products (12)</button></div><div id="cbody"></div>';
+    $$(".seg button").forEach(function (b) { b.addEventListener("click", function () { S.cv = b.dataset.c; viewContent(v); }); });
+    var body = $("#cbody");
+    if (!S.def.groups.length && !S.def.products.length) { body.innerHTML = '<div class="empty">Couldn\'t load the pages to read their original text.</div>'; return; }
+    if (S.cv === "services") {
+      body.innerHTML = S.def.groups.map(function (g) {
+        return '<div class="grp">' + esc(g.letter) + ' · ' + esc(g.name) + '</div>' + g.items.map(function (it) { return svcHtml(it); }).join("");
+      }).join("");
+      body.addEventListener("input", function (e) {
+        var d = e.target.closest("details"); if (!d) return; var slug = d.dataset.slug, it = findSvc(slug);
+        var lead = $("[data-f=lead]", d).value, inc = $("[data-f=inc]", d).value.split("\n").map(function (x) { return x.trim(); }).filter(Boolean), fit = $("[data-f=fit]", d).value;
+        var cur = { lead: lead, inc: inc, fit: fit }, same = JSON.stringify(cur) === JSON.stringify({ lead: it.lead, inc: it.inc, fit: it.fit });
+        if (same) delete S.pub.services[slug]; else S.pub.services[slug] = cur;
+        var bd = $(".badge", d); if (bd) bd.hidden = same; markDirty();
+      });
+      body.addEventListener("click", function (e) {
+        var r = e.target.closest("[data-reset]"); if (!r) return; var d = r.closest("details"), it = findSvc(d.dataset.slug);
+        delete S.pub.services[it.slug]; $("[data-f=lead]", d).value = it.lead; $("[data-f=inc]", d).value = it.inc.join("\n"); $("[data-f=fit]", d).value = it.fit; $(".badge", d).hidden = true; markDirty();
+      });
+    } else {
+      body.innerHTML = '<div class="card">' + S.def.products.map(function (p) {
+        var o = S.pub.products[p.slug], val = o ? o.desc : p.desc;
+        return '<div class="prow" data-slug="' + p.slug + '"><b>' + esc(p.title) + '</b><span style="display:flex;gap:.4rem;align-items:center"><input type="text" maxlength="200" value="' + esc(val) + '" aria-label="' + esc(p.title) + ' description"><span class="badge" ' + (o ? "" : "hidden") + '>Edited</span></span></div>';
+      }).join("") + '</div>';
+      body.addEventListener("input", function (e) {
+        var r = e.target.closest(".prow"); if (!r) return; var slug = r.dataset.slug, p = S.def.products.filter(function (x) { return x.slug === slug; })[0], val = e.target.value;
+        if (val.trim() === p.desc || !val.trim()) delete S.pub.products[slug]; else S.pub.products[slug] = { desc: val };
+        $(".badge", r).hidden = !S.pub.products[slug]; markDirty();
+      });
+    }
+  }
+  function findSvc(slug) { var f; S.def.groups.forEach(function (g) { g.items.forEach(function (i) { if (i.slug === slug) f = i; }); }); return f; }
+  function svcHtml(it) {
+    var o = S.pub.services[it.slug] || {}, lead = o.lead !== undefined ? o.lead : it.lead, inc = o.inc || it.inc, fit = o.fit !== undefined ? o.fit : it.fit;
+    return '<details class="it" data-slug="' + it.slug + '"><summary><span class="n">' + esc(it.n) + '</span>' + esc(it.title) + '<span class="badge" ' + (S.pub.services[it.slug] ? "" : "hidden") + '>Edited</span></summary><div class="in">' +
+      '<label class="f">Explanation<textarea data-f="lead" rows="4" maxlength="700">' + esc(lead) + '</textarea></label>' +
+      '<label class="f">What it includes (one per line)<textarea data-f="inc" rows="5">' + esc(inc.join("\n")) + '</textarea></label>' +
+      '<label class="f">Best for<input type="text" data-f="fit" maxlength="240" value="' + esc(fit) + '"></label><div><button type="button" class="btn ghost sm" data-reset>Reset to original</button></div></div></details>';
+  }
+
+  /* ---------- Settings ---------- */
+  function viewSettings(v) {
+    var P = S.pub.settings, C = S.priv.crm;
+    function fld(label, bind, ph, type, hint) { return '<label class="f">' + label + '<input type="' + (type || "text") + '" data-bind="' + bind + '" placeholder="' + esc(ph || "") + '" value="' + esc(getp(S, bind) || "") + '">' + (hint ? '<span class="hint">' + hint + '</span>' : "") + '</label>'; }
+    v.innerHTML = '<h1>Settings</h1><p class="sub">Links, the contact email, a site-wide notice, and where new leads are sent.</p>' +
+      '<div class="card"><h2>Contact email</h2><p class="sub">Shown in the mobile menu, and used when a visitor\'s form falls back to opening their email app.</p>' + fld("Email", "pub.settings.email", "hello@dotnapps.com", "email") + '</div>' +
+      '<div class="card"><h2>Social links</h2><p class="sub">The icons in the footer. Leave one empty to keep the current link.</p><div class="grid2">' + fld("Instagram", "pub.settings.social.instagram", "https://www.instagram.com/…", "url") + fld("LinkedIn", "pub.settings.social.linkedin", "https://www.linkedin.com/company/…", "url") + fld("WhatsApp", "pub.settings.social.whatsapp", "https://wa.me/…", "url") + fld("Pinterest", "pub.settings.social.pinterest", "https://www.pinterest.com/…", "url") + '</div></div>' +
+      '<div class="card"><h2>Site notice</h2><p class="sub">A small pill at the bottom of every page. Visitors can dismiss it.</p><label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="pub.settings.banner.on"' + (P.banner.on ? " checked" : "") + '><span></span></span><span>Show the notice</span></label><div class="grid2">' + fld("Text", "pub.settings.banner.text", "We're closed on Friday") + fld("Link (optional)", "pub.settings.banner.link", "https://… or /services", "text") + '</div></div>' +
+      '<div class="card"><h2>CRM integration</h2><p class="sub">Every new lead is saved here <b>and</b> sent to your CRM by webhook. Works with any CRM or automation tool that accepts a POST (HubSpot, Zoho, Pipedrive, Zapier, Make, n8n…). The secret never reaches the website.</p>' +
+      '<label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="priv.crm.enabled"' + (C.enabled ? " checked" : "") + '><span></span></span><span>Send new leads to my CRM</span></label>' +
+      '<div class="card" style="background:var(--sunken);margin:0 0 1rem"><h2>Quick setup: Dotnapps CRM</h2><p class="sub" style="margin-bottom:.7rem">For the CRM at workspace.dotnapps.com. Enter your workspace slug and the secret from the CRM\'s <span class="mono">INBOUND_LEAD_KEYS</span>, then press Fill in.</p><div class="grid2"><label class="f">Workspace slug<input type="text" id="qs-slug" placeholder="dotnapps" autocomplete="off"></label><label class="f">Secret<input type="password" id="qs-secret" autocomplete="off" placeholder="from INBOUND_LEAD_KEYS"></label></div><div class="row" style="margin-top:.8rem"><button class="btn ghost sm" type="button" id="qs-fill">Fill in the fields below</button><span id="qs-msg" class="hint" style="margin:0"></span></div></div>' +
+      '<div class="grid2">' + fld("Webhook URL", "priv.crm.url", "https://hooks.example.com/…", "url", "Must be https.") +
+      '<label class="f">Format<select data-bind="priv.crm.format"><option value="json"' + (C.format !== "form" ? " selected" : "") + '>JSON</option><option value="form"' + (C.format === "form" ? " selected" : "") + '>Form fields (x-www-form-urlencoded)</option></select></label>' +
+      fld("Auth header name (optional)", "priv.crm.headerName", "Authorization", "text", "For example Authorization or X-Api-Key.") + fld("Auth header value (optional)", "priv.crm.secret", "Bearer …", "password", "Stored on the server and shown masked.") + '</div>' +
+      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["contact", "Say hello"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
+      '<div class="row" style="margin-top:1rem"><button class="btn ghost" id="crmtest" type="button">Send a test lead</button><span id="crmres" class="hint" style="margin:0"></span></div>' +
+      '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p></div>';
+    v.addEventListener("input", bind); v.addEventListener("change", bind);
+    function bind(e) {
+      var k = e.target.dataset.bind; if (!k) return;
+      var val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+      var root = k.slice(0, 3) === "pub" ? S.pub : S.priv; setp(root, k.replace(/^(pub|priv)\./, ""), val); markDirty();
+    }
+    $("#srcs").addEventListener("change", function (e) {
+      var k = e.target.dataset.src; if (!k) return;
+      var list = (S.priv.crm.sources || []).filter(function (x) { return x !== k; });
+      if (e.target.checked) list.push(k);
+      S.priv.crm.sources = list; markDirty();
+    });
+    $("#qs-fill").addEventListener("click", function () {
+      var slug = $("#qs-slug").value.trim().toLowerCase(), sec = $("#qs-secret").value.trim(), msg = $("#qs-msg");
+      if (!/^[a-z0-9][a-z0-9_-]{0,60}$/.test(slug)) { msg.textContent = "Enter the workspace slug (letters, numbers, dashes)."; msg.style.color = "var(--bad)"; return; }
+      if (sec.length < 24) { msg.textContent = "The secret should be at least 24 characters."; msg.style.color = "var(--bad)"; return; }
+      var c = S.priv.crm;
+      c.enabled = true; c.format = "json"; c.url = "https://workspace.dotnapps.com/api/inbound/leads?org=" + encodeURIComponent(slug);
+      c.headerName = "Authorization"; c.secret = "Bearer " + sec; markDirty(); viewSettings(v);
+      toast("Filled in. Send a test lead, then Save changes.");
+    });
+    $("#crmtest").addEventListener("click", function () {
+      var out = $("#crmres"); if (!S.priv.crm.url) { out.textContent = "Add the webhook URL first."; return; }
+      out.textContent = "Sending…";
+      api("/api/admin?action=test", { method: "POST", body: { private: { crm: S.priv.crm } } }).then(function (r) {
+        var d = r.data || {};
+        out.textContent = d.status === "sent" ? "✓ Your CRM accepted it (HTTP " + d.code + ")." : "✕ Didn't go through: " + (d.error || "unknown error") + ".";
+        out.style.color = d.status === "sent" ? "var(--ok)" : "var(--bad)";
+      });
+    });
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

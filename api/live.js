@@ -18,7 +18,7 @@
  */
 
 const crypto = require("crypto");
-const L = require("./_lib");
+const L = require("./_chatlib");
 
 const MAX_TEXT = 1000;
 const MAX_MESSAGES = 300; // per conversation
