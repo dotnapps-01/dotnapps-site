@@ -2363,10 +2363,21 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 /* Work page: the one-line description above an industry's service cards */
 .ind-lead { margin: 0 0 1.1rem; }
 
-/* Home: Industries teaser - the names as a compact list of links (the full detail lives on the Work page) */
-.ind-cloud { list-style: none; margin: clamp(1.6rem, 4vw, 2.4rem) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; max-width: 56rem; }
-.ind-cloud a { display: block; padding: .55rem .9rem; border: 1px solid var(--card-line); background: var(--frame); color: var(--text); font-size: .88rem; line-height: 1.2; text-decoration: none; transition: background .2s ease; }
-.ind-cloud a:hover, .ind-cloud a:focus-visible { background: var(--sunken); }
-.ind-cloud a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (max-width: 559px) { .ind-cloud { gap: .4rem; } .ind-cloud a { padding: .5rem .7rem; font-size: .8rem; } }
 @media (min-width: 821px) { #work .cases li { grid-template-columns: 8rem 1fr; } }
+
+/* Home: "Who we build for" - five framed industry cards and a "+13 more" card that leads to the Work page */
+.ind-six { list-style: none; margin: clamp(1.6rem, 4vw, 2.4rem) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--card-line); border-left: 1px solid var(--card-line); }
+.ind-six li { min-width: 0; border-right: 1px solid var(--card-line); border-bottom: 1px solid var(--card-line); background: var(--frame); }
+.ind-six a { display: flex; flex-direction: column; justify-content: space-between; gap: 1.6rem; height: 100%; min-height: 7.5rem; box-sizing: border-box; padding: clamp(1rem, 2.4vw, 1.5rem); color: var(--text); text-decoration: none; transition: background .2s ease; }
+.ind-six a:hover, .ind-six a:focus-visible { background: var(--sunken); }
+.ind-six a:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.ind-n { font: 400 .62rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .16em; color: var(--faint); }
+.ind-t { display: flex; align-items: center; gap: .5rem; font-size: 1.02rem; font-weight: 500; letter-spacing: -.015em; line-height: 1.25; }
+.ind-t .arr { width: 14px; height: 14px; flex: none; }
+.ind-six .ind-more { background: var(--sunken); }
+.ind-six .ind-more:hover { background: var(--raise); }
+@media (max-width: 700px) {
+  .ind-six { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ind-six a { min-height: 6rem; gap: 1.2rem; padding: .9rem .8rem; }
+  .ind-t { font-size: .9rem; }
+}
