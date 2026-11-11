@@ -2344,3 +2344,18 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .door .ind-chips li { font-size: .54rem; padding: .3rem .4rem; letter-spacing: .06em; }
   .door .ind-go { font-size: .74rem; padding-top: 1rem; }
 }
+
+/* Services page, phones: the custom-build cards sit two to a row (a lone last card spans the row); the text is set smaller to fit. */
+@media (max-width: 559px) {
+  #custom-build .sg { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #custom-build .sg > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  #custom-build .sg > li { padding: .95rem .8rem 1rem; }
+  #custom-build .sg h3 { font-size: .78rem; letter-spacing: .02em; line-height: 1.25; margin-bottom: .45rem; overflow-wrap: break-word; hyphens: auto; }
+  #custom-build .sg .pf-n { margin-bottom: .7rem; padding: .22rem .38rem; font-size: .56rem; }
+  #custom-build .sg .svc-lead { font-size: .76rem; line-height: 1.48; }
+  #custom-build .sg .svc-inc { margin-top: .8rem; gap: .3rem; }
+  #custom-build .sg .svc-inc li { font-size: .72rem; line-height: 1.4; padding-left: .8rem; }
+  #custom-build .sg .svc-inc li::before { top: .5em; width: 4px; height: 4px; }
+  #custom-build .sg .svc-fit { font-size: .72rem; line-height: 1.45; padding-top: .8rem; }
+  #custom-build .sg .svc-fit b { display: block; margin: 0 0 .35rem; font-size: .52rem; letter-spacing: .16em; }
+}
