@@ -2335,4 +2335,12 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 .door .ind-chips { margin-top: 1.3rem; }
 .door:hover .ind-go, .door:focus-visible .ind-go { color: var(--text); }
 @media (min-width: 701px) { .door p { min-height: 3.2em; } }
-@media (max-width: 700px) { .doors { grid-template-columns: 1fr; } .door { min-height: 0; } }
+@media (max-width: 700px) {
+  .door { min-height: 0; padding: 1rem .8rem 1.1rem; }
+  .door-k { font-size: .54rem; letter-spacing: .14em; }
+  .door h3 { margin: .8rem 0 .5rem; font-size: 1.3rem; }
+  .door p { font-size: .78rem; line-height: 1.5; min-height: 0; }
+  .door .ind-chips { margin-top: .9rem; gap: .3rem; }
+  .door .ind-chips li { font-size: .54rem; padding: .3rem .4rem; letter-spacing: .06em; }
+  .door .ind-go { font-size: .74rem; padding-top: 1rem; }
+}
