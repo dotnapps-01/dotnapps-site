@@ -2323,3 +2323,16 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .ind-chips li { font-size: .54rem; padding: .3rem .4rem; letter-spacing: .06em; }
   .ind-go { font-size: .74rem; padding-top: .9rem; }
 }
+
+/* Home: "Two ways to work with Dotnapps" - two big cards (Done-for-you, Custom build) in the same framed style as the other grids */
+.doors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--card-line); border-left: 1px solid var(--card-line); }
+.door { display: flex; flex-direction: column; min-width: 0; min-height: 17rem; padding: clamp(1.4rem, 3vw, 2.3rem); border-right: 1px solid var(--card-line); border-bottom: 1px solid var(--card-line); background: var(--frame); color: inherit; text-decoration: none; }
+.door:hover, .door:focus-visible { background: var(--sunken); }
+.door:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.door-k { font: 400 .66rem/1 "Space Mono", ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+.door h3 { margin: 1.1rem 0 .7rem; font-size: clamp(1.6rem, 2.6vw, 2.2rem); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; text-transform: none; color: var(--text); }
+.door p { margin: 0; max-width: 30rem; font-size: .95rem; line-height: 1.6; color: var(--muted); }
+.door .ind-chips { margin-top: 1.3rem; }
+.door:hover .ind-go, .door:focus-visible .ind-go { color: var(--text); }
+@media (min-width: 701px) { .door p { min-height: 3.2em; } }
+@media (max-width: 700px) { .doors { grid-template-columns: 1fr; } .door { min-height: 0; } }
