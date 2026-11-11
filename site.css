@@ -2305,3 +2305,21 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   .sec-fig small { white-space: nowrap; width: max-content; transform: translateX(calc(13rem - 100% + .26em)); }
   #industries .sec-fig i { aspect-ratio: 1.9; }
 }
+
+/* Phones: the card grids (done-for-you services, ready-made services and the industry tiles) sit two to a row, like the Business OS apps. A lone last card spans the full row. */
+@media (max-width: 559px) {
+  .sg.rm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sg.rm > li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .sg.rm:not(.ind-sg) > li { padding: .95rem .8rem 1rem; }
+  .sg.rm h3 { font-size: .78rem; letter-spacing: .02em; line-height: 1.25; margin-bottom: .45rem; overflow-wrap: break-word; hyphens: auto; }
+  .sg.rm .rm-line { font-size: .78rem; line-height: 1.5; }
+  .sg.rm .pf-n { margin-bottom: .7rem; padding: .22rem .38rem; font-size: .56rem; }
+  .rm .rm-actions { padding-top: .9rem; gap: .5rem .6rem; }
+  .rm .rm-actions .pf-btn { font-size: .62rem; padding: .5rem .55rem; }
+  .dfy-time { font-size: .54rem; letter-spacing: .14em; }
+  .dfy-time b { margin-right: .4rem; }
+  .ind-card { padding: .95rem .8rem 1rem; }
+  .ind-chips { gap: .3rem; margin-top: .75rem; }
+  .ind-chips li { font-size: .54rem; padding: .3rem .4rem; letter-spacing: .06em; }
+  .ind-go { font-size: .74rem; padding-top: .9rem; }
+}
