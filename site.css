@@ -2359,3 +2359,6 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
   #custom-build .sg .svc-fit { font-size: .72rem; line-height: 1.45; padding-top: .8rem; }
   #custom-build .sg .svc-fit b { display: block; margin: 0 0 .35rem; font-size: .52rem; letter-spacing: .16em; }
 }
+
+/* Work page: the one-line description above an industry's service cards */
+.ind-lead { margin: 0 0 1.1rem; }
