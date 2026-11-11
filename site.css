@@ -2299,3 +2299,9 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 .ind-card:hover .ind-go, .ind-card:focus-visible .ind-go { color: var(--text); }
 .ind-card:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 .dfy-end .bo-link { margin-top: 0; }
+
+/* Section figures (laptop): the caption stays on one line (it was wrapping to two and running into the grid below), and the Industries figure is a little shorter so its caption clears the cards. */
+@media (min-width: 1100px) {
+  .sec-fig small { white-space: nowrap; width: max-content; transform: translateX(calc(13rem - 100% + .26em)); }
+  #industries .sec-fig i { aspect-ratio: 1.9; }
+}
