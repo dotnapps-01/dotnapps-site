@@ -869,19 +869,23 @@ window.dnConfig = (function () {
   }
   function showConsent(id) {
     var old = document.querySelector(".dn-consent"); if (old) old.remove();
-    var box = document.createElement("div"); box.className = "dn-consent"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Cookies");
-    var p = document.createElement("p"); p.textContent = "We use Google Analytics to count visits and see which pages help. It sets cookies. The site works the same if you decline.";
+    var FULL = "We use Google Analytics to count visits and see which pages help. It sets cookies. The site works the same if you decline.";
+    var box = document.createElement("div"); box.className = "dn-consent"; box.setAttribute("role", "group"); box.setAttribute("aria-label", "Cookies. " + FULL); box.title = FULL;
+    var q = document.createElement("span"); q.className = "dn-consent-q"; q.innerHTML = '<span class="dn-consent-a">Analytics </span>cookies?';
     var row = document.createElement("div"); row.className = "dn-consent-btns";
-    [["denied", "Decline"], ["granted", "Accept"]].forEach(function (b) {
+    [["denied", "No thanks"], ["granted", "OK"]].forEach(function (b) {
       var btn = document.createElement("button"); btn.type = "button"; btn.textContent = b[1];
+      btn.setAttribute("aria-label", b[0] === "granted" ? "Accept analytics cookies" : "Decline analytics cookies");
       btn.addEventListener("click", function () {
-        rememberConsent(b[0]); box.remove(); document.documentElement.classList.remove("dn-consent-on");
+        rememberConsent(b[0]); document.documentElement.classList.remove("dn-consent-on");
         if (b[0] === "granted") loadGa(id); else { window["ga-disable-" + id] = true; clearGaCookies(); }
+        box.classList.remove("in"); box.classList.add("out"); setTimeout(function () { box.remove(); }, 360);
       });
       row.appendChild(btn);
     });
-    box.appendChild(p); box.appendChild(row); document.body.appendChild(box);
+    box.appendChild(q); box.appendChild(row); document.body.appendChild(box);
     document.documentElement.classList.add("dn-consent-on");
+    setTimeout(function () { void box.offsetWidth; box.classList.add("in"); }, document.readyState === "complete" ? 60 : 900);
   }
   function analytics(a) {
     if (!a || a.on === false || !/^G-[A-Z0-9]{4,14}$/.test(a.id || "")) return;
