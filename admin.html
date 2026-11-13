@@ -152,11 +152,13 @@ h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.
 @media (max-width: 899px) { .chats.open .clist { display: none; } .chats:not(.open) .cthread { display: none; } .cback { display: inline-flex; } }
 
 /* analytics tab */
-.anchart { display: flex; align-items: flex-end; gap: 3px; height: 130px; margin-top: .8rem; }
-.anchart i { flex: 1; min-width: 2px; background: var(--ink); opacity: .85; border-radius: 2px 2px 0 0; }
+.anchart { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; align-items: end; gap: 4px; height: 140px; margin-top: 1rem; padding-top: 1.1rem; border-bottom: 1px solid var(--line); }
+.anchart i { display: block; justify-self: center; width: min(100%, 14px); min-height: 1px; background: var(--ink); opacity: .85; border-radius: 3px 3px 0 0; }
+.anchart i.z { background: var(--line); opacity: 1; height: 1px !important; }
 .anchart i:hover { opacity: 1; }
+.anchart b { position: absolute; left: 0; top: 0; font: 400 .66rem var(--mono); letter-spacing: .08em; color: var(--muted); }
 .anaxis { display: flex; justify-content: space-between; margin-top: .4rem; font: 400 .66rem var(--mono); letter-spacing: .08em; color: var(--muted); }
-.angrid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; }
+.angrid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; align-items: start; }
 @media (min-width: 900px) { .angrid { grid-template-columns: 1fr 1fr; } }
 .angrid .card + .card { margin-top: 0; }
 .anrow { position: relative; display: flex; justify-content: space-between; gap: 1rem; padding: .42rem .55rem; margin-top: .25rem; font-size: .88rem; border-radius: 6px; overflow: hidden; }
@@ -678,15 +680,15 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     }
     function draw(d) {
       var t = d.totals, max = Math.max.apply(null, d.perDay.map(function (x) { return x.visitors; }).concat([1]));
-      var rate = t.visitors ? (t.forms / t.visitors * 100).toFixed(1) : "–";
+      var ppv = t.visitors ? (t.views / t.visitors).toFixed(1) : "–";
       var today = d.perDay[d.perDay.length - 1] || { visitors: 0 };
-      var html = '<div class="tiles">' + tile("Visitors", t.visitors) + tile("Page views", t.views) + tile("Forms sent", t.forms) + tile("Forms per 100 visitors", rate) + '</div>';
+      var html = '<div class="tiles">' + tile("Visitors", t.visitors) + tile("Page views", t.views) + tile("Forms sent", t.forms) + tile("Pages per visitor", ppv) + '</div>';
       if (!t.views) {
         html += '<div class="empty"><b>No visits counted yet</b><br>Counting starts when this goes live. Visits appear here as people open the site. Your own visits while you are signed in to the admin are not counted.</div>';
       } else {
         html += '<div class="card"><div class="fhead"><h2>Visitors per day</h2><span class="chip">today ' + today.visitors + '</span></div>' +
-          '<div class="anchart" role="img" aria-label="Visitors per day">' + d.perDay.map(function (x) {
-            return '<i style="height:' + Math.max(2, Math.round(x.visitors / max * 100)) + '%" title="' + esc(dayLabel(x.d)) + ': ' + x.visitors + ' visitors, ' + x.views + ' views, ' + x.forms + ' forms sent"></i>';
+          '<div class="anchart" role="img" aria-label="Visitors per day"><b>' + max + ' max</b>' + d.perDay.map(function (x) {
+            return '<i class="' + (x.visitors ? '' : 'z') + '" style="height:' + Math.round(x.visitors / max * 100) + '%" title="' + esc(dayLabel(x.d)) + ': ' + x.visitors + ' visitors, ' + x.views + ' views, ' + x.forms + ' forms sent"></i>';
           }).join("") + '</div><div class="anaxis"><span>' + esc(dayLabel(d.perDay[0].d)) + '</span><span>' + esc(dayLabel(d.perDay[d.perDay.length - 1].d)) + '</span></div></div>' +
           '<div class="angrid">' + list("Top pages", d.pages, function (k) { return PAGE_NAMES[k] || k; }, t.views) +
           list("Where visitors come from", d.sources, srcName, t.views) +
