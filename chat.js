@@ -25,15 +25,7 @@
 
   if (!window.fetch || document.getElementById("dn-chat-launch")) return;
 
-  // Look of the widget: "a" editorial tray, "b" blueprint, "c" product. Add
-  // ?chatstyle=b to any page to preview another one.
-  var STYLE = (function () {
-    var s = window.DN_CHAT_STYLE;
-    try { var q = /[?&]chatstyle=([abc])\b/.exec(location.search); if (q) s = q[1]; } catch (e) {}
-    return /^[abc]$/.test(s) ? s : "a";
-  })();
-  var EYEBROW = { a: ["Online", "Live chat"], b: ["Fig. 06 / Assistant", "Fig. 06 / Live chat"], c: ["", ""] };
-  var TAG = { on: "[ online ]", live: "[ live ]" };
+  var EYEBROW = ["Online", "Live chat"];
   function stamp(ts) { try { return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } }
 
   // ---- state --------------------------------------------------------------
@@ -198,12 +190,12 @@
   launch.setAttribute("aria-expanded", "false");
   launch.setAttribute("aria-controls", "dn-chat-panel");
   launchFace = face("dn-lface");
-  launch.classList.add("dn-s-" + STYLE);
+  launch.classList.add("dn-s-a");
   launch.appendChild(launchFace);
   launch.appendChild(el("span", "dn-lbl", "Ask BLOOP"));
   launch.appendChild(el("span", "dn-dot"));
 
-  var panel = el("section", "dn-panel dn-s-" + STYLE);
+  var panel = el("section", "dn-panel dn-s-a");
   panel.id = "dn-chat-panel";
   panel.hidden = true;
   panel.setAttribute("role", "dialog");
@@ -215,7 +207,7 @@
   headFace = face("dn-hface");
   avatar.appendChild(headFace);
   var titles = el("div", "dn-titles");
-  var eyebrow = el("span", "dn-eyebrow", EYEBROW[STYLE][0]);
+  var eyebrow = el("span", "dn-eyebrow", EYEBROW[0]);
   var title = el("h2", "dn-title");
   title.id = "dn-chat-title";
   title.appendChild(document.createTextNode("BLOOP"));
@@ -227,10 +219,8 @@
   close.appendChild(icon("M6 6l12 12M18 6L6 18"));
   titles.appendChild(eyebrow);
   titles.appendChild(title);
-  var tag = el("span", "dn-tag", TAG.on);
   head.appendChild(avatar);
   head.appendChild(titles);
-  head.appendChild(tag);
   head.appendChild(close);
 
   var log = el("div", "dn-log");
@@ -265,15 +255,7 @@
   foot.appendChild(note);
   foot.appendChild(human);
 
-  // Welcome block, shown in style "c" until the first message.
-  var hero = el("div", "dn-hero");
-  var heroFace = face("dn-bigface");
-  hero.appendChild(heroFace);
-  hero.appendChild(el("h3", "dn-hero-t", "Hi, I’m BLOOP"));
-  hero.appendChild(el("p", "dn-hero-p", "Your friendly Dotnapps assistant. Ask about our services, Business OS, or how we work."));
-
   panel.appendChild(head);
-  panel.appendChild(hero);
   panel.appendChild(log);
   panel.appendChild(chips);
   panel.appendChild(form);
@@ -348,11 +330,9 @@
   function renderChips() {
     chips.textContent = "";
     chips.hidden = msgs.length > 0 || !!live;
-    panel.classList.toggle("dn-empty", !chips.hidden);
     if (chips.hidden) return;
-    CHIPS.forEach(function (c, i) {
+    CHIPS.forEach(function (c) {
       var b = el("button", "dn-chip", c[0]);
-      b.dataset.n = "0" + (i + 1);
       b.type = "button";
       b.addEventListener("click", function () { ask(c[1]); });
       chips.appendChild(b);
@@ -387,8 +367,7 @@
       avatar.appendChild(headFace);
     }
     sub.textContent = on ? SUB_LIVE : SUB_AI;
-    eyebrow.textContent = EYEBROW[STYLE][on ? 1 : 0];
-    tag.textContent = on ? TAG.live : TAG.on;
+    eyebrow.textContent = EYEBROW[on ? 1 : 0];
     note.textContent = on ? NOTE_LIVE : NOTE_AI;
     human.textContent = on ? "End live chat" : "Talk to a human";
     input.placeholder = on ? "Message our team…" : "Type your question…";
