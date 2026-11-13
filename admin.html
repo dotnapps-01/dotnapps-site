@@ -152,6 +152,10 @@ h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.
 @media (max-width: 899px) { .chats.open .clist { display: none; } .chats:not(.open) .cthread { display: none; } .cback { display: inline-flex; } }
 
 /* analytics tab */
+.anbar select, .anbar .btn { height: 2.5rem; box-sizing: border-box; font-size: .86rem; }
+.anbar select { width: auto; min-width: 9.5rem; padding: 0 2.4rem 0 1rem; border-radius: 999px; cursor: pointer; appearance: none; -webkit-appearance: none; background-color: var(--frame); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+.anbar select:hover { border-color: var(--ink); }
+.anbar .btn { justify-content: center; padding: 0 1.1rem; }
 .anchart { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; align-items: end; gap: 4px; height: 140px; margin-top: 1rem; padding-top: 1.1rem; border-bottom: 1px solid var(--line); }
 .anchart i { display: block; justify-self: center; width: min(100%, 14px); min-height: 1px; background: var(--ink); opacity: .85; border-radius: 3px 3px 0 0; }
 .anchart i.z { background: var(--line); opacity: 1; height: 1px !important; }
@@ -668,7 +672,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   function viewAnalytics(v) {
     var days = S.anDays || 30;
     v.innerHTML = '<h1>Analytics</h1><p class="sub">Visits to your site, counted by the site itself. No cookies, no Google, nothing that identifies a person.</p>' +
-      '<div class="bar"><select id="anrange" aria-label="Period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select><button class="btn ghost sm" id="anrefresh" type="button">Refresh</button></div>' +
+      '<div class="bar anbar"><select id="anrange" aria-label="Period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select><button class="btn ghost" id="anrefresh" type="button">Refresh</button></div>' +
       '<div id="anbody"><p class="hint">Loading…</p></div>';
     $("#anrange").value = String(days);
     function list(title, items, label, total) {
