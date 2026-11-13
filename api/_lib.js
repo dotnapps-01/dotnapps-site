@@ -193,11 +193,11 @@ function cleanPublic(p) {
   };
   /* the words on each form: heading, intro, button, thank-you, and each field's label / hint / (optional fields only) whether it shows.
      Only known forms and known field names are kept, and only what was actually changed. */
-  const FORM_FIELDS = { brief: ['name', 'email', 'phone', 'detail'], contact: ['name', 'email', 'phone', 'message'], businessos: ['name', 'email', 'company', 'phone', 'detail'], careers: ['name', 'email', 'phone', 'role', 'link', 'note'] };
+  const FORM_FIELDS = { brief: ['name', 'email', 'phone', 'detail'], project: ['name', 'email', 'phone', 'company', 'detail'], contact: ['name', 'email', 'phone', 'message'], businessos: ['name', 'email', 'company', 'phone', 'detail'], careers: ['name', 'email', 'phone', 'role', 'link', 'note'] };
   const OPTIONAL = ['company', 'phone', 'link', 'note'];
   out.forms = {};
   const pf = p.forms && typeof p.forms === 'object' ? p.forms : {};
-  ['brief', 'contact', 'enquiry', 'businessos', 'careers'].forEach((k) => {
+  ['brief', 'project', 'contact', 'enquiry', 'businessos', 'careers'].forEach((k) => {
     const f = pf[k]; if (!f || typeof f !== 'object') return;
     const o = {};
     const t = str(f.title, 80), sub = str(f.sub, 160), btn = str(f.button, 40), done = str(f.done, 240);
@@ -220,7 +220,7 @@ function cleanPublic(p) {
   return out;
 }
 const MASK = '********';
-const FORMS = ['brief', 'contact', 'enquiry', 'businessos', 'careers'];
+const FORMS = ['brief', 'project', 'contact', 'enquiry', 'businessos', 'careers'];
 function cleanPrivate(p, prev) {
   p = p && typeof p === 'object' ? p : {};
   const c = p.crm && typeof p.crm === 'object' ? p.crm : {};
@@ -232,7 +232,7 @@ function cleanPrivate(p, prev) {
   return {
     forms,
     crm: {
-      v: 2,                                            /* 2 = each form (including service enquiries) is ticked on its own for the CRM */
+      v: 3,                                            /* 2 = service enquiries are ticked on their own for the CRM; 3 = Start a project too */
       enabled: !!c.enabled,
       url: urlOk(str(c.url, 500)) || (devOk(str(c.url, 500)) ? str(c.url, 500) : ''),
       format: c.format === 'form' ? 'form' : c.format === 'flat' ? 'flat' : 'json',
@@ -258,9 +258,10 @@ function blockedHost(host) {
 async function forward(crm, lead, event) {
   const at = new Date().toISOString();
   if (!crm || !crm.enabled || !crm.url) return { status: 'off', at };
-  /* older saved settings (no crm.v) know nothing of service enquiries, so those follow the Say hello setting until the admin is saved once */
+  /* settings saved before a form existed know nothing of it, so it follows the Say hello setting until the admin is saved once */
   const listed = (s) => Array.isArray(crm.sources) && crm.sources.indexOf(s) >= 0;
-  const allowed = listed(lead.source) || (crm.v !== 2 && lead.source === 'enquiry' && listed('contact'));
+  const since = { enquiry: 2, project: 3 }[lead.source];
+  const allowed = listed(lead.source) || (since && (crm.v || 0) < since && listed('contact'));
   if (event !== 'lead.test' && Array.isArray(crm.sources) && !allowed) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
   let u;
   try { u = new URL(crm.url); } catch (e) { return { status: 'failed', error: 'bad url', at }; }

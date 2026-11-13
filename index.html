@@ -105,7 +105,7 @@
       <h1 class="serif hero-rot" aria-live="off"><span class="slide is-active">Unlock your digital potential <span class="h1-end">with us.</span></span></h1>
       <p>Dotnapps designs and builds software for other companies, and runs Business&nbsp;OS, our own suite of business apps.</p>
       <div class="hero-actions">
-        <a class="btn btn--solid" href="#contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--solid" href="#contact" data-modal="project">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <a class="btn btn--solid" href="/products"><span><span class="hide-s">Explore </span>Business&nbsp;OS</span><svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
       <ul class="hero-caps">
@@ -256,7 +256,7 @@
 <circle class="w" cx="102" cy="88" r="3.5"/><circle class="w" cx="156" cy="52" r="3.5"/><circle class="f endp" cx="204" cy="24" r="3.5"/><circle class="trav" r="2.6"/>
 <text x="30" y="24" text-anchor="end">LOAD</text><text x="212" y="136" text-anchor="end">USERS</text><text x="150" y="90">COST HELD FLAT</text><text x="204" y="16" text-anchor="middle">[SCALE]</text></svg><span class="pf-n">04</span><h3>Scale</h3><p>Performance, cost, and reliability once real users arrive &mdash; with a team that stays.</p></li>
         </ol>
-        <div class="pf-foot"><p>Small teams &middot; short cycles &middot; seen every week.</p><a class="pf-btn" href="#contact" data-modal="contact">[Start a project]</a></div>
+        <div class="pf-foot"><p>Small teams &middot; short cycles &middot; seen every week.</p><a class="pf-btn" href="#contact" data-modal="project">[Start a project]</a></div>
       </div>
     </div>
   </section>
@@ -369,6 +369,19 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
         </button>
       </div>
+
+      <form class="mform" data-form="project" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Work email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Phone or WhatsApp (optional)<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91"></label>
+        <label class="full">Company<input type="text" name="company" autocomplete="organization"></label>
+        <label class="full">What are you building?<textarea name="detail" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Send</button>
+        <p class="form-note">We&rsquo;ll only use your details to reply to you.</p>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the message ready to send.</p>
+      </form>
 
       <form class="mform" data-form="contact" hidden>
         <label class="full">Your name<input type="text" name="name" autocomplete="name" required></label>

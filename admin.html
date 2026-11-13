@@ -213,12 +213,14 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   var DEF_TAGS = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
   var STATUSES = ["new", "contacted", "qualified", "won", "lost", "spam"];
   var DEF_NOTE = "We’ll only use your details to reply to you.";
-  var SOURCES = { brief: "Project brief", contact: "Say hello", enquiry: "Service enquiry", businessos: "Business OS", careers: "Careers" };
+  var SOURCES = { brief: "Project brief", project: "Start a project", contact: "Say hello", enquiry: "Service enquiry", businessos: "Business OS", careers: "Careers" };
   /* one entry per form on the site, for the Forms tab */
   var FORM_DEFS = [
     { k: "brief", name: "Project brief", where: "The project brief form on the home page.",
       done: "Thanks — we’ve got your brief and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
-    { k: "contact", name: "Say hello", where: "The Contact button in the menu and footer, and the Start a project buttons.",
+    { k: "project", name: "Start a project", where: "The Start a project buttons on the home, Services and Work pages. It opens as a pop-up.",
+      title: "Start a project", sub: "Tell us what you’re building — we reply by email.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "company", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
+    { k: "contact", name: "Say hello", where: "The Contact button in the menu and footer.",
       title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "message", ph: 1 }] },
     { k: "enquiry", name: "Service enquiry", where: "Opens when someone clicks a service or industry card, with the service name already in the message. It uses the Say hello fields.",
       title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon." },
@@ -293,11 +295,15 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     S.pub.settings = S.pub.settings || {}; S.pub.settings.social = S.pub.settings.social || {}; S.pub.settings.banner = S.pub.settings.banner || {};
     S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {}; S.pub.forms = S.pub.forms || {};
     S.priv.crm = S.priv.crm || { enabled: false, url: "", format: "json", headerName: "", secret: "" };
-    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "contact", "enquiry", "businessos"];
+    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "project", "contact", "enquiry", "businessos"];
     S.priv.forms = S.priv.forms || {};
     FORM_DEFS.forEach(function (f) { if (!S.priv.forms[f.k]) S.priv.forms[f.k] = { open: true }; });
     /* settings saved before service enquiries were their own form: they followed Say hello, so tick it to match */
-    if (!S.priv.crm.v && S.priv.crm.sources.indexOf("contact") >= 0 && S.priv.crm.sources.indexOf("enquiry") < 0) S.priv.crm.sources.push("enquiry");
+    var cv = S.priv.crm.v || 0, srcs = S.priv.crm.sources;
+    if (srcs.indexOf("contact") >= 0) {
+      if (cv < 2 && srcs.indexOf("enquiry") < 0) srcs.push("enquiry");
+      if (cv < 3 && srcs.indexOf("project") < 0) srcs.push("project");
+    }
     if (!S.pub.taglines || !S.pub.taglines.length) S.pub.taglines = DEF_TAGS.map(function (t) { return { a: t[0], b: t[1], on: true }; });
   }
   /* defaults for the content editor come from the live pages themselves */
@@ -618,7 +624,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<div class="grid2">' + fld("Webhook URL", "priv.crm.url", "https://hooks.example.com/…", "url", "Must be https.") +
       '<label class="f">Format<select data-bind="priv.crm.format"><option value="json"' + (C.format !== "form" && C.format !== "flat" ? " selected" : "") + '>JSON</option><option value="form"' + (C.format === "form" ? " selected" : "") + '>Form fields (x-www-form-urlencoded)</option><option value="flat"' + (C.format === "flat" ? " selected" : "") + '>Flat JSON: name, email, company, message, page (Dotnapps CRM)</option></select></label>' +
       fld("Auth header name (optional)", "priv.crm.headerName", "Authorization", "text", "For example Authorization or X-Api-Key.") + fld("Auth header value (optional)", "priv.crm.secret", "Bearer …", "password", "Stored on the server and shown masked.") + '</div>' +
-      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["contact", "Say hello"], ["enquiry", "Service enquiry"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
+      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["project", "Start a project"], ["contact", "Say hello"], ["enquiry", "Service enquiry"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
       '<div class="row" style="margin-top:1rem"><button class="btn ghost" id="crmtest" type="button">Send a test lead</button><span id="crmres" class="hint" style="margin:0"></span></div>' +
       '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p>' +
       '<p class="hint">Flat JSON sends only: <span class="mono">{ name, email, company, message, page }</span>, with the form name added to the message. Use it with the Dotnapps CRM address and the <span class="mono">X-Capture-Key</span> header.</p></div>';

@@ -1,7 +1,7 @@
 'use strict';
 const L = require('./_lib');
 
-const SOURCES = ['brief', 'contact', 'enquiry', 'businessos', 'careers'];
+const SOURCES = ['brief', 'project', 'contact', 'enquiry', 'businessos', 'careers'];
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/;
 
 /* Public: the site's forms post here. Saves the lead, then forwards it to the CRM webhook if one is set. */

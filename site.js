@@ -131,6 +131,7 @@
     var fm = document.getElementById("formModal");
     if (fm && typeof fm.showModal === "function") {
       var FORMS = {
+        project:    { title: "Start a project",    sub: "Tell us what you’re building — we reply by email.",     to: "hello@dotnapps.com",   subj: function (d) { return "Project — " + (d.get("name") || "new enquiry"); } },
         contact:    { title: "Say hello",          sub: "A short note — we read every one.",                     to: "hello@dotnapps.com",   subj: function () { return "Hello from dotnapps.com"; } },
         careers:    { title: "Join the team",       sub: "Senior engineers and product designers who like shipping.",  to: "careers@dotnapps.com", subj: function (d) { return "Application — " + (d.get("role") || "role"); } },
         businessos: { title: "Business OS access",  sub: "Tell us what you'd run on it.",                              to: "hello@dotnapps.com",   subj: function () { return "Business OS — access request"; } }

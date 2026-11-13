@@ -74,7 +74,7 @@
     <h1 class="serif reveal">Services <span class="h1-end">ready-made, or built to order.</span></h1>
     <canvas class="plus-field" data-plus aria-hidden="true"></canvas>
     <p class="reveal">Have us set something up for you, start with a ready-made service, or have something built from scratch. Each custom service says what we do, what it includes and who it&rsquo;s for.</p>
-    <div class="bh-actions reveal"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn btn--solid" href="/products">Business OS<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    <div class="bh-actions reveal"><a class="btn btn--solid" href="#contact" data-modal="project">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn btn--solid" href="/products">Business OS<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     <dl class="pg-facts reveal"><div><dt>Done-for-you</dt><dd>Forty-nine, set up for you</dd></div><div><dt>Ready-made</dt><dd>Eight to start with</dd></div><div><dt>Custom</dt><dd>Twenty-four, in five practices</dd></div><div><dt>Team</dt><dd>The people who scope it build it</dd></div></dl>
   </header>
 
@@ -251,7 +251,7 @@
     <div class="sec-row reveal"><span><i></i>NEXT STEP</span><span class="r">[ START A PROJECT ]</span></div>
     <h2 class="serif reveal">Not sure which one <span class="h2-end">you need?</span></h2>
     <p class="reveal">Tell us what you&rsquo;re trying to do. You get a real reply from the people who would build it.</p>
-    <div class="bh-actions reveal"><a class="btn btn--solid" href="#contact" data-modal="contact">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+    <div class="bh-actions reveal"><a class="btn btn--solid" href="#contact" data-modal="project">Start a project<svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
   </section>
 
   <dialog class="modal" id="formModal" aria-labelledby="modalTitle">
@@ -265,6 +265,19 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
         </button>
       </div>
+
+      <form class="mform" data-form="project" hidden>
+        <div class="row">
+          <label>Your name<input type="text" name="name" autocomplete="name" required></label>
+          <label>Work email<input type="email" name="email" autocomplete="email" required></label>
+        </div>
+        <label class="full">Phone or WhatsApp (optional)<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91"></label>
+        <label class="full">Company<input type="text" name="company" autocomplete="organization"></label>
+        <label class="full">What are you building?<textarea name="detail" required></textarea></label>
+        <button class="btn btn--solid" type="submit">Send</button>
+        <p class="form-note">We&rsquo;ll only use your details to reply to you.</p>
+        <p class="mform-done" hidden>Thanks &mdash; your email app should open with the message ready to send.</p>
+      </form>
 
       <form class="mform" data-form="contact" hidden>
         <label class="full">Your name<input type="text" name="name" autocomplete="name" required></label>
