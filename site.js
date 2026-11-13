@@ -96,7 +96,11 @@
         website: hp ? hp.value : ""
       };
       return fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) })
-        .then(function (r) { return r.ok; }).catch(function () { return false; });
+        .then(function (r) {
+          /* tell Analytics a form was sent (only if the visitor accepted it): which form, nothing personal */
+          if (r.ok && window.__dnGa && typeof window.gtag === "function") { try { window.gtag("event", "generate_lead", { form: source }); } catch (e) {} }
+          return r.ok;
+        }).catch(function () { return false; });
     }
     function addHoneypot(form) {
       var i = document.createElement("input");
@@ -838,9 +842,62 @@ window.dnConfig = (function () {
     var n = c.formNote; if (!n || typeof n !== "object") return;
     [].forEach.call(document.querySelectorAll(".form-note"), function (p) { if (n.on === false) p.hidden = true; else if (n.text) p.textContent = n.text; });
   }
+  /* Google Analytics. Only when the admin has set a Measurement ID, and only after the visitor accepts: until then nothing is sent to Google and no
+     Analytics cookie is set. The choice is remembered for a year; a "Cookie settings" link in the footer reopens it. A browser that sends the
+     Global Privacy Control signal is treated as having declined. */
+  var CONSENT_KEY = "dn-consent";
+  function consentState() {
+    try { var v = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null"); if (v && (v.a === "granted" || v.a === "denied") && Date.now() - (v.t || 0) < 365 * 864e5) return v.a; } catch (e) {}
+    return "";
+  }
+  function rememberConsent(a) { try { localStorage.setItem(CONSENT_KEY, JSON.stringify({ a: a, t: Date.now() })); } catch (e) {} }
+  function clearGaCookies() {
+    var parts = location.hostname.split("."), doms = ["", "; domain=" + location.hostname, "; domain=." + location.hostname];
+    for (var i = 1; i < parts.length - 1; i++) doms.push("; domain=." + parts.slice(i).join("."));
+    document.cookie.split(";").forEach(function (c) {
+      var n = c.split("=")[0].trim();
+      if (/^_ga($|_)/.test(n)) doms.forEach(function (d) { document.cookie = n + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d; });
+    });
+  }
+  function loadGa(id) {
+    window["ga-disable-" + id] = false;
+    if (window.__dnGa) return;
+    window.__dnGa = id; window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date()); window.gtag("config", id);
+    var s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id); document.head.appendChild(s);
+  }
+  function showConsent(id) {
+    var old = document.querySelector(".dn-consent"); if (old) old.remove();
+    var box = document.createElement("div"); box.className = "dn-consent"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Cookies");
+    var p = document.createElement("p"); p.textContent = "We use Google Analytics to count visits and see which pages help. It sets cookies. The site works the same if you decline.";
+    var row = document.createElement("div"); row.className = "dn-consent-btns";
+    [["denied", "Decline"], ["granted", "Accept"]].forEach(function (b) {
+      var btn = document.createElement("button"); btn.type = "button"; btn.textContent = b[1];
+      btn.addEventListener("click", function () {
+        rememberConsent(b[0]); box.remove(); document.documentElement.classList.remove("dn-consent-on");
+        if (b[0] === "granted") loadGa(id); else { window["ga-disable-" + id] = true; clearGaCookies(); }
+      });
+      row.appendChild(btn);
+    });
+    box.appendChild(p); box.appendChild(row); document.body.appendChild(box);
+    document.documentElement.classList.add("dn-consent-on");
+  }
+  function analytics(a) {
+    if (!a || a.on === false || !/^G-[A-Z0-9]{4,14}$/.test(a.id || "")) return;
+    var st = consentState();
+    if (st === "granted") loadGa(a.id);
+    else if (!st) { if (navigator.globalPrivacyControl === true) rememberConsent("denied"); else showConsent(a.id); }
+    var nav = document.querySelector(".foot-links");
+    if (nav && !nav.querySelector(".cookie-settings")) {
+      var l = document.createElement("a"); l.href = "#"; l.className = "cookie-settings"; l.textContent = "Cookie settings";
+      l.addEventListener("click", function (e) { e.preventDefault(); showConsent(a.id); });
+      nav.appendChild(l);
+    }
+  }
   function apply(c) {
     var s = c.settings || {};
-    forms(c); formNote(c);
+    forms(c); formNote(c); analytics(c.analytics);
     if (s.email) { window.__DN_EMAIL = s.email; document.querySelectorAll(".menu-mail").forEach(function (m) { m.textContent = s.email; }); }
     var soc = s.social || {}, map = { instagram: "Instagram", linkedin: "LinkedIn", whatsapp: "WhatsApp", pinterest: "Pinterest" };
     Object.keys(map).forEach(function (k) { if (soc[k]) document.querySelectorAll('.foot-social a[aria-label$="' + map[k] + '"]').forEach(function (a) { a.href = soc[k]; }); });

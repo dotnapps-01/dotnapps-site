@@ -2394,3 +2394,13 @@ label[hidden] { display: none !important; }
 /* the short privacy note under each form */
 .form-note { margin: 0; font-size: .74rem; line-height: 1.5; color: var(--faint); text-align: left; }
 .form-note[hidden] { display: none; }
+
+/* Cookie choice (shown only when Google Analytics is switched on in the admin): equal Accept and Decline buttons, no dimming of the page */
+.dn-consent { position: fixed; z-index: 80; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); transform: translateX(-50%); width: min(560px, calc(100vw - 24px)); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .7rem 1.1rem; padding: .85rem 1rem; background: var(--frame); border: 1px solid var(--border); border-radius: 14px; color: var(--text); }
+.dn-consent p { margin: 0; flex: 1 1 240px; font-size: .82rem; line-height: 1.5; color: var(--muted); }
+.dn-consent-btns { display: flex; gap: .5rem; flex: none; }
+.dn-consent button { font: inherit; font-size: .82rem; font-weight: 500; padding: .5rem 1.05rem; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .2s ease, color .2s ease; }
+.dn-consent button:hover, .dn-consent button:focus-visible { background: var(--ink); color: var(--frame); }
+.dn-consent button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.dn-consent-on .dn-banner { display: none; }
+@media (max-width: 480px) { .dn-consent-btns { width: 100%; } .dn-consent-btns button { flex: 1; } }

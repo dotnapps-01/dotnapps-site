@@ -217,6 +217,11 @@ function cleanPublic(p) {
   const fn = p.formNote && typeof p.formNote === 'object' ? p.formNote : {};
   const fnt = str(fn.text, 200);
   if (fn.on === false || fnt) out.formNote = Object.assign({}, fn.on === false ? { on: false } : {}, fnt ? { text: fnt } : {});
+  /* Google Analytics: a GA4 Measurement ID (G-XXXXXXXXXX). It is public by nature (it sits in the page source of any site that uses it).
+     The site only loads Analytics after a visitor accepts the cookie banner. A switched-off ID is kept so it can be switched back on. */
+  const an = p.analytics && typeof p.analytics === 'object' ? p.analytics : {};
+  const gid = str(an.id, 24).toUpperCase().replace(/\s+/g, '');
+  if (/^G-[A-Z0-9]{4,14}$/.test(gid)) out.analytics = Object.assign({ id: gid }, an.on === false ? { on: false } : {});
   return out;
 }
 const MASK = '********';

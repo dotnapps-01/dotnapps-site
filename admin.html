@@ -293,7 +293,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   }
   function ensure() {
     S.pub.settings = S.pub.settings || {}; S.pub.settings.social = S.pub.settings.social || {}; S.pub.settings.banner = S.pub.settings.banner || {};
-    S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {}; S.pub.forms = S.pub.forms || {};
+    S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {}; S.pub.forms = S.pub.forms || {}; S.pub.analytics = S.pub.analytics || {};
     S.priv.crm = S.priv.crm || { enabled: false, url: "", format: "json", headerName: "", secret: "" };
     if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "project", "contact", "enquiry", "businessos"];
     S.priv.forms = S.priv.forms || {};
@@ -618,6 +618,11 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<div class="card"><h2>Contact email</h2><p class="sub">Shown in the mobile menu, and used when a visitor\'s form falls back to opening their email app.</p>' + fld("Email", "pub.settings.email", "hello@dotnapps.com", "email") + '</div>' +
       '<div class="card"><h2>Social links</h2><p class="sub">The icons in the footer. Leave one empty to keep the current link.</p><div class="grid2">' + fld("Instagram", "pub.settings.social.instagram", "https://www.instagram.com/…", "url") + fld("LinkedIn", "pub.settings.social.linkedin", "https://www.linkedin.com/company/…", "url") + fld("WhatsApp", "pub.settings.social.whatsapp", "https://wa.me/…", "url") + fld("Pinterest", "pub.settings.social.pinterest", "https://www.pinterest.com/…", "url") + '</div></div>' +
       '<div class="card"><h2>Site notice</h2><p class="sub">A small pill at the bottom of every page. Visitors can dismiss it.</p><label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="pub.settings.banner.on"' + (P.banner.on ? " checked" : "") + '><span></span></span><span>Show the notice</span></label><div class="grid2">' + fld("Text", "pub.settings.banner.text", "We're closed on Friday") + fld("Link (optional)", "pub.settings.banner.link", "https://… or /services", "text") + '</div></div>' +
+      '<div class="card"><h2>Google Analytics</h2><p class="sub">Count visits and see which pages and forms work. Visitors get a cookie choice first, and nothing is sent to Google until they accept.</p>' +
+      '<label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="pub.analytics.on"' + ((S.pub.analytics || {}).on === false ? "" : " checked") + '><span></span></span><span>Use Google Analytics</span></label>' +
+      fld("Measurement ID", "pub.analytics.id", "G-XXXXXXXXXX", "text", "In Google Analytics: Admin, then Data streams, then your website stream. The ID starts with G-.") +
+      '<p class="hint" id="gaHint" style="margin-top:.6rem"></p>' +
+      '<p class="hint">Each form sent is also reported to Analytics as a <span class="mono">generate_lead</span> event (the form name only, nothing personal), for people who accepted. After saving, open your site, press Accept, and look at Reports, then Realtime, in Analytics.</p></div>' +
       '<div class="card"><h2>CRM integration</h2><p class="sub">Every new lead is saved here <b>and</b> sent to your CRM by webhook. Works with any CRM or automation tool that accepts a POST (HubSpot, Zoho, Pipedrive, Zapier, Make, n8n…). The secret never reaches the website.</p>' +
       '<label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="priv.crm.enabled"' + (C.enabled ? " checked" : "") + '><span></span></span><span>Send new leads to my CRM</span></label>' +
       '<div class="card" style="background:var(--sunken);margin:0 0 1rem"><h2>Quick setup: Dotnapps CRM</h2><p class="sub" style="margin-bottom:.7rem">For the CRM at workspace.dotnapps.com. Enter your workspace slug and the secret from the CRM\'s <span class="mono">INBOUND_LEAD_KEYS</span>, then press Fill in.</p><div class="grid2"><label class="f">Workspace slug<input type="text" id="qs-slug" placeholder="dotnapps" autocomplete="off"></label><label class="f">Secret<input type="password" id="qs-secret" autocomplete="off" placeholder="from INBOUND_LEAD_KEYS"></label></div><div class="row" style="margin-top:.8rem"><button class="btn ghost sm" type="button" id="qs-fill">Fill in the fields below</button><span id="qs-msg" class="hint" style="margin:0"></span></div></div>' +
@@ -629,8 +634,17 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p>' +
       '<p class="hint">Flat JSON sends only: <span class="mono">{ name, email, company, message, page }</span>, with the form name added to the message. Use it with the Dotnapps CRM address and the <span class="mono">X-Capture-Key</span> header.</p></div>';
     v.addEventListener("input", bind); v.addEventListener("change", bind);
+    function gaHint() {
+      var h = $("#gaHint"), id = String((S.pub.analytics || {}).id || "").trim().toUpperCase(); if (!h) return;
+      if (!id) { h.textContent = ""; return; }
+      var good = /^G-[A-Z0-9]{4,14}$/.test(id);
+      h.textContent = good ? "✓ That looks like a valid Measurement ID." : "That doesn’t look like a Google Analytics 4 Measurement ID. It starts with G- followed by letters and numbers. Older IDs starting UA- no longer work.";
+      h.style.color = good ? "var(--ok)" : "var(--bad)";
+    }
+    gaHint();
     function bind(e) {
       var k = e.target.dataset.bind; if (!k) return;
+      if (k === "pub.analytics.id") setTimeout(gaHint, 0);
       var val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
       var root = k.slice(0, 3) === "pub" ? S.pub : S.priv; setp(root, k.replace(/^(pub|priv)\./, ""), val); markDirty();
     }
