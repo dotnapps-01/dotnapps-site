@@ -40,7 +40,9 @@ visitor's chat box.
   right after they answer the cookie banner (or a few seconds in when there is no banner),
   then "Need any help?" about a minute later, with a button to reach the team. The second
   is skipped if they have already opened the chat. Browsers only allow sound after a tap,
-  so with no tap the pop-ups appear silently. On phones
+  so with no tap the pop-ups appear silently. A visitor who saw "Hi there!" in an earlier
+  visit gets no help message out of the blue. To see both again while testing, add
+  `?bloop=reset` to any page address (e.g. `https://www.dotnapps.com/?bloop=reset`). On phones
   the chat is a compact card, with a button in the header to make it full screen.
   The keyboard never opens by itself; when it is open the suggestions and footer step aside.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then

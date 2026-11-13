@@ -741,6 +741,7 @@
   // otherwise the messages simply appear quietly.
   var GREET_KEY = "dotnapps-bloop-greeted";
   var HELP_KEY = "dotnapps-bloop-help";
+  var SEQ_KEY = "dotnapps-bloop-seq"; // this tab: when "Hi there!" was shown, so the help message can follow on the next page
   var HELP_DELAY = 60000;
   var audioCtx = null, audioReady = false;
   function primeAudio() {
@@ -828,7 +829,7 @@
   }
   function showGreeting() {
     if (alreadyGreeted() || !panel.hidden || live || msgs.length) return;
-    try { localStorage.setItem(GREET_KEY, String(Date.now())); } catch (e) {}
+    try { localStorage.setItem(GREET_KEY, String(Date.now())); sessionStorage.setItem(SEQ_KEY, String(Date.now())); } catch (e) {}
     present("hi");
     scheduleHelp(HELP_DELAY);
   }
@@ -851,11 +852,16 @@
     present("help");
   }
   function scheduleGreeting() {
+    // Add ?bloop=reset to any page address to see both messages again (it clears what this browser remembers).
+    if (/[?&]bloop=reset\b/.test(location.search)) {
+      try { localStorage.removeItem(GREET_KEY); localStorage.removeItem(HELP_KEY); sessionStorage.removeItem(SEQ_KEY); } catch (e) {}
+    }
     if (alreadyGreeted()) {
-      // Same visit, another page: the help message still arrives about a minute after the first one.
+      // Same tab, another page: the help message still arrives about a minute after "Hi there!". A visitor who
+      // saw "Hi there!" in an earlier visit gets no help message out of the blue.
       try {
-        var age = Date.now() - (+localStorage.getItem(GREET_KEY));
-        if (!helpDone() && age < 30 * 60 * 1000) scheduleHelp(Math.max(4000, HELP_DELAY - age));
+        var seq = +sessionStorage.getItem(SEQ_KEY);
+        if (seq && !helpDone() && Date.now() - seq < 30 * 60 * 1000) scheduleHelp(Math.max(4000, HELP_DELAY - (Date.now() - seq)));
       } catch (e) {}
       return;
     }
