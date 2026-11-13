@@ -2397,15 +2397,19 @@ label[hidden] { display: none !important; }
 .form-note { margin: 0; font-size: .74rem; line-height: 1.5; color: var(--faint); text-align: left; }
 .form-note[hidden] { display: none; }
 
-/* Cookie choice (shown only when Google Analytics is switched on in the admin): equal Accept and Decline buttons, no dimming of the page */
-.dn-consent { position: fixed; z-index: 80; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); transform: translateX(-50%); width: min(560px, calc(100vw - 24px)); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .7rem 1.1rem; padding: .85rem 1rem; background: var(--frame); border: 1px solid var(--border); border-radius: 14px; color: var(--text); }
-.dn-consent p { margin: 0; flex: 1 1 240px; font-size: .82rem; line-height: 1.5; color: var(--muted); }
-.dn-consent-btns { display: flex; gap: .5rem; flex: none; }
-.dn-consent button { font: inherit; font-size: .82rem; font-weight: 500; padding: .5rem 1.05rem; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .2s ease, color .2s ease; }
-.dn-consent button:hover, .dn-consent button:focus-visible { background: var(--ink); color: var(--frame); }
+/* Cookie choice (shown only when Google Analytics is switched on in the admin): a small one-line pill, bottom-left. Accept and Decline look identical so neither is pushed; the page is never dimmed. It eases up into view and eases away. */
+.dn-consent { position: fixed; z-index: 80; left: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); max-width: calc(100vw - 24px); box-sizing: border-box; display: flex; align-items: center; gap: .6rem; padding: .3rem .3rem .3rem 1rem; background: var(--frame); border: 1px solid var(--border); border-radius: 999px; color: var(--text); font-size: .8rem; white-space: nowrap; opacity: 0; transform: translateY(18px) scale(.96); transform-origin: left bottom; pointer-events: none; transition: opacity .55s ease, transform .7s cubic-bezier(.2, .9, .25, 1); }
+.dn-consent.in { opacity: 1; transform: none; pointer-events: auto; }
+.dn-consent.out { opacity: 0; transform: translateY(10px) scale(.97); pointer-events: none; transition-duration: .3s; }
+.dn-consent-q { color: var(--muted); }
+.dn-consent-btns { display: flex; gap: .3rem; flex: none; }
+.dn-consent button { font: inherit; font-size: .78rem; font-weight: 500; padding: .38rem .85rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--ink); cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.dn-consent button:hover, .dn-consent button:focus-visible { background: var(--ink); color: var(--frame); border-color: var(--ink); }
 .dn-consent button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .dn-consent-on .dn-banner { display: none; }
-@media (max-width: 480px) { .dn-consent-btns { width: 100%; } .dn-consent-btns button { flex: 1; } }
+@media (max-width: 420px) { .dn-consent-a { display: none; } }
+@media (max-width: 380px) { .dn-consent { padding-left: .8rem; gap: .4rem; font-size: .76rem; } .dn-consent button { padding: .38rem .7rem; } }
+@media (prefers-reduced-motion: reduce) { .dn-consent, .dn-consent.out { transform: none; transition: opacity .2s ease; } }
 
 /* Headings use the heading font (Plus Jakarta Sans); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
 h1, h2, h3, h4 { font-family: var(--font-head); }
