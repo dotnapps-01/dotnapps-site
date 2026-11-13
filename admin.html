@@ -264,14 +264,14 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     function page(u) { return fetch(u, { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (t) { return new DOMParser().parseFromString(t, "text/html"); }).catch(function () { return null; }); }
     return Promise.all([page("/services"), page("/products")]).then(function (p) {
       var groups = [], prods = [];
-      if (p[0]) $$(".svc-group", p[0]).forEach(function (g) {
+      if (p[0]) $$("#custom-build .svc-group", p[0]).forEach(function (g) {
         var items = $$(".sg > li", g).map(function (li) {
           var fit = $(".svc-fit", li), b = fit && $("b", fit);
-          return { slug: li.id, n: ($(".pf-n", li) || {}).textContent || "", title: $("h3", li).textContent, lead: $(".svc-lead", li).textContent.trim(), inc: $$(".svc-inc li", li).map(function (x) { return x.textContent.trim(); }), fit: fit ? fit.textContent.replace(b ? b.textContent : "", "").trim() : "" };
+          return { slug: li.id, n: ($(".pf-n", li) || {}).textContent || "", title: (($("h3", li) || {}).textContent || "").trim(), lead: (($(".svc-lead", li) || {}).textContent || "").trim(), inc: $$(".svc-inc li", li).map(function (x) { return x.textContent.trim(); }), fit: fit ? fit.textContent.replace(b ? b.textContent : "", "").trim() : "" };
         });
         groups.push({ letter: ($(".svc-gh .l", g) || {}).textContent || "", name: ($(".svc-gh h2", g) || {}).textContent || "", items: items });
       });
-      if (p[1]) $$(".pc", p[1]).forEach(function (c) { prods.push({ slug: c.id, n: ($(".pc-n", c) || {}).textContent || "", title: $("h3", c).textContent, desc: $("p", c).textContent.trim() }); });
+      if (p[1]) $$(".pc", p[1]).forEach(function (c) { prods.push({ slug: c.id, n: ($(".pc-n", c) || {}).textContent || "", title: (($("h3", c) || {}).textContent || "").trim(), desc: (($("p", c) || {}).textContent || "").trim() }); });
       S.def = { groups: groups, products: prods };
     });
   }
