@@ -335,6 +335,14 @@
 .dn-greet-eye::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
 .dn-greet-t { display: block; font-size: 1.02rem; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
 .dn-greet-p { display: block; margin-top: .15rem; font-size: .9rem; color: var(--muted); }
+.dn-greet-act {
+  display: inline-flex; align-items: center; gap: .4rem; margin: 0 1rem .9rem; padding: .4rem .85rem;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--dn-tray); color: var(--text);
+  font: inherit; font-size: .84rem; font-weight: 500; cursor: pointer;
+}
+.dn-greet-act[hidden] { display: none; }
+.dn-greet-act::after { content: "\2192"; color: var(--muted); }
+.dn-greet-act:hover { background: var(--dn-card); }
 .dn-greet-x {
   position: absolute; top: .4rem; right: .4rem; width: 30px; height: 30px; padding: 0; display: grid; place-items: center;
   border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;

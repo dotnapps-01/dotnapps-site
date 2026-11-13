@@ -421,7 +421,7 @@
   send.addEventListener("mousedown", function (e) { e.preventDefault(); });
 
   function setOpen(open) {
-    if (open) hideGreeting();
+    if (open) { hideGreeting(); markEngaged(); }
     else { kbdWanted = false; panel.classList.remove("dn-kbd"); }
     panel.hidden = !open;
     launch.setAttribute("aria-expanded", open ? "true" : "false");
@@ -731,12 +731,17 @@
     window.visualViewport.addEventListener("scroll", fit);
   }
 
-  // ---- greeting pop-up with a soft chime --------------------------------
-  // Shown once per visitor, after the cookie choice (or a few seconds in, if there is no
-  // cookie banner). Browsers only allow sound after a tap or key press, and the tap on the
-  // cookie banner counts, so the chime is prepared on the first tap and played only if it
-  // is allowed; otherwise the greeting simply appears quietly.
+  // ---- two pop-up messages with a soft chime ----------------------------
+  // 1. "Hi there!" once per visitor, after the cookie choice (or a few seconds in, if there
+  //    is no cookie banner).
+  // 2. "Need any help?" about a minute later, with a button to reach the team. It is skipped
+  //    if the visitor has already opened the chat.
+  // Browsers only allow sound after a tap or key press, and the tap on the cookie banner
+  // counts, so the chime is prepared on the first tap and played only if it is allowed;
+  // otherwise the messages simply appear quietly.
   var GREET_KEY = "dotnapps-bloop-greeted";
+  var HELP_KEY = "dotnapps-bloop-help";
+  var HELP_DELAY = 60000;
   var audioCtx = null, audioReady = false;
   function primeAudio() {
     try {
@@ -748,11 +753,11 @@
     } catch (e) {}
   }
   ["pointerdown", "keydown", "touchstart"].forEach(function (t) { document.addEventListener(t, primeAudio, { capture: true, passive: true }); });
-  function chime() {
+  function chime(soft) {
     if (!audioReady || !audioCtx || audioCtx.state !== "running") return false;
     try {
       var t0 = audioCtx.currentTime;
-      [[659.25, 0, 0.2], [880, 0.13, 0.34]].forEach(function (n) {
+      (soft ? [[880, 0, 0.3]] : [[659.25, 0, 0.2], [880, 0.13, 0.34]]).forEach(function (n) {
         var o = audioCtx.createOscillator(), g = audioCtx.createGain();
         o.type = "sine";
         o.frequency.value = n[0];
@@ -773,36 +778,87 @@
   greet.setAttribute("role", "status");
   var greetOpen = el("button", "dn-greet-open");
   greetOpen.type = "button";
+  var greetTitle = el("strong", "dn-greet-t");
+  var greetText = el("span", "dn-greet-p");
   greetOpen.appendChild(el("span", "dn-greet-eye", "BLOOP"));
-  greetOpen.appendChild(el("strong", "dn-greet-t", "Hi, I\u2019m BLOOP."));
-  greetOpen.appendChild(el("span", "dn-greet-p", "Ask me about our services, Business OS or how we work."));
+  greetOpen.appendChild(greetTitle);
+  greetOpen.appendChild(greetText);
+  var greetAct = el("button", "dn-greet-act", "Talk to our team");
+  greetAct.type = "button";
   var greetX = el("button", "dn-greet-x");
   greetX.type = "button";
   greetX.setAttribute("aria-label", "Dismiss greeting");
   greetX.appendChild(icon("M6 6l12 12M18 6L6 18"));
   greet.appendChild(greetOpen);
+  greet.appendChild(greetAct);
   greet.appendChild(greetX);
   document.body.appendChild(greet);
 
-  var greetTimer = 0;
+  var greetTimer = 0, helpTimer = 0;
   function hideGreeting() { clearTimeout(greetTimer); greet.hidden = true; }
   greetOpen.addEventListener("click", function () { setOpen(true); });
+  greetAct.addEventListener("click", function () { setOpen(true); showHandoff(); });
   greetX.addEventListener("click", function () { hideGreeting(); launch.focus({ preventScroll: true }); });
 
-  function alreadyGreeted() {
-    try { var v = +localStorage.getItem(GREET_KEY); return !!v && Date.now() - v < 30 * 864e5; } catch (e) { return false; }
+  function recent(key, ms) {
+    try { var v = +localStorage.getItem(key); return !!v && Date.now() - v < ms; } catch (e) { return false; }
+  }
+  function alreadyGreeted() { return recent(GREET_KEY, 30 * 864e5); }
+  function helpDone() { return recent(HELP_KEY, 30 * 864e5); }
+  // Opening the chat means the visitor found BLOOP: no help nudge after that.
+  function markEngaged() {
+    clearTimeout(helpTimer);
+    try { localStorage.setItem(HELP_KEY, String(Date.now())); } catch (e) {}
+  }
+
+  // Put one of the two messages on screen.
+  function present(kind) {
+    var help = kind === "help";
+    greetTitle.textContent = help ? "Need any help?" : "Hi there!";
+    greetText.textContent = help
+      ? "I can answer questions right now, or connect you with our team."
+      : "I\u2019m BLOOP. Ask me about our services, Business OS or how we work.";
+    greetAct.hidden = !help;
+    greet.hidden = true; void greet.offsetWidth; greet.hidden = false; // restart the pop-in
+    launchFace.setAttribute("data-state", help ? "help" : "excited");
+    setTimeout(function () { if (!launch.hasAttribute("data-unread")) launchFace.setAttribute("data-state", "idle"); }, 2200);
+    chime(help);
+    clearTimeout(greetTimer);
+    greetTimer = setTimeout(hideGreeting, help ? 20000 : 12000);
   }
   function showGreeting() {
     if (alreadyGreeted() || !panel.hidden || live || msgs.length) return;
     try { localStorage.setItem(GREET_KEY, String(Date.now())); } catch (e) {}
-    greet.hidden = false;
-    launchFace.setAttribute("data-state", "excited");
-    setTimeout(function () { if (!launch.hasAttribute("data-unread")) launchFace.setAttribute("data-state", "idle"); }, 2200);
-    chime();
-    greetTimer = setTimeout(hideGreeting, 16000);
+    present("hi");
+    scheduleHelp(HELP_DELAY);
+  }
+  function scheduleHelp(ms) {
+    clearTimeout(helpTimer);
+    if (helpDone()) return;
+    helpTimer = setTimeout(showHelp, ms);
+  }
+  function showHelp() {
+    if (helpDone() || !panel.hidden || live || msgs.length) return;
+    if (document.hidden) { // wait until the visitor is looking at the page again
+      document.addEventListener("visibilitychange", function again() {
+        if (document.hidden) return;
+        document.removeEventListener("visibilitychange", again);
+        helpTimer = setTimeout(showHelp, 3000);
+      });
+      return;
+    }
+    try { localStorage.setItem(HELP_KEY, String(Date.now())); } catch (e) {}
+    present("help");
   }
   function scheduleGreeting() {
-    if (alreadyGreeted()) return;
+    if (alreadyGreeted()) {
+      // Same visit, another page: the help message still arrives about a minute after the first one.
+      try {
+        var age = Date.now() - (+localStorage.getItem(GREET_KEY));
+        if (!helpDone() && age < 30 * 60 * 1000) scheduleHelp(Math.max(4000, HELP_DELAY - age));
+      } catch (e) {}
+      return;
+    }
     function watch(banner) {
       var mo = new MutationObserver(function () {
         if (!document.body.contains(banner)) { mo.disconnect(); setTimeout(go, 1200); }

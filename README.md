@@ -36,9 +36,11 @@ visitor's chat box.
   The launcher is just BLOOP, built like the round menu button on phones: an outlined
   circle with a solid disc and the face in the opposite colour (white on black on the
   light site, black on white on the dark one); the chat box uses the site's own colours.
-  A visitor is greeted once (30 days) by a small pop-up with a soft chime: right after
-  they answer the cookie banner, or a few seconds in when there is no banner. Browsers
-  only allow sound after a tap, so with no tap the greeting appears silently. On phones
+  A visitor gets two small pop-ups, once each (30 days): "Hi there!" with a soft chime
+  right after they answer the cookie banner (or a few seconds in when there is no banner),
+  then "Need any help?" about a minute later, with a button to reach the team. The second
+  is skipped if they have already opened the chat. Browsers only allow sound after a tap,
+  so with no tap the pop-ups appear silently. On phones
   the chat is a compact card, with a button in the header to make it full screen.
   The keyboard never opens by itself; when it is open the suggestions and footer step aside.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
