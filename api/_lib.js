@@ -246,7 +246,13 @@ async function forward(crm, lead, event) {
   try {
     const r = await fetch(crm.url, { method: 'POST', headers, body, signal: ctl.signal, redirect: 'manual' });
     clearTimeout(t);
-    return r.status >= 200 && r.status < 300 ? { status: 'sent', code: r.status, at } : { status: 'failed', error: 'HTTP ' + r.status, code: r.status, at };
+    if (r.status >= 200 && r.status < 300) return { status: 'sent', code: r.status, at };
+    /* say why the CRM refused it: its own message, and whether a key header was sent at all */
+    let why = '';
+    try { const tx = (await r.text()).slice(0, 400); try { const j = JSON.parse(tx); why = String(j.error || j.message || ''); } catch (e2) { why = ''; } } catch (e3) { why = ''; }
+    why = why.replace(/[\u0000-\u001f<>]/g, ' ').slice(0, 140).trim();
+    const sent = crm.headerName && crm.secret ? ' [key header sent: ' + crm.headerName + ', ' + String(crm.secret).length + ' characters]' : ' [no key header was sent: fill in the header name and value]';
+    return { status: 'failed', error: 'HTTP ' + r.status + (why ? ' - ' + why : '') + sent, code: r.status, at };
   } catch (e) { clearTimeout(t); return { status: 'failed', error: e.name === 'AbortError' ? 'timed out' : 'network error', at }; }
 }
 
