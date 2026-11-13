@@ -5,7 +5,20 @@ const crypto = require('crypto');
 /* ---------------- storage ----------------
    Production: Upstash Redis over REST (Vercel Marketplace "Upstash for Redis" or Vercel KV set these env vars).
    Local testing only: DN_STORE=memory keeps everything in process memory. */
-const mem = { kv: new Map(), hash: new Map(), ctr: new Map() };
+const mem = { kv: new Map(), hash: new Map(), ctr: new Map(), sets: new Map() };
+
+/* the few extra commands the visit counter needs, for the in-memory test store */
+function memCmd(c) {
+  const op = String(c[0]).toUpperCase(), k = c[1];
+  if (op === 'HINCRBY') { if (!mem.hash.has(k)) mem.hash.set(k, new Map()); const m = mem.hash.get(k); const v = (parseInt(m.get(c[2]), 10) || 0) + Number(c[3]); m.set(c[2], String(v)); return v; }
+  if (op === 'PFADD') { if (!mem.sets.has(k)) mem.sets.set(k, new Set()); const s = mem.sets.get(k), had = s.has(c[2]); s.add(c[2]); return had ? 0 : 1; }
+  if (op === 'PFCOUNT') { const u = new Set(); c.slice(1).forEach((key) => (mem.sets.get(key) || []).forEach((x) => u.add(x))); return u.size; }
+  if (op === 'HGETALL') { const m = mem.hash.get(k), out = []; if (m) m.forEach((v, f) => out.push(f, v)); return out; }
+  if (op === 'EXPIRE') return 1;
+  throw new Error('unsupported in the memory store: ' + op);
+}
+/* days are counted in Indian time, so "today" in the admin is today in India */
+const dayOf = (ms) => new Date(ms + 330 * 60000).toISOString().slice(0, 10);
 
 function restConf() {
   const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
@@ -50,6 +63,15 @@ const store = {
   async hdel(k, f) {
     if (storeKind() === 'memory') { const m = mem.hash.get(k); return m && m.delete(f) ? 1 : 0; }
     return rest(['HDEL', k, f]);
+  },
+  /* several commands in one round trip (Upstash pipeline); results come back in order */
+  async multi(cmds) {
+    if (storeKind() === 'memory') return cmds.map(memCmd);
+    const c = restConf();
+    const r = await fetch(c.url + '/pipeline', { method: 'POST', headers: { Authorization: 'Bearer ' + c.token, 'Content-Type': 'application/json' }, body: JSON.stringify(cmds) });
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !Array.isArray(j)) throw new Error('store error ' + r.status);
+    return j.map((x) => { if (x && x.error) throw new Error(x.error); return x && x.result; });
   },
   /* counter that expires after `ttl` seconds — used for rate limits */
   async incr(k, ttl) {
@@ -296,4 +318,4 @@ async function forward(crm, lead, event) {
   } catch (e) { clearTimeout(t); return { status: 'failed', error: e.name === 'AbortError' ? 'timed out' : 'network error', at }; }
 }
 
-module.exports = { store, storeKind, send, readBody, clientIp, sha, secret, sign, verify, cookies, passwordOk, setSession, clearSession, isAdmin, guard, K_PUBLIC, K_PRIVATE, K_LEADS, getPublic, getPrivate, cleanPublic, cleanPrivate, maskPrivate, MASK, forward, str };
+module.exports = { dayOf, store, storeKind, send, readBody, clientIp, sha, secret, sign, verify, cookies, passwordOk, setSession, clearSession, isAdmin, guard, K_PUBLIC, K_PRIVATE, K_LEADS, getPublic, getPrivate, cleanPublic, cleanPrivate, maskPrivate, MASK, forward, str };

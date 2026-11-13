@@ -151,6 +151,20 @@ h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.
 .cform[hidden], .chead .btn[hidden] { display: none; }
 @media (max-width: 899px) { .chats.open .clist { display: none; } .chats:not(.open) .cthread { display: none; } .cback { display: inline-flex; } }
 
+/* analytics tab */
+.anchart { display: flex; align-items: flex-end; gap: 3px; height: 130px; margin-top: .8rem; }
+.anchart i { flex: 1; min-width: 2px; background: var(--ink); opacity: .85; border-radius: 2px 2px 0 0; }
+.anchart i:hover { opacity: 1; }
+.anaxis { display: flex; justify-content: space-between; margin-top: .4rem; font: 400 .66rem var(--mono); letter-spacing: .08em; color: var(--muted); }
+.angrid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1rem; }
+@media (min-width: 900px) { .angrid { grid-template-columns: 1fr 1fr; } }
+.angrid .card + .card { margin-top: 0; }
+.anrow { position: relative; display: flex; justify-content: space-between; gap: 1rem; padding: .42rem .55rem; margin-top: .25rem; font-size: .88rem; border-radius: 6px; overflow: hidden; }
+.anfill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--sunken); z-index: 0; }
+.anlab, .annum { position: relative; z-index: 1; }
+.anlab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.annum { flex: none; font-variant-numeric: tabular-nums; }
+.annum i { font-style: normal; color: var(--muted); font-size: .76rem; margin-left: .35rem; }
 /* forms tab */
 .fcard { display: grid; gap: .8rem; }
 .fhead { display: flex; align-items: center; gap: .6rem; }
@@ -376,13 +390,13 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<header class="top"><div class="top-in"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><span class="grow"></span>' +
       '<span class="store">Storage · ' + esc(S.store === "memory" ? "memory (testing)" : "connected") + '</span><span class="dirty" id="dirty" hidden>Unsaved changes</span>' +
       '<button class="btn sm" id="save" disabled>Save changes</button><a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site ↗</a><button class="btn ghost sm" id="out">Sign out</button></div></header>' +
-      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("chats", "Chats", CH.waiting || 0) + tabBtn("forms", "Forms") + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
+      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("chats", "Chats", CH.waiting || 0) + tabBtn("forms", "Forms") + tabBtn("analytics", "Analytics") + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
     $$(".tabs button").forEach(function (b) { b.addEventListener("click", function () { S.tab = b.dataset.t; S.open = null; shell(); }); });
     $("#save").addEventListener("click", save);
     $("#save").disabled = !S.dirty; $("#dirty").hidden = !S.dirty;
     $("#out").addEventListener("click", function () { api("/api/auth", { method: "DELETE" }).then(function () { S.dirty = false; stopChats(); loginView(); }); });
     var v = $("#view");
-    ({ leads: viewLeads, chats: viewChats, forms: viewForms, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
+    ({ leads: viewLeads, chats: viewChats, forms: viewForms, analytics: viewAnalytics, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
     startChats();
   }
   function tabBtn(t, label, n) { return '<button role="tab" data-t="' + t + '" aria-selected="' + (S.tab === t) + '">' + label + (n ? '<span class="n">' + n + '</span>' : "") + '</button>'; }
@@ -642,6 +656,55 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       var k = b.dataset.view || b.dataset.k;
       S.f = { q: "", status: "", source: k }; S.tab = "leads"; S.open = b.dataset.lead || null; shell();
     };
+  }
+
+  /* ---------- Analytics: our own cookie-free visit counter ---------- */
+  var PAGE_NAMES = { "/": "Home", "/products": "Business OS", "/services": "Services", "/work": "Work", other: "Other pages" };
+  function srcName(k) { return k === "direct" ? "Direct or unknown" : k.slice(0, 4) === "utm:" ? k.slice(4) + " (campaign)" : k; }
+  function countryName(c) { if (c === "??") return "Unknown"; try { return new Intl.DisplayNames(["en"], { type: "region" }).of(c) || c; } catch (e) { return c; } }
+  function dayLabel(d) { try { return new Date(d + "T12:00:00").toLocaleDateString([], { day: "numeric", month: "short" }); } catch (e) { return d; } }
+  function viewAnalytics(v) {
+    var days = S.anDays || 30;
+    v.innerHTML = '<h1>Analytics</h1><p class="sub">Visits to your site, counted by the site itself. No cookies, no Google, nothing that identifies a person.</p>' +
+      '<div class="bar"><select id="anrange" aria-label="Period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select><button class="btn ghost sm" id="anrefresh" type="button">Refresh</button></div>' +
+      '<div id="anbody"><p class="hint">Loading…</p></div>';
+    $("#anrange").value = String(days);
+    function list(title, items, label, total) {
+      if (!items.length) return '<div class="card"><h2>' + title + '</h2><p class="hint" style="margin:0">Nothing yet.</p></div>';
+      var max = items[0].n || 1;
+      return '<div class="card anlist"><h2>' + title + '</h2>' + items.map(function (x) {
+        return '<div class="anrow"><span class="anfill" style="width:' + Math.max(3, Math.round(x.n / max * 100)) + '%"></span><span class="anlab">' + esc(label(x.k)) + '</span><span class="annum">' + x.n + (total ? ' <i>' + Math.round(x.n / total * 100) + '%</i>' : '') + '</span></div>';
+      }).join("") + '</div>';
+    }
+    function draw(d) {
+      var t = d.totals, max = Math.max.apply(null, d.perDay.map(function (x) { return x.visitors; }).concat([1]));
+      var rate = t.visitors ? (t.forms / t.visitors * 100).toFixed(1) : "–";
+      var today = d.perDay[d.perDay.length - 1] || { visitors: 0 };
+      var html = '<div class="tiles">' + tile("Visitors", t.visitors) + tile("Page views", t.views) + tile("Forms sent", t.forms) + tile("Forms per 100 visitors", rate) + '</div>';
+      if (!t.views) {
+        html += '<div class="empty"><b>No visits counted yet</b><br>Counting starts when this goes live. Visits appear here as people open the site. Your own visits while you are signed in to the admin are not counted.</div>';
+      } else {
+        html += '<div class="card"><div class="fhead"><h2>Visitors per day</h2><span class="chip">today ' + today.visitors + '</span></div>' +
+          '<div class="anchart" role="img" aria-label="Visitors per day">' + d.perDay.map(function (x) {
+            return '<i style="height:' + Math.max(2, Math.round(x.visitors / max * 100)) + '%" title="' + esc(dayLabel(x.d)) + ': ' + x.visitors + ' visitors, ' + x.views + ' views, ' + x.forms + ' forms sent"></i>';
+          }).join("") + '</div><div class="anaxis"><span>' + esc(dayLabel(d.perDay[0].d)) + '</span><span>' + esc(dayLabel(d.perDay[d.perDay.length - 1].d)) + '</span></div></div>' +
+          '<div class="angrid">' + list("Top pages", d.pages, function (k) { return PAGE_NAMES[k] || k; }, t.views) +
+          list("Where visitors come from", d.sources, srcName, t.views) +
+          list("Countries", d.countries, countryName, t.views) +
+          list("Devices", d.devices, function (k) { return k.charAt(0).toUpperCase() + k.slice(1); }, t.views) +
+          list("Forms sent, by form", d.formsByForm, function (k) { return SOURCES[k] || k; }, t.forms) + '</div>';
+      }
+      html += '<div class="card" style="margin-top:1rem"><h2>How these numbers are counted</h2><p class="sub" style="margin:0">Every page opened is counted once. A visitor is counted once a day using a one-way code that changes daily and cannot be traced back, so someone who returns on another day counts again. Your IP address and browser details are not saved. Left out: search-engine bots and link previews, you while signed in to this admin, and anyone who sends a Do Not Track signal. These totals will be lower than Google Analytics (which only counts people who accepted cookies) or higher (this counts everyone else).' +
+        (d.firstSeen ? ' Counting began on ' + esc(dayLabel(d.firstSeen)) + '.' : '') + ' Days run on Indian time.</p></div>';
+      $("#anbody").innerHTML = html;
+    }
+    function load() {
+      $("#anbody").innerHTML = '<p class="hint">Loading…</p>';
+      api("/api/stats?days=" + days).then(function (r) { if (!r.ok) { $("#anbody").innerHTML = '<div class="empty">Couldn\'t load the numbers. Check your connection and try Refresh.</div>'; return; } draw(r.data); });
+    }
+    $("#anrange").addEventListener("change", function (e) { days = S.anDays = Number(e.target.value); load(); });
+    $("#anrefresh").addEventListener("click", load);
+    load();
   }
 
   /* ---------- Settings ---------- */

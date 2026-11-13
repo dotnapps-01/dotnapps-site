@@ -1016,3 +1016,19 @@ window.dnConfig = (function () {
   }
   openFor(); window.addEventListener("hashchange", openFor);
 })();
+
+/* visit counter: one anonymous "this page was opened" signal to /api/hit. No cookie, nothing stored on the visitor's device,
+   skipped for Do Not Track and Global Privacy Control. The totals show in the admin's Analytics tab. */
+(function () {
+  try {
+    if (navigator.doNotTrack === "1" || window.doNotTrack === "1" || navigator.globalPrivacyControl === true) return;
+    var ref = ""; try { var u = new URL(document.referrer); if (u.host !== location.host) ref = u.host; } catch (e) {}
+    var utm = ""; try { utm = new URLSearchParams(location.search).get("utm_source") || ""; } catch (e) {}
+    var body = JSON.stringify({ p: location.pathname, r: ref, u: utm, w: window.innerWidth });
+    var send = function () {
+      if (navigator.sendBeacon) { try { if (navigator.sendBeacon("/api/hit", new Blob([body], { type: "application/json" }))) return; } catch (e) {} }
+      fetch("/api/hit", { method: "POST", headers: { "Content-Type": "application/json" }, body: body, keepalive: true }).catch(function () {});
+    };
+    if (document.readyState === "complete") send(); else window.addEventListener("load", send, { once: true });
+  } catch (e) {}
+})();
