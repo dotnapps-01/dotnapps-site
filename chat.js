@@ -25,6 +25,17 @@
 
   if (!window.fetch || document.getElementById("dn-chat-launch")) return;
 
+  // Look of the widget: "a" editorial tray, "b" blueprint, "c" product. Add
+  // ?chatstyle=b to any page to preview another one.
+  var STYLE = (function () {
+    var s = window.DN_CHAT_STYLE;
+    try { var q = /[?&]chatstyle=([abc])\b/.exec(location.search); if (q) s = q[1]; } catch (e) {}
+    return /^[abc]$/.test(s) ? s : "a";
+  })();
+  var EYEBROW = { a: ["Online", "Live chat"], b: ["Fig. 06 / Assistant", "Fig. 06 / Live chat"], c: ["", ""] };
+  var TAG = { on: "[ online ]", live: "[ live ]" };
+  function stamp(ts) { try { return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } }
+
   // ---- state --------------------------------------------------------------
   // msgs: {role:"user"|"assistant", content, who?:"agent"|"sys"}. Only entries
   // without `who` are AI-chat turns. The greeting is display-only.
@@ -187,10 +198,12 @@
   launch.setAttribute("aria-expanded", "false");
   launch.setAttribute("aria-controls", "dn-chat-panel");
   launchFace = face("dn-lface");
+  launch.classList.add("dn-s-" + STYLE);
   launch.appendChild(launchFace);
+  launch.appendChild(el("span", "dn-lbl", "Ask BLOOP"));
   launch.appendChild(el("span", "dn-dot"));
 
-  var panel = el("section", "dn-panel");
+  var panel = el("section", "dn-panel dn-s-" + STYLE);
   panel.id = "dn-chat-panel";
   panel.hidden = true;
   panel.setAttribute("role", "dialog");
@@ -201,6 +214,8 @@
   var avatar = el("span", "dn-avatar");
   headFace = face("dn-hface");
   avatar.appendChild(headFace);
+  var titles = el("div", "dn-titles");
+  var eyebrow = el("span", "dn-eyebrow", EYEBROW[STYLE][0]);
   var title = el("h2", "dn-title");
   title.id = "dn-chat-title";
   title.appendChild(document.createTextNode("BLOOP"));
@@ -210,8 +225,12 @@
   close.type = "button";
   close.setAttribute("aria-label", "Close chat");
   close.appendChild(icon("M6 6l12 12M18 6L6 18"));
+  titles.appendChild(eyebrow);
+  titles.appendChild(title);
+  var tag = el("span", "dn-tag", TAG.on);
   head.appendChild(avatar);
-  head.appendChild(title);
+  head.appendChild(titles);
+  head.appendChild(tag);
   head.appendChild(close);
 
   var log = el("div", "dn-log");
@@ -246,7 +265,15 @@
   foot.appendChild(note);
   foot.appendChild(human);
 
+  // Welcome block, shown in style "c" until the first message.
+  var hero = el("div", "dn-hero");
+  var heroFace = face("dn-bigface");
+  hero.appendChild(heroFace);
+  hero.appendChild(el("h3", "dn-hero-t", "Hi, I’m BLOOP"));
+  hero.appendChild(el("p", "dn-hero-p", "Your friendly Dotnapps assistant. Ask about our services, Business OS, or how we work."));
+
   panel.appendChild(head);
+  panel.appendChild(hero);
   panel.appendChild(log);
   panel.appendChild(chips);
   panel.appendChild(form);
@@ -271,10 +298,14 @@
     if (last < line.length) p.appendChild(document.createTextNode(line.slice(last)));
   }
 
-  function bubble(role, text, extra, who) {
+  function bubble(role, text, extra, who, ts) {
     var cls = who === "sys" ? "dn-msg dn-note" : "dn-msg " + (role === "user" ? "dn-me" : who === "agent" ? "dn-bot dn-agent" : "dn-bot");
     var b = el("div", cls + (extra ? " " + extra : ""));
     if (who === "agent") b.appendChild(el("span", "dn-who", "Dotnapps team"));
+    if (who !== "sys") {
+      var label = role === "user" ? "You" : who === "agent" ? "Team" : "BLOOP";
+      b.appendChild(el("span", "dn-meta", label + (ts ? " · " + stamp(ts) : "")));
+    }
     String(text).split(/\n+/).forEach(function (line) {
       if (!line.trim()) return;
       var p = el("p");
@@ -317,9 +348,11 @@
   function renderChips() {
     chips.textContent = "";
     chips.hidden = msgs.length > 0 || !!live;
+    panel.classList.toggle("dn-empty", !chips.hidden);
     if (chips.hidden) return;
-    CHIPS.forEach(function (c) {
+    CHIPS.forEach(function (c, i) {
       var b = el("button", "dn-chip", c[0]);
+      b.dataset.n = "0" + (i + 1);
       b.type = "button";
       b.addEventListener("click", function () { ask(c[1]); });
       chips.appendChild(b);
@@ -354,6 +387,8 @@
       avatar.appendChild(headFace);
     }
     sub.textContent = on ? SUB_LIVE : SUB_AI;
+    eyebrow.textContent = EYEBROW[STYLE][on ? 1 : 0];
+    tag.textContent = on ? TAG.live : TAG.on;
     note.textContent = on ? NOTE_LIVE : NOTE_AI;
     human.textContent = on ? "End live chat" : "Talk to a human";
     input.placeholder = on ? "Message our team…" : "Type your question…";
@@ -364,7 +399,7 @@
   function restore() {
     log.textContent = "";
     bubble("assistant", GREETING);
-    msgs.forEach(function (m) { bubble(m.role, m.content, null, m.who); });
+    msgs.forEach(function (m) { bubble(m.role, m.content, null, m.who, m.ts); });
     setLiveUi();
     if (live) poll();
   }
@@ -398,9 +433,9 @@
     if (!text || busy) return;
     if (live) return sendLive(text);
 
-    msgs.push({ role: "user", content: text });
+    msgs.push({ role: "user", content: text, ts: Date.now() });
     persist();
-    bubble("user", text);
+    bubble("user", text, null, null, Date.now());
     renderChips();
     input.value = "";
     grow();
@@ -425,9 +460,9 @@
         clearTimeout(thinkT); clearTimeout(slowT);
         wait.remove();
         if (x.ok && x.d && x.d.reply) {
-          msgs.push({ role: "assistant", content: x.d.reply });
+          msgs.push({ role: "assistant", content: x.d.reply, ts: Date.now() });
           persist();
-          bubble("assistant", x.d.reply);
+          bubble("assistant", x.d.reply, null, null, Date.now());
           setMood(moodFor(text, x.d.reply), 2000);
         } else {
           setMood(x.status === 429 ? "alert" : "error", 3500);
@@ -557,9 +592,9 @@
   }
 
   function sendLive(text) {
-    msgs.push({ role: "user", content: text });
+    msgs.push({ role: "user", content: text, ts: Date.now() });
     persist();
-    var b = bubble("user", text);
+    var b = bubble("user", text, null, null, Date.now());
     input.value = "";
     grow();
     setBusy(true);
@@ -610,8 +645,8 @@
         var gotAgent = false;
         d.messages.forEach(function (m) {
           if (m.f === "agent") {
-            msgs.push({ role: "assistant", content: m.t, who: "agent" });
-            bubble("assistant", m.t, null, "agent");
+            msgs.push({ role: "assistant", content: m.t, who: "agent", ts: m.ts || Date.now() });
+            bubble("assistant", m.t, null, "agent", m.ts || Date.now());
             gotAgent = true;
           }
         });
