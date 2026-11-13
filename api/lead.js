@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
     const lead = {
       id, createdAt: new Date().toISOString(), source, name, email, message,
       company: L.str(b.company, 160), role: L.str(b.role, 120), link: L.str(b.link, 300), page: L.str(b.page, 120),
+      phone: L.str(b.phone, 40).replace(/[^0-9+()\-.\s]/g, '').replace(/\s+/g, ' ').trim().slice(0, 24),
       status: 'new', notes: '', crm: { status: 'off' }
     };
     if (priv.crm && priv.crm.enabled && priv.crm.url) lead.crm = await L.forward(priv.crm, lead, 'lead.created');

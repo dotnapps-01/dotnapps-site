@@ -212,19 +212,20 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   var LOGO = '<svg viewBox="26 27.4 48 45.1" aria-hidden="true"><path fill="currentColor" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>';
   var DEF_TAGS = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
   var STATUSES = ["new", "contacted", "qualified", "won", "lost", "spam"];
+  var DEF_NOTE = "We’ll only use your details to reply to you.";
   var SOURCES = { brief: "Project brief", contact: "Say hello", enquiry: "Service enquiry", businessos: "Business OS", careers: "Careers" };
   /* one entry per form on the site, for the Forms tab */
   var FORM_DEFS = [
     { k: "brief", name: "Project brief", where: "The project brief form on the home page.",
-      done: "Thanks — we’ve got your brief and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "detail", ph: 1 }] },
+      done: "Thanks — we’ve got your brief and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
     { k: "contact", name: "Say hello", where: "The Contact button in the menu and footer, and the Start a project buttons.",
-      title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "message", ph: 1 }] },
+      title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "message", ph: 1 }] },
     { k: "enquiry", name: "Service enquiry", where: "Opens when someone clicks a service or industry card, with the service name already in the message. It uses the Say hello fields.",
       title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon." },
     { k: "businessos", name: "Business OS access", where: "Request access on the Business OS page.",
-      title: "Business OS access", sub: "Tell us what you’d run on it.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "company", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
+      title: "Business OS access", sub: "Tell us what you’d run on it.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "company", opt: 1, ph: 1 }, { n: "phone", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
     { k: "careers", name: "Careers", where: "The Join the team form, opened from the Careers links.",
-      title: "Join the team", sub: "Senior engineers and product designers who like shipping.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "role", ph: 0 }, { n: "link", opt: 1, ph: 1 }, { n: "note", opt: 1, ph: 1 }] }
+      title: "Join the team", sub: "Senior engineers and product designers who like shipping.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "role", ph: 0 }, { n: "link", opt: 1, ph: 1 }, { n: "note", opt: 1, ph: 1 }] }
   ];
   var S = { tab: "leads", leads: [], counts: {}, f: { q: "", status: "", source: "" }, open: null, pub: {}, priv: {}, def: null, cv: "services", dirty: false, store: "" };
 
@@ -364,7 +365,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     return S.leads.filter(function (l) {
       if (S.f.status && l.status !== S.f.status) return false;
       if (S.f.source && l.source !== S.f.source) return false;
-      return !q || (l.name + " " + l.email + " " + l.message + " " + (l.company || "")).toLowerCase().indexOf(q) >= 0;
+      return !q || (l.name + " " + l.email + " " + (l.phone || "") + " " + l.message + " " + (l.company || "")).toLowerCase().indexOf(q) >= 0;
     });
   }
   function recount() {
@@ -380,11 +381,17 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     if (s === "skipped") return '<span class="chip" title="This form is not sent to the CRM (Settings → CRM integration)">CRM skipped</span>';
     return '<span class="chip">CRM off</span>';
   }
+  /* a number as a call link and, when it clearly includes a country code or is a 10-digit Indian mobile, a WhatsApp link */
+  function phoneLinks(p) {
+    var plus = /^\s*\+/.test(p), digits = String(p).replace(/\D/g, ""), out = '<a href="tel:' + (plus ? "+" : "") + digits + '">' + esc(p) + '</a>', wa = "";
+    if (plus && digits.length >= 8) wa = digits; else if (/^[6-9]\d{9}$/.test(digits)) wa = "91" + digits; else if (digits.length >= 11) wa = digits;
+    return wa ? out + ' &middot; <a href="https://wa.me/' + wa + '" target="_blank" rel="noopener noreferrer">WhatsApp</a>' : out;
+  }
   function leadHtml(l) {
     var open = S.open === l.id;
-    var meta = [["Source", SOURCES[l.source] || l.source], l.company && ["Company", l.company], l.role && ["Role", l.role], l.link && ["Link", '<a href="' + esc(l.link) + '" target="_blank" rel="noopener noreferrer">' + esc(l.link) + '</a>'], l.page && ["Page", l.page]].filter(Boolean);
+    var meta = [["Source", SOURCES[l.source] || l.source], l.phone && ["Phone", phoneLinks(l.phone)], l.company && ["Company", l.company], l.role && ["Role", l.role], l.link && ["Link", '<a href="' + esc(l.link) + '" target="_blank" rel="noopener noreferrer">' + esc(l.link) + '</a>'], l.page && ["Page", l.page]].filter(Boolean);
     return '<article class="lead" data-id="' + l.id + '"><button class="lead-row" aria-expanded="' + open + '" data-act="toggle"><span class="d">' + esc(fmt(l.createdAt)) + '</span><span class="who"><b>' + esc(l.name) + '</b><i>' + esc(l.email) + '</i></span><span class="chips"><span class="chip ' + esc(l.status) + '">' + esc(l.status) + '</span><span class="chip">' + esc(SOURCES[l.source] || l.source) + '</span>' + crmChip(l) + '</span></button>' +
-      (open ? '<div class="lead-body"><div class="msg">' + esc(l.message) + '</div><div class="meta">' + meta.map(function (m) { return '<span>' + m[0] + ' · <b>' + (m[0] === "Link" ? m[1] : esc(m[1])) + '</b></span>'; }).join("") + '</div>' +
+      (open ? '<div class="lead-body"><div class="msg">' + esc(l.message) + '</div><div class="meta">' + meta.map(function (m) { return '<span>' + m[0] + ' · <b>' + (m[0] === "Link" || m[0] === "Phone" ? m[1] : esc(m[1])) + '</b></span>'; }).join("") + '</div>' +
       '<div class="grid2"><label class="f">Status<select data-act="status">' + STATUSES.map(function (s) { return '<option ' + (s === l.status ? "selected" : "") + '>' + s + '</option>'; }).join("") + '</select></label>' +
       '<label class="f">Notes (only you see these)<textarea data-act="notes" rows="3" placeholder="Called, wants a demo…">' + esc(l.notes || "") + '</textarea></label></div>' +
       '<div class="row"><a class="btn sm" href="mailto:' + esc(l.email) + '?subject=' + encodeURIComponent("Re: your message to Dotnapps") + '">Reply by email</a><button class="btn ghost sm" data-act="resend">Send to CRM again</button><span class="grow"></span><button class="btn danger sm" data-act="del">Delete</button></div></div>' : "") + '</article>';
@@ -540,6 +547,10 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       return { all: a, n: a.length, nw: a.filter(function (l) { return l.status === "new"; }).length, w: a.filter(function (l) { return Date.parse(l.createdAt) > wk; }).length };
     }
     v.innerHTML = '<h1>Forms</h1><p class="sub">Every form on the site, one by one. Pause a form, choose which ones go to your CRM, and open each form\'s own submissions. Switches apply when you press Save changes.</p>' +
+      '<div class="card fcard" style="margin-bottom:1rem"><div class="fhead"><h2>Privacy note</h2></div>' +
+      '<p class="sub" style="margin:0">A short line under every form, so visitors know what happens to their details. Ask your legal adviser what wording you need.</p>' +
+      '<label class="row"><span class="sw"><input type="checkbox" data-fnote="on"' + ((S.pub.formNote || {}).on === false ? "" : " checked") + '><span></span></span><span>Show it under every form</span></label>' +
+      '<label class="f">Wording<input type="text" data-fnote="text" maxlength="200" value="' + esc((S.pub.formNote || {}).text || DEF_NOTE) + '"></label></div>' +
       FORM_DEFS.map(function (f) {
         var s = stat(f.k), open = S.priv.forms[f.k].open !== false, inCrm = (S.priv.crm.sources || []).indexOf(f.k) >= 0;
         var latest = s.all.slice(0, 3).map(function (l) {
@@ -556,11 +567,24 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
           '<div class="row"><button type="button" class="btn ghost sm" data-view="' + f.k + '">View submissions (' + s.n + ')</button><a class="btn ghost sm" href="/api/leads?format=csv&source=' + f.k + '">Export CSV</a></div></div>';
       }).join("");
     v.oninput = function (e) {
-      var t = e.target, k = t.dataset.fe; if (!k || t.type === "checkbox") return;
+      var t = e.target, k = t.dataset.fe;
+      if (t.dataset.fnote === "text") {
+        var N = S.pub.formNote = S.pub.formNote || {}, s2 = t.value.trim();
+        if (!s2 || s2 === DEF_NOTE) delete N.text; else N.text = s2;
+        if (!Object.keys(N).length) delete S.pub.formNote;
+        markDirty(); return;
+      }
+      if (!k || t.type === "checkbox") return;
       if (t.dataset.ff) fset(k, t.dataset.ff, t.dataset.fprop, t.value); else fset(k, null, t.dataset.fp, t.value);
     };
     v.onchange = function (e) {
       var o = e.target.dataset.fopen, c = e.target.dataset.fcrm;
+      if (e.target.dataset.fnote === "on") {
+        var N2 = S.pub.formNote = S.pub.formNote || {};
+        if (e.target.checked) delete N2.on; else N2.on = false;
+        if (!Object.keys(N2).length) delete S.pub.formNote;
+        markDirty(); return;
+      }
       if (e.target.dataset.fe && e.target.type === "checkbox") { fset(e.target.dataset.fe, e.target.dataset.ff, "show", e.target.checked); return; }
       if (o) { S.priv.forms[o].open = e.target.checked; markDirty(); viewForms(v); }
       if (c) {

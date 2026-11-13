@@ -193,8 +193,8 @@ function cleanPublic(p) {
   };
   /* the words on each form: heading, intro, button, thank-you, and each field's label / hint / (optional fields only) whether it shows.
      Only known forms and known field names are kept, and only what was actually changed. */
-  const FORM_FIELDS = { brief: ['name', 'email', 'detail'], contact: ['name', 'email', 'message'], businessos: ['name', 'email', 'company', 'detail'], careers: ['name', 'email', 'role', 'link', 'note'] };
-  const OPTIONAL = ['company', 'link', 'note'];
+  const FORM_FIELDS = { brief: ['name', 'email', 'phone', 'detail'], contact: ['name', 'email', 'phone', 'message'], businessos: ['name', 'email', 'company', 'phone', 'detail'], careers: ['name', 'email', 'phone', 'role', 'link', 'note'] };
+  const OPTIONAL = ['company', 'phone', 'link', 'note'];
   out.forms = {};
   const pf = p.forms && typeof p.forms === 'object' ? p.forms : {};
   ['brief', 'contact', 'enquiry', 'businessos', 'careers'].forEach((k) => {
@@ -213,6 +213,10 @@ function cleanPublic(p) {
     if (Object.keys(fl).length) o.fields = fl;
     if (Object.keys(o).length) out.forms[k] = o;
   });
+  /* the privacy note under every form: on by default, wording editable */
+  const fn = p.formNote && typeof p.formNote === 'object' ? p.formNote : {};
+  const fnt = str(fn.text, 200);
+  if (fn.on === false || fnt) out.formNote = Object.assign({}, fn.on === false ? { on: false } : {}, fnt ? { text: fnt } : {});
   return out;
 }
 const MASK = '********';
@@ -261,14 +265,14 @@ async function forward(crm, lead, event) {
   let u;
   try { u = new URL(crm.url); } catch (e) { return { status: 'failed', error: 'bad url', at }; }
   if (!devOk(crm.url) && (u.protocol !== 'https:' || blockedHost(u.hostname))) return { status: 'failed', error: 'url not allowed', at };
-  const flat = { id: lead.id, created_at: lead.createdAt, source: lead.source, name: lead.name, email: lead.email, company: lead.company || '', message: lead.message || '', role: lead.role || '', link: lead.link || '', page: lead.page || '' };
+  const flat = { id: lead.id, created_at: lead.createdAt, source: lead.source, name: lead.name, email: lead.email, phone: lead.phone || '', company: lead.company || '', message: lead.message || '', role: lead.role || '', link: lead.link || '', page: lead.page || '' };
   const headers = {};
   let body;
   if (crm.format === 'form') { headers['Content-Type'] = 'application/x-www-form-urlencoded'; body = new URLSearchParams(Object.assign({ event: event || 'lead.created' }, flat)).toString(); }
   else if (crm.format === 'flat') {
     /* the Dotnapps CRM's own website-form shape: name, email, company, message, page at the top level (the key goes in the header) */
     headers['Content-Type'] = 'application/json';
-    body = JSON.stringify({ name: flat.name, email: flat.email, company: flat.company, message: (flat.message + (flat.source ? '\n\n[Website form: ' + flat.source + ']' : '')).trim(), page: flat.page });
+    body = JSON.stringify({ name: flat.name, email: flat.email, phone: flat.phone, company: flat.company, message: (flat.message + (flat.source ? '\n\n[Website form: ' + flat.source + ']' : '')).trim(), page: flat.page });
   }
   else { headers['Content-Type'] = 'application/json'; body = JSON.stringify({ event: event || 'lead.created', lead: flat }); }
   if (crm.headerName && crm.secret) headers[crm.headerName] = crm.secret;

@@ -17,9 +17,9 @@ module.exports = async (req, res) => {
       const week = Date.now() - 7 * 864e5;
       const counts = { total: all.length, new: all.filter((l) => l.status === 'new').length, week: all.filter((l) => Date.parse(l.createdAt) > week).length, crm: all.filter((l) => l.crm && l.crm.status === 'sent').length };
       if (url.searchParams.get('format') === 'csv') {
-        const head = ['id', 'created_at', 'status', 'source', 'name', 'email', 'company', 'role', 'link', 'message', 'notes', 'crm'];
+        const head = ['id', 'created_at', 'status', 'source', 'name', 'email', 'phone', 'company', 'role', 'link', 'message', 'notes', 'crm'];
         const only = /^[a-z]{3,20}$/.test(url.searchParams.get('source') || '') ? url.searchParams.get('source') : '';   /* one form's submissions */
-        const rows = all.filter((l) => !only || l.source === only).map((l) => [l.id, l.createdAt, l.status, l.source, l.name, l.email, l.company, l.role, l.link, l.message, l.notes, l.crm && l.crm.status].map(csvCell).join(','));
+        const rows = all.filter((l) => !only || l.source === only).map((l) => [l.id, l.createdAt, l.status, l.source, l.name, l.email, l.phone, l.company, l.role, l.link, l.message, l.notes, l.crm && l.crm.status].map(csvCell).join(','));
         return L.send(res, 200, [head.join(',')].concat(rows).join('\n'), { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="dotnapps-leads' + (only ? '-' + only : '') + '.csv"' });
       }
       return L.send(res, 200, { leads: all, counts });

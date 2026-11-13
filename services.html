@@ -269,8 +269,10 @@
       <form class="mform" data-form="contact" hidden>
         <label class="full">Your name<input type="text" name="name" autocomplete="name" required></label>
         <label class="full">Email<input type="email" name="email" autocomplete="email" required></label>
+        <label class="full">Phone or WhatsApp (optional)<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91"></label>
         <label class="full">Message<textarea name="message" required></textarea></label>
         <button class="btn btn--solid" type="submit">Send</button>
+        <p class="form-note">We&rsquo;ll only use your details to reply to you.</p>
         <p class="mform-done" hidden>Thanks &mdash; your email app should open with the message ready to send.</p>
       </form>
 
@@ -279,12 +281,14 @@
           <label>Your name<input type="text" name="name" autocomplete="name" required></label>
           <label>Email<input type="email" name="email" autocomplete="email" required></label>
         </div>
+        <label class="full">Phone or WhatsApp (optional)<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91"></label>
         <label class="full">Role
           <select name="role"><option>Senior Engineer</option><option>Product Designer</option><option>Other</option></select>
         </label>
         <label class="full">Portfolio or LinkedIn<input type="url" name="link" placeholder="https://"></label>
         <label class="full">Anything else<textarea name="note"></textarea></label>
         <button class="btn btn--solid" type="submit">Send application</button>
+        <p class="form-note">We&rsquo;ll only use your details to reply to you.</p>
         <p class="mform-done" hidden>Thanks &mdash; your email app should open with the application ready to send.</p>
       </form>
 
@@ -294,8 +298,10 @@
           <label>Work email<input type="email" name="email" autocomplete="email" required></label>
         </div>
         <label class="full">Company<input type="text" name="company" autocomplete="organization"></label>
+        <label class="full">Phone or WhatsApp (optional)<input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="+91"></label>
         <label class="full">Which apps, and what for?<textarea name="detail" placeholder="e.g. CRM + Invoice for a 12-person sales team" required></textarea></label>
         <button class="btn btn--solid" type="submit">Request access</button>
+        <p class="form-note">We&rsquo;ll only use your details to reply to you.</p>
         <p class="mform-done" hidden>Thanks &mdash; your email app should open with the request ready to send.</p>
       </form>
     </div>

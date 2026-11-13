@@ -2390,3 +2390,7 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 
 /* a form field switched off in the admin */
 label[hidden] { display: none !important; }
+
+/* the short privacy note under each form */
+.form-note { margin: 0; font-size: .74rem; line-height: 1.5; color: var(--faint); text-align: left; }
+.form-note[hidden] { display: none; }

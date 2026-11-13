@@ -92,7 +92,7 @@
         source: source, page: location.pathname,
         name: d.get("name") || "", email: d.get("email") || "",
         message: d.get("message") || d.get("detail") || d.get("note") || (d.get("role") ? "Application for " + d.get("role") : ""),
-        company: d.get("company") || "", role: d.get("role") || "", link: d.get("link") || "",
+        company: d.get("company") || "", role: d.get("role") || "", link: d.get("link") || "", phone: d.get("phone") || "",
         website: hp ? hp.value : ""
       };
       return fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) })
@@ -119,7 +119,7 @@
             bf.reset();
             return;
           }
-          var body = "Name: " + (d.get("name") || "") + "\nEmail: " + (d.get("email") || "") + "\n\nWhat they're building:\n" + (d.get("detail") || "");
+          var body = "Name: " + (d.get("name") || "") + "\nEmail: " + (d.get("email") || "") + (d.get("phone") ? "\nPhone: " + d.get("phone") : "") + "\n\nWhat they're building:\n" + (d.get("detail") || "");
           var href = "mailto:" + DN_MAIL() + "?subject=" + encodeURIComponent("Project brief \u2014 " + (d.get("name") || "new")) + "&body=" + encodeURIComponent(body);
           if (done) { done.innerHTML = keep; done.hidden = false; }
           window.location.href = href;
@@ -832,9 +832,14 @@ window.dnConfig = (function () {
       });
     });
   }
+  /* the short privacy note under every form: its wording, or switched off, from the admin */
+  function formNote(c) {
+    var n = c.formNote; if (!n || typeof n !== "object") return;
+    [].forEach.call(document.querySelectorAll(".form-note"), function (p) { if (n.on === false) p.hidden = true; else if (n.text) p.textContent = n.text; });
+  }
   function apply(c) {
     var s = c.settings || {};
-    forms(c);
+    forms(c); formNote(c);
     if (s.email) { window.__DN_EMAIL = s.email; document.querySelectorAll(".menu-mail").forEach(function (m) { m.textContent = s.email; }); }
     var soc = s.social || {}, map = { instagram: "Instagram", linkedin: "LinkedIn", whatsapp: "WhatsApp", pinterest: "Pinterest" };
     Object.keys(map).forEach(function (k) { if (soc[k]) document.querySelectorAll('.foot-social a[aria-label$="' + map[k] + '"]').forEach(function (a) { a.href = soc[k]; }); });
