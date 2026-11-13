@@ -40,6 +40,14 @@ label.f { display: flex; flex-direction: column; gap: .35rem; font-size: .78rem;
 label.f input, label.f select, label.f textarea { text-transform: none; letter-spacing: 0; font-family: var(--sans); color: var(--text); }
 .hint { font-size: .8rem; color: var(--muted); margin: .3rem 0 0; font-family: var(--sans); text-transform: none; letter-spacing: 0; }
 
+.boot { white-space: pre-line; max-width: 30rem; margin: 18vh auto 0; padding: 0 1.1rem; font: 400 .8rem/1.7 var(--mono); letter-spacing: .06em; color: var(--muted); }
+/* show / hide password */
+.pw { position: relative; display: block; width: 100%; }
+.pw input { padding-right: 2.7rem; }
+.pw-eye { position: absolute; right: .3rem; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: transparent; color: var(--muted); }
+.pw-eye:hover, .pw-eye[aria-pressed=true] { color: var(--text); }
+.pw-eye svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
 /* shell */
 .top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); border-bottom: 1px solid var(--line); }
 .top-in { max-width: 1180px; margin: 0 auto; padding: .7rem 1.1rem; display: flex; align-items: center; gap: 1rem; }
@@ -113,6 +121,30 @@ h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.
 .sw input:checked + span { background: var(--ink); }
 .sw input:checked + span::after { transform: translateX(16px); }
 .sw input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* forms tab */
+.fcard { display: grid; gap: .8rem; }
+.fhead { display: flex; align-items: center; gap: .6rem; }
+.fhead h2 { margin: 0; }
+.fstats { display: flex; gap: 1.4rem; flex-wrap: wrap; font: 400 .66rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fstats b { margin-left: .4rem; color: var(--text); font-weight: 500; font-size: .85rem; }
+.fsw { display: flex; gap: .6rem 2rem; flex-wrap: wrap; }
+.fsw .row { flex-wrap: nowrap; align-items: flex-start; }
+.fsw .row > span:last-child { min-width: 0; }
+.flist { border-bottom: 1px solid var(--line); }
+.flead { display: grid; grid-template-columns: 9.5rem auto minmax(0, 1fr); gap: .2rem .8rem; align-items: baseline; width: 100%; text-align: left; border: 0; border-top: 1px solid var(--line); background: none; padding: .55rem 0; font-size: .85rem; }
+.flead:hover { background: var(--sunken); }
+.flead .d { font: 400 .7rem var(--mono); color: var(--muted); }
+.flead i { color: var(--muted); font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 700px) { .flead { grid-template-columns: 1fr; } }
+.fedit { border-top: 1px solid var(--line); padding-top: .7rem; }
+.fedit > summary { cursor: pointer; list-style: none; display: flex; gap: .6rem; align-items: center; font-size: .9rem; font-weight: 500; }
+.fedit > summary::-webkit-details-marker { display: none; }
+.fedit > summary::before { content: "+"; width: 1rem; font-family: var(--mono); color: var(--muted); }
+.fedit[open] > summary::before { content: "\2013"; }
+.fe { display: grid; gap: .8rem; margin-top: .9rem; grid-template-columns: 1fr; }
+.ffield { display: grid; gap: .6rem; grid-template-columns: 1fr; padding: .7rem; border: 1px solid var(--line); border-radius: 10px; }
+.ffield .chip { justify-self: start; }
+@media (min-width: 700px) { .fe { grid-template-columns: 1fr 1fr; } .fe .full2, .fe .ffield { grid-column: 1 / -1; } .ffield { grid-template-columns: 5.5rem 1fr 1fr 6.5rem; align-items: end; } .ffield .chip { align-self: center; } }
 .prev { background: var(--sunken); border-radius: 12px; padding: 1.4rem 1.2rem; margin-bottom: 1rem; min-height: 7.5rem; display: flex; flex-direction: column; justify-content: center; }
 .prev .a { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.08; }
 .prev .b { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.08; color: var(--muted); }
@@ -154,7 +186,21 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><p class="boot" id="boot">Loading&hellip;</p></div>
+<script>
+/* if the admin cannot start (a blocked script, an old cache, a failed request), say so on screen instead of showing a blank page */
+(function () {
+  var last = "";
+  function note(m) { last = String(m || ""); }
+  addEventListener("error", function (e) { note(e.message); });
+  addEventListener("unhandledrejection", function (e) { note(e.reason && e.reason.message || e.reason); });
+  setTimeout(function () {
+    var b = document.getElementById("boot");
+    if (!b) return;
+    b.textContent = "The admin did not start.\n" + (last ? "Error: " + last + "\n" : "") + "Try a private window, or turn off extensions for this site, then reload.";
+  }, 6000);
+})();
+</script>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -166,7 +212,23 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   var LOGO = '<svg viewBox="26 27.4 48 45.1" aria-hidden="true"><path fill="currentColor" d="M27 28.4H43.1V43.8H27Z M47.6 28.4H59.3L73 42.1V66.3L67.9 71.5H56.2V42.4H47.6Z M43.1 47.9L27 54.7V67.2L32 71.5H43.1Z"/></svg>';
   var DEF_TAGS = [["Unlock your digital potential", "with us."], ["Get more customers,", "on autopilot."], ["Your business", "works 24/7."], ["From idea to live", "in weeks."], ["One login.", "Your whole business."]];
   var STATUSES = ["new", "contacted", "qualified", "won", "lost", "spam"];
-  var SOURCES = { brief: "Project brief", contact: "Say hello", businessos: "Business OS", careers: "Careers" };
+  var DEF_NOTE = "We’ll only use your details to reply to you.";
+  var SOURCES = { brief: "Project brief", project: "Start a project", contact: "Say hello", enquiry: "Service enquiry", businessos: "Business OS", careers: "Careers" };
+  /* one entry per form on the site, for the Forms tab */
+  var FORM_DEFS = [
+    { k: "brief", name: "Project brief", where: "The project brief form on the home page.",
+      done: "Thanks — we’ve got your brief and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
+    { k: "project", name: "Start a project", where: "The Start a project buttons on the home, Services and Work pages. It opens as a pop-up.",
+      title: "Start a project", sub: "Tell us what you’re building — we reply by email.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "company", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
+    { k: "contact", name: "Say hello", where: "The Contact button in the menu and footer.",
+      title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "message", ph: 1 }] },
+    { k: "enquiry", name: "Service enquiry", where: "Opens when someone clicks a service or industry card, with the service name already in the message. It uses the Say hello fields.",
+      title: "Say hello", sub: "A short note — we read every one.", done: "Thanks — we’ve got it and will reply by email soon." },
+    { k: "businessos", name: "Business OS access", where: "Request access on the Business OS page.",
+      title: "Business OS access", sub: "Tell us what you’d run on it.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "company", opt: 1, ph: 1 }, { n: "phone", opt: 1, ph: 1 }, { n: "detail", ph: 1 }] },
+    { k: "careers", name: "Careers", where: "The Join the team form, opened from the Careers links.",
+      title: "Join the team", sub: "Senior engineers and product designers who like shipping.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "role", ph: 0 }, { n: "link", opt: 1, ph: 1 }, { n: "note", opt: 1, ph: 1 }] }
+  ];
   var S = { tab: "leads", leads: [], counts: {}, f: { q: "", status: "", source: "" }, open: null, pub: {}, priv: {}, def: null, cv: "services", dirty: false, store: "" };
 
   /* ---------- helpers ---------- */
@@ -231,26 +293,47 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   }
   function ensure() {
     S.pub.settings = S.pub.settings || {}; S.pub.settings.social = S.pub.settings.social || {}; S.pub.settings.banner = S.pub.settings.banner || {};
-    S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {};
+    S.pub.services = S.pub.services || {}; S.pub.products = S.pub.products || {}; S.pub.forms = S.pub.forms || {};
     S.priv.crm = S.priv.crm || { enabled: false, url: "", format: "json", headerName: "", secret: "" };
-    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "contact", "businessos"];
+    if (!S.priv.crm.sources) S.priv.crm.sources = ["brief", "project", "contact", "enquiry", "businessos"];
+    S.priv.forms = S.priv.forms || {};
+    FORM_DEFS.forEach(function (f) { if (!S.priv.forms[f.k]) S.priv.forms[f.k] = { open: true }; });
+    /* settings saved before service enquiries were their own form: they followed Say hello, so tick it to match */
+    var cv = S.priv.crm.v || 0, srcs = S.priv.crm.sources;
+    if (srcs.indexOf("contact") >= 0) {
+      if (cv < 2 && srcs.indexOf("enquiry") < 0) srcs.push("enquiry");
+      if (cv < 3 && srcs.indexOf("project") < 0) srcs.push("project");
+    }
     if (!S.pub.taglines || !S.pub.taglines.length) S.pub.taglines = DEF_TAGS.map(function (t) { return { a: t[0], b: t[1], on: true }; });
   }
   /* defaults for the content editor come from the live pages themselves */
   function loadDefaults() {
     if (S.def) return Promise.resolve();
     function page(u) { return fetch(u, { credentials: "same-origin" }).then(function (r) { return r.text(); }).then(function (t) { return new DOMParser().parseFromString(t, "text/html"); }).catch(function () { return null; }); }
-    return Promise.all([page("/services"), page("/products")]).then(function (p) {
+    function firstText(el) { if (!el) return ""; for (var i = 0; i < el.childNodes.length; i++) { var n = el.childNodes[i]; if (n.nodeType === 3 && n.nodeValue.trim()) return n.nodeValue.trim(); } return ""; }
+    /* what each form says today (button, field labels and hints), read from the home page's own markup */
+    function parseForms(doc) {
+      var out = {}; if (!doc) return out;
+      FORM_DEFS.forEach(function (f) {
+        if (!f.fields) return;
+        var form = f.k === "brief" ? doc.getElementById("brief-form") : doc.querySelector('.mform[data-form="' + f.k + '"]'); if (!form) return;
+        var o = { button: firstText(form.querySelector('button[type="submit"]')), fields: {} };
+        f.fields.forEach(function (fd) { var c = form.querySelector('[name="' + fd.n + '"]'); if (c) o.fields[fd.n] = { label: firstText(c.closest("label")), placeholder: c.getAttribute("placeholder") || "" }; });
+        out[f.k] = o;
+      });
+      return out;
+    }
+    return Promise.all([page("/services"), page("/products"), page("/")]).then(function (p) {
       var groups = [], prods = [];
-      if (p[0]) $$(".svc-group", p[0]).forEach(function (g) {
+      if (p[0]) $$("#custom-build .svc-group", p[0]).forEach(function (g) {
         var items = $$(".sg > li", g).map(function (li) {
           var fit = $(".svc-fit", li), b = fit && $("b", fit);
-          return { slug: li.id, n: ($(".pf-n", li) || {}).textContent || "", title: $("h3", li).textContent, lead: $(".svc-lead", li).textContent.trim(), inc: $$(".svc-inc li", li).map(function (x) { return x.textContent.trim(); }), fit: fit ? fit.textContent.replace(b ? b.textContent : "", "").trim() : "" };
+          return { slug: li.id, n: ($(".pf-n", li) || {}).textContent || "", title: (($("h3", li) || {}).textContent || "").trim(), lead: (($(".svc-lead", li) || {}).textContent || "").trim(), inc: $$(".svc-inc li", li).map(function (x) { return x.textContent.trim(); }), fit: fit ? fit.textContent.replace(b ? b.textContent : "", "").trim() : "" };
         });
         groups.push({ letter: ($(".svc-gh .l", g) || {}).textContent || "", name: ($(".svc-gh h2", g) || {}).textContent || "", items: items });
       });
-      if (p[1]) $$(".pc", p[1]).forEach(function (c) { prods.push({ slug: c.id, n: ($(".pc-n", c) || {}).textContent || "", title: $("h3", c).textContent, desc: $("p", c).textContent.trim() }); });
-      S.def = { groups: groups, products: prods };
+      if (p[1]) $$(".pc", p[1]).forEach(function (c) { prods.push({ slug: c.id, n: ($(".pc-n", c) || {}).textContent || "", title: (($("h3", c) || {}).textContent || "").trim(), desc: (($("p", c) || {}).textContent || "").trim() }); });
+      S.def = { groups: groups, products: prods, forms: parseForms(p[2]) };
     });
   }
 
@@ -260,13 +343,13 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<header class="top"><div class="top-in"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><span class="grow"></span>' +
       '<span class="store">Storage · ' + esc(S.store === "memory" ? "memory (testing)" : "connected") + '</span><span class="dirty" id="dirty" hidden>Unsaved changes</span>' +
       '<button class="btn sm" id="save" disabled>Save changes</button><a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site ↗</a><button class="btn ghost sm" id="out">Sign out</button></div></header>' +
-      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
+      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("forms", "Forms") + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
     $$(".tabs button").forEach(function (b) { b.addEventListener("click", function () { S.tab = b.dataset.t; S.open = null; shell(); }); });
     $("#save").addEventListener("click", save);
     $("#save").disabled = !S.dirty; $("#dirty").hidden = !S.dirty;
     $("#out").addEventListener("click", function () { api("/api/auth", { method: "DELETE" }).then(function () { S.dirty = false; loginView(); }); });
     var v = $("#view");
-    ({ leads: viewLeads, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
+    ({ leads: viewLeads, forms: viewForms, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
   }
   function tabBtn(t, label, n) { return '<button role="tab" data-t="' + t + '" aria-selected="' + (S.tab === t) + '">' + label + (n ? '<span class="n">' + n + '</span>' : "") + '</button>'; }
 
@@ -288,7 +371,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     return S.leads.filter(function (l) {
       if (S.f.status && l.status !== S.f.status) return false;
       if (S.f.source && l.source !== S.f.source) return false;
-      return !q || (l.name + " " + l.email + " " + l.message + " " + (l.company || "")).toLowerCase().indexOf(q) >= 0;
+      return !q || (l.name + " " + l.email + " " + (l.phone || "") + " " + l.message + " " + (l.company || "")).toLowerCase().indexOf(q) >= 0;
     });
   }
   function recount() {
@@ -304,11 +387,17 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     if (s === "skipped") return '<span class="chip" title="This form is not sent to the CRM (Settings → CRM integration)">CRM skipped</span>';
     return '<span class="chip">CRM off</span>';
   }
+  /* a number as a call link and, when it clearly includes a country code or is a 10-digit Indian mobile, a WhatsApp link */
+  function phoneLinks(p) {
+    var plus = /^\s*\+/.test(p), digits = String(p).replace(/\D/g, ""), out = '<a href="tel:' + (plus ? "+" : "") + digits + '">' + esc(p) + '</a>', wa = "";
+    if (plus && digits.length >= 8) wa = digits; else if (/^[6-9]\d{9}$/.test(digits)) wa = "91" + digits; else if (digits.length >= 11) wa = digits;
+    return wa ? out + ' &middot; <a href="https://wa.me/' + wa + '" target="_blank" rel="noopener noreferrer">WhatsApp</a>' : out;
+  }
   function leadHtml(l) {
     var open = S.open === l.id;
-    var meta = [["Source", SOURCES[l.source] || l.source], l.company && ["Company", l.company], l.role && ["Role", l.role], l.link && ["Link", '<a href="' + esc(l.link) + '" target="_blank" rel="noopener noreferrer">' + esc(l.link) + '</a>'], l.page && ["Page", l.page]].filter(Boolean);
+    var meta = [["Source", SOURCES[l.source] || l.source], l.phone && ["Phone", phoneLinks(l.phone)], l.company && ["Company", l.company], l.role && ["Role", l.role], l.link && ["Link", '<a href="' + esc(l.link) + '" target="_blank" rel="noopener noreferrer">' + esc(l.link) + '</a>'], l.page && ["Page", l.page]].filter(Boolean);
     return '<article class="lead" data-id="' + l.id + '"><button class="lead-row" aria-expanded="' + open + '" data-act="toggle"><span class="d">' + esc(fmt(l.createdAt)) + '</span><span class="who"><b>' + esc(l.name) + '</b><i>' + esc(l.email) + '</i></span><span class="chips"><span class="chip ' + esc(l.status) + '">' + esc(l.status) + '</span><span class="chip">' + esc(SOURCES[l.source] || l.source) + '</span>' + crmChip(l) + '</span></button>' +
-      (open ? '<div class="lead-body"><div class="msg">' + esc(l.message) + '</div><div class="meta">' + meta.map(function (m) { return '<span>' + m[0] + ' · <b>' + (m[0] === "Link" ? m[1] : esc(m[1])) + '</b></span>'; }).join("") + '</div>' +
+      (open ? '<div class="lead-body"><div class="msg">' + esc(l.message) + '</div><div class="meta">' + meta.map(function (m) { return '<span>' + m[0] + ' · <b>' + (m[0] === "Link" || m[0] === "Phone" ? m[1] : esc(m[1])) + '</b></span>'; }).join("") + '</div>' +
       '<div class="grid2"><label class="f">Status<select data-act="status">' + STATUSES.map(function (s) { return '<option ' + (s === l.status ? "selected" : "") + '>' + s + '</option>'; }).join("") + '</select></label>' +
       '<label class="f">Notes (only you see these)<textarea data-act="notes" rows="3" placeholder="Called, wants a demo…">' + esc(l.notes || "") + '</textarea></label></div>' +
       '<div class="row"><a class="btn sm" href="mailto:' + esc(l.email) + '?subject=' + encodeURIComponent("Re: your message to Dotnapps") + '">Reply by email</a><button class="btn ghost sm" data-act="resend">Send to CRM again</button><span class="grow"></span><button class="btn danger sm" data-act="del">Delete</button></div></div>' : "") + '</article>';
@@ -422,6 +511,105 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<label class="f">Best for<input type="text" data-f="fit" maxlength="240" value="' + esc(fit) + '"></label><div><button type="button" class="btn ghost sm" data-reset>Reset to original</button></div></div></details>';
   }
 
+  /* ---------- Forms: one card per form ---------- */
+  /* the "Edit this form" panel: heading, intro, button, thank-you, and each field's label / hint / (optional fields) whether it shows */
+  function fdefOf(k) { return (S.def && S.def.forms && S.def.forms[k]) || { button: "", fields: {} }; }
+  function fset(k, field, prop, val) {
+    var f = FORM_DEFS.filter(function (x) { return x.k === k; })[0], dd = fdefOf(k);
+    var F = S.pub.forms[k] = S.pub.forms[k] || {}, tgt = F, def;
+    if (field) { F.fields = F.fields || {}; tgt = F.fields[field] = F.fields[field] || {}; def = ((dd.fields || {})[field] || {})[prop] || ""; }
+    else def = prop === "button" ? (dd.button || "") : (f[prop] || "");
+    if (prop === "show") { if (val) delete tgt.show; else tgt.show = false; }
+    else { var s = String(val).trim(); if (!s || s === def) delete tgt[prop]; else tgt[prop] = s; }
+    if (field && !Object.keys(tgt).length) delete F.fields[field];
+    if (F.fields && !Object.keys(F.fields).length) delete F.fields;
+    if (!Object.keys(F).length) delete S.pub.forms[k];
+    markDirty();
+  }
+  function formEditor(f) {
+    var o = S.pub.forms[f.k] || {}, d = fdefOf(f.k), k = f.k, edited = Object.keys(o).length > 0;
+    function top(label, prop, val, max, wide) { return '<label class="f' + (wide ? " full2" : "") + '">' + label + '<input type="text" data-fe="' + k + '" data-fp="' + prop + '" value="' + esc(val) + '" maxlength="' + max + '"></label>'; }
+    var rows = "";
+    if (f.title !== undefined) rows += top("Heading", "title", o.title || f.title, 80) + top("Intro line", "sub", o.sub || f.sub, 160);
+    if (f.fields) rows += top("Button text", "button", o.button || d.button || "", 40);
+    rows += top("Thank-you message (shown after a successful send)", "done", o.done || f.done, 240, true);
+    (f.fields || []).forEach(function (fd) {
+      var of = (o.fields || {})[fd.n] || {}, df = (d.fields || {})[fd.n] || { label: fd.n, placeholder: "" };
+      var base = 'data-fe="' + k + '" data-ff="' + fd.n + '"';
+      rows += '<div class="ffield"><span class="chip">' + esc(fd.n) + '</span>' +
+        '<label class="f">Label<input type="text" ' + base + ' data-fprop="label" value="' + esc(of.label || df.label) + '" maxlength="60"></label>' +
+        (fd.ph ? '<label class="f">Hint inside the box<input type="text" ' + base + ' data-fprop="placeholder" value="' + esc(of.placeholder !== undefined ? of.placeholder : df.placeholder) + '" maxlength="100"></label>' : '<span></span>') +
+        (fd.opt ? '<label class="row"><span class="sw"><input type="checkbox" ' + base + ' data-fprop="show"' + (of.show === false ? "" : " checked") + '><span></span></span><span>Show</span></label>' : '<span class="hint" style="margin:0">Always shown</span>') + '</div>';
+    });
+    return '<details class="fedit" data-k="' + k + '"' + (S.fopen === k ? " open" : "") + '><summary>Edit this form' + (edited ? ' <span class="chip">edited</span>' : "") + '</summary>' +
+      '<div class="fe">' + rows + '</div><div class="row" style="margin-top:.8rem"><button type="button" class="btn ghost sm" data-freset="' + k + '">Reset this form\'s wording</button>' +
+      '<span class="hint" style="margin:0">Changes show on the site about 15 seconds after you save.</span></div></details>';
+  }
+
+  function viewForms(v) {
+    var wk = Date.now() - 7 * 864e5, crmOn = !!(S.priv.crm && S.priv.crm.enabled);
+    function stat(k) {
+      var a = S.leads.filter(function (l) { return l.source === k; });
+      return { all: a, n: a.length, nw: a.filter(function (l) { return l.status === "new"; }).length, w: a.filter(function (l) { return Date.parse(l.createdAt) > wk; }).length };
+    }
+    v.innerHTML = '<h1>Forms</h1><p class="sub">Every form on the site, one by one. Pause a form, choose which ones go to your CRM, and open each form\'s own submissions. Switches apply when you press Save changes.</p>' +
+      '<div class="card fcard" style="margin-bottom:1rem"><div class="fhead"><h2>Privacy note</h2></div>' +
+      '<p class="sub" style="margin:0">A short line under every form, so visitors know what happens to their details. Ask your legal adviser what wording you need.</p>' +
+      '<label class="row"><span class="sw"><input type="checkbox" data-fnote="on"' + ((S.pub.formNote || {}).on === false ? "" : " checked") + '><span></span></span><span>Show it under every form</span></label>' +
+      '<label class="f">Wording<input type="text" data-fnote="text" maxlength="200" value="' + esc((S.pub.formNote || {}).text || DEF_NOTE) + '"></label></div>' +
+      FORM_DEFS.map(function (f) {
+        var s = stat(f.k), open = S.priv.forms[f.k].open !== false, inCrm = (S.priv.crm.sources || []).indexOf(f.k) >= 0;
+        var latest = s.all.slice(0, 3).map(function (l) {
+          return '<button type="button" class="flead" data-lead="' + esc(l.id) + '" data-k="' + f.k + '"><span class="d">' + esc(fmt(l.createdAt)) + '</span><b>' + esc(l.name) + '</b><i>' + esc((l.message || "").replace(/\s+/g, " ").slice(0, 80)) + '</i></button>';
+        }).join("") || '<p class="hint" style="margin:0">No submissions yet.</p>';
+        return '<div class="card fcard" data-k="' + f.k + '"><div class="fhead"><h2>' + esc(f.name) + '</h2><span class="chip ' + (open ? "sent" : "failed") + '">' + (open ? "Open" : "Paused") + '</span></div>' +
+          '<p class="sub" style="margin:0">' + esc(f.where) + '</p>' +
+          '<div class="fstats"><span>Total<b>' + s.n + '</b></span><span>New<b>' + s.nw + '</b></span><span>Last 7 days<b>' + s.w + '</b></span></div>' +
+          '<div class="fsw"><label class="row"><span class="sw"><input type="checkbox" data-fopen="' + f.k + '"' + (open ? " checked" : "") + '><span></span></span><span>Accepting submissions</span></label>' +
+          '<label class="row"><span class="sw"><input type="checkbox" data-fcrm="' + f.k + '"' + (inCrm ? " checked" : "") + '><span></span></span><span>Send to my CRM' + (crmOn ? "" : ' <i class="hint" style="margin:0">(the CRM is off in Settings)</i>') + '</span></label></div>' +
+          (open ? "" : '<p class="hint" style="margin:0">While paused, nothing is saved here. Visitors are asked to email you instead.</p>') +
+          formEditor(f) +
+          '<div class="flist">' + latest + '</div>' +
+          '<div class="row"><button type="button" class="btn ghost sm" data-view="' + f.k + '">View submissions (' + s.n + ')</button><a class="btn ghost sm" href="/api/leads?format=csv&source=' + f.k + '">Export CSV</a></div></div>';
+      }).join("");
+    v.oninput = function (e) {
+      var t = e.target, k = t.dataset.fe;
+      if (t.dataset.fnote === "text") {
+        var N = S.pub.formNote = S.pub.formNote || {}, s2 = t.value.trim();
+        if (!s2 || s2 === DEF_NOTE) delete N.text; else N.text = s2;
+        if (!Object.keys(N).length) delete S.pub.formNote;
+        markDirty(); return;
+      }
+      if (!k || t.type === "checkbox") return;
+      if (t.dataset.ff) fset(k, t.dataset.ff, t.dataset.fprop, t.value); else fset(k, null, t.dataset.fp, t.value);
+    };
+    v.onchange = function (e) {
+      var o = e.target.dataset.fopen, c = e.target.dataset.fcrm;
+      if (e.target.dataset.fnote === "on") {
+        var N2 = S.pub.formNote = S.pub.formNote || {};
+        if (e.target.checked) delete N2.on; else N2.on = false;
+        if (!Object.keys(N2).length) delete S.pub.formNote;
+        markDirty(); return;
+      }
+      if (e.target.dataset.fe && e.target.type === "checkbox") { fset(e.target.dataset.fe, e.target.dataset.ff, "show", e.target.checked); return; }
+      if (o) { S.priv.forms[o].open = e.target.checked; markDirty(); viewForms(v); }
+      if (c) {
+        var list = (S.priv.crm.sources || []).filter(function (x) { return x !== c; });
+        if (e.target.checked) list.push(c);
+        S.priv.crm.sources = list; markDirty();
+      }
+    };
+    v.onclick = function (e) {
+      var sm = e.target.closest(".fedit > summary");
+      if (sm) { var dt = sm.parentNode, kk = dt.dataset.k; setTimeout(function () { S.fopen = dt.open ? kk : (S.fopen === kk ? null : S.fopen); }, 0); return; }
+      var rs = e.target.closest("[data-freset]");
+      if (rs) { delete S.pub.forms[rs.dataset.freset]; S.fopen = rs.dataset.freset; markDirty(); viewForms(v); toast("Back to the original wording. Press Save changes to apply."); return; }
+      var b = e.target.closest("[data-view],[data-lead]"); if (!b) return;
+      var k = b.dataset.view || b.dataset.k;
+      S.f = { q: "", status: "", source: k }; S.tab = "leads"; S.open = b.dataset.lead || null; shell();
+    };
+  }
+
   /* ---------- Settings ---------- */
   function viewSettings(v) {
     var P = S.pub.settings, C = S.priv.crm;
@@ -434,11 +622,12 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
       '<label class="row" style="margin-bottom:.8rem"><span class="sw"><input type="checkbox" data-bind="priv.crm.enabled"' + (C.enabled ? " checked" : "") + '><span></span></span><span>Send new leads to my CRM</span></label>' +
       '<div class="card" style="background:var(--sunken);margin:0 0 1rem"><h2>Quick setup: Dotnapps CRM</h2><p class="sub" style="margin-bottom:.7rem">For the CRM at workspace.dotnapps.com. Enter your workspace slug and the secret from the CRM\'s <span class="mono">INBOUND_LEAD_KEYS</span>, then press Fill in.</p><div class="grid2"><label class="f">Workspace slug<input type="text" id="qs-slug" placeholder="dotnapps" autocomplete="off"></label><label class="f">Secret<input type="password" id="qs-secret" autocomplete="off" placeholder="from INBOUND_LEAD_KEYS"></label></div><div class="row" style="margin-top:.8rem"><button class="btn ghost sm" type="button" id="qs-fill">Fill in the fields below</button><span id="qs-msg" class="hint" style="margin:0"></span></div></div>' +
       '<div class="grid2">' + fld("Webhook URL", "priv.crm.url", "https://hooks.example.com/…", "url", "Must be https.") +
-      '<label class="f">Format<select data-bind="priv.crm.format"><option value="json"' + (C.format !== "form" ? " selected" : "") + '>JSON</option><option value="form"' + (C.format === "form" ? " selected" : "") + '>Form fields (x-www-form-urlencoded)</option></select></label>' +
+      '<label class="f">Format<select data-bind="priv.crm.format"><option value="json"' + (C.format !== "form" && C.format !== "flat" ? " selected" : "") + '>JSON</option><option value="form"' + (C.format === "form" ? " selected" : "") + '>Form fields (x-www-form-urlencoded)</option><option value="flat"' + (C.format === "flat" ? " selected" : "") + '>Flat JSON: name, email, company, message, page (Dotnapps CRM)</option></select></label>' +
       fld("Auth header name (optional)", "priv.crm.headerName", "Authorization", "text", "For example Authorization or X-Api-Key.") + fld("Auth header value (optional)", "priv.crm.secret", "Bearer …", "password", "Stored on the server and shown masked.") + '</div>' +
-      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["contact", "Say hello"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
+      '<div style="margin-top:1rem"><div class="f" style="margin-bottom:.4rem">Send these forms to the CRM</div><div class="row" id="srcs">' + [["brief", "Project brief"], ["project", "Start a project"], ["contact", "Say hello"], ["enquiry", "Service enquiry"], ["businessos", "Business OS access"], ["careers", "Careers applications"]].map(function (x) { return '<label class="row" style="gap:.4rem;font-size:.9rem"><input type="checkbox" data-src="' + x[0] + '"' + ((C.sources || []).indexOf(x[0]) >= 0 ? " checked" : "") + '> ' + x[1] + '</label>'; }).join("") + '</div><p class="hint">Careers applications are job applications, not sales leads, so they are off by default. Every lead stays in this inbox either way.</p></div>' +
       '<div class="row" style="margin-top:1rem"><button class="btn ghost" id="crmtest" type="button">Send a test lead</button><span id="crmres" class="hint" style="margin:0"></span></div>' +
-      '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p></div>';
+      '<p class="hint">Payload (JSON): <span class="mono">{ "event": "lead.created", "lead": { id, created_at, source, name, email, company, message, role, link, page } }</span></p>' +
+      '<p class="hint">Flat JSON sends only: <span class="mono">{ name, email, company, message, page }</span>, with the form name added to the message. Use it with the Dotnapps CRM address and the <span class="mono">X-Capture-Key</span> header.</p></div>';
     v.addEventListener("input", bind); v.addEventListener("change", bind);
     function bind(e) {
       var k = e.target.dataset.bind; if (!k) return;
@@ -472,6 +661,35 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
   }
 
   boot();
+})();
+</script>
+<script>
+/* an eye button on every password box: tap to show or hide what you typed */
+(function () {
+  var EYE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var OFF = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7c2 0 3.8.7 5.3 1.7M22 12s-3.6 7-10 7c-2 0-3.8-.7-5.3-1.7"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M3 3l18 18"/></svg>';
+  function wrap(inp) {
+    if (inp.dataset.eye) return;
+    inp.dataset.eye = "1";
+    var had = document.activeElement === inp;
+    var w = document.createElement("span"); w.className = "pw";
+    inp.parentNode.insertBefore(w, inp); w.appendChild(inp);
+    var b = document.createElement("button"); b.type = "button"; b.className = "pw-eye";
+    b.setAttribute("aria-label", "Show password"); b.setAttribute("aria-pressed", "false"); b.innerHTML = EYE;
+    b.addEventListener("click", function () {
+      var show = inp.type === "password";
+      inp.type = show ? "text" : "password";
+      b.innerHTML = show ? OFF : EYE;
+      b.setAttribute("aria-label", show ? "Hide password" : "Show password");
+      b.setAttribute("aria-pressed", show ? "true" : "false");
+      inp.focus();
+    });
+    w.appendChild(b);
+    if (had) inp.focus();
+  }
+  function scan() { [].forEach.call(document.querySelectorAll("input[type=password]"), wrap); }
+  new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+  scan();
 })();
 </script>
 </body>

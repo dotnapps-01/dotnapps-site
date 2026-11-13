@@ -191,20 +191,51 @@ function cleanPublic(p) {
     social: { instagram: urlOk(str(soc.instagram, 300)), linkedin: urlOk(str(soc.linkedin, 300)), whatsapp: urlOk(str(soc.whatsapp, 300)), pinterest: urlOk(str(soc.pinterest, 300)) },
     banner: { on: !!(s.banner && s.banner.on), text: str(s.banner && s.banner.text, 200), link: urlOk(str(s.banner && s.banner.link, 300), true) }
   };
+  /* the words on each form: heading, intro, button, thank-you, and each field's label / hint / (optional fields only) whether it shows.
+     Only known forms and known field names are kept, and only what was actually changed. */
+  const FORM_FIELDS = { brief: ['name', 'email', 'phone', 'detail'], project: ['name', 'email', 'phone', 'company', 'detail'], contact: ['name', 'email', 'phone', 'message'], businessos: ['name', 'email', 'company', 'phone', 'detail'], careers: ['name', 'email', 'phone', 'role', 'link', 'note'] };
+  const OPTIONAL = ['company', 'phone', 'link', 'note'];
+  out.forms = {};
+  const pf = p.forms && typeof p.forms === 'object' ? p.forms : {};
+  ['brief', 'project', 'contact', 'enquiry', 'businessos', 'careers'].forEach((k) => {
+    const f = pf[k]; if (!f || typeof f !== 'object') return;
+    const o = {};
+    const t = str(f.title, 80), sub = str(f.sub, 160), btn = str(f.button, 40), done = str(f.done, 240);
+    if (t) o.title = t; if (sub) o.sub = sub; if (btn) o.button = btn; if (done) o.done = done;
+    const fl = {}, fin = f.fields && typeof f.fields === 'object' ? f.fields : {};
+    (FORM_FIELDS[k] || []).forEach((n) => {
+      const x = fin[n]; if (!x || typeof x !== 'object') return;
+      const e = {}, lab = str(x.label, 60), ph = str(x.placeholder, 100);
+      if (lab) e.label = lab; if (ph && n !== 'role') e.placeholder = ph;
+      if (OPTIONAL.indexOf(n) >= 0 && x.show === false) e.show = false;
+      if (Object.keys(e).length) fl[n] = e;
+    });
+    if (Object.keys(fl).length) o.fields = fl;
+    if (Object.keys(o).length) out.forms[k] = o;
+  });
+  /* the privacy note under every form: on by default, wording editable */
+  const fn = p.formNote && typeof p.formNote === 'object' ? p.formNote : {};
+  const fnt = str(fn.text, 200);
+  if (fn.on === false || fnt) out.formNote = Object.assign({}, fn.on === false ? { on: false } : {}, fnt ? { text: fnt } : {});
   return out;
 }
 const MASK = '********';
-const FORMS = ['brief', 'contact', 'businessos', 'careers'];
+const FORMS = ['brief', 'project', 'contact', 'enquiry', 'businessos', 'careers'];
 function cleanPrivate(p, prev) {
   p = p && typeof p === 'object' ? p : {};
   const c = p.crm && typeof p.crm === 'object' ? p.crm : {};
   const old = (prev && prev.crm) || {};
   const header = str(c.headerName, 60).replace(/[^A-Za-z0-9-]/g, '');
+  const fin = p.forms && typeof p.forms === 'object' ? p.forms : {};
+  const forms = {};
+  FORMS.forEach((k) => { forms[k] = { open: !(fin[k] && fin[k].open === false) }; });   /* each form can be paused on its own */
   return {
+    forms,
     crm: {
+      v: 3,                                            /* 2 = service enquiries are ticked on their own for the CRM; 3 = Start a project too */
       enabled: !!c.enabled,
       url: urlOk(str(c.url, 500)) || (devOk(str(c.url, 500)) ? str(c.url, 500) : ''),
-      format: c.format === 'form' ? 'form' : 'json',
+      format: c.format === 'form' ? 'form' : c.format === 'flat' ? 'flat' : 'json',
       headerName: header,
       secret: c.secret === MASK ? (old.secret || '') : str(c.secret, 400),
       sources: Array.isArray(c.sources) ? c.sources.filter((s) => FORMS.indexOf(s) >= 0).filter((s, i, a) => a.indexOf(s) === i) : undefined
@@ -214,7 +245,7 @@ function cleanPrivate(p, prev) {
 function devOk(u) { return process.env.DN_STORE === 'memory' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//.test(u); }
 function maskPrivate(p) {
   const c = (p && p.crm) || {};
-  return { crm: { enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '', sources: Array.isArray(c.sources) ? c.sources : undefined } };
+  return { forms: (p && p.forms) || {}, crm: { v: c.v, enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '', sources: Array.isArray(c.sources) ? c.sources : undefined } };
 }
 
 /* ---------------- CRM webhook ---------------- */
@@ -227,21 +258,36 @@ function blockedHost(host) {
 async function forward(crm, lead, event) {
   const at = new Date().toISOString();
   if (!crm || !crm.enabled || !crm.url) return { status: 'off', at };
-  if (event !== 'lead.test' && Array.isArray(crm.sources) && crm.sources.indexOf(lead.source) < 0) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
+  /* settings saved before a form existed know nothing of it, so it follows the Say hello setting until the admin is saved once */
+  const listed = (s) => Array.isArray(crm.sources) && crm.sources.indexOf(s) >= 0;
+  const since = { enquiry: 2, project: 3 }[lead.source];
+  const allowed = listed(lead.source) || (since && (crm.v || 0) < since && listed('contact'));
+  if (event !== 'lead.test' && Array.isArray(crm.sources) && !allowed) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
   let u;
   try { u = new URL(crm.url); } catch (e) { return { status: 'failed', error: 'bad url', at }; }
   if (!devOk(crm.url) && (u.protocol !== 'https:' || blockedHost(u.hostname))) return { status: 'failed', error: 'url not allowed', at };
-  const flat = { id: lead.id, created_at: lead.createdAt, source: lead.source, name: lead.name, email: lead.email, company: lead.company || '', message: lead.message || '', role: lead.role || '', link: lead.link || '', page: lead.page || '' };
+  const flat = { id: lead.id, created_at: lead.createdAt, source: lead.source, name: lead.name, email: lead.email, phone: lead.phone || '', company: lead.company || '', message: lead.message || '', role: lead.role || '', link: lead.link || '', page: lead.page || '' };
   const headers = {};
   let body;
   if (crm.format === 'form') { headers['Content-Type'] = 'application/x-www-form-urlencoded'; body = new URLSearchParams(Object.assign({ event: event || 'lead.created' }, flat)).toString(); }
+  else if (crm.format === 'flat') {
+    /* the Dotnapps CRM's own website-form shape: name, email, company, message, page at the top level (the key goes in the header) */
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify({ name: flat.name, email: flat.email, phone: flat.phone, company: flat.company, message: (flat.message + (flat.source ? '\n\n[Website form: ' + flat.source + ']' : '')).trim(), page: flat.page });
+  }
   else { headers['Content-Type'] = 'application/json'; body = JSON.stringify({ event: event || 'lead.created', lead: flat }); }
   if (crm.headerName && crm.secret) headers[crm.headerName] = crm.secret;
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
   try {
     const r = await fetch(crm.url, { method: 'POST', headers, body, signal: ctl.signal, redirect: 'manual' });
     clearTimeout(t);
-    return r.status >= 200 && r.status < 300 ? { status: 'sent', code: r.status, at } : { status: 'failed', error: 'HTTP ' + r.status, code: r.status, at };
+    if (r.status >= 200 && r.status < 300) return { status: 'sent', code: r.status, at };
+    /* say why the CRM refused it: its own message, and whether a key header was sent at all */
+    let why = '';
+    try { const tx = (await r.text()).slice(0, 400); try { const j = JSON.parse(tx); why = String(j.error || j.message || ''); } catch (e2) { why = ''; } } catch (e3) { why = ''; }
+    why = why.replace(/[\u0000-\u001f<>]/g, ' ').slice(0, 140).trim();
+    const sent = crm.headerName && crm.secret ? ' [key header sent: ' + crm.headerName + ', ' + String(crm.secret).length + ' characters]' : ' [no key header was sent: fill in the header name and value]';
+    return { status: 'failed', error: 'HTTP ' + r.status + (why ? ' - ' + why : '') + sent, code: r.status, at };
   } catch (e) { clearTimeout(t); return { status: 'failed', error: e.name === 'AbortError' ? 'timed out' : 'network error', at }; }
 }
 

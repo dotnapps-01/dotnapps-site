@@ -91,8 +91,8 @@
       var p = {
         source: source, page: location.pathname,
         name: d.get("name") || "", email: d.get("email") || "",
-        message: d.get("message") || d.get("detail") || d.get("note") || "",
-        company: d.get("company") || "", role: d.get("role") || "", link: d.get("link") || "",
+        message: d.get("message") || d.get("detail") || d.get("note") || (d.get("role") ? "Application for " + d.get("role") : ""),
+        company: d.get("company") || "", role: d.get("role") || "", link: d.get("link") || "", phone: d.get("phone") || "",
         website: hp ? hp.value : ""
       };
       return fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) })
@@ -115,11 +115,11 @@
         var d = new FormData(bf), done = document.getElementById("brief-done"), keep = done ? done.innerHTML : "";
         sendLead(bf, "brief", d).then(function (ok) {
           if (ok) {
-            if (done) { done.textContent = "Thanks \u2014 we\u2019ve got your brief and will reply by email soon."; done.hidden = false; }
+            if (done) { done.textContent = ((window.__DN_FORMS || {}).brief || {}).done || "Thanks \u2014 we\u2019ve got your brief and will reply by email soon."; done.hidden = false; }
             bf.reset();
             return;
           }
-          var body = "Name: " + (d.get("name") || "") + "\nEmail: " + (d.get("email") || "") + "\n\nWhat they're building:\n" + (d.get("detail") || "");
+          var body = "Name: " + (d.get("name") || "") + "\nEmail: " + (d.get("email") || "") + (d.get("phone") ? "\nPhone: " + d.get("phone") : "") + "\n\nWhat they're building:\n" + (d.get("detail") || "");
           var href = "mailto:" + DN_MAIL() + "?subject=" + encodeURIComponent("Project brief \u2014 " + (d.get("name") || "new")) + "&body=" + encodeURIComponent(body);
           if (done) { done.innerHTML = keep; done.hidden = false; }
           window.location.href = href;
@@ -131,6 +131,7 @@
     var fm = document.getElementById("formModal");
     if (fm && typeof fm.showModal === "function") {
       var FORMS = {
+        project:    { title: "Start a project",    sub: "Tell us what you’re building — we reply by email.",     to: "hello@dotnapps.com",   subj: function (d) { return "Project — " + (d.get("name") || "new enquiry"); } },
         contact:    { title: "Say hello",          sub: "A short note — we read every one.",                     to: "hello@dotnapps.com",   subj: function () { return "Hello from dotnapps.com"; } },
         careers:    { title: "Join the team",       sub: "Senior engineers and product designers who like shipping.",  to: "careers@dotnapps.com", subj: function (d) { return "Application — " + (d.get("role") || "role"); } },
         businessos: { title: "Business OS access",  sub: "Tell us what you'd run on it.",                              to: "hello@dotnapps.com",   subj: function () { return "Business OS — access request"; } }
@@ -146,6 +147,8 @@
         mTrigger = trigger || null;
         mTitle.textContent = cfg.title;
         mSub.textContent = cfg.sub;
+        var ov = (window.__DN_FORMS || {})[key];                       /* heading and intro edited in the admin */
+        if (ov) { if (ov.title) mTitle.textContent = ov.title; if (ov.sub) mSub.textContent = ov.sub; }
         mPanels.forEach(function (p) {
           var on = p.getAttribute("data-form") === key;
           p.hidden = !on;
@@ -161,6 +164,10 @@
           e.preventDefault();
           openModal(btn.getAttribute("data-modal"), btn);
           var pf = btn.getAttribute("data-prefill");
+          var pform = fm.querySelector(".mform:not([hidden])");
+          if (pform) pform.dataset.src = pf ? "enquiry" : "";          /* opened from a service card: the admin files it as a service enquiry */
+          var eo = (window.__DN_FORMS || {}).enquiry;
+          if (pf && eo) { if (eo.title) mTitle.textContent = eo.title; if (eo.sub) mSub.textContent = eo.sub; }
           if (pf) {
             var ta = fm.querySelector(".mform:not([hidden]) textarea");
             if (ta) { ta.value = pf + "\n\n"; try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (er) {} }
@@ -179,8 +186,10 @@
           e.preventDefault();
           var key = form.getAttribute("data-form"), cfg = FORMS[key];
           var d = new FormData(form), doneEl = form.querySelector(".mform-done"), keep = doneEl.innerHTML;
-          sendLead(form, key, d).then(function (ok) {
-            if (ok) { doneEl.textContent = "Thanks \u2014 we\u2019ve got it and will reply by email soon."; doneEl.hidden = false; form.reset(); return; }
+          var src = key === "contact" && form.dataset.src === "enquiry" ? "enquiry" : key;
+          sendLead(form, src, d).then(function (ok) {
+            var FF = window.__DN_FORMS || {};
+            if (ok) { doneEl.textContent = (FF[src] && FF[src].done) || (src === "enquiry" && FF.contact && FF.contact.done) || "Thanks \u2014 we\u2019ve got it and will reply by email soon."; doneEl.hidden = false; form.reset(); return; }
             var lines = [];
             d.forEach(function (v, k) { if (v && k !== "website") lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v); });
             var to = key === "careers" ? cfg.to : DN_MAIL();
@@ -799,8 +808,39 @@ window.dnConfig = (function () {
     });
     Object.keys(pr).forEach(function (k) { var card = document.getElementById(k); if (card && card.classList.contains("pc")) txt(card.querySelector("p"), pr[k].desc); });
   }
+  /* the words on each form, as edited in the admin: button, field labels and hints, hidden optional fields; the modal heading, intro and thank-you are read from window.__DN_FORMS when a form opens or is sent */
+  function setText(el, t) {
+    if (!el || typeof t !== "string" || !t) return;
+    for (var i = 0; i < el.childNodes.length; i++) { var n = el.childNodes[i]; if (n.nodeType === 3 && n.nodeValue.trim()) { n.nodeValue = t; return; } }
+    el.insertBefore(document.createTextNode(t), el.firstChild);
+  }
+  function forms(c) {
+    var F = c.forms; if (!F || typeof F !== "object") return;
+    window.__DN_FORMS = F;
+    Object.keys(F).forEach(function (k) {
+      var cfg = F[k] || {}, form = k === "brief" ? document.getElementById("brief-form") : document.querySelector('.mform[data-form="' + k + '"]');
+      if (!form) return;
+      var sb = form.querySelector('button[type="submit"]');        /* buttons carry two text layers (.bt and .bt2) for the hover effect: change both */
+      if (sb) { var layers = sb.querySelectorAll(".bt, .bt2"); if (layers.length) [].forEach.call(layers, function (x) { setText(x, cfg.button); }); else setText(sb, cfg.button); }
+      var fl = cfg.fields || {};
+      Object.keys(fl).forEach(function (n) {
+        if (!/^[a-z]+$/.test(n)) return;
+        var ctl = form.querySelector('[name="' + n + '"]'); if (!ctl) return;
+        var lab = ctl.closest("label"), f = fl[n] || {};
+        if (lab) setText(lab, f.label);
+        if (f.placeholder && "placeholder" in ctl) ctl.placeholder = f.placeholder;
+        if (f.show === false && lab) { lab.hidden = true; ctl.disabled = true; ctl.required = false; }
+      });
+    });
+  }
+  /* the short privacy note under every form: its wording, or switched off, from the admin */
+  function formNote(c) {
+    var n = c.formNote; if (!n || typeof n !== "object") return;
+    [].forEach.call(document.querySelectorAll(".form-note"), function (p) { if (n.on === false) p.hidden = true; else if (n.text) p.textContent = n.text; });
+  }
   function apply(c) {
     var s = c.settings || {};
+    forms(c); formNote(c);
     if (s.email) { window.__DN_EMAIL = s.email; document.querySelectorAll(".menu-mail").forEach(function (m) { m.textContent = s.email; }); }
     var soc = s.social || {}, map = { instagram: "Instagram", linkedin: "LinkedIn", whatsapp: "WhatsApp", pinterest: "Pinterest" };
     Object.keys(map).forEach(function (k) { if (soc[k]) document.querySelectorAll('.foot-social a[aria-label$="' + map[k] + '"]').forEach(function (a) { a.href = soc[k]; }); });
