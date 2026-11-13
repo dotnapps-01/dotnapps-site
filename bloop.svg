@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="BLOOP, the Dotnapps assistant">
   <style>
-    .b { fill: #000; stroke: #000; stroke-width: 5; stroke-linejoin: round; }
-    .e { fill: #fff; }
-    @media (prefers-color-scheme: dark) { .b { fill: #F5F5F7; stroke: #F5F5F7; } .e { fill: #000; } }
+    .f { fill: #000; }
+    .r { fill: none; stroke: #000; stroke-width: 7.9; stroke-linecap: round; }
+    @media (prefers-color-scheme: dark) { .f { fill: #F5F5F7; } .r { stroke: #F5F5F7; } }
   </style>
-  <path class="b" d="M8.5 28Q8.5 13.5 20 13.5L47.5 36.5Q50 38.5 52.5 36.5L80 13.5Q91.5 13.5 91.5 28V78Q91.5 88.5 81 88.5H19Q8.5 88.5 8.5 78Z"/>
-  <rect class="e" x="30" y="47" width="7" height="25" rx="3.5"/>
-  <rect class="e" x="63" y="47" width="7" height="25" rx="3.5"/>
+  <path class="r" d="M19 64.9A36.3 36.3 0 1 1 81 64.9"/>
+  <circle class="f" cx="37.5" cy="42.8" r="6.9"/>
+  <circle class="f" cx="62.5" cy="42.8" r="6.9"/>
+  <ellipse class="f" cx="50" cy="73.8" rx="25.1" ry="10.9"/>
+  <path class="f" d="M50 82V94.6L73.4 79.2Z"/>
 </svg>

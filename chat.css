@@ -157,11 +157,12 @@
   border-radius: 50%; background: #FF3B30; border: 2px solid var(--frame);
 }
 
-/* ---- BLOOP, the bot's face (bloop.svg) ---- */
+/* ---- BLOOP, the bot's face: ring, two eyes and a speech-bubble mouth (bloop.svg) ---- */
 .dn-face { display: block; overflow: visible; flex: none; }
-.dn-face .dn-fb { fill: var(--face-fill); stroke: var(--face-fill); stroke-width: 5; stroke-linejoin: round; }
-.dn-face .dn-fe { fill: var(--face-eye); }
-.dn-face .dn-arc { fill: none; stroke: var(--face-eye); stroke-width: 5; stroke-linecap: round; }
+.dn-face .dn-ring { fill: none; stroke: var(--face-fill); stroke-width: 7.9; stroke-linecap: round; }
+.dn-face .dn-mouth, .dn-face .dn-fe { fill: var(--face-fill); }
+.dn-face .dn-fd { fill: var(--face-eye); }   /* dots cut out of the mouth: the colour of whatever the face sits on */
+.dn-face .dn-arc { fill: none; stroke: var(--face-fill); stroke-width: 4.6; stroke-linecap: round; stroke-linejoin: round; }
 .dn-face .g { display: none; }
 .dn-face[data-state="idle"] .g-eyes,
 .dn-face[data-state="thinking"] .g-eyes,
@@ -185,7 +186,7 @@
 .dn-face[data-state="processing"] .g-processing,
 .dn-face[data-state="online"] .g-online { display: inline; }
 .dn-face .g-eyes { transform-box: fill-box; transform-origin: center; animation: dn-blink 5.5s infinite; }
-/* sparks / zzz sit outside the body, so they take the body colour; speech-bubble badges are inverted with an outline */
+/* sparks and zzz sit outside the ring; speech-bubble badges are inverted with an outline */
 .dn-face .dn-spark { fill: none; stroke: var(--face-fill); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .dn-face .dn-bt { fill: var(--face-eye); stroke: var(--face-fill); stroke-width: 3.5; stroke-linejoin: round; }
 .dn-face .dn-bg { fill: none; stroke: var(--face-fill); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -255,7 +256,7 @@
 .dn-s-a .dn-title { font-size: 1.02rem; }
 .dn-s-a .dn-avatar { border-radius: 28%; background: var(--ink); width: 40px; height: 40px; }
 .dn-s-a .dn-avatar::after { background: var(--dn-card); border-color: var(--dn-tray); }
-.dn-s-a .dn-hface { --face-fill: var(--frame); --face-eye: var(--ink); width: 25px; height: 25px; }
+.dn-s-a .dn-hface { --face-fill: var(--frame); --face-eye: var(--ink); width: 28px; height: 28px; }
 .dn-s-a .dn-team path { fill: var(--frame); }
 .dn-s-a .dn-log { background: var(--dn-tray); padding: 14px; gap: 10px; }
 .dn-s-a .dn-mini, .dn-s-a .dn-sp { display: none; }
@@ -282,10 +283,10 @@
   width: auto; height: 54px; padding: 0 20px 0 9px; gap: .55rem; grid-auto-flow: column; place-items: center;
   border-radius: 999px; background: var(--dn-card); color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-nav);
 }
-.dn-s-a .dn-lface { --face-fill: var(--ink); --face-eye: var(--dn-card); width: 32px; height: 32px; }
+.dn-s-a .dn-lface { --face-fill: var(--ink); --face-eye: var(--dn-card); width: 34px; height: 34px; }
 .dn-launch.dn-s-a .dn-lbl { display: block; font-weight: 600; font-size: .92rem; letter-spacing: -.005em; white-space: nowrap; }
 .dn-launch.dn-s-a .dn-lbl::after { content: "→"; margin-left: .5rem; color: var(--muted); }
-.dn-launch.dn-s-a .dn-dot { left: 33px; right: auto; bottom: 11px; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--dn-card); box-sizing: content-box; }
+.dn-launch.dn-s-a .dn-dot { left: 38px; right: auto; top: 9px; bottom: auto; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--dn-card); box-sizing: content-box; }
 
 /* the launcher steps aside while the chat is open (it would peek out from under the rounded corners) */
 .dn-launch[aria-expanded="true"] { display: none; }

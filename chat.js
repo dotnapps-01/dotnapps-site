@@ -81,7 +81,7 @@
 
   // ---- BLOOP, the bot's face (see bloop.svg) -------------------------------
   // One SVG, three expressions switched by data-state: idle, typing, happy.
-  var BODY = "M8.5 28Q8.5 13.5 20 13.5L47.5 36.5Q50 38.5 52.5 36.5L80 13.5Q91.5 13.5 91.5 28V78Q91.5 88.5 81 88.5H19Q8.5 88.5 8.5 78Z";
+  var RING = "M19 64.9A36.3 36.3 0 1 1 81 64.9"; // open ring, ends rounded, gap at the bottom
   function sv(tag, attrs, parent) {
     var n = document.createElementNS(SVG_NS, tag);
     for (var k in attrs) n.setAttribute(k, attrs[k]);
@@ -89,75 +89,75 @@
     return n;
   }
   /*
-   * Expressions (see the BLOOP sheet): idle, typing, happy, excited, wink, love,
-   * cool, thinking, help, success, error, alert, offline, processing, online.
-   * Each is a <g class="g g-NAME">; CSS shows the one(s) matching data-state.
-   * Several states (thinking, help, success, error, alert, online) reuse the
-   * idle eyes ("g-eyes") and add a badge or dot on top.
+   * BLOOP's face: an open ring, two round eyes and a speech-bubble mouth, all in one
+   * colour. Expressions: idle, typing, happy, excited, wink, love, cool, thinking, help,
+   * success, error, alert, offline, processing, online. Each is a <g class="g g-NAME">;
+   * CSS shows the one(s) matching data-state. Several states (thinking, help, success,
+   * error, alert, online) reuse the idle eyes ("g-eyes") and add a badge or dot on top.
    */
   var MOODS = ["idle", "typing", "happy", "excited", "wink", "love", "cool", "thinking", "help", "success", "error", "alert", "offline", "processing", "online"];
   function face(cls) {
     var s = sv("svg", { "class": "dn-face " + (cls || ""), viewBox: "0 0 100 100", "aria-hidden": "true", focusable: "false", "data-state": "idle" });
-    sv("path", { "class": "dn-fb", d: BODY }, s);
+    sv("path", { "class": "dn-ring", d: RING }, s);
+    sv("ellipse", { "class": "dn-mouth", cx: 50, cy: 73.8, rx: 25.1, ry: 10.9 }, s);
+    sv("path", { "class": "dn-mouth", d: "M50 82V94.6L73.4 79.2Z" }, s);
     function grp(name) { return sv("g", { "class": "g g-" + name }, s); }
-    function pill(parent, x, y, h) { return sv("rect", { "class": "dn-fe", x: x, y: y, width: 7, height: h, rx: 3.5 }, parent); }
+    function dot(parent, cx, cy, r, cls) { return sv("circle", { "class": cls || "dn-fe", cx: cx, cy: cy, r: r }, parent); }
     function line(parent, d, cls) { return sv("path", { "class": cls || "dn-arc", d: d }, parent); }
+    function eyesIn(g) { dot(g, 37.5, 42.8, 6.9); dot(g, 62.5, 42.8, 6.9); }
 
-    var eyes = grp("eyes");
-    pill(eyes, 30, 47, 25); pill(eyes, 63, 47, 25);
+    eyesIn(grp("eyes"));
 
     var typ = grp("typing");
-    pill(typ, 30, 45, 16); pill(typ, 63, 45, 16);
-    [41, 50, 59].forEach(function (cx, i) { sv("circle", { "class": "dn-fe dn-td dn-td" + i, cx: cx, cy: 74, r: 2.6 }, typ); });
+    eyesIn(typ);
+    [42, 50, 58].forEach(function (cx, i) { dot(typ, cx, 73.8, 2.3, "dn-fd dn-td dn-td" + i); });
 
     var hap = grp("happy");
-    line(hap, "M27 67Q33.5 51 40 67"); line(hap, "M60 67Q66.5 51 73 67");
+    line(hap, "M30.5 47Q37.5 36 44.5 47"); line(hap, "M55.5 47Q62.5 36 69.5 47");
 
     var exc = grp("excited");
-    line(exc, "M27 52L39 60L27 68"); line(exc, "M73 52L61 60L73 68");
-    line(exc, "M79 4L83 -5", "dn-spark"); line(exc, "M88 8L96 2", "dn-spark"); line(exc, "M91 17L99 16", "dn-spark");
+    line(exc, "M31 36L43 43L31 50"); line(exc, "M69 36L57 43L69 50");
+    line(exc, "M82 8L86 0", "dn-spark"); line(exc, "M91 11L98 5", "dn-spark"); line(exc, "M93 20L100 19", "dn-spark");
 
     var wnk = grp("wink");
-    pill(wnk, 30, 47, 25);
-    sv("rect", { "class": "dn-fe", x: 60, y: 58, width: 14, height: 6, rx: 3 }, wnk);
+    dot(wnk, 37.5, 42.8, 6.9);
+    sv("rect", { "class": "dn-fe", x: 55.5, y: 40.3, width: 14, height: 5, rx: 2.5 }, wnk);
 
     var lov = grp("love");
     var heart = "M0-2C-2-8-10-6-10 0C-10 5-4 8 0 12C4 8 10 5 10 0C10-6 2-8 0-2Z";
-    sv("path", { "class": "dn-fe", d: heart, transform: "translate(34 57) scale(.9)" }, lov);
-    sv("path", { "class": "dn-fe", d: heart, transform: "translate(66 57) scale(.9)" }, lov);
+    sv("path", { "class": "dn-fe", d: heart, transform: "translate(37.5 40) scale(.78)" }, lov);
+    sv("path", { "class": "dn-fe", d: heart, transform: "translate(62.5 40) scale(.78)" }, lov);
 
     var col = grp("cool");
-    sv("path", { "class": "dn-fe", d: "M20 46H47V57Q47 67 38 67H29Q20 67 20 57Z" }, col);
-    sv("path", { "class": "dn-fe", d: "M53 46H80V57Q80 67 71 67H62Q53 67 53 57Z" }, col);
-    sv("rect", { "class": "dn-fe", x: 46, y: 46, width: 8, height: 5 }, col);
+    sv("rect", { "class": "dn-fe", x: 26, y: 36, width: 21, height: 14, rx: 6 }, col);
+    sv("rect", { "class": "dn-fe", x: 53, y: 36, width: 21, height: 14, rx: 6 }, col);
+    sv("rect", { "class": "dn-fe", x: 46, y: 37, width: 8, height: 4 }, col);
 
     // speech-bubble badges (top right): thinking, help, success, error, alert
     function badge(name, draw) {
       var g = grp(name);
-      sv("path", { "class": "dn-bt", d: "M73 20L66 33L83 26Z" }, g);
-      sv("circle", { "class": "dn-bt", cx: 85, cy: 12, r: 15 }, g);
+      sv("circle", { "class": "dn-bt", cx: 88, cy: 12, r: 11 }, g);
       draw(g);
     }
-    badge("thinking", function (g) { [78, 85, 92].forEach(function (cx) { sv("circle", { "class": "dn-bg-f", cx: cx, cy: 12, r: 2.3 }, g); }); });
-    badge("help", function (g) { line(g, "M80 7Q80 2 85 2Q90 2 90 7Q90 10.5 85 12.5V15", "dn-bg"); sv("circle", { "class": "dn-bg-f", cx: 85, cy: 21, r: 2 }, g); });
-    badge("success", function (g) { line(g, "M78 12.5L83 17.5L92 6.5", "dn-bg"); });
-    badge("error", function (g) { line(g, "M79 6L91 18M91 6L79 18", "dn-bg"); });
-    badge("alert", function (g) { line(g, "M85 3.5V13.5", "dn-bg"); sv("circle", { "class": "dn-bg-f", cx: 85, cy: 20, r: 2.3 }, g); });
+    badge("thinking", function (g) { [82, 88, 94].forEach(function (cx) { dot(g, cx, 12, 2, "dn-bg-f"); }); });
+    badge("help", function (g) { line(g, "M84 8.5Q84 4.5 88 4.5Q92 4.5 92 8.5Q92 11.2 88 13V15", "dn-bg"); dot(g, 88, 19, 1.8, "dn-bg-f"); });
+    badge("success", function (g) { line(g, "M82 12.5L86.5 17L94 7.5", "dn-bg"); });
+    badge("error", function (g) { line(g, "M83 7L93 17M93 7L83 17", "dn-bg"); });
+    badge("alert", function (g) { line(g, "M88 5.5V13.5", "dn-bg"); dot(g, 88, 18.5, 2, "dn-bg-f"); });
 
     var off = grp("offline");
-    sv("rect", { "class": "dn-fe", x: 27, y: 59, width: 12, height: 6, rx: 3 }, off);
-    sv("rect", { "class": "dn-fe", x: 61, y: 59, width: 12, height: 6, rx: 3 }, off);
-    line(off, "M72 3H79L72 11H79", "dn-spark"); line(off, "M84 -9H95L84 5H95", "dn-spark");
+    sv("rect", { "class": "dn-fe", x: 30, y: 40.6, width: 15, height: 4.6, rx: 2.3 }, off);
+    sv("rect", { "class": "dn-fe", x: 55, y: 40.6, width: 15, height: 4.6, rx: 2.3 }, off);
+    line(off, "M78 10H85L78 18H85", "dn-spark"); line(off, "M89 -2H99L89 12H99", "dn-spark");
 
     var prc = grp("processing");
     var ring = sv("g", { "class": "dn-spin" }, prc);
     for (var i = 0; i < 8; i++) {
       var a = i * Math.PI / 4;
-      sv("circle", { "class": "dn-fe", cx: (50 + 12 * Math.cos(a)).toFixed(1), cy: (62 + 12 * Math.sin(a)).toFixed(1), r: i % 2 ? 1.9 : 2.6 }, ring);
+      dot(ring, (50 + 10 * Math.cos(a)).toFixed(1), (43 + 10 * Math.sin(a)).toFixed(1), i % 2 ? 1.8 : 2.6);
     }
 
-    var onl = grp("online");
-    sv("circle", { "class": "dn-fe", cx: 80, cy: 79, r: 4.5 }, onl);
+    dot(grp("online"), 86, 84, 4.6);
     return s;
   }
   // The Dotnapps mark (favicon.svg), shown while a human is on the chat.
