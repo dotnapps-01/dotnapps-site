@@ -191,6 +191,28 @@ function cleanPublic(p) {
     social: { instagram: urlOk(str(soc.instagram, 300)), linkedin: urlOk(str(soc.linkedin, 300)), whatsapp: urlOk(str(soc.whatsapp, 300)), pinterest: urlOk(str(soc.pinterest, 300)) },
     banner: { on: !!(s.banner && s.banner.on), text: str(s.banner && s.banner.text, 200), link: urlOk(str(s.banner && s.banner.link, 300), true) }
   };
+  /* the words on each form: heading, intro, button, thank-you, and each field's label / hint / (optional fields only) whether it shows.
+     Only known forms and known field names are kept, and only what was actually changed. */
+  const FORM_FIELDS = { brief: ['name', 'email', 'detail'], contact: ['name', 'email', 'message'], businessos: ['name', 'email', 'company', 'detail'], careers: ['name', 'email', 'role', 'link', 'note'] };
+  const OPTIONAL = ['company', 'link', 'note'];
+  out.forms = {};
+  const pf = p.forms && typeof p.forms === 'object' ? p.forms : {};
+  ['brief', 'contact', 'enquiry', 'businessos', 'careers'].forEach((k) => {
+    const f = pf[k]; if (!f || typeof f !== 'object') return;
+    const o = {};
+    const t = str(f.title, 80), sub = str(f.sub, 160), btn = str(f.button, 40), done = str(f.done, 240);
+    if (t) o.title = t; if (sub) o.sub = sub; if (btn) o.button = btn; if (done) o.done = done;
+    const fl = {}, fin = f.fields && typeof f.fields === 'object' ? f.fields : {};
+    (FORM_FIELDS[k] || []).forEach((n) => {
+      const x = fin[n]; if (!x || typeof x !== 'object') return;
+      const e = {}, lab = str(x.label, 60), ph = str(x.placeholder, 100);
+      if (lab) e.label = lab; if (ph && n !== 'role') e.placeholder = ph;
+      if (OPTIONAL.indexOf(n) >= 0 && x.show === false) e.show = false;
+      if (Object.keys(e).length) fl[n] = e;
+    });
+    if (Object.keys(fl).length) o.fields = fl;
+    if (Object.keys(o).length) out.forms[k] = o;
+  });
   return out;
 }
 const MASK = '********';

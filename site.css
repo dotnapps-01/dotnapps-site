@@ -2387,3 +2387,6 @@ details.svc-group > summary.svc-gh:focus-visible { outline: 2px solid var(--focu
 .pf-go:focus-visible { outline: none; }
 .pf-go:focus-visible::after { outline: 2px solid var(--ink); outline-offset: -2px; }
 @media (max-width: 559px) { .pf-go { width: 24px; height: 24px; } .pf-go svg { width: 10px; height: 10px; } }
+
+/* a form field switched off in the admin */
+label[hidden] { display: none !important; }
