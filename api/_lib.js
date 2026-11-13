@@ -194,14 +194,19 @@ function cleanPublic(p) {
   return out;
 }
 const MASK = '********';
-const FORMS = ['brief', 'contact', 'businessos', 'careers'];
+const FORMS = ['brief', 'contact', 'enquiry', 'businessos', 'careers'];
 function cleanPrivate(p, prev) {
   p = p && typeof p === 'object' ? p : {};
   const c = p.crm && typeof p.crm === 'object' ? p.crm : {};
   const old = (prev && prev.crm) || {};
   const header = str(c.headerName, 60).replace(/[^A-Za-z0-9-]/g, '');
+  const fin = p.forms && typeof p.forms === 'object' ? p.forms : {};
+  const forms = {};
+  FORMS.forEach((k) => { forms[k] = { open: !(fin[k] && fin[k].open === false) }; });   /* each form can be paused on its own */
   return {
+    forms,
     crm: {
+      v: 2,                                            /* 2 = each form (including service enquiries) is ticked on its own for the CRM */
       enabled: !!c.enabled,
       url: urlOk(str(c.url, 500)) || (devOk(str(c.url, 500)) ? str(c.url, 500) : ''),
       format: c.format === 'form' ? 'form' : c.format === 'flat' ? 'flat' : 'json',
@@ -214,7 +219,7 @@ function cleanPrivate(p, prev) {
 function devOk(u) { return process.env.DN_STORE === 'memory' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//.test(u); }
 function maskPrivate(p) {
   const c = (p && p.crm) || {};
-  return { crm: { enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '', sources: Array.isArray(c.sources) ? c.sources : undefined } };
+  return { forms: (p && p.forms) || {}, crm: { v: c.v, enabled: !!c.enabled, url: c.url || '', format: c.format || 'json', headerName: c.headerName || '', secret: c.secret ? MASK : '', sources: Array.isArray(c.sources) ? c.sources : undefined } };
 }
 
 /* ---------------- CRM webhook ---------------- */
@@ -227,7 +232,10 @@ function blockedHost(host) {
 async function forward(crm, lead, event) {
   const at = new Date().toISOString();
   if (!crm || !crm.enabled || !crm.url) return { status: 'off', at };
-  if (event !== 'lead.test' && Array.isArray(crm.sources) && crm.sources.indexOf(lead.source) < 0) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
+  /* older saved settings (no crm.v) know nothing of service enquiries, so those follow the Say hello setting until the admin is saved once */
+  const listed = (s) => Array.isArray(crm.sources) && crm.sources.indexOf(s) >= 0;
+  const allowed = listed(lead.source) || (crm.v !== 2 && lead.source === 'enquiry' && listed('contact'));
+  if (event !== 'lead.test' && Array.isArray(crm.sources) && !allowed) return { status: 'skipped', error: 'this form is not sent to the CRM', at };
   let u;
   try { u = new URL(crm.url); } catch (e) { return { status: 'failed', error: 'bad url', at }; }
   if (!devOk(crm.url) && (u.protocol !== 'https:' || blockedHost(u.hostname))) return { status: 'failed', error: 'url not allowed', at };

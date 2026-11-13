@@ -161,6 +161,8 @@
           e.preventDefault();
           openModal(btn.getAttribute("data-modal"), btn);
           var pf = btn.getAttribute("data-prefill");
+          var pform = fm.querySelector(".mform:not([hidden])");
+          if (pform) pform.dataset.src = pf ? "enquiry" : "";          /* opened from a service card: the admin files it as a service enquiry */
           if (pf) {
             var ta = fm.querySelector(".mform:not([hidden]) textarea");
             if (ta) { ta.value = pf + "\n\n"; try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (er) {} }
@@ -179,7 +181,8 @@
           e.preventDefault();
           var key = form.getAttribute("data-form"), cfg = FORMS[key];
           var d = new FormData(form), doneEl = form.querySelector(".mform-done"), keep = doneEl.innerHTML;
-          sendLead(form, key, d).then(function (ok) {
+          var src = key === "contact" && form.dataset.src === "enquiry" ? "enquiry" : key;
+          sendLead(form, src, d).then(function (ok) {
             if (ok) { doneEl.textContent = "Thanks \u2014 we\u2019ve got it and will reply by email soon."; doneEl.hidden = false; form.reset(); return; }
             var lines = [];
             d.forEach(function (v, k) { if (v && k !== "website") lines.push(k.charAt(0).toUpperCase() + k.slice(1) + ": " + v); });
