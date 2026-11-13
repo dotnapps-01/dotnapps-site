@@ -889,6 +889,7 @@ window.dnConfig = (function () {
   }
   function analytics(a) {
     if (!a || a.on === false || !/^G-[A-Z0-9]{4,14}$/.test(a.id || "")) return;
+    if (/[?&]cookies=ask\b/.test(location.search)) { try { localStorage.removeItem(CONSENT_KEY); } catch (e) {} showConsent(a.id); }   /* dotnapps.com/?cookies=ask shows the choice again */
     var st = consentState();
     if (st === "granted") loadGa(a.id);
     else if (!st) { if (navigator.globalPrivacyControl === true) rememberConsent("denied"); else showConsent(a.id); }
