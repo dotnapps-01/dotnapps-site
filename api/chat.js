@@ -7,12 +7,16 @@
  * Response: { reply: string }   or   { error: string }  with a non-200 status
  *
  * Tries free LLM tiers in order and moves to the next on any failure
- * (rate limit, outage, bad model name, empty answer):
- *   1. Groq   GROQ_MODEL            (default llama-3.3-70b-versatile)
- *   2. Groq   GROQ_FALLBACK_MODEL   (default llama-3.1-8b-instant)
- *   3. Gemini GEMINI_MODEL          (default gemini-2.5-flash)
+ * (rate limit, outage, retired model, empty answer):
+ *   1. Groq models, newest first: GROQ_MODEL, GROQ_FALLBACK_MODEL (if set), then
+ *      openai/gpt-oss-120b, llama-3.3-70b-versatile, openai/gpt-oss-20b,
+ *      llama-3.1-8b-instant. At most 3 Groq models are tried per request, and a
+ *      model Groq says no longer exists is skipped until the instance restarts.
+ *   2. Gemini  GEMINI_MODEL (default gemini-2.5-flash)
  * A provider is skipped when its API key is not set. If all fail, the widget
- * shows a "contact us" message instead.
+ * shows a "contact us" message instead. Failures are logged (provider, HTTP
+ * status and the provider's error text, never the visitor's message), so
+ * Vercel -> Logs shows exactly why.
  *
  * Environment variables (Vercel -> Settings -> Environment Variables):
  *   GROQ_API_KEY, GEMINI_API_KEY  (set at least one)
@@ -58,7 +62,14 @@ async function post(url, headers, body, ms) {
       body: JSON.stringify(body),
       signal: ctl.signal
     });
-    if (!r.ok) throw new Error("HTTP " + r.status);
+    if (!r.ok) {
+      let body = "";
+      try { body = (await r.text()).slice(0, 300); } catch (e) { /* ignore */ }
+      const err = new Error("HTTP " + r.status + (body ? " " + body.replace(/\s+/g, " ") : ""));
+      err.status = r.status;
+      err.body = body;
+      throw err;
+    }
     return await r.json();
   } finally {
     clearTimeout(timer);
@@ -66,15 +77,23 @@ async function post(url, headers, body, ms) {
 }
 
 async function askGroq(model, msgs, ms) {
+  const body = {
+    model,
+    messages: [{ role: "system", content: SYSTEM_PROMPT }].concat(msgs),
+    temperature: 0.3
+  };
+  if (/gpt-oss/.test(model)) {
+    // Reasoning models count their thinking against the output budget, so keep
+    // the effort low and leave room for the visible answer.
+    body.reasoning_effort = "low";
+    body.max_completion_tokens = 1000;
+  } else {
+    body.max_tokens = MAX_OUT_TOKENS;
+  }
   const data = await post(
     "https://api.groq.com/openai/v1/chat/completions",
     { Authorization: "Bearer " + process.env.GROQ_API_KEY },
-    {
-      model,
-      messages: [{ role: "system", content: SYSTEM_PROMPT }].concat(msgs),
-      temperature: 0.3,
-      max_tokens: MAX_OUT_TOKENS
-    },
+    body,
     ms
   );
   return data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
@@ -98,13 +117,29 @@ async function askGemini(model, msgs, ms) {
   return parts && parts.map((p) => p.text || "").join("");
 }
 
+// Groq retires models from time to time. A model that reports "not found" or
+// "decommissioned" is remembered and skipped, so every request isn't slowed down.
+const deadModels = new Set();
+const modelGone = (e) =>
+  !!e && (e.status === 404 || /model_not_found|model_decommissioned|decommission|does not exist|no longer supported/i.test(e.body || ""));
+const GROQ_DEFAULTS = ["openai/gpt-oss-120b", "llama-3.3-70b-versatile", "openai/gpt-oss-20b", "llama-3.1-8b-instant"];
+const MAX_GROQ_TRIES = 3;
+
 function providers() {
   const list = [];
   if (process.env.GROQ_API_KEY) {
-    const primary = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
-    const backup = process.env.GROQ_FALLBACK_MODEL || "llama-3.1-8b-instant";
-    list.push({ name: "groq:" + primary, run: (m, ms) => askGroq(primary, m, ms) });
-    if (backup !== primary) list.push({ name: "groq:" + backup, run: (m, ms) => askGroq(backup, m, ms) });
+    const names = [process.env.GROQ_MODEL, process.env.GROQ_FALLBACK_MODEL].concat(GROQ_DEFAULTS)
+      .filter((m, i, a) => m && a.indexOf(m) === i && !deadModels.has(m))
+      .slice(0, MAX_GROQ_TRIES);
+    names.forEach((model) => {
+      list.push({
+        name: "groq:" + model,
+        run: (m, ms) => askGroq(model, m, ms).catch((e) => {
+          if (modelGone(e)) deadModels.add(model);
+          throw e;
+        })
+      });
+    });
   }
   if (process.env.GEMINI_API_KEY) {
     const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
