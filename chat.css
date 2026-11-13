@@ -229,15 +229,16 @@
 }
 
 /* =====================================================================
-   Look: "editorial tray", taken from the FAQ and services blocks on the site:
-   a pale tray holding white cards, small mono labels, hairline edges, a pill
-   launcher and black pill buttons.
+   Look: the chat box wears the website's own colours (white on the light site,
+   black on the dark site), with hairline edges, small mono labels and black pill
+   buttons. BLOOP is drawn in the opposite colour (black on light, white on dark),
+   and the message area has a faint dot grid, like the dotted graphics on the site.
    ===================================================================== */
-:root { --dn-tray: #F5F5F7; --dn-card: #FFFFFF; --dn-edge: rgba(0, 0, 0, .09); --dn-grid: rgba(0, 0, 0, .16); }
-:root[data-theme="dark"] { --dn-tray: #000000; --dn-card: #1D1D1F; --dn-edge: rgba(255, 255, 255, .12); --dn-grid: rgba(255, 255, 255, .2); }
+:root { --dn-tray: var(--frame); --dn-card: var(--sunken); --dn-edge: rgba(0, 0, 0, .09); --dn-dot: rgba(0, 0, 0, .1); }
+:root[data-theme="dark"] { --dn-edge: rgba(255, 255, 255, .12); --dn-dot: rgba(255, 255, 255, .14); }
 
 /* label bits, shown by the look below */
-.dn-lbl, .dn-eyebrow, .dn-meta { display: none; }
+.dn-eyebrow, .dn-meta { display: none; }
 .dn-titles { flex: 1; min-width: 0; }
 .dn-who { display: none; }
 .dn-eyebrow, .dn-meta {
@@ -245,25 +246,28 @@
   text-transform: uppercase; letter-spacing: .14em; font-size: .62rem; font-weight: 400; color: var(--muted);
 }
 
-/* ---------- A · Editorial tray (like the FAQ block) ---------- */
+/* ---------- the chat box ---------- */
 .dn-panel.dn-s-a {
   width: min(400px, calc(100vw - 32px)); border-radius: 14px;
   background: var(--dn-tray); border: 1px solid var(--border); box-shadow: var(--shadow-frame);
 }
-.dn-s-a .dn-head { background: var(--dn-tray); border-bottom: 1px solid var(--dn-edge); padding: .8rem .9rem .8rem 1rem; }
+.dn-s-a .dn-head { background: var(--dn-tray); border-bottom: 1px solid var(--dn-edge); padding: .7rem .9rem .7rem 1rem; }
 .dn-s-a .dn-eyebrow { display: flex; align-items: center; gap: .45rem; margin-bottom: .1rem; }
 .dn-s-a .dn-eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
 .dn-s-a .dn-title { font-size: 1.02rem; }
-.dn-s-a .dn-avatar { border-radius: 28%; background: var(--ink); width: 40px; height: 40px; }
-.dn-s-a .dn-avatar::after { background: var(--dn-card); border-color: var(--dn-tray); }
-.dn-s-a .dn-hface { --face-fill: var(--frame); --face-eye: var(--ink); width: 28px; height: 28px; }
-.dn-s-a .dn-team path { fill: var(--frame); }
-.dn-s-a .dn-log { background: var(--dn-tray); padding: 14px; gap: 10px; }
+.dn-s-a .dn-avatar { background: none; border-radius: 0; width: 38px; height: 38px; }
+.dn-s-a .dn-avatar::after { top: 1px; right: -1px; bottom: auto; background: var(--ink); border-color: var(--dn-tray); }
+.dn-s-a .dn-hface { --face-fill: var(--ink); --face-eye: var(--dn-tray); width: 36px; height: 36px; }
+.dn-s-a .dn-team path { fill: var(--ink); }
+.dn-s-a .dn-log {
+  padding: 14px; gap: 10px; background-color: var(--dn-tray);
+  background-image: radial-gradient(circle at 1px 1px, var(--dn-dot) 1px, transparent 1.5px); background-size: 20px 20px;
+}
 .dn-s-a .dn-mini, .dn-s-a .dn-sp { display: none; }
 .dn-s-a .dn-row { max-width: 92%; }
 .dn-s-a .dn-row .dn-msg { max-width: 100%; }
 .dn-s-a .dn-msg { border-radius: 12px; padding: .6rem .8rem; max-width: 90%; }
-.dn-s-a .dn-bot { background: var(--dn-card); border: 1px solid var(--dn-edge); box-shadow: var(--shadow-chip); border-bottom-left-radius: 12px; }
+.dn-s-a .dn-bot { background: var(--dn-card); border: 1px solid var(--dn-edge); border-bottom-left-radius: 12px; }
 .dn-s-a .dn-me { background: var(--ink); color: var(--frame); border-bottom-right-radius: 12px; }
 .dn-s-a .dn-agent { background: var(--dn-card); border-left: 3px solid var(--focus); }
 .dn-s-a .dn-meta { display: block; margin-bottom: .2rem; }
@@ -271,7 +275,8 @@
 .dn-s-a .dn-note { background: none; border: 0; box-shadow: none; }
 .dn-s-a .dn-hand { background: var(--dn-card); border: 1px solid var(--dn-edge); }
 .dn-s-a .dn-chips { background: var(--dn-tray); padding: 0 14px 12px; }
-.dn-s-a .dn-chip { background: var(--dn-card); border-color: var(--border); display: inline-flex; align-items: center; gap: .4rem; font-weight: 500; }
+.dn-s-a .dn-chip { background: var(--dn-tray); border-color: var(--border); display: inline-flex; align-items: center; gap: .4rem; font-weight: 500; }
+.dn-s-a .dn-chip:hover { background: var(--dn-card); }
 .dn-s-a .dn-chip::after { content: "→"; color: var(--muted); }
 .dn-s-a .dn-chip:hover::after { color: var(--ink); }
 .dn-s-a .dn-form { background: var(--dn-tray); border-top: 1px solid var(--dn-edge); padding: .7rem .8rem .4rem; }
@@ -279,19 +284,80 @@
 .dn-s-a .dn-send { border-radius: 999px; }
 .dn-s-a .dn-foot { background: var(--dn-tray); }
 .dn-s-a .dn-foot, .dn-s-a .dn-foot .dn-link { font-family: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace; text-transform: uppercase; letter-spacing: .08em; font-size: .6rem; }
-.dn-launch.dn-s-a {
-  width: auto; height: 54px; padding: 0 20px 0 9px; gap: .55rem; grid-auto-flow: column; place-items: center;
-  border-radius: 999px; background: var(--dn-card); color: var(--ink); border: 1px solid var(--border); box-shadow: var(--shadow-nav);
-}
-.dn-s-a .dn-lface { --face-fill: var(--ink); --face-eye: var(--dn-card); width: 34px; height: 34px; }
-.dn-launch.dn-s-a .dn-lbl { display: block; font-weight: 600; font-size: .92rem; letter-spacing: -.005em; white-space: nowrap; }
-.dn-launch.dn-s-a .dn-lbl::after { content: "→"; margin-left: .5rem; color: var(--muted); }
-.dn-launch.dn-s-a .dn-dot { left: 38px; right: auto; top: 9px; bottom: auto; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--dn-card); box-sizing: content-box; }
 
-/* the launcher steps aside while the chat is open (it would peek out from under the rounded corners) */
+/* header buttons */
+.dn-expand {
+  display: none; flex: none; width: 34px; height: 34px; padding: 0; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;
+}
+.dn-expand:hover { background: var(--hairline); color: var(--ink); }
+.dn-expand svg { width: 16px; height: 16px; }
+
+/* ---------- the launcher: just BLOOP, in the opposite colour to the site ---------- */
+.dn-launch.dn-s-a {
+  width: 64px; height: 64px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
+  color: var(--ink); display: grid; place-items: center;
+}
+.dn-s-a .dn-lface {
+  --face-fill: var(--ink); --face-eye: var(--frame); width: 58px; height: 58px;
+  /* a thin halo in the page colour keeps the mark readable over buttons and images */
+  filter: drop-shadow(1.5px 0 0 var(--frame)) drop-shadow(-1.5px 0 0 var(--frame)) drop-shadow(0 1.5px 0 var(--frame)) drop-shadow(0 -1.5px 0 var(--frame)) drop-shadow(0 6px 10px rgba(0, 0, 0, .18));
+}
+.dn-launch.dn-s-a .dn-dot { left: 47px; right: auto; top: 8px; bottom: auto; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--frame); box-sizing: content-box; }
+
+/* the launcher steps aside while the chat is open */
 .dn-launch[aria-expanded="true"] { display: none; }
 
-/* phones: keep the sheet near full screen */
+/* ---------- greeting pop-up ---------- */
+.dn-greet {
+  position: fixed; z-index: 41;
+  right: max(16px, env(safe-area-inset-right)); bottom: calc(max(16px, env(safe-area-inset-bottom)) + 72px);
+  width: min(290px, calc(100vw - 32px));
+  background: var(--dn-tray); color: var(--text); border: 1px solid var(--border); border-radius: 14px;
+  box-shadow: var(--shadow-frame); animation: dn-pop .28s cubic-bezier(.2, .9, .3, 1.15);
+  transform-origin: bottom right;
+}
+.dn-greet[hidden] { display: none; }
+.dn-greet::after {
+  content: ""; position: absolute; bottom: -7px; right: 28px; width: 12px; height: 12px;
+  background: var(--dn-tray); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg);
+}
+@keyframes dn-pop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+.dn-greet-open {
+  display: block; width: 100%; text-align: left; padding: .85rem 2.6rem .9rem 1rem; border: 0; background: none;
+  color: inherit; font: inherit; line-height: 1.45; cursor: pointer; border-radius: 14px;
+}
+.dn-greet-eye {
+  display: flex; align-items: center; gap: .45rem; margin-bottom: .25rem;
+  font: 400 .62rem "Space Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.dn-greet-eye::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.dn-greet-t { display: block; font-size: 1.02rem; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+.dn-greet-p { display: block; margin-top: .15rem; font-size: .9rem; color: var(--muted); }
+.dn-greet-x {
+  position: absolute; top: .4rem; right: .4rem; width: 30px; height: 30px; padding: 0; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;
+}
+.dn-greet-x:hover { background: var(--hairline); color: var(--ink); }
+.dn-greet-x svg { width: 14px; height: 14px; }
+.dn-greet button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- phones: a compact card by default, full screen only on request ---------- */
 @media (max-width: 520px) {
-  .dn-panel.dn-s-a { width: auto; }
+  .dn-panel.dn-s-a {
+    inset: auto 12px calc(var(--dn-kb, 0px) + max(12px, env(safe-area-inset-bottom))) 12px;
+    width: auto; border-radius: 16px;
+    height: min(68dvh, 540px, calc(100dvh - var(--dn-kb, 0px) - 24px));
+  }
+  .dn-panel.dn-s-a.dn-full {
+    inset: max(8px, env(safe-area-inset-top)) 8px calc(var(--dn-kb, 0px) + max(8px, env(safe-area-inset-bottom))) 8px;
+    height: auto;
+  }
+  .dn-expand { display: grid; }
+  .dn-greet { right: 12px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 70px); }
+  .dn-launch.dn-s-a { right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dn-greet { animation: none; }
 }

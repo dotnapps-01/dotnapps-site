@@ -33,6 +33,12 @@ visitor's chat box.
   thinking, typing, help, success, error, alert, online, processing, offline) and
   reacts to the chat: typing while it waits, thinking after 4s, love for thanks,
   error/alert when something fails, asleep when the visitor's connection drops.
+  The launcher is just BLOOP (drawn in the opposite colour to the site, so black on
+  the light site and white on the dark one); the chat box uses the site's own colours.
+  A visitor is greeted once (30 days) by a small pop-up with a soft chime: right after
+  they answer the cookie banner, or a few seconds in when there is no banner. Browsers
+  only allow sound after a tap, so with no tap the greeting appears silently. On phones
+  the chat is a compact card, with a button in the header to make it full screen.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
   `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
   whose key isn't set.

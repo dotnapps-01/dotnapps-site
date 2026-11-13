@@ -192,7 +192,6 @@
   launchFace = face("dn-lface");
   launch.classList.add("dn-s-a");
   launch.appendChild(launchFace);
-  launch.appendChild(el("span", "dn-lbl", "Ask BLOOP"));
   launch.appendChild(el("span", "dn-dot"));
 
   var panel = el("section", "dn-panel dn-s-a");
@@ -219,8 +218,16 @@
   close.appendChild(icon("M6 6l12 12M18 6L6 18"));
   titles.appendChild(eyebrow);
   titles.appendChild(title);
+  // Phones get a compact card by default; this button makes it full screen (and back).
+  var expand = el("button", "dn-expand");
+  expand.type = "button";
+  expand.setAttribute("aria-pressed", "false");
+  expand.setAttribute("aria-label", "Make chat full screen");
+  expand.appendChild(icon("M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"));
+  var expandPath = expand.querySelector("path");
   head.appendChild(avatar);
   head.appendChild(titles);
+  head.appendChild(expand);
   head.appendChild(close);
 
   var log = el("div", "dn-log");
@@ -386,6 +393,7 @@
   // ---- behaviour ----------------------------------------------------------
   var greeted = false;
   function setOpen(open) {
+    if (open) hideGreeting();
     panel.hidden = !open;
     launch.setAttribute("aria-expanded", open ? "true" : "false");
     if (open) {
@@ -672,5 +680,119 @@
     if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(input.value); }
   });
 
+  // ---- full screen on phones --------------------------------------------
+  var FULL_KEY = "dotnapps-chat-full";
+  function setFull(on) {
+    panel.classList.toggle("dn-full", on);
+    expand.setAttribute("aria-pressed", on ? "true" : "false");
+    expand.setAttribute("aria-label", on ? "Exit full screen" : "Make chat full screen");
+    expandPath.setAttribute("d", on ? "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" : "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5");
+    try { sessionStorage.setItem(FULL_KEY, on ? "1" : "0"); } catch (e) {}
+  }
+  expand.addEventListener("click", function () { setFull(!panel.classList.contains("dn-full")); input.focus({ preventScroll: true }); });
+  try { if (sessionStorage.getItem(FULL_KEY) === "1") setFull(true); } catch (e) {}
+
+  // On phones the on-screen keyboard covers the bottom of the page; keep the card above it.
+  if (window.visualViewport) {
+    var fit = function () {
+      var vv = window.visualViewport;
+      panel.style.setProperty("--dn-kb", Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) + "px");
+    };
+    window.visualViewport.addEventListener("resize", fit);
+    window.visualViewport.addEventListener("scroll", fit);
+  }
+
+  // ---- greeting pop-up with a soft chime --------------------------------
+  // Shown once per visitor, after the cookie choice (or a few seconds in, if there is no
+  // cookie banner). Browsers only allow sound after a tap or key press, and the tap on the
+  // cookie banner counts, so the chime is prepared on the first tap and played only if it
+  // is allowed; otherwise the greeting simply appears quietly.
+  var GREET_KEY = "dotnapps-bloop-greeted";
+  var audioCtx = null, audioReady = false;
+  function primeAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      audioReady = true;
+    } catch (e) {}
+  }
+  ["pointerdown", "keydown", "touchstart"].forEach(function (t) { document.addEventListener(t, primeAudio, { capture: true, passive: true }); });
+  function chime() {
+    if (!audioReady || !audioCtx || audioCtx.state !== "running") return false;
+    try {
+      var t0 = audioCtx.currentTime;
+      [[659.25, 0, 0.2], [880, 0.13, 0.34]].forEach(function (n) {
+        var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = "sine";
+        o.frequency.value = n[0];
+        g.gain.setValueAtTime(0.0001, t0 + n[1]);
+        g.gain.exponentialRampToValueAtTime(0.07, t0 + n[1] + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + n[1] + n[2]);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start(t0 + n[1]);
+        o.stop(t0 + n[1] + n[2] + 0.03);
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+
+  var greet = el("div", "dn-greet");
+  greet.hidden = true;
+  greet.setAttribute("role", "status");
+  var greetOpen = el("button", "dn-greet-open");
+  greetOpen.type = "button";
+  greetOpen.appendChild(el("span", "dn-greet-eye", "BLOOP"));
+  greetOpen.appendChild(el("strong", "dn-greet-t", "Hi, I\u2019m BLOOP."));
+  greetOpen.appendChild(el("span", "dn-greet-p", "Ask me about our services, Business OS or how we work."));
+  var greetX = el("button", "dn-greet-x");
+  greetX.type = "button";
+  greetX.setAttribute("aria-label", "Dismiss greeting");
+  greetX.appendChild(icon("M6 6l12 12M18 6L6 18"));
+  greet.appendChild(greetOpen);
+  greet.appendChild(greetX);
+  document.body.appendChild(greet);
+
+  var greetTimer = 0;
+  function hideGreeting() { clearTimeout(greetTimer); greet.hidden = true; }
+  greetOpen.addEventListener("click", function () { setOpen(true); });
+  greetX.addEventListener("click", function () { hideGreeting(); launch.focus({ preventScroll: true }); });
+
+  function alreadyGreeted() {
+    try { var v = +localStorage.getItem(GREET_KEY); return !!v && Date.now() - v < 30 * 864e5; } catch (e) { return false; }
+  }
+  function showGreeting() {
+    if (alreadyGreeted() || !panel.hidden || live || msgs.length) return;
+    try { localStorage.setItem(GREET_KEY, String(Date.now())); } catch (e) {}
+    greet.hidden = false;
+    launchFace.setAttribute("data-state", "excited");
+    setTimeout(function () { if (!launch.hasAttribute("data-unread")) launchFace.setAttribute("data-state", "idle"); }, 2200);
+    chime();
+    greetTimer = setTimeout(hideGreeting, 16000);
+  }
+  function scheduleGreeting() {
+    if (alreadyGreeted()) return;
+    function watch(banner) {
+      var mo = new MutationObserver(function () {
+        if (!document.body.contains(banner)) { mo.disconnect(); setTimeout(go, 1200); }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+    function go() {
+      var b = document.querySelector(".dn-consent"); // the cookie choice is still open: keep waiting
+      if (b) return watch(b);
+      showGreeting();
+    }
+    function start() {
+      var b = document.querySelector(".dn-consent");
+      if (b) watch(b); else setTimeout(go, 1200);
+    }
+    if (document.readyState === "complete") setTimeout(start, 2500);
+    else window.addEventListener("load", function () { setTimeout(start, 2500); });
+  }
+
   restore();
+  scheduleGreeting();
 })();
