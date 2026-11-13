@@ -204,7 +204,7 @@ function cleanPrivate(p, prev) {
     crm: {
       enabled: !!c.enabled,
       url: urlOk(str(c.url, 500)) || (devOk(str(c.url, 500)) ? str(c.url, 500) : ''),
-      format: c.format === 'form' ? 'form' : 'json',
+      format: c.format === 'form' ? 'form' : c.format === 'flat' ? 'flat' : 'json',
       headerName: header,
       secret: c.secret === MASK ? (old.secret || '') : str(c.secret, 400),
       sources: Array.isArray(c.sources) ? c.sources.filter((s) => FORMS.indexOf(s) >= 0).filter((s, i, a) => a.indexOf(s) === i) : undefined
@@ -235,6 +235,11 @@ async function forward(crm, lead, event) {
   const headers = {};
   let body;
   if (crm.format === 'form') { headers['Content-Type'] = 'application/x-www-form-urlencoded'; body = new URLSearchParams(Object.assign({ event: event || 'lead.created' }, flat)).toString(); }
+  else if (crm.format === 'flat') {
+    /* the Dotnapps CRM's own website-form shape: name, email, company, message, page at the top level (the key goes in the header) */
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify({ name: flat.name, email: flat.email, company: flat.company, message: (flat.message + (flat.source ? '\n\n[Website form: ' + flat.source + ']' : '')).trim(), page: flat.page });
+  }
   else { headers['Content-Type'] = 'application/json'; body = JSON.stringify({ event: event || 'lead.created', lead: flat }); }
   if (crm.headerName && crm.secret) headers[crm.headerName] = crm.secret;
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
