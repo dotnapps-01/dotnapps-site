@@ -20,6 +20,50 @@ dependencies — open it in a browser or serve the folder statically.
   `prefers-reduced-motion`
 - Responsive from ~320px up
 
+## Chat assistant
+
+A floating chat widget on every page: an AI assistant (BLOOP) first, with a
+live human handoff ("Talk to a human"). **Live chats appear in the Chats tab
+of the admin dashboard (`/admin`)**; there is no email. Replies show up in the
+visitor's chat box.
+
+- `chat.js` / `chat.css`: the widget (follows the light/dark theme). The bot is
+  **BLOOP**; its face is drawn in `chat.js` (`face()`) from the same shapes as
+  `bloop.svg`. It has 15 expressions (idle, happy, excited, wink, love, cool,
+  thinking, typing, help, success, error, alert, online, processing, offline) and
+  reacts to the chat: typing while it waits, thinking after 4s, love for thanks,
+  error/alert when something fails, asleep when the visitor's connection drops.
+- `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
+  `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
+  whose key isn't set.
+- `api/_knowledge.js`: the AI's system prompt and company facts. **Edit this
+  to change what the bot says** (pricing, hours, new services).
+- `api/live.js`: visitor side of human chat (start, send, end, poll). Name and
+  email are optional.
+- `api/chats.js` + the **Chats** tab in `admin.html`: the team side. It reuses
+  the admin login (`ADMIN_PASSWORD`), so there is no extra password. Reply, end
+  or delete chats, and see the AI transcript. While the dashboard is open it
+  polls every few seconds, shows a badge and a toast for new messages, and tells
+  the widget that someone is online.
+- `api/_chatlib.js`: shared chat helpers (Upstash Redis over REST, limits).
+  `api/_lib.js` stays the admin's own helper file.
+
+Chats are stored in the same Upstash Redis database the admin uses (keys
+`dn:c:*`, `dn:m:*`, `dn:idx`, `dn:agent:seen`) and deleted 3 days after the last
+message. Without Redis, "Talk to a human" shows an email fallback instead.
+
+Environment variables (Vercel -> Settings -> Environment Variables), then redeploy:
+
+| Variable | Purpose |
+|---|---|
+| `GROQ_API_KEY` / `GEMINI_API_KEY` | AI replies (set at least one). Keys: console.groq.com, aistudio.google.com |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_*`) | Already needed by the admin; live chat reuses them |
+| `ADMIN_PASSWORD` | Already needed by the admin; signs you in to the Chats tab |
+| `GROQ_MODEL`, `GROQ_FALLBACK_MODEL`, `GEMINI_MODEL` | Optional model overrides |
+
+Rate limits on the chat endpoints are in-memory, so best-effort only. Test
+locally with `npx vercel dev` (the plain `http.server` preview has no `/api`).
+
 ## Local preview
 
 ```bash

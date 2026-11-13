@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="BLOOP, the Dotnapps assistant">
+  <style>
+    .b { fill: #000; stroke: #000; stroke-width: 5; stroke-linejoin: round; }
+    .e { fill: #fff; }
+    @media (prefers-color-scheme: dark) { .b { fill: #F5F5F7; stroke: #F5F5F7; } .e { fill: #000; } }
+  </style>
+  <path class="b" d="M8.5 28Q8.5 13.5 20 13.5L47.5 36.5Q50 38.5 52.5 36.5L80 13.5Q91.5 13.5 91.5 28V78Q91.5 88.5 81 88.5H19Q8.5 88.5 8.5 78Z"/>
+  <rect class="e" x="30" y="47" width="7" height="25" rx="3.5"/>
+  <rect class="e" x="63" y="47" width="7" height="25" rx="3.5"/>
+</svg>

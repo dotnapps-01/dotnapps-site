@@ -43,7 +43,7 @@
       ]
     },
     {
-      "source": "/(products|services|site\\.css|site\\.js)",
+      "source": "/(products|services|site\\.css|site\\.js|chat\\.css|chat\\.js)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -81,5 +81,16 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 30
+    },
+    "api/live.js": {
+      "maxDuration": 15
+    },
+    "api/chats.js": {
+      "maxDuration": 15
+    }
+  }
 }
