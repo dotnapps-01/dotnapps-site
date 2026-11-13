@@ -80,19 +80,6 @@
           "value": "noindex, nofollow"
         }
       ]
-    },
-    {
-      "source": "/agent",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
     }
   ],
   "functions": {
@@ -102,7 +89,7 @@
     "api/live.js": {
       "maxDuration": 15
     },
-    "api/agent.js": {
+    "api/chats.js": {
       "maxDuration": 15
     }
   }

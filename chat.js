@@ -1,6 +1,6 @@
 /* Dotnapps chat widget.
    - AI assistant:   POST /api/chat   (api/chat.js)
-   - Live human chat: /api/live       (api/live.js) — the team replies from /agent */
+   - Live human chat: /api/live       (api/live.js), answered from the Chats tab of /admin */
 (function () {
   "use strict";
 
@@ -16,7 +16,7 @@
   var SUB_AI = "Dotnapps assistant · AI chat";
   var SUB_LIVE = "Live chat with our team";
   var NOTE_AI = "AI can make mistakes. Don’t share passwords or sensitive data.";
-  var NOTE_LIVE = "You’re talking to our team. Messages are emailed to us.";
+  var NOTE_LIVE = "You’re talking to our team. Please don’t share passwords or card details.";
   var CHIPS = [
     ["Our services", "What services does Dotnapps offer?"],
     ["Business OS", "What is Business OS?"],
@@ -483,7 +483,7 @@
     var f = el("form", "dn-msg dn-bot dn-hand");
     f.id = "dn-handoff";
     f.setAttribute("aria-label", "Contact details for live chat");
-    f.appendChild(el("p", null, "Happy to connect you with our team. Leave your email so they can reach you if you step away."));
+    f.appendChild(el("p", null, "Happy to connect you with our team. Add your email if you'd like a reply after you leave this page (optional)."));
     function field(id, text, type, auto, req) {
       var l = el("label", "dn-lab", text);
       l.setAttribute("for", id);
@@ -498,7 +498,7 @@
       return i;
     }
     var nameI = field("dn-h-name", "Name (optional)", "text", "name", false);
-    var mailI = field("dn-h-email", "Email", "email", "email", true);
+    var mailI = field("dn-h-email", "Email (optional)", "email", "email", false);
     var errP = el("p", "dn-ferr");
     errP.setAttribute("role", "alert");
     var row = el("div", "dn-hrow");
@@ -518,7 +518,7 @@
     f.addEventListener("submit", function (e) {
       e.preventDefault();
       errP.textContent = "";
-      if (!mailI.checkValidity()) { errP.textContent = "Please enter a valid email address."; mailI.focus(); return; }
+      if (!mailI.checkValidity()) { errP.textContent = "That email address doesn’t look right."; mailI.focus(); return; }
       go.disabled = true;
       go.textContent = "Connecting…";
       setMood("processing");
@@ -534,7 +534,7 @@
           live = { id: d.id, next: d.next || 0 };
           addSys(d.online
             ? "You’re connected. A team member will reply here shortly."
-            : "You’re connected. Our team has been notified and will reply here, or by email if you leave.");
+            : "You’re connected. Our team isn’t online right now. Your messages are saved, and they’ll reply here (or by email if you left one) when they’re back.");
           persist();
           setLiveUi();
           schedulePoll();

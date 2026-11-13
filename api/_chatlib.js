@@ -5,8 +5,6 @@
  * exposed as API routes).
  */
 
-const crypto = require("crypto");
-
 const ALLOWED_HOSTS = /^(www\.dotnapps\.com|dotnapps\.com|localhost(:\d+)?|127\.0\.0\.1(:\d+)?|[a-z0-9-]+\.vercel\.app)$/i;
 
 function clientIp(req) {
@@ -86,58 +84,7 @@ function parse(s) {
   }
 }
 
-// ---- Email notifications via Resend (free tier) ---------------------------
-const SITE_URL = () => (process.env.SITE_URL || "https://www.dotnapps.com").replace(/\/+$/, "");
 const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]{2,}$/;
-
-/*
- * Sends the team an email, unless the hourly/daily cap is hit (protects the
- * free quota from being burned by spam). Resolves true when an email was sent.
- */
-async function notifyTeam(opts) {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return false;
-  try {
-    const d = new Date().toISOString();
-    const hour = "dn:mail:h:" + d.slice(0, 13);
-    const day = "dn:mail:d:" + d.slice(0, 10);
-    const r = await redis([["INCR", hour], ["EXPIRE", hour, 3600], ["INCR", day], ["EXPIRE", day, 86400]]);
-    if (r[0] > 20 || r[2] > 60) {
-      console.error("chat: email cap reached, not sending");
-      return false;
-    }
-    const body = {
-      from: process.env.RESEND_FROM || "Dotnapps Chat <onboarding@resend.dev>",
-      to: [process.env.NOTIFY_EMAIL || "hello@dotnapps.com"],
-      subject: opts.subject,
-      text: opts.text
-    };
-    if (opts.replyTo && EMAIL_RE.test(opts.replyTo)) body.reply_to = opts.replyTo;
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 8000);
-    try {
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-        signal: ctl.signal
-      });
-      if (!res.ok) throw new Error("resend HTTP " + res.status);
-      return true;
-    } finally {
-      clearTimeout(timer);
-    }
-  } catch (e) {
-    console.error("chat: notify failed:", e && e.message);
-    return false;
-  }
-}
-
-function sameSecret(a, b) {
-  const ha = crypto.createHash("sha256").update(String(a)).digest();
-  const hb = crypto.createHash("sha256").update(String(b)).digest();
-  return crypto.timingSafeEqual(ha, hb);
-}
 
 function query(req) {
   try {
@@ -153,6 +100,5 @@ const TTL = 3 * 24 * 3600; // conversations expire 3 days after the last message
 module.exports = {
   clientIp, originAllowed, limiter,
   redis, redisConfigured, parse,
-  notifyTeam, SITE_URL, EMAIL_RE,
-  sameSecret, query, ID_RE, TTL
+  EMAIL_RE, query, ID_RE, TTL
 };

@@ -121,6 +121,36 @@ h1 { margin: 0 0 .25rem; font-size: 1.5rem; font-weight: 500; letter-spacing: -.
 .sw input:checked + span { background: var(--ink); }
 .sw input:checked + span::after { transform: translateX(16px); }
 .sw input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* chats tab (live chat from the website widget) */
+.chats { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .chats { grid-template-columns: 300px minmax(0, 1fr); align-items: start; } }
+.clist { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; overflow-y: auto; max-height: min(70vh, 640px); }
+.clist .empty { border: 0; }
+.crow { display: block; width: 100%; text-align: left; padding: .7rem .9rem; border: 0; border-bottom: 1px solid var(--line); background: none; }
+.crow:last-child { border-bottom: 0; }
+.crow:hover, .crow[aria-current=true] { background: var(--sunken); }
+.crow b { display: flex; align-items: center; gap: .5rem; font-weight: 600; }
+.crow i { display: block; font-style: normal; color: var(--muted); font-size: .84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: .1rem; }
+.crow small { display: block; font: 400 .6rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-top: .25rem; }
+.cthread { background: var(--frame); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; height: min(70vh, 640px); min-width: 0; }
+.chead { display: flex; align-items: center; gap: .6rem; padding: .7rem .9rem; border-bottom: 1px solid var(--line); }
+.cwho { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: .1rem .7rem; align-items: baseline; font-size: .86rem; color: var(--muted); }
+.cwho b { color: var(--text); font-size: .95rem; }
+.cwho a { color: var(--focus); }
+.clog { flex: 1; min-height: 0; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.cm { max-width: min(70ch, 86%); padding: .5rem .8rem; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .92rem; }
+.cm small { display: block; font: 400 .58rem var(--mono); letter-spacing: .1em; text-transform: uppercase; opacity: .6; margin-bottom: .15rem; }
+.cm.visitor { align-self: flex-start; background: var(--sunken); }
+.cm.bot { align-self: flex-start; border: 1px dashed var(--line2); color: var(--muted); }
+.cm.agent { align-self: flex-end; background: var(--ink); color: var(--frame); }
+.cm.sys { align-self: center; color: var(--muted); font-size: .8rem; padding: .1rem; }
+.cform { display: flex; gap: .5rem; padding: .7rem; border-top: 1px solid var(--line); }
+.cform textarea { min-height: 0; height: 2.7rem; resize: none; }
+.cplace { margin: auto; padding: 1rem; color: var(--muted); text-align: center; }
+.cback { display: none; }
+.cform[hidden], .chead .btn[hidden] { display: none; }
+@media (max-width: 899px) { .chats.open .clist { display: none; } .chats:not(.open) .cthread { display: none; } .cback { display: inline-flex; } }
+
 /* forms tab */
 .fcard { display: grid; gap: .8rem; }
 .fhead { display: flex; align-items: center; gap: .6rem; }
@@ -229,6 +259,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     { k: "careers", name: "Careers", where: "The Join the team form, opened from the Careers links.",
       title: "Join the team", sub: "Senior engineers and product designers who like shipping.", done: "Thanks — we’ve got it and will reply by email soon.", fields: [{ n: "name", ph: 0 }, { n: "email", ph: 0 }, { n: "phone", opt: 1, ph: 1 }, { n: "role", ph: 0 }, { n: "link", opt: 1, ph: 1 }, { n: "note", opt: 1, ph: 1 }] }
   ];
+  var CH = { list: [], waiting: 0, need: null, open: null, meta: null, next: 0, listT: 0, threadT: 0, running: false, off: false };
   var S = { tab: "leads", leads: [], counts: {}, f: { q: "", status: "", source: "" }, open: null, pub: {}, priv: {}, def: null, cv: "services", dirty: false, store: "" };
 
   /* ---------- helpers ---------- */
@@ -260,6 +291,7 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
     $("#app").innerHTML = '<div class="center"><div class="box"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><h1>Backend not reachable</h1><p class="sub">The admin needs the site\'s <code class="mono">/api</code> functions. They run on Vercel; a plain static preview cannot run them. Open this page on the deployed site, or run it with <code class="mono">vercel dev</code>.</p><p><a class="btn ghost" href="">Try again</a></p></div></div>';
   }
   function loginView(msg) {
+    stopChats();
     $("#app").innerHTML = '<div class="center"><form class="box" id="login" autocomplete="on"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><h1>Sign in</h1><p class="sub">Leads, hero text, site copy and settings.</p>' +
       '<label class="f">Password<input type="password" id="pw" name="password" autocomplete="current-password" required autofocus></label><p class="err" id="lerr" role="alert">' + esc(msg || "") + '</p><button class="btn" type="submit" style="margin-top:.4rem">Sign in</button></form></div>';
     $("#login").addEventListener("submit", function (e) {
@@ -339,17 +371,19 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
 
   /* ---------- shell ---------- */
   function shell() {
+    clearTimeout(CH.threadT);
     $("#app").innerHTML =
       '<header class="top"><div class="top-in"><div class="brand">' + LOGO + 'Dotnapps <small>Admin</small></div><span class="grow"></span>' +
       '<span class="store">Storage · ' + esc(S.store === "memory" ? "memory (testing)" : "connected") + '</span><span class="dirty" id="dirty" hidden>Unsaved changes</span>' +
       '<button class="btn sm" id="save" disabled>Save changes</button><a class="btn ghost sm" href="/" target="_blank" rel="noopener">View site ↗</a><button class="btn ghost sm" id="out">Sign out</button></div></header>' +
-      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("forms", "Forms") + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
+      '<div class="wrap"><nav class="tabs" role="tablist" aria-label="Sections">' + tabBtn("leads", "Leads", S.counts.new || 0) + tabBtn("chats", "Chats", CH.waiting || 0) + tabBtn("forms", "Forms") + tabBtn("hero", "Hero") + tabBtn("content", "Content") + tabBtn("settings", "Settings") + '</nav><main id="view"></main></div>';
     $$(".tabs button").forEach(function (b) { b.addEventListener("click", function () { S.tab = b.dataset.t; S.open = null; shell(); }); });
     $("#save").addEventListener("click", save);
     $("#save").disabled = !S.dirty; $("#dirty").hidden = !S.dirty;
-    $("#out").addEventListener("click", function () { api("/api/auth", { method: "DELETE" }).then(function () { S.dirty = false; loginView(); }); });
+    $("#out").addEventListener("click", function () { api("/api/auth", { method: "DELETE" }).then(function () { S.dirty = false; stopChats(); loginView(); }); });
     var v = $("#view");
-    ({ leads: viewLeads, forms: viewForms, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
+    ({ leads: viewLeads, chats: viewChats, forms: viewForms, hero: viewHero, content: viewContent, settings: viewSettings })[S.tab](v);
+    startChats();
   }
   function tabBtn(t, label, n) { return '<button role="tab" data-t="' + t + '" aria-selected="' + (S.tab === t) + '">' + label + (n ? '<span class="n">' + n + '</span>' : "") + '</button>'; }
 
@@ -657,6 +691,148 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
         out.textContent = d.status === "sent" ? "✓ Your CRM accepted it (HTTP " + d.code + ")." : "✕ Didn't go through: " + (d.error || "unknown error") + ".";
         out.style.color = d.status === "sent" ? "var(--ok)" : "var(--bad)";
       });
+    });
+  }
+
+  /* ---------- Chats: live chat from the website widget (api/chats.js) ---------- */
+  function chEl(t, c, x) { var n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; }
+  function chatBadge() {
+    var tb = $('.tabs button[data-t="chats"]'); if (!tb) return;
+    var nb = $(".n", tb), v = CH.waiting;
+    if (v) { if (!nb) { nb = document.createElement("span"); nb.className = "n"; tb.appendChild(nb); } nb.textContent = v; } else if (nb) nb.remove();
+  }
+  function startChats() { if (CH.running) return; CH.running = true; pollChats(); }
+  function stopChats() { CH.running = false; CH.need = null; clearTimeout(CH.listT); clearTimeout(CH.threadT); document.title = "Admin — Dotnapps"; }
+  /* While the dashboard is open this checks for chats every few seconds, which also tells the website's widget that someone is online. */
+  function pollChats() {
+    clearTimeout(CH.listT);
+    if (!CH.running) return;
+    api("/api/chats?view=list").then(function (r) {
+      if (!CH.running) return;
+      if (r.status === 401) { stopChats(); return loginView("Your session ended. Please sign in again."); }
+      if (r.status === 503) { CH.off = true; if (S.tab === "chats") renderChatList(); return; }
+      if (r.ok && r.data) {
+        CH.off = false;
+        var chats = r.data.chats || [], need = {};
+        chats.forEach(function (c) { if (c.needsReply) need[c.id] = 1; });
+        var fresh = CH.need ? chats.filter(function (c) { return need[c.id] && !CH.need[c.id]; }) : [];
+        CH.need = need; CH.list = chats; CH.waiting = r.data.waiting || 0;
+        chatBadge();
+        document.title = (CH.waiting ? "(" + CH.waiting + ") " : "") + "Admin — Dotnapps";
+        if (fresh.length && !(S.tab === "chats" && !document.hidden)) toast("New chat message from " + (fresh[0].name || fresh[0].email || "a visitor"));
+        if (S.tab === "chats") renderChatList();
+      }
+      CH.listT = setTimeout(pollChats, document.hidden ? 20000 : 6000);
+    });
+  }
+  function viewChats(v) {
+    v.innerHTML = '<div class="chats' + (CH.open ? " open" : "") + '" id="chats"><div class="clist" id="clist" role="list" aria-label="Chats"></div><section class="cthread" id="cthread" aria-label="Conversation"></section></div>';
+    renderChatList(); buildThread();
+    if (CH.open) pollThread(true);
+  }
+  function renderChatList() {
+    var box = $("#clist"); if (!box) return;
+    box.textContent = "";
+    if (CH.off) { box.appendChild(chEl("p", "empty", "Live chat uses the same Upstash Redis database as the rest of the admin, and it isn't reachable right now.")); return; }
+    if (!CH.list.length) { box.appendChild(chEl("p", "empty", "No chats yet. When a visitor taps “Talk to a human” on the site, the conversation shows up here.")); return; }
+    CH.list.forEach(function (c) {
+      var b = chEl("button", "crow"); b.type = "button"; b.setAttribute("role", "listitem"); b.dataset.id = c.id;
+      if (CH.open === c.id) b.setAttribute("aria-current", "true");
+      var n = chEl("b", null, c.name || c.email || "Visitor");
+      if (c.status === "closed") n.appendChild(chEl("span", "chip", "ended")); else if (c.needsReply) n.appendChild(chEl("span", "chip new", "needs reply"));
+      b.appendChild(n); b.appendChild(chEl("i", null, c.preview || "")); b.appendChild(chEl("small", null, fmt(new Date(c.updated).toISOString())));
+      b.addEventListener("click", function () { openChat(c.id); });
+      box.appendChild(b);
+    });
+  }
+  function buildThread() {
+    var t = $("#cthread"); if (!t) return;
+    t.textContent = "";
+    if (!CH.open) { t.appendChild(chEl("p", "cplace", "Pick a conversation on the left.")); return; }
+    var head = chEl("div", "chead");
+    var back = chEl("button", "btn ghost sm cback", "← Chats"); back.type = "button";
+    back.addEventListener("click", function () { CH.open = null; clearTimeout(CH.threadT); var w = $("#chats"); if (w) w.classList.remove("open"); buildThread(); renderChatList(); });
+    var who = chEl("div", "cwho"); who.id = "cwho";
+    var end = chEl("button", "btn danger sm", "End chat"); end.type = "button"; end.id = "cend"; end.hidden = true;
+    var del = chEl("button", "btn ghost sm", "Delete"); del.type = "button"; del.id = "cdel"; del.hidden = true;
+    head.appendChild(back); head.appendChild(who); head.appendChild(end); head.appendChild(del);
+    var log = chEl("div", "clog"); log.id = "clog"; log.setAttribute("role", "log"); log.setAttribute("aria-live", "polite");
+    var form = chEl("form", "cform"); form.id = "cform"; form.hidden = true;
+    var ta = chEl("textarea"); ta.id = "ctext"; ta.rows = 1; ta.maxLength = 2000; ta.placeholder = "Write a reply… (Enter to send, Shift+Enter for a new line)"; ta.setAttribute("aria-label", "Your reply");
+    var send = chEl("button", "btn", "Send"); send.type = "submit"; send.id = "csend";
+    form.appendChild(ta); form.appendChild(send);
+    t.appendChild(head); t.appendChild(log); t.appendChild(form);
+    end.addEventListener("click", closeChat); del.addEventListener("click", deleteChat);
+    form.addEventListener("submit", function (e) { e.preventDefault(); sendChat(); });
+    ta.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendChat(); } });
+  }
+  function openChat(id) {
+    CH.open = id; CH.next = 0; CH.meta = null;
+    var w = $("#chats"); if (w) w.classList.add("open");
+    renderChatList(); buildThread(); pollThread(true);
+  }
+  function addChatMsg(log, m) {
+    var b = chEl("div", "cm " + m.f);
+    var label = { visitor: "Visitor", bot: "BLOOP (AI)", agent: "You" }[m.f];
+    if (label) b.appendChild(chEl("small", null, label + " · " + new Date(m.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })));
+    b.appendChild(document.createTextNode(m.t));
+    log.appendChild(b);
+  }
+  function pollThread(first) {
+    clearTimeout(CH.threadT);
+    if (!CH.open || S.tab !== "chats") return;
+    var id = CH.open;
+    api("/api/chats?id=" + id + "&after=" + CH.next).then(function (r) {
+      if (id !== CH.open || S.tab !== "chats") return;
+      if (r.status === 401) { stopChats(); return loginView("Your session ended. Please sign in again."); }
+      if (r.status === 404) {
+        var l = $("#clog"); if (l) { l.textContent = ""; l.appendChild(chEl("p", "cplace", "This chat has expired or was deleted.")); }
+        var f = $("#cform"); if (f) f.hidden = true;
+        return;
+      }
+      if (r.ok && r.data) {
+        var m = r.data.meta; CH.meta = m;
+        var who = $("#cwho");
+        if (who) {
+          who.textContent = "";
+          who.appendChild(chEl("b", null, m.name || "Visitor"));
+          if (m.email) { var a = chEl("a", null, m.email); a.href = "mailto:" + m.email; who.appendChild(a); } else who.appendChild(chEl("span", null, "no email left"));
+          if (m.page) who.appendChild(chEl("span", null, m.page));
+        }
+        var closed = m.status === "closed";
+        $("#cform").hidden = closed; $("#cend").hidden = closed; $("#cdel").hidden = !closed;
+        var log = $("#clog"), stick = first || log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+        (r.data.messages || []).forEach(function (x) { addChatMsg(log, x); });
+        CH.next = r.data.next;
+        if (stick) log.scrollTop = log.scrollHeight;
+        if (first && !closed) { var ta = $("#ctext"); if (ta) ta.focus({ preventScroll: true }); }
+      }
+      CH.threadT = setTimeout(pollThread, document.hidden ? 10000 : 3000);
+    });
+  }
+  function sendChat() {
+    var ta = $("#ctext"), t = ta.value.trim();
+    if (!t || !CH.open) return;
+    var b = $("#csend"); b.disabled = true;
+    api("/api/chats", { method: "POST", body: { id: CH.open, text: t } }).then(function (r) {
+      b.disabled = false;
+      if (r.ok) { ta.value = ""; pollThread(); pollChats(); }
+      else toast(r.status === 410 ? "That chat has already ended." : "Couldn't send. Check your connection and try again.", true);
+    });
+  }
+  function closeChat() {
+    if (!CH.open || !confirm("End this chat? The visitor goes back to the AI assistant.")) return;
+    api("/api/chats", { method: "POST", body: { id: CH.open, action: "close" } }).then(function (r) {
+      if (!r.ok) return toast("Couldn't end the chat. Try again.", true);
+      toast("Chat ended."); pollThread(); pollChats();
+    });
+  }
+  function deleteChat() {
+    if (!CH.open || !confirm("Delete this conversation for good?")) return;
+    api("/api/chats?id=" + CH.open, { method: "DELETE" }).then(function (r) {
+      if (!r.ok) return toast("Couldn't delete it. Try again.", true);
+      CH.open = null; toast("Conversation deleted."); buildThread(); pollChats();
+      var w = $("#chats"); if (w) w.classList.remove("open");
     });
   }
 

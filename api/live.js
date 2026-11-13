@@ -3,18 +3,21 @@
 /*
  * /api/live — the visitor side of human chat.
  *
- *   POST {action:"start", name?, email, page?, transcript?:[{role,content}]}
- *        -> {id, next, online}      creates the conversation, emails the team
+ *   POST {action:"start", name?, email?, page?, transcript?:[{role,content}]}
+ *        -> {id, next, online}      creates the conversation
  *   POST {action:"send", id, text} -> {ok, next}
  *   POST {action:"end",  id}       -> {ok}
  *   GET  ?id=<id>&after=<n>        -> {messages, next, status}   (polled by the widget)
  *
+ * Chats appear in the Chats tab of the admin dashboard (/admin), served by
+ * api/chats.js. There is no email: the team sees new chats there.
+ * `online` is true while someone has the dashboard open.
+ *
  * The conversation id is an unguessable 128-bit token created here; whoever
  * holds it can read and write that one conversation.
  *
- * Needs UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN (storage).
- * RESEND_API_KEY (+ NOTIFY_EMAIL, RESEND_FROM, SITE_URL) enables the email
- * notifications; without it the team only sees chats on the /agent page.
+ * Storage: the same Upstash Redis the admin uses (UPSTASH_REDIS_REST_URL +
+ * UPSTASH_REDIS_REST_TOKEN, or KV_REST_API_URL + KV_REST_API_TOKEN).
  */
 
 const crypto = require("crypto");
@@ -22,7 +25,6 @@ const L = require("./_chatlib");
 
 const MAX_TEXT = 1000;
 const MAX_MESSAGES = 300; // per conversation
-const RENOTIFY_MS = 3 * 60 * 1000; // at most one email per 3 minutes per chat
 
 const startLimited = L.limiter([[60 * 60 * 1000, 3], [24 * 60 * 60 * 1000, 8]]);
 const sendLimited = L.limiter([[60 * 1000, 20], [24 * 60 * 60 * 1000, 400]]);
@@ -68,7 +70,7 @@ module.exports = async function handler(req, res) {
     if (b.action === "start") {
       if (startLimited(ip)) return send(429, { error: "You've started several chats already. Please email hello@dotnapps.com." });
       const email = clean(b.email, 120);
-      if (!L.EMAIL_RE.test(email)) return send(400, { error: "Please enter a valid email address." });
+      if (email && !L.EMAIL_RE.test(email)) return send(400, { error: "That email address doesn't look right." });
       const name = clean(b.name, 60);
       const page = clean(b.page, 100);
       const ctx = (Array.isArray(b.transcript) ? b.transcript : [])
@@ -78,7 +80,7 @@ module.exports = async function handler(req, res) {
         .filter((m) => m.t);
 
       const id = crypto.randomBytes(16).toString("hex");
-      const meta = { id, name, email, page, status: "waiting", created: now, updated: now, lastVisitor: now, lastAgent: 0, lastNotify: now };
+      const meta = { id, name, email, page, status: "waiting", created: now, updated: now, lastVisitor: now, lastAgent: 0 };
       const first = ctx.concat([{ f: "sys", t: "Visitor asked to talk to a human.", ts: now }]);
       const [, , , , online] = await L.redis([
         ["SET", cKey(id), JSON.stringify(meta), "EX", L.TTL],
@@ -87,18 +89,6 @@ module.exports = async function handler(req, res) {
         ["ZADD", "dn:idx", now, id],
         ["EXISTS", "dn:agent:seen"]
       ]);
-
-      const lines = ctx.map((m) => (m.f === "visitor" ? "Visitor: " : "BLOOP (AI): ") + m.t).join("\n");
-      await L.notifyTeam({
-        subject: "New live chat on dotnapps.com" + (name ? " - " + name : ""),
-        text:
-          "A visitor wants to talk to a person.\n\n" +
-          "Name: " + (name || "(not given)") + "\nEmail: " + email + "\nPage: " + (page || "/") + "\n\n" +
-          (lines ? "Conversation so far:\n" + lines + "\n\n" : "") +
-          "Reply here: " + L.SITE_URL() + "/agent#" + id + "\n" +
-          "(You can also reply to this email to write to the visitor directly.)",
-        replyTo: email
-      });
       return send(200, { id, next: first.length, online: online === 1 });
     }
 
@@ -130,25 +120,14 @@ module.exports = async function handler(req, res) {
       if (!text) return send(400, { error: "Please type a message." });
       if (len >= MAX_MESSAGES) return send(429, { error: "This chat is full. Please email hello@dotnapps.com." });
 
-      const shouldNotify = now - (meta.lastNotify || 0) > RENOTIFY_MS && now - (meta.lastAgent || 0) > RENOTIFY_MS;
       meta.updated = now;
       meta.lastVisitor = now;
-      if (shouldNotify) meta.lastNotify = now;
       await L.redis([
         ["RPUSH", mKey(id), JSON.stringify({ f: "visitor", t: text, ts: now })],
         ["SET", cKey(id), JSON.stringify(meta), "EX", L.TTL],
         ["EXPIRE", mKey(id), L.TTL],
         ["ZADD", "dn:idx", now, id]
       ]);
-      if (shouldNotify) {
-        await L.notifyTeam({
-          subject: "New message in live chat" + (meta.name ? " - " + meta.name : ""),
-          text:
-            (meta.name || meta.email) + " wrote:\n\n" + text + "\n\n" +
-            "Reply here: " + L.SITE_URL() + "/agent#" + id,
-          replyTo: meta.email
-        });
-      }
       return send(200, { ok: true, next: len + 1 });
     }
 
