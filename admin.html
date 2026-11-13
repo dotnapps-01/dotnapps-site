@@ -40,6 +40,7 @@ label.f { display: flex; flex-direction: column; gap: .35rem; font-size: .78rem;
 label.f input, label.f select, label.f textarea { text-transform: none; letter-spacing: 0; font-family: var(--sans); color: var(--text); }
 .hint { font-size: .8rem; color: var(--muted); margin: .3rem 0 0; font-family: var(--sans); text-transform: none; letter-spacing: 0; }
 
+.boot { white-space: pre-line; max-width: 30rem; margin: 18vh auto 0; padding: 0 1.1rem; font: 400 .8rem/1.7 var(--mono); letter-spacing: .06em; color: var(--muted); }
 /* show / hide password */
 .pw { position: relative; display: block; width: 100%; }
 .pw input { padding-right: 2.7rem; }
@@ -161,7 +162,21 @@ details.it .in { padding: 0 1rem 1rem; display: grid; gap: .8rem; }
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><p class="boot" id="boot">Loading&hellip;</p></div>
+<script>
+/* if the admin cannot start (a blocked script, an old cache, a failed request), say so on screen instead of showing a blank page */
+(function () {
+  var last = "";
+  function note(m) { last = String(m || ""); }
+  addEventListener("error", function (e) { note(e.message); });
+  addEventListener("unhandledrejection", function (e) { note(e.reason && e.reason.message || e.reason); });
+  setTimeout(function () {
+    var b = document.getElementById("boot");
+    if (!b) return;
+    b.textContent = "The admin did not start.\n" + (last ? "Error: " + last + "\n" : "") + "Try a private window, or turn off extensions for this site, then reload.";
+  }, 6000);
+})();
+</script>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
