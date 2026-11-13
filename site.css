@@ -1,4 +1,6 @@
   :root {
+    --font-body: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;     /* paragraphs, buttons, cards, menus */
+    --font-head: "Sora", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;   /* headlines and the tagline */
     --canvas: #F5F5F7;
     --frame: #FFFFFF;
     --sunken: #F5F5F7;
@@ -59,7 +61,7 @@
     margin: 0;
     background: var(--frame);
     color: var(--text);
-    font-family: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.58;
     -webkit-font-smoothing: antialiased;
@@ -82,7 +84,7 @@
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
 
   .serif {
-    font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-head);
     font-weight: 700;
     letter-spacing: -.035em;
     line-height: 1.05;
@@ -2084,7 +2086,7 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 
 /* ---------- Business OS page (overview) ---------- */
 .pg-facts.f4 { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 60rem; }
-.pg-facts.f4 dt { font: 500 1.5rem/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: -.03em; text-transform: none; color: var(--text); }
+.pg-facts.f4 dt { font: 500 1.5rem/1 var(--font-head); letter-spacing: -.03em; text-transform: none; color: var(--text); }
 .bos-sec .band-head { margin-bottom: 1.6rem; }
 .bos-sec .band-head p { max-width: 40rem; }
 .bos-grid { margin-top: 0; }
@@ -2404,3 +2406,6 @@ label[hidden] { display: none !important; }
 .dn-consent button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .dn-consent-on .dn-banner { display: none; }
 @media (max-width: 480px) { .dn-consent-btns { width: 100%; } .dn-consent-btns button { flex: 1; } }
+
+/* Headings use the heading font (Sora); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
+h1, h2, h3, h4 { font-family: var(--font-head); }

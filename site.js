@@ -523,7 +523,7 @@
         ctx.stroke();
 
         ctx.fillStyle = col.muted;
-        ctx.font = "600 12px 'Space Grotesk', system-ui, sans-serif";
+        ctx.font = "600 12px 'Manrope', system-ui, sans-serif";
         ctx.textAlign = "right";
         var sc = String(shown); while (sc.length < 5) sc = "0" + sc;
         ctx.fillText(sc, W - 14, 22);
