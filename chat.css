@@ -255,10 +255,11 @@
 .dn-s-a .dn-eyebrow { display: flex; align-items: center; gap: .45rem; margin-bottom: .1rem; }
 .dn-s-a .dn-eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
 .dn-s-a .dn-title { font-size: 1.02rem; }
-.dn-s-a .dn-avatar { background: none; border-radius: 0; width: 38px; height: 38px; }
-.dn-s-a .dn-avatar::after { top: 1px; right: -1px; bottom: auto; background: var(--ink); border-color: var(--dn-tray); }
-.dn-s-a .dn-hface { --face-fill: var(--ink); --face-eye: var(--dn-tray); width: 36px; height: 36px; }
-.dn-s-a .dn-team path { fill: var(--ink); }
+.dn-s-a .dn-avatar { background: var(--ink); border-radius: 50%; width: 40px; height: 40px; }
+.dn-s-a .dn-avatar::after { display: none; }
+.dn-s-a .dn-hface { --face-fill: var(--frame); --face-eye: var(--ink); width: 26px; height: 26px; }
+.dn-s-a .dn-team { width: 22px; height: 22px; }
+.dn-s-a .dn-team path { fill: var(--frame); }
 .dn-s-a .dn-log {
   padding: 14px; gap: 10px; background-color: var(--dn-tray);
   background-image: radial-gradient(circle at 1px 1px, var(--dn-dot) 1px, transparent 1.5px); background-size: 20px 20px;
@@ -293,17 +294,17 @@
 .dn-expand:hover { background: var(--hairline); color: var(--ink); }
 .dn-expand svg { width: 16px; height: 16px; }
 
-/* ---------- the launcher: just BLOOP, in the opposite colour to the site ---------- */
+/* ---------- the launcher: built like the round menu button at the top of the site ----------
+   an outlined circle in the page colour, a solid disc inside it, and BLOOP drawn on the disc in
+   the opposite colour (white on black on the light site, black on white on the dark site) */
 .dn-launch.dn-s-a {
-  width: 64px; height: 64px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
-  color: var(--ink); display: grid; place-items: center;
+  position: fixed; width: 62px; height: 62px; padding: 0; display: grid; place-items: center;
+  border: 1px solid var(--border); border-radius: 50%; background: var(--frame); color: var(--frame);
+  box-shadow: var(--shadow-nav);
 }
-.dn-s-a .dn-lface {
-  --face-fill: var(--ink); --face-eye: var(--frame); width: 58px; height: 58px;
-  /* a thin halo in the page colour keeps the mark readable over buttons and images */
-  filter: drop-shadow(1.5px 0 0 var(--frame)) drop-shadow(-1.5px 0 0 var(--frame)) drop-shadow(0 1.5px 0 var(--frame)) drop-shadow(0 -1.5px 0 var(--frame)) drop-shadow(0 6px 10px rgba(0, 0, 0, .18));
-}
-.dn-launch.dn-s-a .dn-dot { left: 47px; right: auto; top: 8px; bottom: auto; width: 9px; height: 9px; background: var(--ink); border: 2px solid var(--frame); box-sizing: content-box; }
+.dn-launch.dn-s-a::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: var(--ink); }
+.dn-s-a .dn-lface { position: relative; --face-fill: var(--frame); --face-eye: var(--ink); width: 32px; height: 32px; }
+.dn-launch.dn-s-a .dn-dot { display: none; }
 
 /* the launcher steps aside while the chat is open */
 .dn-launch[aria-expanded="true"] { display: none; }
@@ -354,8 +355,12 @@
     height: auto;
   }
   .dn-expand { display: grid; }
-  .dn-greet { right: 12px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 70px); }
-  .dn-launch.dn-s-a { right: 8px; bottom: max(8px, env(safe-area-inset-bottom)); }
+  .dn-s-a .dn-sub { display: none; }
+  .dn-panel.dn-s-a.dn-kbd .dn-chips, .dn-panel.dn-s-a.dn-kbd .dn-foot, .dn-panel.dn-s-a.dn-kbd .dn-eyebrow { display: none; }
+  .dn-greet { right: 12px; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 64px); }
+  .dn-launch.dn-s-a { width: 56px; height: 56px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .dn-launch.dn-s-a::before { inset: 6px; }
+  .dn-s-a .dn-lface { width: 29px; height: 29px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

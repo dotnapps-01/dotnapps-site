@@ -392,8 +392,37 @@
 
   // ---- behaviour ----------------------------------------------------------
   var greeted = false;
+  // On phones the keyboard must not pop up by itself (it would cover the welcome message and
+  // squeeze the card); it opens when the visitor taps the message box. While it is open the
+  // card drops the suggestions and the footer so the conversation keeps its room.
+  var COARSE = window.matchMedia ? window.matchMedia("(pointer: coarse)") : null;
+  var kbdWanted = false, kbdTimer = 0;
+  function focusInput() {
+    if (COARSE && COARSE.matches && !kbdWanted) return;
+    input.focus({ preventScroll: true });
+  }
+  input.addEventListener("focus", function () {
+    kbdWanted = true;
+    clearTimeout(kbdTimer);
+    if (COARSE && COARSE.matches) {
+      panel.classList.add("dn-kbd");
+      setTimeout(function () { log.scrollTop = log.scrollHeight; }, 320);
+    }
+  });
+  input.addEventListener("blur", function () {
+    clearTimeout(kbdTimer);
+    kbdTimer = setTimeout(function () {
+      if (document.activeElement === input) return;
+      kbdWanted = false; // a keyboard the visitor dismissed stays dismissed
+      panel.classList.remove("dn-kbd");
+    }, 300);
+  });
+  // Tapping the send arrow must not take focus from the message box, or the keyboard would close after every message.
+  send.addEventListener("mousedown", function (e) { e.preventDefault(); });
+
   function setOpen(open) {
     if (open) hideGreeting();
+    else { kbdWanted = false; panel.classList.remove("dn-kbd"); }
     panel.hidden = !open;
     launch.setAttribute("aria-expanded", open ? "true" : "false");
     if (open) {
@@ -401,7 +430,7 @@
       launchFace.setAttribute("data-state", "idle");
       if (!msgs.length && !greeted) { greeted = true; setMood("excited", 1800); }
       log.scrollTop = log.scrollHeight;
-      input.focus({ preventScroll: true });
+      focusInput();
       if (live) poll();
     } else if (panel.contains(document.activeElement)) {
       launch.focus({ preventScroll: true });
@@ -468,7 +497,7 @@
       .then(function () {
         clearTimeout(timer);
         setBusy(false);
-        input.focus({ preventScroll: true });
+        focusInput();
       });
   }
 
@@ -536,7 +565,7 @@
     log.scrollTop = log.scrollHeight;
     mailI.focus({ preventScroll: true });
 
-    cancel.addEventListener("click", function () { f.remove(); input.focus({ preventScroll: true }); });
+    cancel.addEventListener("click", function () { f.remove(); focusInput(); });
     f.addEventListener("submit", function (e) {
       e.preventDefault();
       errP.textContent = "";
@@ -560,7 +589,7 @@
           persist();
           setLiveUi();
           schedulePoll();
-          input.focus({ preventScroll: true });
+          focusInput();
         } else {
           go.disabled = false;
           go.textContent = "Start live chat";
@@ -607,7 +636,7 @@
       grow();
     }).then(function () {
       setBusy(false);
-      input.focus({ preventScroll: true });
+      focusInput();
     });
   }
 
@@ -689,7 +718,7 @@
     expandPath.setAttribute("d", on ? "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" : "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5");
     try { sessionStorage.setItem(FULL_KEY, on ? "1" : "0"); } catch (e) {}
   }
-  expand.addEventListener("click", function () { setFull(!panel.classList.contains("dn-full")); input.focus({ preventScroll: true }); });
+  expand.addEventListener("click", function () { setFull(!panel.classList.contains("dn-full")); focusInput(); });
   try { if (sessionStorage.getItem(FULL_KEY) === "1") setFull(true); } catch (e) {}
 
   // On phones the on-screen keyboard covers the bottom of the page; keep the card above it.
