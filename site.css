@@ -1,6 +1,6 @@
   :root {
     --font-body: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;     /* paragraphs, buttons, cards, menus */
-    --font-head: "Schibsted Grotesk", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;   /* headlines and the tagline */
+    --font-head: "Plus Jakarta Sans", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;   /* headlines and the tagline */
     --canvas: #F5F5F7;
     --frame: #FFFFFF;
     --sunken: #F5F5F7;
@@ -2407,5 +2407,5 @@ label[hidden] { display: none !important; }
 .dn-consent-on .dn-banner { display: none; }
 @media (max-width: 480px) { .dn-consent-btns { width: 100%; } .dn-consent-btns button { flex: 1; } }
 
-/* Headings use the heading font (Schibsted Grotesk); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
+/* Headings use the heading font (Plus Jakarta Sans); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
 h1, h2, h3, h4 { font-family: var(--font-head); }
