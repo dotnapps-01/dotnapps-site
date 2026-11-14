@@ -371,6 +371,16 @@
   .dn-s-a .dn-lface { width: 29px; height: 29px; }
 }
 
+/* a small wobble on the BLOOP button when a message pops up (a visual cue for when the browser keeps the sound off) */
+.dn-launch.dn-nudge { animation: dn-wobble 1.4s ease-in-out; }
+@keyframes dn-wobble {
+  0%, 100% { transform: none; }
+  12% { transform: translateY(-6px) rotate(-8deg); } 24% { transform: translateY(0) rotate(7deg); }
+  36% { transform: translateY(-4px) rotate(-5deg); } 48% { transform: translateY(0) rotate(4deg); }
+  60% { transform: translateY(-2px) rotate(-2deg); } 72% { transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dn-greet { animation: none; }
+  .dn-launch.dn-nudge { animation: none; }
 }

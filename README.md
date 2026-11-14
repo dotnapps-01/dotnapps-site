@@ -36,11 +36,13 @@ visitor's chat box.
   The launcher is just BLOOP, built like the round menu button on phones: an outlined
   circle with a solid disc and the face in the opposite colour (white on black on the
   light site, black on white on the dark one); the chat box uses the site's own colours.
-  A visitor gets two small pop-ups, once each (30 days): "Hi there!" with a soft chime
-  right after they answer the cookie banner (or a few seconds in when there is no banner),
-  then "Need any help?" about a minute later, with a button to reach the team. The second
-  is skipped if they have already opened the chat. Browsers only allow sound after a tap,
-  so with no tap the pop-ups appear silently. A visitor who saw "Hi there!" in an earlier
+  A visitor gets two small pop-ups, once each (30 days): "Hi there!" a couple of seconds
+  after the page loads (it does not wait for the cookie pill), then "Need any help?" about
+  a minute later, with a button to reach the team. The second is skipped if they have
+  already opened the chat. Each comes with a soft chime and a little wobble of the BLOOP
+  button. Browsers only allow sound after a tap or key press, so if the visitor has not
+  tapped yet the message shows quietly and its chime plays on their first tap while it is
+  still on screen (not when they tap the message itself). A visitor who saw "Hi there!" in an earlier
   visit gets no help message out of the blue. To see both again while testing, add
   `?bloop=reset` to any page address (e.g. `https://www.dotnapps.com/?bloop=reset`). On phones
   the chat is a compact card, with a button in the header to make it full screen.

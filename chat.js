@@ -732,38 +732,45 @@
   }
 
   // ---- two pop-up messages with a soft chime ----------------------------
-  // 1. "Hi there!" once per visitor, after the cookie choice (or a few seconds in, if there
-  //    is no cookie banner).
+  // 1. "Hi there!" once per visitor, a couple of seconds after the page loads. It does not wait
+  //    for the cookie pill.
   // 2. "Need any help?" about a minute later, with a button to reach the team. It is skipped
   //    if the visitor has already opened the chat.
-  // Browsers only allow sound after a tap or key press, and the tap on the cookie banner
-  // counts, so the chime is prepared on the first tap and played only if it is allowed;
-  // otherwise the messages simply appear quietly.
+  // Browsers only allow sound after a tap or key press. If the visitor has not tapped yet when a
+  // message appears, the message shows quietly and its chime plays on their first tap while it
+  // is still on screen (for example on the cookie pill); a tap on the message itself does not chime.
   var GREET_KEY = "dotnapps-bloop-greeted";
   var HELP_KEY = "dotnapps-bloop-help";
   var SEQ_KEY = "dotnapps-bloop-seq"; // this tab: when "Hi there!" was shown, so the help message can follow on the next page
   var HELP_DELAY = 60000;
-  var audioCtx = null, audioReady = false;
-  function primeAudio() {
+  var audioCtx = null, audioReady = false, pendingChime = null;
+  function primeAudio(e) {
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       if (!audioCtx) audioCtx = new AC();
-      if (audioCtx.state === "suspended") audioCtx.resume();
       audioReady = true;
-    } catch (e) {}
+      // A message is already on screen and was silent: give it its chime now, unless this tap is on BLOOP itself.
+      var onBloop = e && e.target && e.target.closest && e.target.closest(".dn-greet, #dn-chat-launch, .dn-panel");
+      var late = pendingChime && !greet.hidden && !onBloop ? pendingChime : null;
+      if (late) pendingChime = null;
+      var woke = audioCtx.state === "suspended" ? audioCtx.resume() : null;
+      var done = function () { if (late) chime(late.soft); };
+      if (woke && woke.then) woke.then(done, function () {}); else done();
+    } catch (err) {}
   }
-  ["pointerdown", "keydown", "touchstart"].forEach(function (t) { document.addEventListener(t, primeAudio, { capture: true, passive: true }); });
+  // Browsers only count some events as a real tap or key press (a touch counts on release), so listen for all of them.
+  ["pointerdown", "pointerup", "click", "keydown", "touchstart", "touchend"].forEach(function (t) { document.addEventListener(t, primeAudio, { capture: true, passive: true }); });
   function chime(soft) {
     if (!audioReady || !audioCtx || audioCtx.state !== "running") return false;
     try {
       var t0 = audioCtx.currentTime;
       (soft ? [[880, 0, 0.3]] : [[659.25, 0, 0.2], [880, 0.13, 0.34]]).forEach(function (n) {
         var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = "sine";
+        o.type = "triangle";
         o.frequency.value = n[0];
         g.gain.setValueAtTime(0.0001, t0 + n[1]);
-        g.gain.exponentialRampToValueAtTime(0.07, t0 + n[1] + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.17, t0 + n[1] + 0.015);
         g.gain.exponentialRampToValueAtTime(0.0001, t0 + n[1] + n[2]);
         o.connect(g);
         g.connect(audioCtx.destination);
@@ -796,7 +803,7 @@
   document.body.appendChild(greet);
 
   var greetTimer = 0, helpTimer = 0;
-  function hideGreeting() { clearTimeout(greetTimer); greet.hidden = true; }
+  function hideGreeting() { clearTimeout(greetTimer); pendingChime = null; greet.hidden = true; }
   greetOpen.addEventListener("click", function () { setOpen(true); });
   greetAct.addEventListener("click", function () { setOpen(true); showHandoff(); });
   greetX.addEventListener("click", function () { hideGreeting(); launch.focus({ preventScroll: true }); });
@@ -822,8 +829,10 @@
     greetAct.hidden = !help;
     greet.hidden = true; void greet.offsetWidth; greet.hidden = false; // restart the pop-in
     launchFace.setAttribute("data-state", help ? "help" : "excited");
+    launch.classList.remove("dn-nudge"); void launch.offsetWidth; launch.classList.add("dn-nudge"); // a little wobble, in case the browser keeps the sound off
+    setTimeout(function () { launch.classList.remove("dn-nudge"); }, 1800);
     setTimeout(function () { if (!launch.hasAttribute("data-unread")) launchFace.setAttribute("data-state", "idle"); }, 2200);
-    chime(help);
+    pendingChime = chime(help) ? null : { soft: help };
     clearTimeout(greetTimer);
     greetTimer = setTimeout(hideGreeting, help ? 20000 : 12000);
   }
@@ -865,23 +874,9 @@
       } catch (e) {}
       return;
     }
-    function watch(banner) {
-      var mo = new MutationObserver(function () {
-        if (!document.body.contains(banner)) { mo.disconnect(); setTimeout(go, 1200); }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
-    }
-    function go() {
-      var b = document.querySelector(".dn-consent"); // the cookie choice is still open: keep waiting
-      if (b) return watch(b);
-      showGreeting();
-    }
-    function start() {
-      var b = document.querySelector(".dn-consent");
-      if (b) watch(b); else setTimeout(go, 1200);
-    }
-    if (document.readyState === "complete") setTimeout(start, 2500);
-    else window.addEventListener("load", function () { setTimeout(start, 2500); });
+    function start() { showGreeting(); }
+    if (document.readyState === "complete") setTimeout(start, 2000);
+    else window.addEventListener("load", function () { setTimeout(start, 2000); });
   }
 
   restore();
