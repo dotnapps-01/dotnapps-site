@@ -272,7 +272,7 @@
 
   // ---- rendering ----------------------------------------------------------
   // Plain text only; dotnapps.com links and emails become real links.
-  var LINKS = /(https?:\/\/(?:www\.)?dotnapps\.com(?:\/[^\s)]*[^\s).,;:!?])?|[\w.+-]+@dotnapps\.com)/g;
+  var LINKS = /(https?:\/\/(?:www\.)?dotnapps\.com(?:\/[^\s)]*[^\s).,;:!?])?|https:\/\/wa\.me\/[\w\/-]+|https:\/\/www\.instagram\.com\/dotnapps|https:\/\/www\.linkedin\.com\/company\/dotnapps\/?|[\w.+-]+@dotnapps\.com)/g;
 
   function fill(p, line) {
     var last = 0, m;

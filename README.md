@@ -50,8 +50,13 @@ visitor's chat box.
 - `api/chat.js`: AI replies (`POST /api/chat`). Tries Groq (`GROQ_MODEL`, then
   `GROQ_FALLBACK_MODEL`), then Gemini (`GEMINI_MODEL`); skips any provider
   whose key isn't set.
-- `api/_knowledge.js`: the AI's system prompt and company facts. **Edit this
-  to change what the bot says** (pricing, hours, new services).
+- `api/_knowledge.js`: everything BLOOP knows. **This is how you train it**: edit the text,
+  push, and it is live in about 2 minutes. `CORE` (the rules, who Dotnapps is, how to reach
+  the team) goes with every question; `SECTIONS` are topics (one service, pricing, process,
+  terms...) and only the few that match the visitor's question are added, so each request
+  stays small on the free AI tier. To add a topic, add an entry with the words a visitor
+  might use (`keys`) and a short `text`. Do not put price amounts in until they are
+  confirmed: the rules tell BLOOP never to quote one.
 - `api/live.js`: visitor side of human chat (start, send, end, poll). Name and
   email are optional.
 - `api/chats.js` + the **Chats** tab in `admin.html`: the team side. It reuses

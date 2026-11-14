@@ -23,7 +23,7 @@
  *   GROQ_MODEL, GROQ_FALLBACK_MODEL, GEMINI_MODEL  (optional overrides)
  */
 
-const { SYSTEM_PROMPT } = require("./_knowledge");
+const { buildPrompt } = require("./_knowledge");
 const { clientIp, originAllowed, limiter } = require("./_chatlib");
 
 const MAX_HISTORY = 8; // messages sent to the model (keeps token use low)
@@ -79,7 +79,7 @@ async function post(url, headers, body, ms) {
 async function askGroq(model, msgs, ms) {
   const body = {
     model,
-    messages: [{ role: "system", content: SYSTEM_PROMPT }].concat(msgs),
+    messages: [{ role: "system", content: buildPrompt(msgs) }].concat(msgs),
     temperature: 0.3
   };
   if (/gpt-oss/.test(model)) {
@@ -107,7 +107,7 @@ async function askGemini(model, msgs, ms) {
     "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
     { "x-goog-api-key": process.env.GEMINI_API_KEY },
     {
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      systemInstruction: { parts: [{ text: buildPrompt(msgs) }] },
       contents: msgs.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
       generationConfig
     },
