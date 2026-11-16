@@ -925,7 +925,7 @@ window.dnConfig = (function () {
     .then(function (c) { clearTimeout(to); if (c && typeof c === "object" && !Array.isArray(c) && Object.keys(c).length) { try { apply(c); } catch (e) { if (window.console) console.warn("dnConfig apply failed:", e && e.message); } return c; } return null; });
 })();
 
-/* hero taglines: a slideshow — the letters of one sentence flip over one by one, then the next sentence's letters flip in.
+/* hero taglines: a slideshow — the words of one sentence flip over one by one, then the next sentence's words flip in.
    Taglines come from the admin when set. On phones every tagline is set on exactly three lines. */
 (function () {
   var h1 = document.querySelector(".hero-rot");
@@ -936,7 +936,7 @@ window.dnConfig = (function () {
   var mq = window.matchMedia ? window.matchMedia("(max-width: 620px)") : { matches: false };
   function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function word(w, n, grey) {
-    return '<span class="w' + (grey ? " g" : "") + '">' + w.split("").map(function (ch) { return '<span class="c" aria-hidden="true" style="--i:' + (n.v++) + '">' + esc(ch) + '</span>'; }).join("") + '</span>';
+    return '<span class="w c' + (grey ? " g" : "") + '" aria-hidden="true" style="--i:' + (n.v++) + '">' + esc(w) + '</span>';
   }
   function words(t, n) { return t.split(" ").filter(Boolean).map(function (w) { return word(w, n, false); }).join(" "); }
   /* split the words into exactly three lines: even widths, grey part starting on its own line where it can, no stray one-word scraps */

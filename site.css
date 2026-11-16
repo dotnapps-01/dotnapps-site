@@ -2168,10 +2168,10 @@ html.is-scrolling .pf-fig *, html.is-scrolling .stack-track { animation-play-sta
 .hero-rot .h1-end { display: block; }
 .js .hero-rot .slide:not(.has-c) { opacity: 0; }
 .hero-rot .w { display: inline-block; white-space: nowrap; }
-/* No permanent will-change here: 130+ letters would each become a standing GPU layer and make Chrome stutter. The animation promotes only the letters that are flipping, only while they flip; "backwards" fill lets the layer drop when it ends. */
-.hero-rot .c { display: inline-block; white-space: pre; opacity: 0; }
-.hero-rot .slide.is-active .c { opacity: 1; animation: heroFlipIn .42s ease-out backwards; animation-delay: calc(var(--i) * 20ms + 200ms); }
-.hero-rot .slide.is-out .c { animation: heroFlipOut .3s ease-in backwards; animation-delay: calc(var(--i) * 14ms); }
+/* Each WORD flips (about 6 elements per tagline instead of 30 letters). No permanent will-change: the animation promotes a word only while it flips, and "backwards" fill lets the layer drop when it ends. */
+.hero-rot .c { opacity: 0; }
+.hero-rot .slide.is-active .c { opacity: 1; animation: heroFlipIn .55s cubic-bezier(.2, .8, .25, 1) backwards; animation-delay: calc(var(--i) * 95ms + 200ms); }
+.hero-rot .slide.is-out .c { animation: heroFlipOut .32s ease-in backwards; animation-delay: calc(var(--i) * 55ms); }
 @keyframes heroFlipIn { from { opacity: 0; transform: perspective(400px) rotateX(-90deg); } to { opacity: 1; transform: none; } }
 @keyframes heroFlipOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: perspective(400px) rotateX(90deg); } }
 .reduce-motion .hero-rot .slide { opacity: 1 !important; }
