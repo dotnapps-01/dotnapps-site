@@ -2414,3 +2414,9 @@ label[hidden] { display: none !important; }
 
 /* Headings use the heading font (Plus Jakarta Sans); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
 h1, h2, h3, h4 { font-family: var(--font-head); }
+
+/* Phones: no rule above the page label on Products / Services / Work, and the heading block sits a little higher */
+@media (max-width: 620px) {
+  .pg-head { padding-top: clamp(5.2rem, 16vw, 6rem); }
+  .pg-head > .sec-row { border-top: 0; padding-top: .2rem; }
+}
