@@ -1,6 +1,6 @@
   :root {
-    --font-body: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;     /* paragraphs, buttons, cards, menus */
-    --font-head: "Plus Jakarta Sans", "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;   /* headlines and the tagline */
+    --font-body: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;     /* paragraphs, buttons, cards, menus */
+    --font-head: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;   /* headlines and the tagline */
     --canvas: #F5F5F7;
     --frame: #FFFFFF;
     --sunken: #F5F5F7;
@@ -2412,7 +2412,7 @@ label[hidden] { display: none !important; }
 @media (max-width: 380px) { .dn-consent { padding-left: .8rem; gap: .4rem; font-size: .76rem; } .dn-consent button { padding: .38rem .7rem; } }
 @media (prefers-reduced-motion: reduce) { .dn-consent, .dn-consent.out { transform: none; transition: opacity .2s ease; } }
 
-/* Headings use the heading font (Plus Jakarta Sans); everything else uses the body font (Manrope). Small spaced labels stay in Space Mono. */
+/* Headings use the heading font (Space Grotesk); everything else uses the body font (Space Grotesk). Small spaced labels stay in Space Mono. */
 h1, h2, h3, h4 { font-family: var(--font-head); }
 
 /* Phones: no rule above the page label on Products / Services / Work, and the heading block sits a little higher */
