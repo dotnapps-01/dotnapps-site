@@ -1039,12 +1039,12 @@ window.dnConfig = (function () {
 })();
 
 /* phones: a wave of plus marks behind the hero, with a quiet zone around the text (the marks shrink to faint specks there) so nothing competes with the headline.
-   Draws about 30 times a second, and stops while the hero is off-screen, the tab is hidden, or the page is scrolling. With reduced motion it is one still picture. */
+   Very light: small, faint marks, drawn about 24 times a second, and stops while the hero is off-screen, the tab is hidden, or the page is scrolling. With reduced motion it is one still picture. */
 (function () {
   var cv = document.querySelector(".hero-wave"), hero = document.querySelector(".hero");
   if (!cv || !hero || !window.matchMedia) return;
   var mq = window.matchMedia("(max-width: 820px)"), rm = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var ctx = cv.getContext("2d"), root = document.documentElement, G = 20, W = 0, H = 0, cols = 0, rows = 0, ox = 0, oy = 0, mask = null, raf = 0, last = 0, lastTint = 0, rgb = "0,0,0";
+  var ctx = cv.getContext("2d"), root = document.documentElement, G = 28, W = 0, H = 0, cols = 0, rows = 0, ox = 0, oy = 0, mask = null, raf = 0, last = 0, lastTint = 0, rgb = "0,0,0";
   function ss(a, b, v) { var t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t); }
   function tint() { var m = /(\d+)[, ]+(\d+)[, ]+(\d+)/.exec(getComputedStyle(cv).color || ""); rgb = m ? m[1] + "," + m[2] + "," + m[3] : "0,0,0"; }
   function layout() {
@@ -1070,15 +1070,15 @@ window.dnConfig = (function () {
   function draw(t) {
     ctx.clearRect(0, 0, W, H);
     for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
-      var m = mask[j * cols + i], x = ox + i * G, y = oy + j * G, w = (Math.sin((x * .7 + y) * .024 - t * 1.5) + 1) / 2;
-      var a = (.08 + .72 * w * w) * m + .05 * (1 - m), r = 1.3 + 3.5 * w * m;
+      var m = mask[j * cols + i], x = ox + i * G, y = oy + j * G, w = (Math.sin((x * .7 + y) * .018 - t * 1) + 1) / 2;
+      var a = (.035 + .2 * w * w) * m + .02 * (1 - m), r = 1.1 + 1.9 * w * m;
       ctx.fillStyle = "rgba(" + rgb + "," + a.toFixed(3) + ")";
       ctx.fillRect(x - r, y - .6, r * 2, 1.2); ctx.fillRect(x - .6, y - r, 1.2, r * 2);
     }
   }
   function loop(ms) {
     raf = requestAnimationFrame(loop);
-    if (ms - last < 32 || document.hidden || hero.classList.contains("is-off") || root.classList.contains("is-scrolling")) return;
+    if (ms - last < 42 || document.hidden || hero.classList.contains("is-off") || root.classList.contains("is-scrolling")) return;
     last = ms; if (ms - lastTint > 2000) { lastTint = ms; tint(); } draw(ms / 1000);
   }
   var rt = 0; function later() { clearTimeout(rt); rt = setTimeout(layout, 150); }
