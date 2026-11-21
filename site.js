@@ -1038,13 +1038,13 @@ window.dnConfig = (function () {
   } catch (e) {}
 })();
 
-/* phones: plus marks behind the hero. They rest small and faint, and one soft wave passes through every few seconds. Marks stay small near the text so nothing competes with the headline.
-   While resting nothing is redrawn; during a pass it draws about 30 times a second, and it stops while the hero is off-screen, the tab is hidden, or the page is scrolling. With reduced motion it is one still picture. */
+/* phones: a wave of plus marks behind the hero, with a quiet zone around the text (the marks shrink to faint specks there) so nothing competes with the headline.
+   Draws about 30 times a second, and stops while the hero is off-screen, the tab is hidden, or the page is scrolling. With reduced motion it is one still picture. */
 (function () {
   var cv = document.querySelector(".hero-wave"), hero = document.querySelector(".hero");
   if (!cv || !hero || !window.matchMedia) return;
   var mq = window.matchMedia("(max-width: 820px)"), rm = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var ctx = cv.getContext("2d"), root = document.documentElement, G = 20, W = 0, H = 0, cols = 0, rows = 0, ox = 0, oy = 0, mask = null, raf = 0, last = 0, lastTint = 0, resting = false, rgb = "0,0,0";
+  var ctx = cv.getContext("2d"), root = document.documentElement, G = 20, W = 0, H = 0, cols = 0, rows = 0, ox = 0, oy = 0, mask = null, raf = 0, last = 0, lastTint = 0, rgb = "0,0,0";
   function ss(a, b, v) { var t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t); }
   function tint() { var m = /(\d+)[, ]+(\d+)[, ]+(\d+)/.exec(getComputedStyle(cv).color || ""); rgb = m ? m[1] + "," + m[2] + "," + m[3] : "0,0,0"; }
   function layout() {
@@ -1061,19 +1061,16 @@ window.dnConfig = (function () {
     for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
       var x = ox + i * G, y = oy + j * G, q = 1e9;
       for (var k = 0; k < boxes.length; k++) { var b = boxes[k], dx = Math.max(b[0] - x, 0, x - b[2]), dy = Math.max(b[1] - y, 0, y - b[3]); q = Math.min(q, Math.sqrt(dx * dx + dy * dy)); }
-      mask[j * cols + i] = .2 + .8 * ss(8, 40, q);
+      mask[j * cols + i] = ss(6, 46, q);
     }
     hero.classList.add("has-wave"); tint();
     if (rm.matches) draw(0); else if (!raf) raf = requestAnimationFrame(loop);
   }
-  /* the marks rest, small and faint; every 7 seconds one soft wave sweeps diagonally through them (about 3.6 s), then they rest again */
-  var CYCLE = 7, SWEEP = 3.6;
-  function front(t) { var p = (t % CYCLE) / SWEEP; return p > 1 ? null : -70 + p * (W * .7 + H + 140); }
+  /* a continuous diagonal wave of plus marks; around the text the marks shrink to faint specks (a quiet zone) and swell again further out */
   function draw(t) {
     ctx.clearRect(0, 0, W, H);
-    var f = front(t);
     for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
-      var m = mask[j * cols + i], x = ox + i * G, y = oy + j * G, d = f === null ? 1e4 : (x * .7 + y) - f, w = Math.exp(-d * d / (2 * 55 * 55));
+      var m = mask[j * cols + i], x = ox + i * G, y = oy + j * G, w = (Math.sin((x * .7 + y) * .024 - t * 1.5) + 1) / 2;
       var a = (.08 + .72 * w * w) * m + .05 * (1 - m), r = 1.3 + 3.5 * w * m;
       ctx.fillStyle = "rgba(" + rgb + "," + a.toFixed(3) + ")";
       ctx.fillRect(x - r, y - .6, r * 2, 1.2); ctx.fillRect(x - .6, y - r, 1.2, r * 2);
@@ -1082,9 +1079,7 @@ window.dnConfig = (function () {
   function loop(ms) {
     raf = requestAnimationFrame(loop);
     if (ms - last < 32 || document.hidden || hero.classList.contains("is-off") || root.classList.contains("is-scrolling")) return;
-    last = ms; if (ms - lastTint > 2000) { lastTint = ms; tint(); resting = false; }
-    var t = ms / 1000; if (front(t) === null) { if (resting) return; resting = true; } else resting = false;
-    draw(t);
+    last = ms; if (ms - lastTint > 2000) { lastTint = ms; tint(); } draw(ms / 1000);
   }
   var rt = 0; function later() { clearTimeout(rt); rt = setTimeout(layout, 150); }
   window.addEventListener("resize", later); window.addEventListener("load", later);
