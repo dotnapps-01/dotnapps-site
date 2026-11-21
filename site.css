@@ -2421,9 +2421,5 @@ h1, h2, h3, h4 { font-family: var(--font-head); }
   .pg-head > .sec-row { border-top: 0; padding-top: .2rem; }
 }
 
-/* Phones: a field of plus marks swelling in a slow diagonal wave, with a quiet zone around the text so the headline, buttons and tags stay clean (see the script in site.js). */
-.hero-wave { display: none; }
-@media (max-width: 820px) {
-  .hero-wave { display: block; position: absolute; z-index: 0; top: -3rem; left: calc(-1 * var(--fp)); width: calc(100% + 2 * var(--fp)); height: calc(100% + 3rem); pointer-events: none; color: var(--ink); }
-  .hero.has-wave .hero-rings { display: none; }
-}
+/* Phones: no animated background behind the hero (the rings are hidden; laptops and tablets keep theirs) */
+@media (max-width: 820px) { .hero-rings { display: none; } }
