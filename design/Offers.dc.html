@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Offers and loyalty</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="offers" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Engage</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Offers, loyalty &amp; digital bills</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Redeem a code</button><button type="button" class="btn btn-p">New offer</button></div>
+</header>
+<nav class="tabs" aria-label="Offer sections" style="padding: 0 clamp(8px, 1.6vw, 20px)"><sc-for list="{{tabs}}" as="t"><a href="#{{t.id}}" class="tab {{t.cls}}">{{t.t}}</a></sc-for></nav>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border: 1px solid #E7E7EB; background: #fff">
+<sc-for list="{{kpis}}" as="k"><div style="padding: 16px 18px; border-right: 1px solid #F1F1F3"><div class="k">{{k.l}}</div><div class="disp" style="font-size: 28px; font-weight: 500; margin-top: 6px">{{k.v}}</div><div class="mono" style="font-size: 11px; color: #3D3D45; margin-top: 4px">{{k.d}}</div></div></sc-for>
+</div>
+
+<section id="coupons">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px"><h2 class="ct" style="font-size: 17px">Coupons &amp; offers</h2><a href="#" class="mono" style="font-size: 11px">VIEW ALL →</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px">
+<sc-for list="{{coupons}}" as="c"><article class="card" style="display: flex; flex-direction: column">
+<div style="padding: 16px; border-bottom: 1px dashed #D6D6DC; display: flex; justify-content: space-between; gap: 10px; background: {{c.bg}}; color: {{c.fg}}"><div><div class="mono" style="font-size: 10.5px; opacity: .8">{{c.k}}</div><div class="disp" style="font-size: 26px; margin-top: 4px">{{c.h}}</div></div><span class="pill" style="background: {{c.sb}}; color: {{c.sf}}; align-self: flex-start">{{c.s}}</span></div>
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px"><div style="font-size: 13.5px; font-weight: 600">{{c.t}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{c.d}}</div><div><div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px"><span>Redeemed</span><span class="mono">{{c.r}}</span></div><div style="height: 6px; background: #F1F1F3"><div style="height: 6px; width: {{c.w}}; background: #0E0E10"></div></div></div></div>
+</article></sc-for>
+</div>
+</section>
+
+<div class="row" id="loyalty">
+<section class="card" style="flex: 2 1 520px">
+<div class="ch"><h2 class="ct">Loyalty program · Coffee Club</h2><span class="pill" style="background: #E3F2EA; color: #1F6B45">LIVE</span></div>
+<div style="padding: 20px; display: flex; flex-wrap: wrap; gap: 24px">
+<div style="flex: 0 0 280px; max-width: 100%; background: #0E0E10; color: #fff; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between"><span class="disp" style="font-size: 18px">Coffee Club</span><span class="mono" style="font-size: 10px; color: #CDBDFF">[BUSINESS]</span></div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px"><sc-for list="{{stamps}}" as="s"><div style="aspect-ratio: 1; border: 1.5px solid {{s.b}}; background: {{s.bg}}; display: flex; align-items: center; justify-content: center; border-radius: 50%"><sc-if value="{{s.on}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></sc-if></div></sc-for></div>
+<div class="mono" style="font-size: 11px; color: #B8B8C0">7 OF 10 · FREE COFFEE AT 10</div>
+</div>
+<div style="flex: 1 1 260px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-content: start">
+<div class="fl"><label for="l1">Stamps needed</label><input id="l1" class="in" value="10"></div>
+<div class="fl"><label for="l2">Reward</label><input id="l2" class="in" value="1 free filter coffee"></div>
+<div class="fl"><label for="l3">Stamp rule</label><select id="l3" class="in"><option>1 per visit, max 1 per day</option><option>1 per ₹200 spent</option></select></div>
+<div class="fl"><label for="l4">Staff confirmation</label><select id="l4" class="in"><option>4-digit staff PIN</option><option>Scan staff QR</option></select></div>
+<div class="fl"><label for="l5">Win-back message after</label><select id="l5" class="in"><option>30 days without visit</option></select></div>
+<div class="fl"><label for="l6">Card expires</label><select id="l6" class="in"><option>Never</option><option>12 months</option></select></div>
+</div>
+</div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Recent redemptions</h2></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{reds}}" as="r"><li style="padding: 12px 18px; border-bottom: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 10px"><div><div style="font-size: 13.5px; font-weight: 600">{{r.n}}</div><div class="mono" style="font-size: 10.5px; color: #6B6B75; margin-top: 2px">{{r.w}}</div></div><span class="mono" style="font-size: 11px; color: #3D3D45">{{r.t}}</span></li></sc-for></ul>
+</section>
+</div>
+
+<div class="row" id="bills">
+<section class="card" style="flex: 1 1 360px">
+<div class="ch"><h2 class="ct">Digital bills</h2><span class="pill" style="background: #E3F2EA; color: #1F6B45">CONNECTED</span></div>
+<div style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-size: 13.5px; color: #3D3D45; line-height: 1.55">Customer scans the counter QR → enters mobile → bill arrives on WhatsApp with a loyalty stamp and opt-in for offers.</p>
+<div class="fl"><label for="b1">Bill source</label><select id="b1" class="in"><option>Billing software via API</option><option>Upload bill photo</option><option>Enter amount manually</option></select></div>
+<sc-for list="{{billOpts}}" as="o"><div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #F1F1F3"><span style="font-size: 13px">{{o.t}}</span><span class="tog" style="background: {{o.bg}}"><i style="left: {{o.x}}"></i></span></div></sc-for>
+</div>
+</section>
+<section class="card" style="flex: 2 1 520px">
+<div class="ch"><h2 class="ct">Bills sent today</h2><span class="mono" style="font-size: 11px; color: #6B6B75">86 BILLS · ₹48,210</span></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Bill</th><th scope="col">Customer</th><th scope="col">Amount</th><th scope="col">Counter</th><th scope="col">Stamp</th><th scope="col">Delivered</th></tr></thead>
+<tbody><sc-for list="{{bills}}" as="b"><tr><td class="mono">{{b.id}}</td><td>{{b.c}}</td><td class="mono">{{b.a}}</td><td>{{b.k}}</td><td>{{b.s}}</td><td><span class="pill" style="background: #E3F2EA; color: #1F6B45">{{b.d}}</span></td></tr></sc-for></tbody></table></div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = (x) => ({ bg: x ? '#0E0E10' : '#D6D6DC', x: x ? '18px' : '2px' });
+    return {
+      tabs: [{ id: 'coupons', t: 'Coupons & offers', cls: 'on' }, { id: 'loyalty', t: 'Loyalty', cls: '' }, { id: 'bills', t: 'Digital bills', cls: '' }, { id: 'loyalty', t: 'Win-back', cls: '' }],
+      kpis: [{ l: 'Active offers', v: '4', d: '2 ending this week' }, { l: 'Redemptions', v: '1,026', d: 'last 30 days' }, { l: 'Loyalty members', v: '2,318', d: '58 rewards earned' }, { l: 'Repeat visit rate', v: '34%', d: 'members vs 12% others' }, { l: 'Bills on WhatsApp', v: '2,940', d: '71% opted in' }],
+      coupons: [
+        { k: 'COUPON · SKN-WKND', h: '2 for ₹99', t: 'Weekend filter coffee', d: 'Sat–Sun · 1 per customer · ends 30 Nov', r: '212 / 500', w: '42%', s: 'LIVE', sb: '#E3F2EA', sf: '#1F6B45', bg: '#F3EEFF', fg: '#0E0E10' },
+        { k: 'COUPON · BDAY', h: 'Free dessert', t: 'Birthday treat', d: 'Auto-sent on birthday · 7-day validity', r: '64 / ∞', w: '18%', s: 'AUTO', sb: '#0E0E10', sf: '#FFFFFF', bg: '#FFFFFF', fg: '#0E0E10' },
+        { k: 'COUPON · FIRST10', h: '10% off', t: 'First visit welcome', d: 'New contacts only · min ₹300', r: '388 / 1000', w: '39%', s: 'LIVE', sb: '#E3F2EA', sf: '#1F6B45', bg: '#FFFFFF', fg: '#0E0E10' },
+        { k: 'COUPON · DIWALI', h: '20% off', t: 'Diwali festive offer', d: 'Ended 5 Nov', r: '388 / 400', w: '97%', s: 'ENDED', sb: '#F1F1F3', sf: '#3D3D45', bg: '#FFFFFF', fg: '#0E0E10' }
+      ],
+      stamps: Array.from({ length: 10 }, (_, i) => ({ on: i < 7, b: i < 7 ? '#CDBDFF' : '#4A4A52', bg: i < 7 ? '#CDBDFF' : 'transparent' })),
+      reds: [{ n: 'Divya S.', w: 'Free coffee · Coffee Club', t: '14m' }, { n: 'Mohammed I.', w: 'SKN-WKND · Counter 1', t: '32m' }, { n: 'Ananya R.', w: 'Birthday dessert', t: '1h' }, { n: 'Gowri T.', w: 'FIRST10 · ₹48 off', t: '2h' }],
+      billOpts: [{ t: 'Add loyalty stamp automatically', ...on(true) }, { t: 'Ask to opt in for offers', ...on(true) }, { t: 'Ask for a review 2 hours later', ...on(true) }, { t: 'Attach GST invoice PDF', ...on(false) }],
+      bills: [{ id: '#B-20931', c: 'Divya S.', a: '₹640', k: 'Counter 1', s: '+1 (8/10)', d: 'READ' }, { id: '#B-20930', c: 'Rahul S.', a: '₹1,280', k: 'Counter 2', s: '+1 (3/10)', d: 'DELIVERED' }, { id: '#B-20929', c: 'Gowri T.', a: '₹310', k: 'Counter 1', s: '+1 (1/10)', d: 'READ' }, { id: '#B-20928', c: 'Arun K.', a: '₹920', k: 'Counter 1', s: '—', d: 'DELIVERED' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

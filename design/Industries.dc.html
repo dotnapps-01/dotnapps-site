@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Industries</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.lbl{font:500 12px/1.4 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#0E0E10}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn:hover{background:#0E0E10;color:#fff}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;border-color:#5B45B8;color:#fff}
+.x{position:absolute;width:15px;height:15px;font:300 18px/15px Inter,sans-serif;color:#8C8C84;text-align:center;pointer-events:none}
+.frame{max-width:1280px;margin:0 auto;border-left:1px solid #E7E7EB;border-right:1px solid #E7E7EB;box-sizing:border-box;position:relative}
+.sec{border-bottom:1px solid #E7E7EB;position:relative}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh">
+<dc-import name="SiteNav" active="industries" hint-size="100%,73px"></dc-import>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 104px) clamp(20px, 5vw, 64px) 40px; display: flex; flex-direction: column; gap: 22px">
+<span class="x" aria-hidden="true" style="left: -8px; bottom: -8px">+</span><span class="x" aria-hidden="true" style="right: -8px; bottom: -8px">+</span>
+<span class="lbl">Industries</span>
+<h1 class="disp" style="margin: 0; font-size: clamp(42px, 6vw, 80px); line-height: 1; max-width: 980px">Your workspace sets itself up for your industry.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #3D3D45; max-width: 640px">Pick your business type at sign-up and Skanor switches on the right modules, templates and QR placements for you.</p>
+<nav aria-label="Industries" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px"><sc-for list="{{inds}}" as="i"><a href="#{{i.id}}" class="mono" style="font-size: 12px; padding: 10px 14px; border: 1px solid #E7E7EB; background: #fff; text-decoration: none; color: #0E0E10">{{i.t}}</a></sc-for></nav>
+</div>
+</section>
+
+<sc-for list="{{inds}}" as="i" hint-placeholder-count="10">
+<section class="sec" id="{{i.id}}">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr))">
+<div style="padding: 36px clamp(20px, 3vw, 40px); border-right: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 14px"><div style="width: 48px; height: 48px; background: #0E0E10; color: #fff; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{i.ic}}"></path></svg></div><span class="mono" style="font-size: 12px; color: #6B6B75">{{i.n}}</span></div>
+<h2 class="disp" style="margin: 0; font-size: 32px">{{i.t}}</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3D3D45">{{i.d}}</p>
+</div>
+<div style="padding: 36px clamp(20px, 3vw, 40px); border-right: 1px solid #E7E7EB; background: #F6F6F8; display: flex; flex-direction: column; gap: 12px">
+<span class="mono" style="font-size: 11px; letter-spacing: .06em; color: #6B6B75">WHERE THE QR GOES</span>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px"><sc-for list="{{i.where}}" as="w"><li style="display: flex; gap: 10px; font-size: 14px"><span style="width: 10px; height: 10px; margin-top: 4px; flex: none; border: 2px solid #0E0E10; box-sizing: border-box"></span>{{w}}</li></sc-for></ul>
+</div>
+<div style="padding: 36px clamp(20px, 3vw, 40px); display: flex; flex-direction: column; gap: 14px; background: #fff">
+<span class="mono" style="font-size: 11px; letter-spacing: .06em; color: #6B6B75">MODULES SWITCHED ON</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{i.mods}}" as="m"><span class="mono" style="font-size: 12px; padding: 8px 10px; background: #F3EEFF; color: #5B45B8; border: 1px solid #E2D9FF">{{m}}</span></sc-for></div>
+<div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap"><span class="mono" style="font-size: 12px; color: #3D3D45">Best plan: {{i.plan}}</span><a href="SignUp.dc.html" style="font-size: 14px; font-weight: 600">Start with this setup →</a></div>
+</div>
+</div>
+</section>
+</sc-for>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 96px) clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; align-items: center; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%)">
+<div style="max-width: 640px"><h2 class="disp" style="margin: 0; font-size: clamp(32px, 4.4vw, 56px); line-height: 1.02">Don’t see your industry?</h2><p style="margin: 14px 0 0; font-size: 16px; color: #3D3D45">Tell us how you’d use QR codes — we’ll set up a workspace with you.</p></div>
+<a class="btn btn-p" href="Contact.dc.html">Talk to us</a>
+</div>
+</section>
+<dc-import name="SiteFooter" hint-size="100%,460px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      inds: [
+        { id: 'retail', n: '01', t: 'Retail & shops', ic: 'M3 9l2-5h14l2 5M3 9h18v2a3 3 0 01-6 0 3 3 0 01-6 0 3 3 0 01-6 0zM5 13v8h14v-8', d: 'Build a customer list you own, bring people back, and lift your Google rating.', where: ['Billing counter standee', 'Printed bill and carry bag', 'Shop window', 'Product shelf tags'], mods: ['Review Assistant', 'Digital bills', 'Loyalty stamps', 'Coupons', 'WhatsApp offers', 'Catalogue'], plan: 'Growth' },
+        { id: 'food', n: '02', t: 'Restaurants & cafés', ic: 'M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 3c-2 0-3 3-3 6s1 3 3 3v9', d: 'Update the menu in seconds, hear about problems at the table, and grow reviews.', where: ['Table tents (one QR per table)', 'Menu card', 'Takeaway box sticker', 'Entrance standee'], mods: ['Menu & catalogue', 'Review Assistant', 'Table feedback', 'Loyalty', 'Wi-Fi QR'], plan: 'Growth' },
+        { id: 'salon', n: '03', t: 'Salons & spas', ic: 'M6 9a3 3 0 100-6 3 3 0 000 6zM6 21a3 3 0 100-6 3 3 0 000 6zM8.5 7.5L20 19M8.5 16.5L20 5', d: 'Fill your calendar, reward regulars, and see which stylist earns the best reviews.', where: ['Mirror stations (per stylist)', 'Reception desk', 'Service menu', 'Invoice'], mods: ['Bookings', 'Staff-wise reviews', 'Loyalty', 'Digital cards', 'Offers'], plan: 'Growth' },
+        { id: 'clinic', n: '04', t: 'Clinics & hospitals', ic: 'M4 21V5h16v16M9 21v-5h6v5M12 8v5M9.5 10.5h5', d: 'Catch issues ward by ward, fix them within SLA, and let patients book follow-ups.', where: ['Ward and room doors', 'Washrooms', 'OPD waiting area', 'Discharge summary'], mods: ['Feedback tickets', 'SLA escalation', 'Appointments', 'Review Assistant', 'Visitor passes'], plan: 'Business' },
+        { id: 'hotel', n: '05', t: 'Hotels & hospitality', ic: 'M3 20V8h18v12M3 14h18M7 11h.01M12 4v4', d: 'In-room service requests, housekeeping tickets, and guest reviews at checkout.', where: ['In-room card', 'Bathroom mirror', 'Front desk', 'Checkout folio'], mods: ['Service requests', 'Housekeeping tickets', 'Menu', 'Wi-Fi QR', 'Reviews'], plan: 'Business' },
+        { id: 'realestate', n: '06', t: 'Real estate developers', ic: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6', d: 'Turn every plot stone and hoarding into a live sales agent.', where: ['Plot marker stones', 'Site hoardings', 'Brochures', 'Site office'], mods: ['Real estate plots', 'Lead forms', 'Site-visit booking', 'Brochure PDF', 'WhatsApp leads'], plan: 'Business' },
+        { id: 'mfg', n: '07', t: 'Manufacturers & D2C brands', ic: 'M3 21V10l6 4V10l6 4V6l6 3v12z', d: 'Know every end customer, replace paper warranty cards, and fight counterfeits.', where: ['Each product unit (serialized)', 'Packaging box', 'User manual', 'Dealer counter'], mods: ['Serialized QR', 'Warranty registration', 'Authenticity', 'Service requests', 'API'], plan: 'Enterprise' },
+        { id: 'facility', n: '08', t: 'Facilities & apartments', ic: 'M5 21V3h10v18M15 9h4v12M8 7h4M8 11h4M8 15h4', d: 'A QR on every asset: residents report issues, technicians log every visit.', where: ['ACs, lifts, gensets, RO units', 'Common areas & washrooms', 'Main gate', 'Notice board'], mods: ['Asset service logs', 'Tickets', 'Visitor passes', 'AMC reminders', 'Notices'], plan: 'Business' },
+        { id: 'construction', n: '09', t: 'Construction contractors', ic: 'M3 18h18M5 18v-3a7 7 0 0114 0v3M10 8V5h4v3', d: 'Reliable labour attendance without registers, and payroll in one export.', where: ['Site entry gate', 'Site office', 'Equipment', 'Material store'], mods: ['Labour attendance', 'Selfie + location', 'Shifts', 'Payroll export', 'Asset QR'], plan: 'Growth' },
+        { id: 'events', n: '10', t: 'Events & education', ic: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', d: 'Registrations, QR tickets, gate check-in and feedback after every session.', where: ['Posters & invites', 'Entry gate', 'Session rooms', 'Certificates'], mods: ['Event check-in', 'QR tickets', 'Lead forms', 'Feedback', 'Attendance'], plan: 'Growth' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

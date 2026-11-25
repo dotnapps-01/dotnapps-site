@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Product QR and warranty</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="products" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Products · Enterprise</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Product QR, warranty &amp; authenticity</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Add product</button><button type="button" class="btn btn-p">Generate batch</button></div>
+</header>
+<nav class="tabs" aria-label="Product sections" style="padding: 0 clamp(8px, 1.6vw, 20px)"><sc-for list="{{tabs}}" as="t"><a href="#" class="tab {{t.cls}}">{{t.t}}</a></sc-for></nav>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border: 1px solid #E7E7EB; background: #fff">
+<sc-for list="{{kpis}}" as="k"><div style="padding: 16px 18px; border-right: 1px solid #F1F1F3"><div class="k">{{k.l}}</div><div class="disp" style="font-size: 28px; font-weight: 500; margin-top: 6px">{{k.v}}</div><div class="mono" style="font-size: 11px; color: {{k.c}}; margin-top: 4px">{{k.d}}</div></div></sc-for>
+</div>
+<div class="row">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Batches</h2><a href="#" style="font-size: 13px; font-weight: 600">Download print files</a></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Batch</th><th scope="col">Product</th><th scope="col">Serial range</th><th scope="col">Codes</th><th scope="col">Activated</th><th scope="col">Status</th></tr></thead>
+<tbody><sc-for list="{{batches}}" as="b"><tr><td class="mono" style="font-weight: 600">{{b.id}}</td><td>{{b.p}}</td><td class="mono" style="font-size: 12px">{{b.r}}</td><td class="mono">{{b.n}}</td><td><div style="display: flex; gap: 8px; align-items: center"><div style="width: 80px; height: 6px; border-radius: 6px; background: #F1F1F3"><div style="height: 6px; border-radius: 6px; width: {{b.w}}; background: #0E0E10"></div></div><span class="mono" style="font-size: 12px">{{b.w}}</span></div></td><td><span class="pill" style="background: {{b.sb}}; color: {{b.sf}}">{{b.s}}</span></td></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Counterfeit alerts</h2><span class="pill" style="background: #FBE4E1; color: #A8321F">3 NEW</span></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{alerts}}" as="a"><li style="padding: 14px 18px; border-bottom: 1px solid #F1F1F3; display: flex; flex-direction: column; gap: 6px"><div style="display: flex; justify-content: space-between; gap: 8px"><span class="mono" style="font-size: 12.5px; font-weight: 600">{{a.s}}</span><span class="mono" style="font-size: 11px; color: #6B6B75">{{a.t}}</span></div><span style="font-size: 13px; color: #3D3D45">{{a.d}}</span><div style="display: flex; gap: 6px"><button type="button" class="btn" style="min-height: 30px; padding: 0 12px; font-size: 12.5px">Investigate</button><button type="button" class="btn" style="min-height: 30px; padding: 0 12px; font-size: 12.5px">Block code</button></div></li></sc-for></ul>
+</section>
+</div>
+<div class="row">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Warranty registrations</h2><select class="in" aria-label="Filter" style="width: auto; min-height: 34px"><option>Last 7 days</option></select></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Customer</th><th scope="col">Product · serial</th><th scope="col">Bought from</th><th scope="col">Invoice</th><th scope="col">Warranty till</th><th scope="col">Status</th></tr></thead>
+<tbody><sc-for list="{{regs}}" as="r"><tr><td><div style="font-weight: 600">{{r.n}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{r.c}}</div></td><td><div>{{r.p}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{r.s}}</div></td><td>{{r.d}}</td><td><a href="#">{{r.i}}</a></td><td class="mono">{{r.w}}</td><td><span class="pill" style="background: {{r.sb}}; color: {{r.sf}}">{{r.st}}</span></td></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Generate batch</h2></div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+<div class="fl"><label for="g1">Product</label><select id="g1" class="in"><option>AquaPure RO 8L</option><option>AquaPure UV 6L</option></select></div>
+<div class="fl"><label for="g2">Quantity</label><input id="g2" class="in" value="5,000"></div>
+<div class="fl"><label for="g3">Serial prefix</label><input id="g3" class="in" value="AQ-26-"></div>
+<div class="fl"><label for="g4">Warranty period</label><select id="g4" class="in"><option>12 months from registration</option><option>24 months</option></select></div>
+<div class="fl"><label for="g5">Print format</label><select id="g5" class="in"><option>Label roll · 30×30 mm</option><option>A4 sheets</option><option>CSV for packaging line printer</option></select></div>
+<button type="button" class="btn btn-p">Generate 5,000 codes</button>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = { s: 'IN MARKET', sb: '#E3F2EA', sf: '#1F6B45' }, Pr = { s: 'PRINTING', sb: '#FDF0E1', sf: '#8A4A06' };
+    return {
+      tabs: [{ t: 'Overview', cls: 'on' }, { t: 'Products', cls: '' }, { t: 'Batches', cls: '' }, { t: 'Warranty', cls: '' }, { t: 'Authenticity', cls: '' }, { t: 'Service requests', cls: '' }, { t: 'Dealers', cls: '' }],
+      kpis: [{ l: 'Codes issued', v: '48,000', d: '6 batches', c: '#3D3D45' }, { l: 'Activated by buyers', v: '31.4%', d: '15,072 units', c: '#1F6B45' }, { l: 'Warranty registrations', v: '9,840', d: '▲ 22% this month', c: '#1F6B45' }, { l: 'Service requests', v: '312', d: '41 open', c: '#3D3D45' }, { l: 'Suspected fakes', v: '17', d: '3 new this week', c: '#A8321F' }],
+      batches: [
+        { id: 'B-07', p: 'AquaPure RO 8L', r: 'AQ-25-110001 → 115000', n: '5,000', w: '38%', ...A },
+        { id: 'B-06', p: 'AquaPure UV 6L', r: 'AQ-25-100001 → 110000', n: '10,000', w: '52%', ...A },
+        { id: 'B-05', p: 'AquaPure RO 8L', r: 'AQ-25-090001 → 100000', n: '10,000', w: '71%', ...A },
+        { id: 'B-08', p: 'AquaPure Copper 10L', r: 'AQ-26-000001 → 008000', n: '8,000', w: '0%', ...Pr }
+      ],
+      alerts: [
+        { s: 'AQ-25-104512', t: '2h ago', d: 'Scanned as “first scan” in Madurai and Kolkata within 3 hours.' },
+        { s: 'AQ-25-099871', t: '1d ago', d: 'Registered twice with different phone numbers.' },
+        { s: 'AQ-25-091002', t: '2d ago', d: '14 scans from one unknown dealer location.' }
+      ],
+      regs: [
+        { n: 'Ramesh G.', c: '+91 98xxx xx210', p: 'AquaPure RO 8L', s: 'AQ-25-112384', d: 'Sri Ganesh Electricals', i: 'invoice.jpg', w: '25 Nov 2027', st: 'VERIFIED', sb: '#E3F2EA', sf: '#1F6B45' },
+        { n: 'Lakshmi P.', c: '+91 97xxx xx551', p: 'AquaPure UV 6L', s: 'AQ-25-104990', d: 'Amazon', i: 'invoice.pdf', w: '24 Nov 2027', st: 'VERIFIED', sb: '#E3F2EA', sf: '#1F6B45' },
+        { n: 'Abdul R.', c: '+91 90xxx xx887', p: 'AquaPure RO 8L', s: 'AQ-25-099871', d: 'Local dealer', i: 'invoice.jpg', w: '—', st: 'REVIEW', sb: '#FDF0E1', sf: '#8A4A06' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

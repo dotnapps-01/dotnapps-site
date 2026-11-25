@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Review Assistant</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.lbl{font:500 12px/1.4 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#0E0E10}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn:hover{background:#0E0E10;color:#fff}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;border-color:#5B45B8;color:#fff}
+.x{position:absolute;width:15px;height:15px;font:300 18px/15px Inter,sans-serif;color:#8C8C84;text-align:center;pointer-events:none}
+.frame{max-width:1280px;margin:0 auto;border-left:1px solid #E7E7EB;border-right:1px solid #E7E7EB;box-sizing:border-box;position:relative}
+.sec{border-bottom:1px solid #E7E7EB;position:relative}
+.card{background:#fff;border:1px solid #E7E7EB}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh">
+<dc-import name="SiteNav" active="features" hint-size="100%,73px"></dc-import>
+
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr))">
+<span class="x" aria-hidden="true" style="left: -8px; bottom: -8px">+</span><span class="x" aria-hidden="true" style="right: -8px; bottom: -8px">+</span>
+<div style="padding: clamp(48px, 6vw, 88px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 24px; justify-content: center">
+<a href="Features.dc.html" class="mono" style="font-size: 12px; text-decoration: none; color: #6B6B75">← Features / Growth / Review Assistant</a>
+<h1 class="disp" style="margin: 0; font-size: clamp(42px, 5.6vw, 76px); line-height: 1">Get the reviews your service deserves.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #3D3D45; max-width: 520px">A one-tap rating page on every table, counter and invoice. Happy customers post to Google in seconds; unhappy ones reach your manager before they reach the internet.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap"><a class="btn btn-p" href="SignUp.dc.html">Start free</a><a class="btn" href="ScanReviews.dc.html">See the customer view</a></div>
+</div>
+<div style="border-left: 1px solid #E7E7EB; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%); display: flex; align-items: center; justify-content: center; gap: 28px; padding: 48px 24px; flex-wrap: wrap">
+<div style="width: 250px; height: 500px; border: 1px solid #0E0E10; border-radius: 36px; background: #fff; padding: 28px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 10px"><div style="width: 36px; height: 36px; background: #0E0E10; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px">[B]</div><div><div style="font-size: 13px; font-weight: 600">[Business name]</div><div class="mono" style="font-size: 10px; color: #6B6B75">Table 4</div></div></div>
+<div class="disp" style="font-size: 24px; line-height: 1.1">How was your visit today?</div>
+<div style="display: flex; gap: 6px; color: #0E0E10"><sc-for list="{{five}}" as="s"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"></path></svg></sc-for></div>
+<div class="mono" style="font-size: 10px; color: #6B6B75">WHAT DID YOU LIKE?</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{likes}}" as="l"><span style="font-size: 11px; padding: 6px 9px; border: 1px solid {{l.b}}; background: {{l.bg}}; color: {{l.fg}}">{{l.t}}</span></sc-for></div>
+<div style="padding: 10px; background: #FAFAFA; font-size: 11px; line-height: 1.5; color: #3D3D45">“Loved the filter coffee and the quick service. Staff were very friendly!”<div class="mono" style="font-size: 9px; color: #0E0E10; margin-top: 6px">AI SUGGESTION · EDIT FREELY</div></div>
+<span class="mono" style="margin-top: auto; text-align: center; font-size: 11px; padding: 13px 0; background: #0E0E10; color: #fff">COPY &amp; POST ON GOOGLE</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div class="card" style="padding: 14px 16px; width: 220px; box-sizing: border-box"><div class="mono" style="font-size: 10px; color: #6B6B75">THIS MONTH</div><div class="disp" style="font-size: 34px; font-weight: 500">[000]</div><div style="font-size: 12px; color: #3D3D45">new Google reviews</div></div>
+<div class="card" style="padding: 14px 16px; width: 220px; box-sizing: border-box"><div class="mono" style="font-size: 10px; color: #6B6B75">AVG RATING</div><div class="disp" style="font-size: 34px; font-weight: 500">[0.0]★</div><div style="font-size: 12px; color: #3D3D45">across 3 locations</div></div>
+<div class="card" style="padding: 14px 16px; width: 220px; box-sizing: border-box; background: #0E0E10; color: #fff; border-color: #0E0E10"><div class="mono" style="font-size: 10px; color: #CDBDFF">PRIVATE FEEDBACK</div><div style="font-size: 13px; margin-top: 6px">4 open · 2 resolved today</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr))">
+<sc-for list="{{probs}}" as="p"><div style="padding: 36px clamp(20px, 2.6vw, 36px); border-right: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 10px"><span class="mono" style="font-size: 12px; color: #6B6B75">{{p.n}} · THE PROBLEM</span><p style="margin: 0; font-size: 15px; color: #6B6B75; line-height: 1.5">{{p.a}}</p><span class="mono" style="font-size: 12px; color: #0E0E10; margin-top: 8px">WITH SKANOR</span><p style="margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4">{{p.b}}</p></div></sc-for>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) 32px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center"><span class="lbl">The flow</span><h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 50px)">Fair to customers. Fair to Google.</h2><p style="margin: 0; max-width: 620px; color: #3D3D45; font-size: 16px; line-height: 1.55">Every customer sees the Google option, whatever they rate. Private feedback is an extra channel, never a filter — so your reviews stay genuine and policy-safe.</p></div>
+<div style="padding: 16px clamp(20px, 5vw, 64px) 64px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0">
+<sc-for list="{{flow}}" as="f">
+<div style="display: flex; align-items: center">
+<div class="card" style="width: 200px; padding: 18px; box-sizing: border-box; border-top: 3px solid {{f.c}}"><div class="mono" style="font-size: 11px; color: #6B6B75">{{f.n}}</div><div style="font-size: 15px; font-weight: 600; margin: 6px 0 4px">{{f.t}}</div><div style="font-size: 13px; color: #3D3D45; line-height: 1.45">{{f.d}}</div></div>
+<sc-if value="{{f.arrow}}" hint-placeholder-val="{{ true }}"><svg width="40" height="16" viewBox="0 0 40 16" aria-hidden="true"><path d="M2 8h34M30 3l6 5-6 5" fill="none" stroke="#0E0E10" stroke-width="1.5"></path></svg></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame">
+<div style="padding: 48px clamp(20px, 5vw, 64px) 32px; border-bottom: 1px solid #E7E7EB"><span class="lbl">What's inside</span><h2 class="disp" style="margin: 12px 0 0; font-size: clamp(30px, 3.6vw, 44px)">Everything for reputation, in one module</h2></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))">
+<sc-for list="{{feats}}" as="f"><div style="padding: 28px clamp(20px, 2.4vw, 32px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; background: #fff"><div class="mono" style="font-size: 12px; color: #0E0E10">{{f.n}}</div><h3 style="margin: 10px 0 6px; font-size: 17px; font-weight: 600">{{f.t}}</h3><p style="margin: 0; font-size: 14px; color: #3D3D45; line-height: 1.5">{{f.d}}</p></div></sc-for>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr))">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px); border-right: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 16px"><span class="lbl">Setup</span><h2 class="disp" style="margin: 0; font-size: clamp(30px, 3.6vw, 44px)">Live in 10 minutes</h2><p style="margin: 0; font-size: 16px; color: #3D3D45; line-height: 1.55">Connect your Google Business Profile, choose where codes go, print. That's it.</p><div><a class="btn btn-p" href="Onboarding.dc.html">Set it up now</a></div></div>
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{steps}}" as="s"><li style="padding: 24px clamp(20px, 3vw, 40px); border-bottom: 1px solid #E7E7EB; display: flex; gap: 20px; align-items: start"><span class="mono" style="font-size: 28px; color: #0E0E10; line-height: 1">{{s.n}}</span><div><div style="font-size: 17px; font-weight: 600">{{s.t}}</div><div style="font-size: 14px; color: #3D3D45; margin-top: 4px">{{s.d}}</div></div></li></sc-for>
+</ol>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 104px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%)">
+<h2 class="disp" style="margin: 0; font-size: clamp(36px, 5vw, 64px); line-height: 1">Your next 100 reviews start with one QR.</h2>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center"><a class="btn btn-p" href="SignUp.dc.html">Start free</a><a class="btn" href="Pricing.dc.html">See pricing</a></div>
+</div>
+</section>
+<dc-import name="SiteFooter" hint-size="100%,460px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = { b: '#0E0E10', bg: '#F1F1F3', fg: '#5B45B8' }, off = { b: '#E7E7EB', bg: '#fff', fg: '#3D3D45' };
+    return {
+      five: [1, 2, 3, 4, 5],
+      likes: [{ t: 'Food', ...on }, { t: 'Service', ...on }, { t: 'Ambience', ...off }, { t: 'Price', ...off }, { t: 'Staff', ...on }],
+      probs: [
+        { n: '01', a: 'Happy customers rarely leave reviews — they just leave.', b: 'A one-tap prompt with AI-suggested words makes posting effortless.' },
+        { n: '02', a: 'Unhappy customers go straight to Google with 1 star.', b: 'They also get a direct line to the manager, who can fix it today.' },
+        { n: '03', a: 'Reviews are spread across branches with no owner.', b: 'One inbox, per-location targets, and staff-wise QR codes.' }
+      ],
+      flow: [
+        { n: 'STEP 1', t: 'Scan', d: 'Table, counter, bill or staff QR', c: '#0E0E10', arrow: true },
+        { n: 'STEP 2', t: 'Rate', d: 'One tap, 1–5 stars, pick what they liked', c: '#0E0E10', arrow: true },
+        { n: 'STEP 3', t: 'Post on Google', d: 'Shown to everyone, with AI suggestion', c: '#0E0E10', arrow: true },
+        { n: 'ALSO', t: 'Tell the manager', d: 'Private note → WhatsApp alert → ticket', c: '#0E0E10', arrow: false }
+      ],
+      feats: [
+        { n: '01', t: 'Staff-wise QR codes', d: 'See which team member earns the best reviews.' },
+        { n: '02', t: 'AI review suggestions', d: 'Drafted from tapped chips, in English, Tamil, Hindi, Telugu, Kannada, Malayalam and more.' },
+        { n: '03', t: 'Google review inbox', d: 'Read and reply to all reviews across locations.' },
+        { n: '04', t: 'AI reply drafts', d: 'Polite, on-brand replies you approve with one click.' },
+        { n: '05', t: 'Private feedback alerts', d: 'Manager gets WhatsApp alerts with the customer’s number.' },
+        { n: '06', t: 'Review targets & leaderboard', d: 'Monthly goals per branch and staff.' },
+        { n: '07', t: 'Review widgets', d: 'Show your best reviews on your website.' },
+        { n: '08', t: 'NFC tap cards', d: 'Pair the QR with an NFC card at the counter.' }
+      ],
+      steps: [
+        { n: '01', t: 'Connect Google Business Profile', d: 'Sign in with Google — we find your locations.' },
+        { n: '02', t: 'Customise the rating page', d: 'Logo, questions, languages and chips.' },
+        { n: '03', t: 'Generate codes', d: 'One per table, counter, staff member or invoice.' },
+        { n: '04', t: 'Print or order stickers', d: 'Download files or order table tents from us.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — QR Studio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="studio" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">QR codes / Create</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Create a QR code</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><a class="btn" href="QRLibrary.dc.html">Cancel</a><button type="button" class="btn">Save draft</button><a class="btn btn-p" href="QRLibrary.dc.html">Save &amp; publish</a></div>
+</header>
+<nav class="tabs" aria-label="Steps" style="padding: 0 clamp(8px, 1.6vw, 20px)">
+<sc-for list="{{stepTabs}}" as="s"><button type="button" class="tab {{s.cls}}" onClick="{{s.go}}" style="background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; font-family: inherit"><span class="mono" style="font-size: 11px; color: #0E0E10">{{s.n}}</span>{{s.t}}</button></sc-for>
+</nav>
+<div class="row" style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px)">
+<div style="flex: 2 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+
+<sc-if value="{{showType}}" hint-placeholder-val="{{ true }}">
+<section class="card">
+<div class="ch"><h2 class="ct">What should the scan do?</h2><label style="display: flex; align-items: center; gap: 8px; font-size: 13px"><span class="sr">Filter types</span><input class="in" type="search" placeholder="Search types" style="width: 200px"></label></div>
+<div style="padding: 18px; display: flex; flex-direction: column; gap: 18px">
+<sc-for list="{{typeGroups}}" as="g">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; gap: 10px; align-items: center"><span class="k">{{g.h}}</span><span class="pill" style="background: {{g.pb}}; color: {{g.pf}}">{{g.plan}}</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px">
+<sc-for list="{{g.types}}" as="t"><button type="button" onClick="{{t.pick}}" aria-pressed="{{t.on}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; min-height: 84px; text-align: left; cursor: pointer; font: inherit; color: #0E0E10; border: {{t.border}}; background: {{t.bg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{t.ic}}"></path></svg><span style="font-size: 13px; font-weight: 600">{{t.t}}</span></button></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showContent}}" hint-placeholder-val="{{ false }}">
+<section class="card">
+<div class="ch"><h2 class="ct">{{typeName}} · content</h2><span class="pill" style="background: #F3EEFF; color: #5B45B8">DYNAMIC</span></div>
+<div style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div class="fl"><label for="nm">QR name (internal)</label><input id="nm" class="in" value="{{typeName}} — Anna Nagar"></div>
+<div class="fl"><label for="lc">Location</label><select id="lc" class="in"><option>Anna Nagar, Chennai</option><option>RS Puram, Coimbatore</option><option>All locations</option></select></div>
+<sc-for list="{{fields}}" as="f"><div class="fl"><label for="{{f.id}}">{{f.l}}</label><input id="{{f.id}}" class="in" placeholder="{{f.ph}}"></div></sc-for>
+<div class="fl"><label for="fo">Folder</label><select id="fo" class="in"><option>Table tents</option><option>Counter</option><option>Packaging</option></select></div>
+</div>
+<div style="padding: 0 20px 20px; display: flex; flex-direction: column; gap: 12px">
+<span class="k">Advanced</span>
+<sc-for list="{{adv}}" as="a"><div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid #F1F1F3"><div><div style="font-size: 13.5px; font-weight: 600">{{a.t}}</div><div style="font-size: 12px; color: #6B6B75">{{a.d}}</div></div><span class="tog" style="background: {{a.bg}}"><i style="left: {{a.x}}"></i></span></div></sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showDesign}}" hint-placeholder-val="{{ false }}">
+<section class="card">
+<div class="ch"><h2 class="ct">Design</h2><button type="button" class="btn">Apply brand kit</button></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 22px">
+<div class="fl"><span class="lb">Colour</span><div style="display: flex; gap: 10px; flex-wrap: wrap"><sc-for list="{{colors}}" as="c"><button type="button" onClick="{{c.pick}}" aria-label="{{c.n}}" aria-pressed="{{c.on}}" style="width: 44px; height: 44px; background: {{c.v}}; border: {{c.ring}}; cursor: pointer; padding: 0"></button></sc-for></div></div>
+<div class="fl"><span class="lb">Dot style</span><div style="display: flex; gap: 10px; flex-wrap: wrap"><sc-for list="{{variants}}" as="v"><button type="button" onClick="{{v.pick}}" aria-pressed="{{v.on}}" class="mono" style="min-height: 44px; padding: 0 16px; font-size: 12px; cursor: pointer; border: {{v.border}}; background: {{v.bg}}; color: #0E0E10">{{v.t}}</button></sc-for></div></div>
+<div class="fl"><span class="lb">Frame label</span><div style="display: flex; gap: 10px; flex-wrap: wrap"><sc-for list="{{labels}}" as="l"><button type="button" onClick="{{l.pick}}" aria-pressed="{{l.on}}" class="mono" style="min-height: 44px; padding: 0 14px; font-size: 11px; cursor: pointer; border: {{l.border}}; background: {{l.bg}}; color: #0E0E10">{{l.t}}</button></sc-for></div></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<div style="padding: 14px; border: 1px dashed #D6D6DC; display: flex; gap: 12px; align-items: center"><div style="width: 40px; height: 40px; background: #0E0E10; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">[B]</div><div><div style="font-size: 13px; font-weight: 600">Logo in centre</div><div style="font-size: 12px; color: #6B6B75">logo.png · <a href="#">Replace</a></div></div></div>
+<div style="padding: 14px; border: 1px solid #F1F1F3; display: flex; justify-content: space-between; align-items: center"><div><div style="font-size: 13px; font-weight: 600">Scannability</div><div style="font-size: 12px; color: #1F6B45">Excellent · contrast 15:1</div></div><span class="pill" style="background: #E3F2EA; color: #1F6B45">PASS</span></div>
+</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showDownload}}" hint-placeholder-val="{{ false }}">
+<section class="card">
+<div class="ch"><h2 class="ct">Download &amp; print</h2></div>
+<div style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px">
+<sc-for list="{{formats}}" as="f"><button type="button" style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start; padding: 14px; border: 1px solid #E7E7EB; background: #fff; cursor: pointer; font: inherit; text-align: left; color: #0E0E10"><span class="mono" style="font-size: 13px; font-weight: 500">{{f.t}}</span><span style="font-size: 12px; color: #6B6B75">{{f.d}}</span></button></sc-for>
+</div>
+<div style="margin: 0 20px 20px; padding: 18px; background: #0E0E10; color: #fff; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between"><div><div class="mono" style="font-size: 11px; color: #CDBDFF">PRINT SHOP</div><div style="font-size: 15px; font-weight: 600; margin-top: 4px">Order 20 acrylic table tents</div><div style="font-size: 12px; color: #B8B8C0; margin-top: 2px">Delivered in 3–5 days · from [₹ PRICE]</div></div><button type="button" class="btn" style="background: #fff">Order prints</button></div>
+</section>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; gap: 10px"><button type="button" class="btn" onClick="{{prev}}" style="visibility: {{prevVis}}">Back</button><button type="button" class="btn btn-p" onClick="{{next}}">{{nextLabel}}</button></div>
+</div>
+
+<aside style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<section class="card">
+<div class="ch"><h2 class="ct">Live preview</h2><span class="mono" style="font-size: 11px; color: #6B6B75">{{typeName}}</span></div>
+<div style="padding: 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%)">
+<div style="background: #fff; border: 2px solid {{color}}; padding: 16px 16px 0; display: flex; flex-direction: column; align-items: center">
+<dc-import name="QRMark" size="220" variant="{{variant}}" color="{{color}}" seed="{{seed}}" hint-size="220px,220px"></dc-import>
+<span class="mono" style="display: block; width: calc(100% + 32px); text-align: center; margin-top: 14px; padding: 10px 0; background: {{color}}; color: #fff; font-size: 12px; letter-spacing: .08em">{{label}}</span>
+</div>
+</div>
+<div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #E7E7EB">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #6B6B75">Short link</span><span class="mono">skn.to/an-t4</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #6B6B75">Type</span><span>Dynamic · editable</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #6B6B75">Opens</span><span>{{typeName}} page</span></div>
+</div>
+</section>
+<section class="card">
+<div class="ch"><h2 class="ct">Test on your phone</h2></div>
+<div style="padding: 14px 18px; font-size: 13px; color: #3D3D45; line-height: 1.5">Scan the preview with your camera, or <a href="ScanReviews.dc.html">open the scan page</a>.</div>
+</section>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1550}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { step: 0, type: 'review', color: '#0E0E10', variant: 'dot', label: 'SCAN TO REVIEW US' }; }
+  renderVals() {
+    const st = this.state;
+    const ic = {
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z', menu: 'M4 5h16M4 12h16M4 19h10', user: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0', tag: 'M3 12V4h8l10 10-8 8zM7.5 7.5h.01', stamp: 'M12 21a9 9 0 100-18 9 9 0 000 18zM8 12l3 3 5-6', card: 'M3 5h18v14H3zM7 9h4M7 13h6M15 9h2v4h-2z', link: 'M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1', bill: 'M6 2h12v20l-3-2-3 2-3-2-3 2zM9 7h6M9 11h6', globe: 'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18', chat: 'M21 12a8 8 0 01-11.6 7.1L3 21l1.9-6.2A8 8 0 1121 12z', pay: 'M6 4h12M6 9h12M6 4c6 0 8 2.5 8 5s-2 5-8 5l8 7', wifi: 'M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M12 19.5h.01', pin: 'M12 21s-7-6.5-7-12a7 7 0 0114 0c0 5.5-7 12-7 12zM12 11a2 2 0 100-4 2 2 0 000 4z', file: 'M6 2h9l5 5v15H6zM14 2v6h6', ticket: 'M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z', wrench: 'M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z', clock: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 7v5l3 2', cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', home: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6', box: 'M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10', badge: 'M4 4h16v16H4zM9 9a3 3 0 106 0 3 3 0 00-6 0M7 18a5 5 0 0110 0'
+    };
+    const groups = [
+      { h: 'Basic', plan: 'FREE', pb: '#F1F1F3', pf: '#3D3D45', types: [['url', 'Website', ic.globe], ['wa', 'WhatsApp chat', ic.chat], ['upi', 'UPI payment', ic.pay], ['wifi', 'Wi-Fi', ic.wifi], ['maps', 'Google Maps', ic.pin], ['pdf', 'PDF / file', ic.file]] },
+      { h: 'Engage', plan: 'STARTER+', pb: '#F3EEFF', pf: '#5B45B8', types: [['review', 'Review page', ic.star], ['menu', 'Menu / catalogue', ic.menu], ['lead', 'Lead form', ic.user], ['coupon', 'Coupon', ic.tag], ['loyalty', 'Loyalty card', ic.stamp], ['vcard', 'Business card', ic.card], ['bio', 'Link-in-bio', ic.link], ['bill', 'Digital bill', ic.bill]] },
+      { h: 'Operate', plan: 'GROWTH+', pb: '#0E0E10', pf: '#FFFFFF', types: [['ticket', 'Feedback → ticket', ic.ticket], ['asset', 'Asset service', ic.wrench], ['attend', 'Attendance point', ic.clock], ['visitor', 'Visitor pass', ic.badge], ['booking', 'Booking / event', ic.cal], ['plot', 'Real estate plot', ic.home]] },
+      { h: 'Advanced', plan: 'ENTERPRISE', pb: '#0E0E10', pf: '#FFFFFF', types: [['product', 'Product (serialized)', ic.box]] }
+    ];
+    const all = {};
+    const typeGroups = groups.map((g) => ({ ...g, types: g.types.map(([k, t, i]) => { all[k] = t; const on = st.type === k; return { k, t, ic: i, on: on ? 'true' : 'false', border: on ? '2px solid #0E0E10' : '1px solid #E7E7EB', bg: on ? '#F3EEFF' : '#fff', pick: () => this.setState({ type: k }) }; }) }));
+    const F = {
+      review: [['Google review link', 'Auto-filled from Google Business Profile'], ['Question shown', 'How was your visit today?'], ['Languages', 'English, Tamil, Hindi'], ['Send private feedback to', 'Manager WhatsApp number']],
+      menu: [['Menu', 'Choose a menu from Pages'], ['Order on WhatsApp', '+91 number']],
+      lead: [['Form', 'Franchise enquiry form'], ['Notify', 'Sales WhatsApp number']],
+      url: [['Website URL', 'https://']], wa: [['WhatsApp number', '+91'], ['Pre-filled message', 'Hi! I scanned your QR']],
+      upi: [['UPI ID', 'business@upi'], ['Amount (optional)', '₹']], wifi: [['Network name', 'Cafe_Guest'], ['Password', '••••••••']]
+    };
+    const fields = (F[st.type] || [['Page', 'Select or create a page'], ['Notify', 'Team member or WhatsApp']]).map((f, i) => ({ id: 'f' + i, l: f[0], ph: f[1] }));
+    const tabs = ['Type', 'Content', 'Design', 'Download'];
+    const colors = [['Ink', '#0E0E10'], ['Lilac', '#5B45B8'], ['Forest', '#1F6B45'], ['Maroon', '#8E2440'], ['Brown', '#5A3A1E']];
+    const variants = [['square', 'Square'], ['dot', 'Dots'], ['halftone', 'Halftone']];
+    const labels = ['SCAN TO REVIEW US', 'SCAN FOR MENU', 'SCAN TO PAY', 'SCAN ME'];
+    return {
+      showType: st.step === 0, showContent: st.step === 1, showDesign: st.step === 2, showDownload: st.step === 3,
+      stepTabs: tabs.map((t, i) => ({ n: '0' + (i + 1), t, cls: i === st.step ? 'on' : '', go: () => this.setState({ step: i }) })),
+      next: () => this.setState({ step: Math.min(3, st.step + 1) }),
+      prev: () => this.setState({ step: Math.max(0, st.step - 1) }),
+      prevVis: st.step === 0 ? 'hidden' : 'visible',
+      nextLabel: st.step === 3 ? 'Finish' : 'Next step',
+      typeGroups, typeName: all[st.type] || 'Review page', fields,
+      adv: [
+        { t: 'Dynamic (editable after print)', d: 'Change destination any time', on: true },
+        { t: 'Schedule start / end', d: 'Auto-pause after a date', on: false },
+        { t: 'Smart redirect', d: 'Different page by time, language or city', on: false },
+        { t: 'Password protect', d: 'Ask for a PIN before opening', on: false }
+      ].map((a) => ({ ...a, bg: a.on ? '#0E0E10' : '#D6D6DC', x: a.on ? '18px' : '2px' })),
+      colors: colors.map(([n, v]) => ({ n, v, on: st.color === v ? 'true' : 'false', ring: st.color === v ? '3px solid #FAFAFA' : '1px solid #E7E7EB', pick: () => this.setState({ color: v }) })).map((c) => ({ ...c, ring: c.on === 'true' ? '3px solid #FAFAFA; outline: 2px solid ' + c.v : c.ring })),
+      variants: variants.map(([k, t]) => ({ t, on: st.variant === k ? 'true' : 'false', border: st.variant === k ? '2px solid #0E0E10' : '1px solid #E7E7EB', bg: st.variant === k ? '#F3EEFF' : '#fff', pick: () => this.setState({ variant: k }) })),
+      labels: labels.map((t) => ({ t, on: st.label === t ? 'true' : 'false', border: st.label === t ? '2px solid #0E0E10' : '1px solid #E7E7EB', bg: st.label === t ? '#F3EEFF' : '#fff', pick: () => this.setState({ label: t }) })),
+      formats: [{ t: 'PNG', d: 'High-res, 2000 px' }, { t: 'SVG', d: 'Vector for designers' }, { t: 'PDF', d: 'Print-ready with bleed' }, { t: 'EPS', d: 'For print shops' }, { t: 'Table tent', d: 'A6 fold template' }, { t: 'Sticker sheet', d: 'A4, 12 per sheet' }],
+      color: st.color, variant: st.variant, label: st.label, seed: String(st.type.length * 7 + 3)
+    };
+  }
+}
+</script>
+</body>
+</html>

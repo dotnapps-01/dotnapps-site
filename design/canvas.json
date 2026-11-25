@@ -1,0 +1,411 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "AdminConsole.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Skanor admin console (internal)",
+      "w": 1440,
+      "x": 4560,
+      "y": 6060
+    },
+    "Analytics.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "app",
+      "title": "Analytics",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "AppSidebar.dc.html": {
+      "h": 1040,
+      "page": "system",
+      "title": "Component · AppSidebar",
+      "w": 260,
+      "x": 1900,
+      "y": 0
+    },
+    "Attendance.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Attendance & visitors",
+      "w": 1440,
+      "x": 1520,
+      "y": 4040
+    },
+    "Bookings.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Bookings & events",
+      "w": 1440,
+      "x": 3040,
+      "y": 4040
+    },
+    "Contact.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "site",
+      "title": "Contact & book a demo",
+      "w": 1440,
+      "x": 7600,
+      "y": 0
+    },
+    "Dashboard.dc.html": {
+      "expand": "fill",
+      "h": 1650,
+      "page": "app",
+      "title": "Dashboard",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Features.dc.html": {
+      "expand": "fill",
+      "h": 4800,
+      "page": "site",
+      "title": "Features — every module",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Industries.dc.html": {
+      "expand": "fill",
+      "h": 4000,
+      "page": "site",
+      "title": "Industries",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "Integrations.dc.html": {
+      "expand": "fill",
+      "h": 1650,
+      "page": "app",
+      "title": "Integrations, API & white-label",
+      "w": 1440,
+      "x": 1520,
+      "y": 6060
+    },
+    "Leads.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Leads, forms & contacts",
+      "w": 1440,
+      "x": 1520,
+      "y": 2020
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 6400,
+      "page": "site",
+      "title": "Home",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "ModuleReviews.dc.html": {
+      "expand": "fill",
+      "h": 3700,
+      "page": "site",
+      "title": "Module page template — Review Assistant",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Offers.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "app",
+      "title": "Offers, loyalty & digital bills",
+      "w": 1440,
+      "x": 3040,
+      "y": 2020
+    },
+    "Onboarding.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "is_interactive": true,
+      "page": "onboarding",
+      "title": "Onboarding wizard (clickable)",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Pages.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Pages — menu, card, link-in-bio builder",
+      "w": 1440,
+      "x": 4560,
+      "y": 2020
+    },
+    "Pricing.dc.html": {
+      "expand": "fill",
+      "h": 4000,
+      "page": "site",
+      "title": "Pricing",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "Products.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "app",
+      "title": "Product QR, warranty & authenticity",
+      "w": 1440,
+      "x": 0,
+      "y": 6060
+    },
+    "QRLibrary.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "QR Library, bulk & print",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "QRMark.dc.html": {
+      "h": 300,
+      "page": "system",
+      "title": "Component · QRMark",
+      "w": 300,
+      "x": 1520,
+      "y": 0
+    },
+    "QRStudio.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "is_interactive": true,
+      "page": "app",
+      "title": "QR Studio — create & design (clickable)",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "RealEstate.dc.html": {
+      "expand": "fill",
+      "h": 1550,
+      "page": "app",
+      "title": "Real estate plots",
+      "w": 1440,
+      "x": 4560,
+      "y": 4040
+    },
+    "Reviews.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "app",
+      "title": "Reviews & feedback",
+      "w": 1440,
+      "x": 0,
+      "y": 2020
+    },
+    "ScanEngage.dc.html": {
+      "h": 1110,
+      "page": "scan",
+      "title": "Scan · Menu, leads, offers, loyalty, bill, card",
+      "w": 2708,
+      "x": 0,
+      "y": 1230
+    },
+    "ScanOps.dc.html": {
+      "h": 1110,
+      "page": "scan",
+      "title": "Scan · Tickets, service, attendance, visitors, booking, plots",
+      "w": 2708,
+      "x": 0,
+      "y": 2460
+    },
+    "ScanProduct.dc.html": {
+      "h": 1110,
+      "page": "scan",
+      "title": "Scan · Product hub, warranty, authenticity",
+      "w": 1832,
+      "x": 0,
+      "y": 3690
+    },
+    "ScanReviews.dc.html": {
+      "h": 1110,
+      "page": "scan",
+      "title": "Scan · Reviews & feedback",
+      "w": 1832,
+      "x": 0,
+      "y": 0
+    },
+    "Settings.dc.html": {
+      "expand": "fill",
+      "h": 1800,
+      "page": "app",
+      "title": "Settings — business, team, billing",
+      "w": 1440,
+      "x": 3040,
+      "y": 6060
+    },
+    "SignUp.dc.html": {
+      "expand": "fill",
+      "h": 940,
+      "page": "onboarding",
+      "title": "Sign up / Log in",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "SiteFooter.dc.html": {
+      "h": 460,
+      "page": "system",
+      "title": "Component · SiteFooter",
+      "w": 1440,
+      "x": 1520,
+      "y": 1352
+    },
+    "SiteNav.dc.html": {
+      "h": 72,
+      "page": "system",
+      "title": "Component · SiteNav",
+      "w": 1440,
+      "x": 1520,
+      "y": 1160
+    },
+    "StyleGuide.dc.html": {
+      "expand": "fill",
+      "h": 2300,
+      "page": "system",
+      "title": "Style guide",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Tickets.dc.html": {
+      "expand": "fill",
+      "h": 1650,
+      "page": "app",
+      "title": "Tickets & asset service",
+      "w": 1440,
+      "x": 0,
+      "y": 4040
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-25T17:33:30Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "page": "site",
+    "view": "canvas"
+  },
+  "notes": {
+    "t_app": {
+      "kind": "title1",
+      "maxW": 6000,
+      "page": "app",
+      "text": "Product app — every module, Basic → Advanced",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t_onb": {
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "onboarding",
+      "text": "Sign up & onboarding",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t_scan": {
+      "kind": "title1",
+      "maxW": 2708,
+      "page": "scan",
+      "text": "What customers see when they scan",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t_site": {
+      "kind": "title1",
+      "maxW": 8000,
+      "page": "site",
+      "text": "Marketing website — Home, Features, Module template, Industries, Pricing, Contact",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t_sys": {
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "system",
+      "text": "Design system & shared components",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Features.dc.html",
+    "ModuleReviews.dc.html",
+    "Industries.dc.html",
+    "Pricing.dc.html",
+    "Contact.dc.html",
+    "SignUp.dc.html",
+    "Onboarding.dc.html",
+    "Dashboard.dc.html",
+    "QRStudio.dc.html",
+    "QRLibrary.dc.html",
+    "Analytics.dc.html",
+    "Reviews.dc.html",
+    "Leads.dc.html",
+    "Offers.dc.html",
+    "Pages.dc.html",
+    "Tickets.dc.html",
+    "Attendance.dc.html",
+    "Bookings.dc.html",
+    "RealEstate.dc.html",
+    "Products.dc.html",
+    "Integrations.dc.html",
+    "Settings.dc.html",
+    "AdminConsole.dc.html",
+    "ScanReviews.dc.html",
+    "ScanEngage.dc.html",
+    "ScanOps.dc.html",
+    "ScanProduct.dc.html",
+    "StyleGuide.dc.html",
+    "QRMark.dc.html",
+    "AppSidebar.dc.html",
+    "SiteNav.dc.html",
+    "SiteFooter.dc.html"
+  ],
+  "pages": [
+    {
+      "id": "site",
+      "name": "1 · Marketing website"
+    },
+    {
+      "id": "onboarding",
+      "name": "2 · Sign up & onboarding"
+    },
+    {
+      "id": "app",
+      "name": "3 · Product app (all modules)"
+    },
+    {
+      "id": "scan",
+      "name": "4 · Customer scan screens (mobile)"
+    },
+    {
+      "id": "system",
+      "name": "5 · Design system & components"
+    }
+  ],
+  "title": "Skanor — SaaS UI/UX (Landing to Full Product)"
+}

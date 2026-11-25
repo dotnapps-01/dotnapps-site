@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Features</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.lbl{font:500 12px/1.4 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#0E0E10}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn:hover{background:#0E0E10;color:#fff}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;border-color:#5B45B8;color:#fff}
+.x{position:absolute;width:15px;height:15px;font:300 18px/15px Inter,sans-serif;color:#8C8C84;text-align:center;pointer-events:none}
+.frame{max-width:1280px;margin:0 auto;border-left:1px solid #E7E7EB;border-right:1px solid #E7E7EB;box-sizing:border-box;position:relative}
+.sec{border-bottom:1px solid #E7E7EB;position:relative}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh">
+<dc-import name="SiteNav" active="features" hint-size="100%,73px"></dc-import>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 104px) clamp(20px, 5vw, 64px) 48px; display: flex; flex-direction: column; gap: 24px">
+<span class="x" aria-hidden="true" style="left: -8px; bottom: -8px">+</span><span class="x" aria-hidden="true" style="right: -8px; bottom: -8px">+</span>
+<span class="lbl">Features · 40+ modules</span>
+<h1 class="disp" style="margin: 0; font-size: clamp(42px, 6vw, 80px); line-height: 1; max-width: 1000px">Everything a QR code can do for a business — in one place.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #3D3D45; max-width: 640px">Four levels, one dashboard. Turn modules on when you need them — your codes, contacts and data carry over.</p>
+<nav aria-label="Levels" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px">
+<sc-for list="{{levels}}" as="lv"><a href="#{{lv.id}}" class="mono" style="font-size: 12px; padding: 12px 16px; border: 1px solid #0E0E10; text-decoration: none; color: #0E0E10; background: #fff">{{lv.n}} · {{lv.name}}</a></sc-for>
+</nav>
+</div>
+</section>
+
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="4">
+<section class="sec" id="{{lv.id}}">
+<div class="frame">
+<div style="padding: 48px clamp(20px, 5vw, 64px) 36px; display: flex; flex-wrap: wrap; gap: 20px 48px; align-items: end; justify-content: space-between; border-bottom: 1px solid #E7E7EB; background: {{lv.bg}}">
+<div style="display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap">
+<span class="mono" style="font-size: clamp(48px, 6vw, 80px); color: #0E0E10; line-height: 1">{{lv.n}}</span>
+<div><h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 48px)">{{lv.name}}</h2><p style="margin: 6px 0 0; font-size: 16px; color: #3D3D45">{{lv.tag}}</p></div>
+</div>
+<span class="mono" style="font-size: 12px; padding: 8px 12px; border: 1px solid #0E0E10; background: #fff">INCLUDED FROM {{lv.plan}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr))">
+<sc-for list="{{lv.mods}}" as="m">
+<div style="padding: 28px clamp(20px, 2.4vw, 32px) 32px; border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<div style="width: 40px; height: 40px; border: 1px solid #E7E7EB; display: flex; align-items: center; justify-content: center; color: #0E0E10; background: #FAFAFA"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.ic}}"></path></svg></div>
+<h3 style="margin: 4px 0 0; font-size: 18px; font-weight: 600">{{m.t}}</h3>
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #3D3D45">{{m.d}}</p>
+<ul style="margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{m.b}}" as="b"><li class="mono" style="font-size: 12px; color: #1C1C21; display: flex; gap: 8px"><span style="color: #0E0E10">→</span>{{b}}</li></sc-for>
+</ul>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{lv.showTypes}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 32px clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 16px; border-bottom: 1px solid #E7E7EB">
+<span class="mono" style="font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6B6B75">QR types included</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{types}}" as="t"><span class="mono" style="font-size: 12px; padding: 9px 12px; background: #fff; border: 1px solid #E7E7EB">{{t}}</span></sc-for></div>
+</div>
+</sc-if>
+</div>
+</section>
+</sc-for>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 104px) clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; align-items: center; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%)">
+<h2 class="disp" style="margin: 0; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.02; max-width: 720px">Not sure which modules you need?</h2>
+<div style="display: flex; gap: 12px; flex-wrap: wrap"><a class="btn btn-p" href="SignUp.dc.html">Start free</a><a class="btn" href="Pricing.dc.html">Compare plans</a></div>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,460px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      qr: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3z',
+      pen: 'M4 20h4L19 9l-4-4L4 16zM13 7l4 4',
+      dl: 'M12 3v12M6 9l6 6 6-6M4 21h16',
+      chart: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
+      chat: 'M21 12a8 8 0 01-11.6 7.1L3 21l1.9-6.2A8 8 0 1121 12z',
+      card: 'M3 5h18v14H3zM7 9h4M7 13h6M15 9h2v4h-2z',
+      link: 'M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1',
+      menu: 'M4 5h16M4 12h16M4 19h10',
+      user: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0',
+      tag: 'M3 12V4h8l10 10-8 8zM7.5 7.5h.01',
+      stamp: 'M12 21a9 9 0 100-18 9 9 0 000 18zM8 12l3 3 5-6',
+      bill: 'M6 2h12v20l-3-2-3 2-3-2-3 2zM9 7h6M9 11h6M9 15h4',
+      ticket: 'M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z',
+      wrench: 'M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z',
+      clock: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 7v5l3 2',
+      badge: 'M4 4h16v16H4zM9 9a3 3 0 106 0 3 3 0 00-6 0M7 18a5 5 0 0110 0',
+      cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+      home: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6',
+      up: 'M12 21V9M6 15l6-6 6 6M4 3h16',
+      users: 'M9 11a4 4 0 100-8 4 4 0 000 8zM2 21a7 7 0 0114 0M16 3.5a4 4 0 010 7.5M22 21a7 7 0 00-4-6.3',
+      print: 'M6 9V3h12v6M6 18H3v-8h18v8h-3M6 14h12v7H6z',
+      box: 'M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10',
+      shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+      split: 'M6 3v6a6 6 0 006 6h6M18 15l-3-3M18 15l-3 3M6 21v-6',
+      bolt: 'M13 2L4 14h7l-1 8 9-12h-7z',
+      code: 'M8 6l-6 6 6 6M16 6l6 6-6 6',
+      plug: 'M9 2v6M15 2v6M6 8h12v4a6 6 0 01-12 0zM12 18v4',
+      globe: 'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18',
+      lock: 'M5 11h14v10H5zM8 11V7a4 4 0 018 0v4'
+    };
+    return {
+      types: ['Website URL', 'WhatsApp chat', 'UPI payment', 'Wi-Fi login', 'Google Maps', 'PDF', 'Image gallery', 'Video', 'Contact (vCard)', 'Email', 'SMS', 'Phone call', 'App download', 'Social links', 'Plain text', 'Event (calendar)'],
+      levels: [
+        { id: 'basic', n: '01', name: 'Basic', plan: 'FREE', tag: 'Make, design and track QR codes.', bg: '#FAFAFA', showTypes: true, mods: [
+          { ic: I.qr, t: 'Dynamic QR codes', d: 'Change where a printed code points, any time.', b: ['Edit, pause or expire', 'Schedule start and end dates', 'Short link for every code'] },
+          { ic: I.pen, t: 'QR designer', d: 'Make codes that look like your brand.', b: ['Logo, colours, dot & eye styles', 'Frames with “Scan me” labels', 'Saved brand kit'] },
+          { ic: I.dl, t: 'Downloads', d: 'Files ready for any printer.', b: ['PNG, SVG, EPS, print PDF', 'Sticker, table-tent & standee sizes', 'Scan-test before you print'] },
+          { ic: I.chart, t: 'Scan analytics', d: 'See how every code performs.', b: ['Scans by day, city and device', 'Unique vs repeat scans', 'Weekly email report'] }
+        ] },
+        { id: 'growth', n: '02', name: 'Growth', plan: 'STARTER', tag: 'Turn scans into customers who come back.', bg: '#FAFAFA', showTypes: false, mods: [
+          { ic: I.star, t: 'Review Assistant', d: 'More Google reviews from happy customers.', b: ['One-tap rating page', 'AI review suggestions in 8 languages', 'QR per table, counter or staff'] },
+          { ic: I.chat, t: 'Private feedback', d: 'A direct line to the manager, alongside Google.', b: ['Instant WhatsApp alert', 'Turns into a ticket on Pro', 'Customer gets a reply'] },
+          { ic: I.card, t: 'Digital business card', d: 'Tap-to-save contact pages for every staff member.', b: ['Save to contacts in one tap', 'WhatsApp, call, email, map', 'Team cards managed centrally'] },
+          { ic: I.link, t: 'Link-in-bio page', d: 'One page with all your links, offers and socials.', b: ['Drag-and-drop blocks', 'Your colours and logo', 'Click tracking'] },
+          { ic: I.menu, t: 'Menu & catalogue', d: 'A menu or price list you can update in seconds.', b: ['Categories, photos, veg tags', 'Mark items sold out', 'Order on WhatsApp'] },
+          { ic: I.user, t: 'Lead capture forms', d: 'Collect enquiries straight from a scan.', b: ['Custom fields & consent', 'Leads to WhatsApp and inbox', 'Export to CRM'] },
+          { ic: I.tag, t: 'Coupons & offers', d: 'Scan-to-claim offers with redemption control.', b: ['Limits per customer', 'Staff redeem by code', 'Expiry & schedule'] },
+          { ic: I.stamp, t: 'Loyalty stamp card', d: 'Digital stamp cards — no app, no paper.', b: ['Scan per visit, reward at N', 'Anti-fraud staff PIN', 'Win-back messages'] },
+          { ic: I.bill, t: 'Digital bills', d: 'Send the bill on WhatsApp and build your customer list.', b: ['Scan at counter to receive bill', 'Opt-in for offers', 'Links to loyalty'] }
+        ] },
+        { id: 'pro', n: '03', name: 'Pro', plan: 'GROWTH', tag: 'Run daily operations from a scan.', bg: '#FAFAFA', showTypes: false, mods: [
+          { ic: I.ticket, t: 'Tickets with SLA', d: 'Complaints become tracked tasks.', b: ['Auto-assign by location & type', 'SLA timers and escalation', 'Customer updates on WhatsApp'] },
+          { ic: I.wrench, t: 'Asset service logs', d: 'A QR on every AC, lift, genset or RO unit.', b: ['Scan to raise a complaint', 'Technician logs each visit', 'AMC due-date reminders'] },
+          { ic: I.clock, t: 'Attendance', d: 'Staff and labour check-in at the site QR.', b: ['Selfie + location check', 'Shifts, overtime, leave', 'Payroll export'] },
+          { ic: I.badge, t: 'Visitor passes', d: 'Visitors register at the gate in seconds.', b: ['Host approval on WhatsApp', 'Digital pass with QR', 'Visitor log & export'] },
+          { ic: I.cal, t: 'Bookings & events', d: 'Appointments, site visits and event entry.', b: ['Slots, staff & reminders', 'QR tickets & gate scanning', 'No-show tracking'] },
+          { ic: I.home, t: 'Real estate plots', d: 'A QR on every plot stone in your layout.', b: ['Live availability & price', 'Brochure and plan PDF', 'Site-visit booking'] },
+          { ic: I.up, t: 'Bulk QR from CSV', d: 'Generate hundreds of unique codes at once.', b: ['Upload rows, get codes', 'Variable data per code', 'ZIP or print sheet'] },
+          { ic: I.users, t: 'Multi-location & roles', d: 'One account for every branch and team.', b: ['Branch-wise dashboards', 'Owner, manager, staff roles', 'Activity log'] },
+          { ic: I.print, t: 'Print shop', d: 'Order stickers, table tents and standees.', b: ['Print-ready templates', 'Delivered to your door', 'Reorder in one click'] }
+        ] },
+        { id: 'advanced', n: '04', name: 'Advanced', plan: 'BUSINESS', tag: 'Scale across products, brands and systems.', bg: '#F3EEFF', showTypes: false, mods: [
+          { ic: I.box, t: 'Serialized product QR', d: 'A unique code on every unit you make.', b: ['Batch & serial management', 'Print files for packaging lines', 'Product hub page'] },
+          { ic: I.card, t: 'Warranty registration', d: 'Replace paper warranty cards.', b: ['Invoice photo upload', 'Auto warranty end date', 'Service history per unit'] },
+          { ic: I.shield, t: 'Authenticity checks', d: 'Customers verify it’s genuine.', b: ['First-scan verification', 'Duplicate-scan alerts', 'Counterfeit map'] },
+          { ic: I.split, t: 'Smart redirects', d: 'One code, different content by context.', b: ['By time, city, language, device', 'A/B test destinations', 'Scan limits'] },
+          { ic: I.bolt, t: 'AI insights & replies', d: 'Understand feedback without reading it all.', b: ['Sentiment & topic summaries', 'AI-drafted review replies', 'Rating-drop alerts'] },
+          { ic: I.code, t: 'API & webhooks', d: 'Create codes and receive scan events in your systems.', b: ['REST API & keys', 'Webhooks for every event', 'Sandbox'] },
+          { ic: I.plug, t: 'Integrations', d: 'Connect the tools you already use.', b: ['Google Business, WhatsApp', 'Shopify, Zoho, Tally', 'Orkha by Dotnapps'] },
+          { ic: I.globe, t: 'White-label & domain', d: 'Agencies resell Skanor as their own.', b: ['Your logo and colours', 'scan.yourbrand.com', 'Client workspaces'] },
+          { ic: I.lock, t: 'Security & compliance', d: 'Controls for larger teams.', b: ['Password & expiring QR', 'SSO and audit log', 'Data export & deletion'] }
+        ] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

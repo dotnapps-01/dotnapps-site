@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.lbl{font:500 12px/1.4 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#0E0E10}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn:hover{background:#0E0E10;color:#fff}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;border-color:#5B45B8;color:#fff}
+.x{position:absolute;width:15px;height:15px;font:300 18px/15px Inter,sans-serif;color:#8C8C84;text-align:center;pointer-events:none}
+.frame{max-width:1280px;margin:0 auto;border-left:1px solid #E7E7EB;border-right:1px solid #E7E7EB;box-sizing:border-box;position:relative}
+.sec{border-bottom:1px solid #E7E7EB;position:relative}
+.card{background:#fff;border:1px solid #E7E7EB}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #FAFAFA">
+<dc-import name="SiteNav" active="home" hint-size="100%,73px"></dc-import>
+
+<!-- HERO -->
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr))">
+<span class="x" aria-hidden="true" style="left: -8px; bottom: -8px">+</span>
+<span class="x" aria-hidden="true" style="right: -8px; bottom: -8px">+</span>
+<div style="padding: clamp(40px, 6vw, 88px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; justify-content: center; gap: 28px">
+<span class="lbl" style="display: inline-flex; align-items: center; gap: 10px"><span style="width: 8px; height: 8px; background: #0E0E10"></span>QR platform for growing businesses</span>
+<h1 class="disp" style="margin: 0; font-size: clamp(44px, 6.4vw, 88px); line-height: 0.98">Every scan, working for your business.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #3D3D45; max-width: 520px">Skanor turns one QR code into reviews, leads, loyalty, service tickets, attendance and product warranty — all run from one dashboard.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a class="btn btn-p" href="SignUp.dc.html">Start free <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn" href="Contact.dc.html">Book a demo</a>
+</div>
+<p class="mono" style="margin: 0; font-size: 12px; color: #6B6B75">Free plan · No card needed · Works with any phone camera</p>
+</div>
+<div style="position: relative; min-height: 560px; border-left: 1px solid #E7E7EB; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%); display: flex; align-items: center; justify-content: center; overflow: hidden">
+<div style="background: #fff; padding: 26px; border-radius: 24px; box-shadow: 0 20px 60px rgba(90,80,180,.18)">
+<dc-import name="QRMark" size="340" variant="halftone" color="#0E0E10" seed="11" hint-size="340px,340px"></dc-import>
+</div>
+<sc-for list="{{floats}}" as="f" hint-placeholder-count="4">
+<div class="card" style="position: absolute; {{f.pos}}; padding: 12px 14px; display: flex; gap: 12px; align-items: center; box-shadow: 0 8px 24px rgba(14,14,16,.08); max-width: 250px">
+<div style="width: 36px; height: 36px; flex: none; display: flex; align-items: center; justify-content: center; background: #F1F1F3; color: #0E0E10"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.ic}}"></path></svg></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 600">{{f.t}}</span><span class="mono" style="font-size: 11px; color: #6B6B75">{{f.s}}</span></div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<!-- LOGOS -->
+<section class="sec">
+<div class="frame" style="padding: 36px clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 24px; align-items: center">
+<span class="mono" style="font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6B6B75">Trusted by shops, clinics, builders &amp; brands</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; width: 100%">
+<sc-for list="{{logos}}" as="l" hint-placeholder-count="6"><div style="height: 48px; border: 1px dashed #D6D6DC; display: flex; align-items: center; justify-content: center; font: 500 12px Inter, sans-serif; color: #6B6B75">{{l}}</div></sc-for>
+</div>
+</div>
+</section>
+
+<!-- LEVELS -->
+<section class="sec">
+<div class="frame">
+<div style="padding: clamp(48px, 6vw, 88px) clamp(20px, 5vw, 64px) 40px; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: end; border-bottom: 1px solid #E7E7EB">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px"><span class="lbl">One platform · 4 levels</span><h2 class="disp" style="margin: 0; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.02">From your first QR to a full QR operating system</h2></div>
+<p style="margin: 0; max-width: 380px; font-size: 16px; line-height: 1.6; color: #3D3D45">Start with a free QR. Turn on modules as you grow. Every module runs on the same codes, the same contacts and the same dashboard.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))">
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="4">
+<div style="padding: 32px clamp(20px, 2.4vw, 32px) 40px; border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 18px; background: {{lv.bg}}">
+<div style="display: flex; justify-content: space-between; align-items: center"><span class="mono" style="font-size: 13px; color: #0E0E10">{{lv.n}}</span><span class="mono" style="font-size: 11px; padding: 4px 8px; border: 1px solid #E7E7EB; color: #3D3D45; background: #fff">{{lv.plan}}</span></div>
+<div><h3 class="disp" style="margin: 0 0 6px; font-size: 28px">{{lv.name}}</h3><p style="margin: 0; font-size: 14px; color: #6B6B75">{{lv.tag}}</p></div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{lv.items}}" as="it"><li style="display: flex; gap: 10px; font-size: 14px; line-height: 1.4; color: #1C1C21"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="2" style="flex: none; margin-top: 2px" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>{{it}}</li></sc-for>
+</ul>
+</div>
+</sc-for>
+</div>
+<div style="padding: 24px clamp(20px, 5vw, 64px); display: flex; justify-content: center"><a class="btn" href="Features.dc.html">See every module</a></div>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec">
+<div class="frame">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) 40px; text-align: center; display: flex; flex-direction: column; gap: 14px; align-items: center; border-bottom: 1px solid #E7E7EB">
+<span class="lbl">How it works</span>
+<h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 52px)">Create. Place. Act.</h2>
+<p style="margin: 0; font-size: 16px; color: #3D3D45; max-width: 560px">Every Skanor code is a small app: it opens a page, captures something, and starts a follow-up.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr))">
+<div style="border-right: 1px solid #E7E7EB">
+<div style="height: 260px; border-bottom: 1px solid #E7E7EB; background: #F6F6F8; display: flex; align-items: center; justify-content: center; gap: 18px">
+<div class="card" style="padding: 14px"><dc-import name="QRMark" size="120" variant="dot" color="#0E0E10" seed="3" hint-size="120px,120px"></dc-import></div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="mono" style="font-size: 11px; padding: 6px 10px; background: #0E0E10; color: #fff">Review page</span>
+<span class="mono" style="font-size: 11px; padding: 6px 10px; border: 1px solid #E7E7EB; background: #fff">Menu</span>
+<span class="mono" style="font-size: 11px; padding: 6px 10px; border: 1px solid #E7E7EB; background: #fff">Lead form</span>
+<span class="mono" style="font-size: 11px; padding: 6px 10px; border: 1px solid #E7E7EB; background: #fff">+ 20 more</span>
+</div>
+</div>
+<div style="padding: 28px 32px 36px"><h3 style="margin: 0 0 8px; font-size: 20px; font-weight: 600">1 · Create</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3D3D45">Pick what the scan should do, add your logo and colours, and download print-ready files or order stickers.</p></div>
+</div>
+<div style="border-right: 1px solid #E7E7EB">
+<div style="height: 260px; border-bottom: 1px solid #E7E7EB; background: #F6F6F8; display: flex; align-items: center; justify-content: center">
+<div style="width: 150px; height: 220px; border: 1px solid #0E0E10; border-radius: 22px; background: #fff; padding: 18px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; align-items: center">
+<span style="font-size: 12px; font-weight: 600">How was your visit?</span>
+<div style="display: flex; gap: 3px; color: #0E0E10"><sc-for list="{{five}}" as="s"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"></path></svg></sc-for></div>
+<div style="width: 100%; height: 8px; background: #F1F1F3"></div><div style="width: 80%; height: 8px; background: #F1F1F3"></div>
+<span class="mono" style="margin-top: auto; width: 100%; text-align: center; font-size: 10px; padding: 8px 0; background: #0E0E10; color: #fff">POST ON GOOGLE</span>
+</div>
+</div>
+<div style="padding: 28px 32px 36px"><h3 style="margin: 0 0 8px; font-size: 20px; font-weight: 600">2 · Place</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3D3D45">Put it on the counter, table, product box, AC unit or plot stone. Customers scan with any camera — no app needed.</p></div>
+</div>
+<div>
+<div style="height: 260px; border-bottom: 1px solid #E7E7EB; background: #F6F6F8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+<sc-for list="{{acts}}" as="a"><div class="card" style="width: 260px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box"><span style="font-size: 13px; font-weight: 500">{{a.t}}</span><span class="mono" style="font-size: 10px; padding: 3px 7px; background: {{a.bg}}; color: {{a.fg}}">{{a.s}}</span></div></sc-for>
+</div>
+<div style="padding: 28px 32px 36px"><h3 style="margin: 0 0 8px; font-size: 20px; font-weight: 600">3 · Act</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #3D3D45">Every scan becomes a review, lead, stamp, ticket or check-in — routed to the right person on WhatsApp and in your dashboard.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SPOTLIGHT -->
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr))">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #E7E7EB">
+<span class="lbl">Core module · Review Assistant</span>
+<h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 50px); line-height: 1.04">More Google reviews. Complaints fixed before they go public.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #3D3D45">Customers rate their visit in one tap. Everyone can post to Google with AI-suggested words; anyone unhappy also gets a private line to the manager, which opens a ticket instantly.</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{spot}}" as="s"><li style="display: flex; gap: 12px; font-size: 15px; color: #1C1C21"><span class="mono" style="color: #0E0E10; font-size: 13px; padding-top: 2px">{{s.n}}</span>{{s.t}}</li></sc-for>
+</ul>
+<div><a class="btn" href="ModuleReviews.dc.html">Explore Review Assistant</a></div>
+</div>
+<div style="padding: clamp(32px, 4vw, 56px); background: #F6F6F8; display: flex; flex-direction: column; gap: 0; justify-content: center; align-items: center">
+<div class="card" style="width: 100%; max-width: 420px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box"><div><div class="mono" style="font-size: 11px; color: #6B6B75">SCAN · TABLE 4</div><div style="font-size: 15px; font-weight: 600; margin-top: 4px">Customer rates visit</div></div><div style="display: flex; gap: 2px; color: #0E0E10"><sc-for list="{{five}}" as="s"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"></path></svg></sc-for></div></div>
+<div style="width: 1px; height: 28px; background: #0E0E10"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; max-width: 420px">
+<div class="card" style="padding: 16px; border-top: 3px solid #0E0E10"><div class="mono" style="font-size: 11px; color: #0E0E10">4–5 ★</div><div style="font-size: 14px; font-weight: 600; margin: 6px 0 4px">Post on Google</div><div style="font-size: 12px; color: #6B6B75; line-height: 1.45">AI suggests words from what they liked</div></div>
+<div class="card" style="padding: 16px; border-top: 3px solid #0E0E10"><div class="mono" style="font-size: 11px; color: #3D3D45">1–3 ★</div><div style="font-size: 14px; font-weight: 600; margin: 6px 0 4px">Tell the manager</div><div style="font-size: 12px; color: #6B6B75; line-height: 1.45">Google option stays visible too</div></div>
+</div>
+<div style="width: 1px; height: 28px; background: #0E0E10"></div>
+<div class="card" style="width: 100%; max-width: 420px; padding: 16px 20px; display: flex; gap: 14px; align-items: center; box-sizing: border-box; background: #0E0E10; color: #fff; border-color: #0E0E10"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CDBDFF" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z"></path></svg><div><div style="font-size: 14px; font-weight: 600">Ticket #128 · "Food was cold"</div><div class="mono" style="font-size: 11px; color: #B8B8C0; margin-top: 3px">Manager alerted on WhatsApp · SLA 2h</div></div></div>
+</div>
+</div>
+</section>
+
+<!-- STATS -->
+<section class="sec">
+<div class="frame">
+<div style="padding: 48px clamp(20px, 5vw, 64px) 32px; text-align: center; border-bottom: 1px solid #E7E7EB"><h2 class="disp" style="margin: 0; font-size: clamp(28px, 3.4vw, 42px)">Results our customers measure</h2></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4"><div style="padding: 32px clamp(20px, 2.4vw, 32px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB"><div class="disp" style="font-size: 52px; font-weight: 500">{{s.v}}</div><div style="font-size: 14px; color: #3D3D45; margin-top: 6px">{{s.l}}</div></div></sc-for>
+</div>
+<div style="padding: 40px clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: start">
+<div style="flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px"><div style="width: 120px; height: 40px; border: 1px dashed #D6D6DC; display: flex; align-items: center; justify-content: center" class="mono"><span style="font-size: 11px; color: #6B6B75">[Logo]</span></div><span style="font-size: 13px; color: #6B6B75">[Name, Role]</span></div>
+<p style="flex: 1 1 420px; margin: 0; font-size: 20px; line-height: 1.5">“[Customer quote — what changed after using Skanor, in their words. Replace with a real testimonial.]”</p>
+</div>
+</div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="sec">
+<div class="frame">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; border-bottom: 1px solid #E7E7EB">
+<div style="display: flex; flex-direction: column; gap: 14px"><span class="lbl">Industries</span><h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 52px)">Set up for your kind of business</h2></div>
+<a class="btn" href="Industries.dc.html">All industries</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))">
+<sc-for list="{{inds}}" as="i" hint-placeholder-count="8"><a href="Industries.dc.html" style="padding: 28px clamp(20px, 2.4vw, 32px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: #0E0E10"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{i.ic}}"></path></svg><span style="font-size: 17px; font-weight: 600">{{i.t}}</span><span style="font-size: 14px; line-height: 1.5; color: #3D3D45">{{i.d}}</span></a></sc-for>
+</div>
+</div>
+</section>
+
+<!-- ADVANCED (DARK) -->
+<section class="sec" style="background: #0E0E10; color: #fff; border-color: #2A2A30">
+<div class="frame" style="border-color: #2A2A30; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr))">
+<div style="padding: clamp(48px, 6vw, 88px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; gap: 22px">
+<span class="mono" style="font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #CDBDFF">Advanced · For brands &amp; manufacturers</span>
+<h2 class="disp" style="margin: 0; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.02">A unique QR on every product you ship.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #C9C9D1">Replace paper warranty cards. Every unit gets its own code: customers register warranty, watch setup videos, verify it's genuine and raise service requests — and you finally know who bought your product.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: #2A2A30; border: 1px solid #2A2A30">
+<sc-for list="{{adv}}" as="a"><div style="background: #0E0E10; padding: 18px"><div class="mono" style="font-size: 11px; color: #CDBDFF">{{a.n}}</div><div style="font-size: 15px; font-weight: 600; margin-top: 6px">{{a.t}}</div></div></sc-for>
+</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap"><a class="btn btn-p" href="Contact.dc.html">Talk to sales</a><a class="btn" href="Features.dc.html" style="background: transparent; color: #fff; border-color: #fff">View API docs</a></div>
+</div>
+<div style="padding: clamp(32px, 4vw, 64px); border-left: 1px solid #2A2A30; display: flex; align-items: center; justify-content: center; background-image: radial-gradient(#2E2E36 1px, transparent 1px); background-size: 18px 18px">
+<div style="width: 100%; max-width: 380px; background: #fff; color: #0E0E10; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: center"><span class="mono" style="font-size: 11px; color: #6B6B75">SERIAL · AQ-24-118392</span><span class="mono" style="font-size: 10px; padding: 4px 8px; background: #E3F2EA; color: #1F6B45">GENUINE</span></div>
+<div style="display: flex; gap: 16px; align-items: center"><div style="width: 72px; height: 72px; background: #F1F1F3; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3D3D45" stroke-width="1.5" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10"></path></svg></div><div><div style="font-size: 16px; font-weight: 600">[Product name] Water Purifier</div><div style="font-size: 13px; color: #6B6B75; margin-top: 4px">Made [Month YYYY] · Batch B-07</div></div></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<span class="mono" style="font-size: 11px; padding: 12px 8px; text-align: center; background: #0E0E10; color: #fff">REGISTER WARRANTY</span>
+<span class="mono" style="font-size: 11px; padding: 12px 8px; text-align: center; border: 1px solid #0E0E10">BOOK SERVICE</span>
+<span class="mono" style="font-size: 11px; padding: 12px 8px; text-align: center; border: 1px solid #E7E7EB">SETUP VIDEO</span>
+<span class="mono" style="font-size: 11px; padding: 12px 8px; text-align: center; border: 1px solid #E7E7EB">USER MANUAL</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="sec">
+<div class="frame" style="padding: 48px clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between">
+<div style="max-width: 360px"><span class="lbl">Integrations</span><h3 class="disp" style="margin: 10px 0 0; font-size: 30px">Works with the tools you already use</h3></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 480px; justify-content: flex-end">
+<sc-for list="{{ints}}" as="n"><span class="mono" style="font-size: 12px; padding: 10px 14px; border: 1px solid #E7E7EB; background: #fff">{{n}}</span></sc-for>
+</div>
+</div>
+</section>
+
+<!-- PRICING TEASER -->
+<section class="sec">
+<div class="frame">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) 40px; text-align: center; display: flex; flex-direction: column; gap: 14px; align-items: center; border-bottom: 1px solid #E7E7EB"><span class="lbl">Pricing</span><h2 class="disp" style="margin: 0; font-size: clamp(32px, 4vw, 52px)">Start free. Pay per location as you grow.</h2></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))">
+<sc-for list="{{tiers}}" as="t" hint-placeholder-count="4"><div style="padding: 32px clamp(20px, 2.4vw, 28px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 12px; background: {{t.bg}}"><span class="mono" style="font-size: 12px; color: #0E0E10">{{t.n}}</span><span class="disp" style="font-size: 34px; font-weight: 500">{{t.p}}</span><span style="font-size: 14px; color: #3D3D45; line-height: 1.5">{{t.d}}</span></div></sc-for>
+</div>
+<div style="padding: 24px; display: flex; justify-content: center"><a class="btn" href="Pricing.dc.html">Compare plans</a></div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr))">
+<div style="padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px); border-right: 1px solid #E7E7EB"><span class="lbl">FAQ</span><h2 class="disp" style="margin: 14px 0 0; font-size: clamp(32px, 4vw, 48px)">Questions, answered</h2></div>
+<div>
+<sc-for list="{{faqs}}" as="q"><details style="border-bottom: 1px solid #E7E7EB; padding: 24px clamp(20px, 3vw, 40px)"><summary style="cursor: pointer; font-size: 17px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px">{{q.q}}<span class="mono" style="color: #0E0E10">+</span></summary><p style="margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: #3D3D45">{{q.a}}</p></details></sc-for>
+</div>
+</div>
+</section>
+
+<!-- CTA -->
+<section class="sec">
+<div class="frame" style="padding: clamp(64px, 8vw, 120px) clamp(20px, 5vw, 64px); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 24px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%)">
+<span class="x" aria-hidden="true" style="left: -8px; top: -8px">+</span><span class="x" aria-hidden="true" style="right: -8px; top: -8px">+</span>
+<h2 class="disp" style="margin: 0; font-size: clamp(38px, 5.4vw, 72px); line-height: 1; max-width: 900px">Put your first QR to work today.</h2>
+<p style="margin: 0; font-size: 17px; color: #3D3D45">Set up in under 10 minutes. Free forever for one location.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center"><a class="btn btn-p" href="SignUp.dc.html">Start free</a><a class="btn" href="Contact.dc.html">Book a demo</a></div>
+</div>
+</section>
+
+<dc-import name="SiteFooter" hint-size="100%,460px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":6400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
+      user: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0',
+      tag: 'M3 12V4h8l10 10-8 8zM7.5 7.5h.01',
+      ticket: 'M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z',
+      store: 'M3 9l2-5h14l2 5M3 9h18v2a3 3 0 01-6 0 3 3 0 01-6 0 3 3 0 01-6 0zM5 13v8h14v-8',
+      food: 'M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 3c-2 0-3 3-3 6s1 3 3 3v9',
+      cut: 'M6 9a3 3 0 100-6 3 3 0 000 6zM6 21a3 3 0 100-6 3 3 0 000 6zM8.5 7.5L20 19M8.5 16.5L20 5',
+      hosp: 'M4 21V5h16v16M9 21v-5h6v5M12 8v5M9.5 10.5h5',
+      home: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6',
+      fact: 'M3 21V10l6 4V10l6 4V6l6 3v12z',
+      bldg: 'M5 21V3h10v18M15 9h4v12M8 7h4M8 11h4M8 15h4',
+      hat: 'M3 18h18M5 18v-3a7 7 0 0114 0v3M10 8V5h4v3'
+    };
+    return {
+      five: [1, 2, 3, 4, 5],
+      floats: [
+        { pos: 'top: 9%; left: 5%', ic: I.star, t: '5★ review posted', s: 'Google · Table 4 · now' },
+        { pos: 'top: 16%; right: 4%', ic: I.user, t: 'New lead · Priya S.', s: 'Interested in 2BHK' },
+        { pos: 'bottom: 15%; left: 4%', ic: I.tag, t: 'Stamp 7 of 10', s: 'Free coffee at 10' },
+        { pos: 'bottom: 9%; right: 5%', ic: I.ticket, t: 'Ticket #214 · AC', s: 'Assigned to Ravi · 2h SLA' }
+      ],
+      logos: ['[Client logo]', '[Client logo]', '[Client logo]', '[Client logo]', '[Client logo]', '[Client logo]'],
+      levels: [
+        { n: '01', name: 'Basic', plan: 'FREE', tag: 'Make & track QR codes', bg: '#FFFFFF', items: ['Dynamic QR — edit after printing', 'URL, WhatsApp, UPI, Wi-Fi, maps, PDF, contact', 'Logo, colour & frame designer', 'PNG, SVG & print-ready PDF', 'Scan analytics'] },
+        { n: '02', name: 'Growth', plan: 'STARTER+', tag: 'Engage customers', bg: '#FFFFFF', items: ['Review assistant + private feedback', 'Digital business card & link-in-bio', 'Menu & catalogue', 'Lead capture forms', 'Coupons & offers', 'Loyalty stamp cards', 'Digital bills on WhatsApp'] },
+        { n: '03', name: 'Pro', plan: 'GROWTH+', tag: 'Run daily operations', bg: '#FFFFFF', items: ['Feedback → tickets with SLA', 'Asset service logs', 'Staff & labour attendance', 'Visitor & event check-in', 'Appointment booking', 'Real-estate plot QR', 'Bulk QR from CSV · multi-location · roles'] },
+        { n: '04', name: 'Advanced', plan: 'BUSINESS+', tag: 'Scale & integrate', bg: '#F3EEFF', items: ['Serialized product QR', 'Warranty registration', 'Authenticity & anti-counterfeit', 'Smart redirects by time, place, language', 'AI review insights & replies', 'API, webhooks & white-label'] }
+      ],
+      acts: [
+        { t: 'Review · 5★ Google', s: 'POSTED', bg: '#F1F1F3', fg: '#5B45B8' },
+        { t: 'Lead · Arun K.', s: 'NEW', bg: '#0E0E10', fg: '#FFFFFF' },
+        { t: 'Ticket #219 · Lift', s: 'ASSIGNED', bg: '#FDF0E1', fg: '#8A4A06' },
+        { t: 'Check-in · Site B', s: '08:52', bg: '#F1F1F3', fg: '#3D3D45' }
+      ],
+      spot: [
+        { n: '01', t: 'One QR per table, counter or staff member' },
+        { n: '02', t: 'AI writes review suggestions in English, Tamil, Hindi and more' },
+        { n: '03', t: 'Unhappy feedback opens a ticket with an SLA' },
+        { n: '04', t: 'Reply to Google reviews from one inbox' }
+      ],
+      stats: [
+        { v: '[00]%', l: 'More Google reviews per month' },
+        { v: '[00]%', l: 'Repeat visits from loyalty cards' },
+        { v: '[00]h', l: 'Average complaint resolution' },
+        { v: '[00]K', l: 'Scans tracked every month' }
+      ],
+      inds: [
+        { ic: I.store, t: 'Retail & shops', d: 'Reviews, loyalty, digital bills and WhatsApp offers.' },
+        { ic: I.food, t: 'Restaurants & cafés', d: 'Table menus, feedback per table and review boosts.' },
+        { ic: I.cut, t: 'Salons & spas', d: 'Bookings, staff-wise reviews and repeat-visit rewards.' },
+        { ic: I.hosp, t: 'Clinics & hospitals', d: 'Ward feedback, tickets with SLA and appointments.' },
+        { ic: I.home, t: 'Real estate', d: 'Plot QR with live availability and site-visit booking.' },
+        { ic: I.fact, t: 'Manufacturers & D2C', d: 'Product QR, warranty registration, authenticity.' },
+        { ic: I.bldg, t: 'Facilities & apartments', d: 'Asset QR, complaints, technician visit logs.' },
+        { ic: I.hat, t: 'Construction', d: 'Labour attendance with selfie and location, payroll export.' }
+      ],
+      adv: [
+        { n: '01', t: 'One code per unit' },
+        { n: '02', t: 'Warranty registration' },
+        { n: '03', t: 'Counterfeit alerts' },
+        { n: '04', t: 'Service requests' },
+        { n: '05', t: 'API & webhooks' },
+        { n: '06', t: 'White-label' }
+      ],
+      ints: ['Google Business Profile', 'WhatsApp Business', 'Shopify', 'WooCommerce', 'Zoho CRM', 'Tally', 'Razorpay', 'Google Sheets', 'Orkha by Dotnapps', 'Webhooks'],
+      tiers: [
+        { n: 'FREE', p: '₹0', d: '1 location · Basic QR · 3 dynamic codes', bg: '#FFFFFF' },
+        { n: 'STARTER', p: '[₹ PRICE]', d: 'Review assistant, cards, menus, lead forms', bg: '#FFFFFF' },
+        { n: 'GROWTH', p: '[₹ PRICE]', d: 'Loyalty, bills, tickets, bulk QR, team roles', bg: '#F3EEFF' },
+        { n: 'BUSINESS', p: '[₹ PRICE]', d: 'Operations modules, AI, integrations', bg: '#FFFFFF' }
+      ],
+      faqs: [
+        { q: 'Can I change where a QR points after printing?', a: 'Yes. Dynamic codes can be edited any time from the dashboard — the printed code stays the same.' },
+        { q: 'Do my customers need an app?', a: 'No. Any phone camera or Google Lens opens the Skanor page instantly.' },
+        { q: 'Is the review flow allowed by Google?', a: 'Yes. Every customer is offered the option to post on Google, whatever their rating. Private feedback is an extra channel, never a filter.' },
+        { q: 'Can I use one account for many branches?', a: 'Yes. Add locations, assign staff and compare performance in one dashboard.' },
+        { q: 'Do you print the stickers and standees?', a: 'Yes. Order print-ready stickers, table tents and standees from QR Library.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

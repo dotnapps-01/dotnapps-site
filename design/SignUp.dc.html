@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Sign up</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label{font:500 12px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#3D3D45}
+.in{min-height:48px;padding:0 14px;border:1px solid #D6D6DC;background:#fff;font:400 15px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; padding: 28px clamp(20px, 5vw, 72px)">
+<a href="Main.dc.html" aria-label="Skanor home" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0E0E10"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="2" width="22" height="22" fill="none" stroke="#0E0E10" stroke-width="4"></rect><rect x="9" y="9" width="8" height="8" fill="#0E0E10"></rect></svg><span class="disp" style="font-size: 22px; letter-spacing: -0.04em">skanor</span></a>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 0">
+<form aria-label="Create account" style="width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px">
+<div role="tablist" aria-label="Account" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #0E0E10">
+<button type="button" role="tab" aria-selected="true" class="mono" style="min-height: 44px; border: 0; background: #0E0E10; color: #fff; font-size: 12px; cursor: pointer">SIGN UP</button>
+<button type="button" role="tab" aria-selected="false" class="mono" style="min-height: 44px; border: 0; background: #fff; color: #0E0E10; font-size: 12px; cursor: pointer">LOG IN</button>
+</div>
+<div><h1 class="disp" style="margin: 0; font-size: 40px; line-height: 1.05">Create your free account</h1><p style="margin: 8px 0 0; font-size: 15px; color: #3D3D45">Your first QR is 2 minutes away.</p></div>
+<button type="button" class="btn" style="width: 100%; text-transform: none; font: 500 15px Inter, sans-serif; letter-spacing: 0"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 01-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z" fill="#4285F4"></path><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0012 22z" fill="#34A853"></path><path d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 000 9.2z" fill="#FBBC05"></path><path d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.8-2.8A10 10 0 003.1 7.4L6.4 10c.8-2.3 3-4.1 5.6-4.1z" fill="#EA4335"></path></svg>Continue with Google</button>
+<div style="display: flex; align-items: center; gap: 12px"><span style="flex: 1; height: 1px; background: #E7E7EB"></span><span class="mono" style="font-size: 11px; color: #6B6B75">OR WITH MOBILE</span><span style="flex: 1; height: 1px; background: #E7E7EB"></span></div>
+<div class="fl"><label for="s1">Business name</label><input id="s1" class="in" type="text" autocomplete="organization" placeholder="e.g. Saravana Cafe"></div>
+<div class="fl"><label for="s2">Mobile number</label><div style="display: flex"><span class="mono" style="min-height: 48px; padding: 0 12px; display: flex; align-items: center; border: 1px solid #D6D6DC; border-right: 0; background: #FAFAFA; font-size: 14px">+91</span><input id="s2" class="in" type="tel" autocomplete="tel-national"></div></div>
+<a class="btn btn-p" href="Onboarding.dc.html" style="width: 100%">Send OTP on WhatsApp</a>
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #6B6B75">By continuing you agree to the <a href="Main.dc.html">Terms</a> and <a href="Main.dc.html">Privacy Policy</a>.</p>
+</form>
+</div>
+</div>
+<div style="flex: 1 1 480px; min-width: 0; background: #0E0E10; color: #fff; display: flex; flex-direction: column; justify-content: center; gap: 36px; padding: clamp(40px, 6vw, 88px); background-image: radial-gradient(#2A2A30 1px, transparent 1px); background-size: 18px 18px">
+<div style="background: #fff; padding: 20px; align-self: flex-start"><dc-import name="QRMark" size="200" variant="halftone" color="#0E0E10" seed="23" hint-size="200px,200px"></dc-import></div>
+<h2 class="disp" style="margin: 0; font-size: clamp(32px, 3.6vw, 48px); line-height: 1.05; max-width: 520px">One QR. Reviews, leads, loyalty and more.</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{pts}}" as="p"><li style="display: flex; gap: 12px; font-size: 15px; color: #D6D6DC"><span class="mono" style="color: #CDBDFF">{{p.n}}</span>{{p.t}}</li></sc-for>
+</ul>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { pts: [
+      { n: '01', t: 'Free forever for one location' },
+      { n: '02', t: 'Workspace set up for your industry' },
+      { n: '03', t: 'Works with any phone camera — no app' }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

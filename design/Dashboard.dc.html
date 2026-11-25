@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="dashboard" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Overview</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Good evening, Vikas</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search</label>
+<input id="q" class="in" type="search" placeholder="Search QR, contacts, tickets…" style="width: 260px; max-width: 100%">
+<select class="in" aria-label="Date range"><option>Last 30 days</option><option>Last 7 days</option><option>This year</option></select>
+<button type="button" class="btn" aria-label="Notifications" style="padding: 0 12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"></path></svg></button>
+<a class="btn btn-p" href="QRStudio.dc.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create QR</a>
+</div>
+</header>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0; border: 1px solid #E7E7EB; background: #fff">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="6"><div style="padding: 16px 18px; border-right: 1px solid #F1F1F3; display: flex; flex-direction: column; gap: 6px"><span class="k">{{k.l}}</span><span class="disp" style="font-size: 30px; font-weight: 500">{{k.v}}</span><span class="mono" style="font-size: 11px; color: {{k.c}}">{{k.d}}</span></div></sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Scans · last 30 days</h2><div style="display: flex; gap: 14px" class="mono"><span style="font-size: 11px; display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #0E0E10"></span>Unique</span><span style="font-size: 11px; display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #CDBDFF"></span>Repeat</span></div></div>
+<div style="padding: 20px 18px 12px; display: flex; gap: 10px">
+<div class="mono" style="display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: #6B6B75; height: 200px; text-align: right"><span>800</span><span>400</span><span>0</span></div>
+<div style="flex: 1; min-width: 0; height: 200px; display: flex; align-items: flex-end; gap: 4px; border-bottom: 1px solid #E7E7EB; background-image: linear-gradient(#F1F1F3 1px, transparent 1px); background-size: 100% 100px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="30"><div title="{{b.t}}" style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: {{b.r}}; background: #CDBDFF"></div><div style="height: {{b.u}}; background: #0E0E10"></div></div></sc-for>
+</div>
+</div>
+<div class="mono" style="padding: 0 18px 16px 50px; display: flex; justify-content: space-between; font-size: 10px; color: #6B6B75"><span>27 Oct</span><span>10 Nov</span><span>25 Nov</span></div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Finish setting up</h2><span class="mono" style="font-size: 11px; color: #0E0E10">4 / 7</span></div>
+<div style="padding: 6px 0">
+<sc-for list="{{setup}}" as="s"><a href="{{s.href}}" style="display: flex; gap: 12px; align-items: center; padding: 10px 18px; text-decoration: none; color: #0E0E10"><span style="width: 18px; height: 18px; flex: none; border: 1.5px solid {{s.bc}}; background: {{s.bg}}; display: flex; align-items: center; justify-content: center; box-sizing: border-box"><sc-if value="{{s.done}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></sc-if></span><span style="font-size: 13.5px; flex: 1; color: {{s.fg}}; text-decoration: {{s.dec}}">{{s.t}}</span><span class="mono" style="font-size: 11px; color: #0E0E10">{{s.a}}</span></a></sc-for>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Top QR codes</h2><a href="QRLibrary.dc.html" class="mono" style="font-size: 11px">VIEW ALL →</a></div>
+<div style="overflow-x: auto">
+<table class="tbl"><thead><tr><th scope="col">QR code</th><th scope="col">Type</th><th scope="col">Location</th><th scope="col">Scans</th><th scope="col">Result</th><th scope="col">Status</th></tr></thead>
+<tbody><sc-for list="{{top}}" as="t"><tr><td style="font-weight: 600">{{t.n}}</td><td><span class="pill" style="background: #F3EEFF; color: #5B45B8">{{t.ty}}</span></td><td style="color: #3D3D45">{{t.l}}</td><td class="mono">{{t.s}}</td><td style="color: #3D3D45">{{t.r}}</td><td><span class="pill" style="background: {{t.sb}}; color: {{t.sf}}">{{t.st}}</span></td></tr></sc-for></tbody></table>
+</div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Live activity</h2><span class="mono" style="font-size: 11px; display: flex; gap: 6px; align-items: center; color: #1F6B45"><span style="width: 7px; height: 7px; background: #1F7A4D; border-radius: 50%"></span>LIVE</span></div>
+<ul style="margin: 0; padding: 4px 0; list-style: none">
+<sc-for list="{{feed}}" as="f"><li style="display: flex; gap: 12px; padding: 10px 18px; border-bottom: 1px solid #F1F1F3"><div style="width: 30px; height: 30px; flex: none; background: {{f.bg}}; color: {{f.fg}}; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.ic}}"></path></svg></div><div style="min-width: 0; flex: 1"><div style="font-size: 13px; font-weight: 500">{{f.t}}</div><div class="mono" style="font-size: 10.5px; color: #6B6B75; margin-top: 2px">{{f.s}}</div></div></li></sc-for>
+</ul>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Locations</h2><a href="Settings.dc.html" class="mono" style="font-size: 11px">MANAGE →</a></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Location</th><th scope="col">Scans</th><th scope="col">Rating</th><th scope="col">Open tickets</th></tr></thead>
+<tbody><sc-for list="{{locs}}" as="l"><tr><td style="font-weight: 600">{{l.n}}</td><td class="mono">{{l.s}}</td><td class="mono">{{l.r}}</td><td class="mono">{{l.t}}</td></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Unlock more modules</h2><a href="Settings.dc.html" class="mono" style="font-size: 11px">SEE PLANS →</a></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr))">
+<sc-for list="{{locked}}" as="m"><a href="{{m.href}}" style="padding: 16px 18px; border-right: 1px solid #F1F1F3; border-bottom: 1px solid #F1F1F3; text-decoration: none; color: #0E0E10; display: flex; flex-direction: column; gap: 6px"><span class="pill" style="align-self: flex-start; background: #0E0E10; color: #fff">{{m.p}}</span><span style="font-size: 14px; font-weight: 600">{{m.t}}</span><span style="font-size: 12px; color: #3D3D45">{{m.d}}</span></a></sc-for>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const bars = [];
+    for (let i = 0; i < 30; i++) {
+      const u = 180 + Math.round(Math.abs(Math.sin(i * 0.7)) * 260 + i * 6 + (i % 7 === 5 ? 120 : 0));
+      const r = Math.round(u * 0.35);
+      bars.push({ u: (u / 800 * 100).toFixed(1) + '%', r: (r / 800 * 100).toFixed(1) + '%', t: u + ' unique · ' + r + ' repeat' });
+    }
+    const ok = { sb: '#E3F2EA', sf: '#1F6B45', st: 'ACTIVE' };
+    return {
+      bars,
+      kpis: [
+        { l: 'Total scans', v: '12,480', d: '▲ 18% vs last month', c: '#1F6B45' },
+        { l: 'Unique visitors', v: '8,912', d: '▲ 12%', c: '#1F6B45' },
+        { l: 'New Google reviews', v: '214', d: '▲ 31%', c: '#1F6B45' },
+        { l: 'Avg rating', v: '4.6★', d: '▲ 0.2', c: '#1F6B45' },
+        { l: 'Leads captured', v: '386', d: '▼ 4%', c: '#A8321F' },
+        { l: 'Open tickets', v: '9', d: '2 breaching SLA', c: '#8A4A06' }
+      ],
+      setup: [
+        { t: 'Create your first QR', a: '', done: true, href: 'QRStudio.dc.html' },
+        { t: 'Connect Google Business Profile', a: '', done: true, href: 'Integrations.dc.html' },
+        { t: 'Upload logo & brand colours', a: '', done: true, href: 'Settings.dc.html' },
+        { t: 'Print your table tents', a: '', done: true, href: 'QRLibrary.dc.html' },
+        { t: 'Invite your team', a: 'INVITE', done: false, href: 'Settings.dc.html' },
+        { t: 'Set up a loyalty card', a: 'SET UP', done: false, href: 'Offers.dc.html' },
+        { t: 'Connect WhatsApp Business', a: 'CONNECT', done: false, href: 'Integrations.dc.html' }
+      ].map((s) => ({ ...s, bc: s.done ? '#0E0E10' : '#9A9AA3', bg: s.done ? '#0E0E10' : '#fff', fg: s.done ? '#6B6B75' : '#0E0E10', dec: s.done ? 'line-through' : 'none' })),
+      top: [
+        { n: 'Table tents — Review', ty: 'REVIEW', l: 'Anna Nagar', s: '3,204', r: '128 reviews', ...ok },
+        { n: 'Main menu', ty: 'MENU', l: 'All locations', s: '2,860', r: '41 WhatsApp orders', ...ok },
+        { n: 'Counter loyalty', ty: 'LOYALTY', l: 'Anna Nagar', s: '1,912', r: '612 stamps', ...ok },
+        { n: 'Diwali 20% off', ty: 'COUPON', l: 'All locations', s: '1,140', r: '388 redeemed', sb: '#F1F1F3', sf: '#3D3D45', st: 'EXPIRED' },
+        { n: 'Franchise enquiry', ty: 'LEAD FORM', l: 'Website', s: '640', r: '92 leads', ...ok }
+      ],
+      feed: [
+        { t: '5★ review posted on Google', s: 'Table 6 · Anna Nagar · 2 min ago', ic: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z', bg: '#F1F1F3', fg: '#5B45B8' },
+        { t: 'Private feedback: “AC too cold”', s: 'Ticket #231 · assigned to Meena', ic: 'M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z', bg: '#FDF0E1', fg: '#8A4A06' },
+        { t: 'New lead · Karthik R.', s: 'Franchise enquiry · 9 min ago', ic: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0', bg: '#0E0E10', fg: '#fff' },
+        { t: 'Reward unlocked · Free coffee', s: 'Loyalty · Divya S. · 14 min ago', ic: 'M3 12V4h8l10 10-8 8zM7.5 7.5h.01', bg: '#E3F2EA', fg: '#1F6B45' },
+        { t: 'Bill sent on WhatsApp · ₹640', s: 'Counter 1 · 20 min ago', ic: 'M6 2h12v20l-3-2-3 2-3-2-3 2zM9 7h6M9 11h6', bg: '#F1F1F3', fg: '#3D3D45' }
+      ],
+      locs: [
+        { n: 'Anna Nagar, Chennai', s: '6,120', r: '4.7★', t: '3' },
+        { n: 'RS Puram, Coimbatore', s: '4,050', r: '4.5★', t: '5' },
+        { n: 'Koramangala, Bengaluru', s: '2,310', r: '4.6★', t: '1' }
+      ],
+      locked: [
+        { p: 'BUSINESS', t: 'Asset service logs', d: 'QR on every AC & lift', href: 'Tickets.dc.html' },
+        { p: 'BUSINESS', t: 'Staff attendance', d: 'Selfie + location check-in', href: 'Attendance.dc.html' },
+        { p: 'BUSINESS', t: 'AI insights', d: 'Summaries & reply drafts', href: 'Reviews.dc.html' },
+        { p: 'ENTERPRISE', t: 'Product QR', d: 'Warranty & authenticity', href: 'Products.dc.html' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

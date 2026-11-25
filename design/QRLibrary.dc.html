@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — QR Library</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="library" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">QR codes</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">QR Library <span class="mono" style="font-size: 14px; color: #6B6B75; font-weight: 400; letter-spacing: 0">38 codes</span></h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><a class="btn" href="#bulk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21V9M6 15l6-6 6 6M4 3h16"></path></svg>Bulk from CSV</a><a class="btn btn-p" href="QRStudio.dc.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Create QR</a></div>
+</header>
+<div class="row" style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px)">
+<nav aria-label="Folders" class="card" style="flex: 1 1 200px; max-width: 100%">
+<div class="ch"><h2 class="ct">Folders</h2><button type="button" class="btn" aria-label="New folder" style="min-height: 32px; padding: 0 10px">+</button></div>
+<ul style="margin: 0; padding: 6px 0; list-style: none"><sc-for list="{{folders}}" as="f"><li><a href="#" style="display: flex; justify-content: space-between; padding: 10px 18px; font-size: 13.5px; text-decoration: none; color: {{f.fg}}; background: {{f.bg}}; font-weight: {{f.w}}"><span>{{f.t}}</span><span class="mono" style="font-size: 11px; color: #6B6B75">{{f.c}}</span></a></li></sc-for></ul>
+</nav>
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card" style="padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<label class="sr" for="qs">Search QR codes</label><input id="qs" class="in" type="search" placeholder="Search by name or short link" style="flex: 1 1 220px; width: auto">
+<select class="in" aria-label="Type" style="width: auto"><option>All types</option><option>Review</option><option>Menu</option><option>Coupon</option></select>
+<select class="in" aria-label="Location" style="width: auto"><option>All locations</option><option>Anna Nagar</option></select>
+<select class="in" aria-label="Status" style="width: auto"><option>Any status</option><option>Active</option><option>Paused</option><option>Expired</option></select>
+<div role="group" aria-label="View" style="display: flex; border: 1px solid #0E0E10"><button type="button" class="mono" style="min-height: 38px; padding: 0 12px; border: 0; background: #0E0E10; color: #fff; font-size: 11px">GRID</button><button type="button" class="mono" style="min-height: 38px; padding: 0 12px; border: 0; background: #fff; font-size: 11px">LIST</button></div>
+</div>
+<div style="padding: 10px 14px; background: #0E0E10; color: #fff; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between"><span class="mono" style="font-size: 12px">3 SELECTED</span><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{bulk}}" as="b"><button type="button" class="mono" style="min-height: 34px; padding: 0 12px; background: transparent; color: #fff; border: 1px solid #4A4A52; font-size: 11px; cursor: pointer">{{b}}</button></sc-for></div></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px">
+<sc-for list="{{codes}}" as="c" hint-placeholder-count="8">
+<article class="card" style="display: flex; flex-direction: column">
+<div style="padding: 16px; display: flex; justify-content: space-between; align-items: flex-start; background: #F6F6F8; border-bottom: 1px solid #F1F1F3">
+<div style="background: #fff; padding: 8px; border: 1px solid #F1F1F3"><dc-import name="QRMark" size="96" variant="{{c.v}}" color="{{c.col}}" seed="{{c.seed}}" hint-size="96px,96px"></dc-import></div>
+<label style="display: flex; padding: 4px"><span class="sr">Select {{c.n}}</span><input type="checkbox" checked="{{c.sel}}" style="width: 18px; height: 18px; accent-color: #0E0E10"></label>
+</div>
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1">
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="pill" style="background: #F3EEFF; color: #5B45B8">{{c.ty}}</span><span class="pill" style="background: {{c.sb}}; color: {{c.sf}}">{{c.st}}</span></div>
+<h3 style="margin: 0; font-size: 14.5px; font-weight: 600">{{c.n}}</h3>
+<div class="mono" style="font-size: 11px; color: #6B6B75">{{c.link}} · {{c.l}}</div>
+<div style="display: flex; justify-content: space-between; align-items: end; margin-top: auto; padding-top: 6px"><div><div class="disp" style="font-size: 22px; font-weight: 500">{{c.s}}</div><div class="mono" style="font-size: 10px; color: #6B6B75">SCANS · 30D</div></div><div style="display: flex; gap: 4px"><a href="QRStudio.dc.html" class="btn" aria-label="Edit {{c.n}}" style="min-height: 34px; padding: 0 10px">Edit</a><button type="button" class="btn" aria-label="Download {{c.n}}" style="min-height: 34px; padding: 0 10px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M6 9l6 6 6-6M4 21h16"></path></svg></button></div></div>
+</div>
+</article>
+</sc-for>
+</div>
+
+<div class="row" id="bulk">
+<section class="card" style="flex: 2 1 480px">
+<div class="ch"><h2 class="ct">Bulk generate from CSV</h2><a href="#" class="mono" style="font-size: 11px">DOWNLOAD TEMPLATE</a></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="border: 2px dashed #D6D6DC; padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; background: #F6F6F8"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"></path></svg><div style="font-size: 14px; font-weight: 600">Drop a CSV or Excel file</div><div style="font-size: 12px; color: #6B6B75">One row per QR · up to 10,000 rows</div><button type="button" class="btn" style="margin-top: 6px">Choose file</button></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Column in file</th><th scope="col">Maps to</th><th scope="col">Example</th></tr></thead><tbody><sc-for list="{{map}}" as="m"><tr><td class="mono">{{m.a}}</td><td>{{m.b}}</td><td style="color: #6B6B75">{{m.c}}</td></tr></sc-for></tbody></table></div>
+</div>
+</section>
+<section class="card" style="flex: 1 1 300px">
+<div class="ch"><h2 class="ct">Print orders</h2><a href="#" class="mono" style="font-size: 11px">NEW ORDER</a></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{orders}}" as="o"><li style="padding: 14px 18px; border-bottom: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 12px"><div><div style="font-size: 13.5px; font-weight: 600">{{o.t}}</div><div class="mono" style="font-size: 11px; color: #6B6B75; margin-top: 3px">{{o.d}}</div></div><span class="pill" style="background: {{o.b}}; color: {{o.f}}; align-self: flex-start">{{o.s}}</span></li></sc-for></ul>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1550}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = { sb: '#E3F2EA', sf: '#1F6B45', st: 'ACTIVE' }, P = { sb: '#FDF0E1', sf: '#8A4A06', st: 'PAUSED' }, E = { sb: '#F1F1F3', sf: '#3D3D45', st: 'EXPIRED' };
+    return {
+      folders: [['All codes', '38', true], ['Table tents', '12'], ['Counter', '6'], ['Menus', '3'], ['Campaigns', '7'], ['Staff cards', '8'], ['Archived', '2']].map(([t, c, on]) => ({ t, c, fg: on ? '#0E0E10' : '#3D3D45', bg: on ? '#F3EEFF' : 'transparent', w: on ? '600' : '400' })),
+      bulk: ['MOVE', 'DOWNLOAD ZIP', 'PRINT SHEET', 'PAUSE', 'DELETE'],
+      codes: [
+        { n: 'Table 1–12 · Review', ty: 'REVIEW', link: 'skn.to/an-t1', l: 'Anna Nagar', s: '3,204', v: 'dot', col: '#0E0E10', seed: '3', sel: true, ...A },
+        { n: 'Main menu', ty: 'MENU', link: 'skn.to/menu', l: 'All', s: '2,860', v: 'square', col: '#0E0E10', seed: '9', sel: true, ...A },
+        { n: 'Counter loyalty', ty: 'LOYALTY', link: 'skn.to/stamp', l: 'Anna Nagar', s: '1,912', v: 'dot', col: '#1F6B45', seed: '14', sel: true, ...A },
+        { n: 'Diwali 20% off', ty: 'COUPON', link: 'skn.to/diwali', l: 'All', s: '1,140', v: 'halftone', col: '#8E2440', seed: '21', sel: false, ...E },
+        { n: 'Franchise enquiry', ty: 'LEAD FORM', link: 'skn.to/franchise', l: 'Website', s: '640', v: 'square', col: '#0E0E10', seed: '27', sel: false, ...A },
+        { n: 'Guest Wi-Fi', ty: 'WI-FI', link: 'static', l: 'Anna Nagar', s: '512', v: 'square', col: '#0E0E10', seed: '33', sel: false, ...A },
+        { n: 'Meena · business card', ty: 'CARD', link: 'skn.to/meena', l: 'Team', s: '96', v: 'dot', col: '#0E0E10', seed: '41', sel: false, ...A },
+        { n: 'Pay at counter', ty: 'UPI', link: 'static', l: 'RS Puram', s: '402', v: 'square', col: '#5A3A1E', seed: '47', sel: false, ...P }
+      ],
+      map: [{ a: 'name', b: 'QR name', c: 'Table 13' }, { a: 'type', b: 'QR type', c: 'review' }, { a: 'location', b: 'Location', c: 'Anna Nagar' }, { a: 'url / page', b: 'Destination', c: 'menu-dinner' }, { a: 'serial', b: 'Serial (product QR)', c: 'AQ-24-000123' }],
+      orders: [{ t: '20 acrylic table tents', d: 'Order #P-1042 · ₹[PRICE]', s: 'SHIPPED', b: '#F3EEFF', f: '#5B45B8' }, { t: '200 vinyl stickers', d: 'Order #P-1038', s: 'DELIVERED', b: '#E3F2EA', f: '#1F6B45' }, { t: '2 counter standees', d: 'Order #P-1031', s: 'PRINTING', b: '#FDF0E1', f: '#8A4A06' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

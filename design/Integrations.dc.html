@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Integrations and API</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="integrations" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Platform</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Integrations, API &amp; white-label</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><a class="btn" href="#">API docs</a><button type="button" class="btn btn-p">Create API key</button></div>
+</header>
+<nav class="tabs" aria-label="Platform sections" style="padding: 0 clamp(8px, 1.6vw, 20px)"><sc-for list="{{tabs}}" as="t"><a href="#{{t.id}}" class="tab {{t.cls}}">{{t.t}}</a></sc-for></nav>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+<section id="apps">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px">
+<sc-for list="{{apps}}" as="a"><article class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center"><div style="width: 44px; height: 44px; border-radius: 12px; background: {{a.bg}}; color: {{a.fg}}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px">{{a.i}}</div><span class="pill" style="background: {{a.sb}}; color: {{a.sf}}">{{a.s}}</span></div>
+<div><h3 style="margin: 0; font-size: 15px; font-weight: 600">{{a.n}}</h3><p style="margin: 4px 0 0; font-size: 13px; color: #3D3D45; line-height: 1.5">{{a.d}}</p></div>
+<button type="button" class="btn" style="margin-top: auto; min-height: 36px">{{a.cta}}</button>
+</article></sc-for>
+</div>
+</section>
+<div class="row" id="api">
+<section class="card" style="flex: 1 1 440px">
+<div class="ch"><h2 class="ct">API keys</h2><span class="pill" style="background: #F1F1F3; color: #3D3D45">ENTERPRISE</span></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Name</th><th scope="col">Key</th><th scope="col">Scope</th><th scope="col">Last used</th></tr></thead>
+<tbody><sc-for list="{{keys}}" as="k"><tr><td style="font-weight: 600">{{k.n}}</td><td class="mono" style="font-size: 12px">{{k.k}}</td><td>{{k.s}}</td><td class="mono" style="font-size: 12px">{{k.u}}</td></tr></sc-for></tbody></table></div>
+<div style="margin: 16px 18px 18px; border-radius: 12px; background: #0E0E10; color: #E7E7EB; padding: 14px 16px; font: 12.5px/1.7 ui-monospace, Menlo, monospace; overflow-x: auto; white-space: pre">POST /v1/qr
+{ "type": "product", "serial": "AQ-26-000123",
+  "page": "warranty-aquapure", "location": "dealer-114" }</div>
+</section>
+<section class="card" style="flex: 1 1 440px" id="webhooks">
+<div class="ch"><h2 class="ct">Webhooks</h2><a href="#" style="font-size: 13px; font-weight: 600">+ Add endpoint</a></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{hooks}}" as="h"><li style="padding: 14px 18px; border-bottom: 1px solid #F1F1F3; display: flex; flex-direction: column; gap: 8px"><div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap"><span class="mono" style="font-size: 12.5px; font-weight: 600">{{h.u}}</span><span class="pill" style="background: {{h.sb}}; color: {{h.sf}}">{{h.s}}</span></div><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{h.e}}" as="e"><span class="pill" style="background: #F1F1F3; color: #3D3D45">{{e}}</span></sc-for></div></li></sc-for></ul>
+</section>
+</div>
+<section class="card" id="whitelabel">
+<div class="ch"><h2 class="ct">White-label</h2><span class="pill" style="background: #F1F1F3; color: #3D3D45">FOR AGENCIES</span></div>
+<div style="padding: 20px; display: flex; flex-wrap: wrap; gap: 24px">
+<div style="flex: 1 1 320px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-content: start">
+<div class="fl"><label for="w1">Brand name</label><input id="w1" class="in" value="[Agency] QR Suite"></div>
+<div class="fl"><label for="w2">Custom domain</label><input id="w2" class="in" value="scan.agencybrand.com"></div>
+<div class="fl"><label for="w3">App domain</label><input id="w3" class="in" value="app.agencybrand.com"></div>
+<div class="fl"><label for="w4">Support email</label><input id="w4" class="in" value="help@agencybrand.com"></div>
+<div style="grid-column: 1 / -1; padding: 12px 14px; border-radius: 12px; background: #E3F2EA; color: #1F6B45; font-size: 13px">DNS verified · SSL active for scan.agencybrand.com</div>
+</div>
+<div style="flex: 1 1 320px">
+<div class="k" style="margin-bottom: 10px">Client workspaces</div>
+<ul style="margin: 0; padding: 0; list-style: none; border: 1px solid #E7E7EB; border-radius: 14px; overflow: hidden"><sc-for list="{{clients}}" as="c"><li style="padding: 12px 14px; border-bottom: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 10px; background: #fff"><div><div style="font-size: 13.5px; font-weight: 600">{{c.n}}</div><div style="font-size: 12px; color: #6B6B75">{{c.d}}</div></div><a href="Dashboard.dc.html" style="font-size: 13px; font-weight: 600; align-self: center">Open</a></li></sc-for></ul>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = { s: 'CONNECTED', sb: '#E3F2EA', sf: '#1F6B45', cta: 'Manage' }, N = { s: 'AVAILABLE', sb: '#F1F1F3', sf: '#3D3D45', cta: 'Connect' };
+    return {
+      tabs: [{ id: 'apps', t: 'Apps', cls: 'on' }, { id: 'api', t: 'API keys', cls: '' }, { id: 'webhooks', t: 'Webhooks', cls: '' }, { id: 'whitelabel', t: 'White-label', cls: '' }],
+      apps: [
+        { i: 'G', n: 'Google Business Profile', d: 'Review links, review inbox and replies.', bg: '#F1F1F3', fg: '#0E0E10', ...C },
+        { i: 'W', n: 'WhatsApp Business', d: 'Alerts, bills, OTP and broadcasts from your number.', bg: '#E3F2EA', fg: '#1F6B45', ...N },
+        { i: 'S', n: 'Shopify', d: 'Product QR, order lookup and loyalty for online buyers.', bg: '#F1F1F3', fg: '#0E0E10', ...N },
+        { i: 'W', n: 'WooCommerce', d: 'Sync products and orders.', bg: '#F3EEFF', fg: '#0E0E10', ...N },
+        { i: 'Z', n: 'Zoho CRM', d: 'Send leads and contacts to Zoho.', bg: '#FBE3EF', fg: '#0E0E10', ...N },
+        { i: 'T', n: 'Tally', d: 'Pull bills for digital receipts and loyalty.', bg: '#F1F1F3', fg: '#0E0E10', ...N },
+        { i: 'R', n: 'Razorpay', d: 'Payment links and paid bookings.', bg: '#F1F1F3', fg: '#0E0E10', ...C },
+        { i: 'O', n: 'Orkha by Dotnapps', d: 'Send tickets, leads and attendance to your Orkha workspace.', bg: '#0E0E10', fg: '#FFFFFF', ...N }
+      ],
+      keys: [{ n: 'Packaging line', k: 'sk_live_••••••a91c', s: 'qr:write', u: '2 min ago' }, { n: 'ERP sync', k: 'sk_live_••••••0f2e', s: 'read-only', u: '1 h ago' }, { n: 'Sandbox', k: 'sk_test_••••••77b3', s: 'all', u: '3 d ago' }],
+      hooks: [{ u: 'https://erp.example.com/skanor', s: 'HEALTHY', sb: '#E3F2EA', sf: '#1F6B45', e: ['scan.created', 'warranty.registered', 'counterfeit.flagged'] }, { u: 'https://hooks.zapier.com/…', s: '2 FAILURES', sb: '#FDF0E1', sf: '#8A4A06', e: ['lead.created', 'review.received'] }],
+      clients: [{ n: 'Saravana Cafe', d: '3 locations · Growth' }, { n: 'Glow Salon', d: '1 location · Starter' }, { n: 'Green Meadows Realty', d: '2 projects · Business' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

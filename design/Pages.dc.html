@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Pages</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="pages" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">QR codes / Pages</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Dinner menu <span class="pill" style="background: #E3F2EA; color: #1F6B45; font-size: 11px; vertical-align: middle">PUBLISHED</span></h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Preview</button><button type="button" class="btn">Link to QR</button><button type="button" class="btn btn-p">Publish changes</button></div>
+</header>
+<div class="row" style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px)">
+<nav class="card" aria-label="Pages" style="flex: 1 1 220px; max-width: 100%">
+<div class="ch"><h2 class="ct">Pages</h2><button type="button" class="btn" style="min-height: 32px; padding: 0 12px">+ New</button></div>
+<sc-for list="{{groups}}" as="g"><div style="padding: 10px 0 4px"><div class="k" style="padding: 0 18px 6px">{{g.h}}</div><sc-for list="{{g.items}}" as="i"><a href="#" style="display: flex; justify-content: space-between; padding: 9px 18px; font-size: 13.5px; text-decoration: none; color: #0E0E10; background: {{i.bg}}; font-weight: {{i.w}}"><span>{{i.t}}</span><span class="mono" style="font-size: 11px; color: #6B6B75">{{i.v}}</span></a></sc-for></div></sc-for>
+</nav>
+<section class="card" style="flex: 2 1 440px">
+<div class="ch"><h2 class="ct">Blocks</h2><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{add}}" as="a"><button type="button" class="btn" style="min-height: 32px; padding: 0 12px; font-size: 13px">+ {{a}}</button></sc-for></div></div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{blocks}}" as="b"><div style="border: 1px solid #E7E7EB; border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; background: {{b.bg}}"><span aria-hidden="true" style="color: #A0A0A8; font-size: 16px; cursor: grab">⋮⋮</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 600">{{b.t}}</div><div style="font-size: 12px; color: #6B6B75; margin-top: 2px">{{b.d}}</div></div><span class="pill" style="background: #F1F1F3; color: #3D3D45">{{b.k}}</span><button type="button" class="btn" aria-label="Edit {{b.t}}" style="min-height: 32px; padding: 0 12px; font-size: 13px">Edit</button></div></sc-for>
+</div>
+<div style="padding: 0 16px 16px"><div style="border-radius: 12px; border: 1px solid #E7E7EB; padding: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
+<div class="fl"><label for="p1">Item name</label><input id="p1" class="in" value="Ghee Roast Dosa"></div>
+<div class="fl"><label for="p2">Price</label><input id="p2" class="in" value="₹140"></div>
+<div class="fl"><label for="p3">Tags</label><input id="p3" class="in" value="Veg, Bestseller"></div>
+<div class="fl"><label for="p4">Availability</label><select id="p4" class="in"><option>Available</option><option>Sold out today</option></select></div>
+</div></div>
+</section>
+<aside style="flex: 1 1 320px; display: flex; justify-content: center">
+<div style="width: 300px; height: 620px; border-radius: 40px; border: 1px solid #0E0E10; background: #fff; overflow: hidden; display: flex; flex-direction: column">
+<div style="padding: 26px 18px 14px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%)"><div style="font-size: 12px; color: #3D3D45">Saravana Cafe · Anna Nagar</div><div class="disp" style="font-size: 26px; margin-top: 4px">Dinner menu</div></div>
+<div style="display: flex; gap: 6px; padding: 12px 16px; overflow-x: auto"><sc-for list="{{cats}}" as="c"><span style="font-size: 12px; padding: 6px 12px; border-radius: 999px; white-space: nowrap; background: {{c.bg}}; color: {{c.fg}}">{{c.t}}</span></sc-for></div>
+<div style="padding: 0 16px; display: flex; flex-direction: column; gap: 0; flex: 1">
+<sc-for list="{{items}}" as="i"><div style="display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid #F1F1F3"><div><div style="font-size: 13.5px; font-weight: 600">{{i.n}}</div><div style="font-size: 11px; color: #6B6B75; margin-top: 2px">{{i.d}}</div></div><div style="text-align: right"><div style="font-size: 13px; font-weight: 600">{{i.p}}</div><div style="font-size: 10px; color: {{i.c}}; margin-top: 2px">{{i.s}}</div></div></div></sc-for>
+</div>
+<div style="padding: 12px 16px 18px"><div style="text-align: center; font-size: 13px; font-weight: 500; padding: 12px; border-radius: 999px; background: #0E0E10; color: #fff">Order on WhatsApp</div></div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1550}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const it = (t, v, on) => ({ t, v, bg: on ? '#F1F1F3' : 'transparent', w: on ? '600' : '400' });
+    return {
+      groups: [
+        { h: 'Menus & catalogues', items: [it('Dinner menu', '2.8K', true), it('Breakfast menu', '1.1K'), it('Catering price list', '240')] },
+        { h: 'Business cards', items: [it('Meena S.', '96'), it('Ravi K.', '72'), it('Vikas R.', '140')] },
+        { h: 'Link-in-bio', items: [it('Saravana Cafe links', '610')] },
+        { h: 'Landing pages', items: [it('Franchise enquiry', '640'), it('Diwali offer', '1.1K')] }
+      ],
+      add: ['Section', 'Item', 'Image', 'Button', 'Offer'],
+      blocks: [
+        { t: 'Header', d: 'Logo, title, location', k: 'HEADER', bg: '#fff' },
+        { t: 'Dosa & Uttapam', d: '9 items', k: 'SECTION', bg: '#F6F6F8' },
+        { t: 'Meals', d: '4 items', k: 'SECTION', bg: '#fff' },
+        { t: 'Beverages', d: '7 items · 1 sold out', k: 'SECTION', bg: '#fff' },
+        { t: 'Weekend offer banner', d: 'Links to SKN-WKND coupon', k: 'OFFER', bg: '#fff' },
+        { t: 'Order on WhatsApp', d: '+91 98xxx xx210', k: 'BUTTON', bg: '#fff' }
+      ],
+      cats: [{ t: 'Dosa', bg: '#0E0E10', fg: '#fff' }, { t: 'Meals', bg: '#F1F1F3', fg: '#0E0E10' }, { t: 'Beverages', bg: '#F1F1F3', fg: '#0E0E10' }, { t: 'Desserts', bg: '#F1F1F3', fg: '#0E0E10' }],
+      items: [
+        { n: 'Ghee Roast Dosa', d: 'Veg · Bestseller', p: '₹140', s: 'Available', c: '#1F6B45' },
+        { n: 'Masala Dosa', d: 'Veg', p: '₹110', s: 'Available', c: '#1F6B45' },
+        { n: 'Onion Uttapam', d: 'Veg', p: '₹120', s: 'Available', c: '#1F6B45' },
+        { n: 'Podi Dosa', d: 'Veg · Spicy', p: '₹120', s: 'Sold out', c: '#A8321F' },
+        { n: 'Rava Dosa', d: 'Veg', p: '₹130', s: 'Available', c: '#1F6B45' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

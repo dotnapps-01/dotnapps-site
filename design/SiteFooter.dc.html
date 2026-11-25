@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site footer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<footer style="font-family: Inter, system-ui, sans-serif; color: #FFFFFF; background: #0E0E10; width: 100%">
+<div style="max-width: 1280px; margin: 0 auto; box-sizing: border-box; border-left: 1px solid #2A2A30; border-right: 1px solid #2A2A30">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 32px; padding: 56px clamp(20px, 5vw, 64px) 40px; border-bottom: 1px solid #2A2A30">
+<div style="display: flex; flex-direction: column; gap: 16px; grid-column: span 2; min-width: 0">
+<div style="display: flex; align-items: center; gap: 10px"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="2" width="22" height="22" fill="none" stroke="#FFFFFF" stroke-width="4"></rect><rect x="9" y="9" width="8" height="8" fill="#CDBDFF"></rect></svg><span style="font-family: 'Inter Tight', Inter, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.04em">skanor</span></div>
+<p style="margin: 0; font-size: 14px; line-height: 1.6; color: #B8B8C0; max-width: 300px">The QR platform for growing businesses. A Dotnapps product.</p>
+<form style="display: flex; gap: 8px; flex-wrap: wrap; max-width: 380px" aria-label="Newsletter">
+<label for="nl" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Email address</label>
+<input id="nl" type="email" placeholder="you@business.com" style="flex: 1 1 200px; min-height: 44px; padding: 0 14px; background: #1A1A1F; border: 1px solid #3A3A42; color: #FFFFFF; font: 400 14px Inter, sans-serif">
+<button type="submit" style="min-height: 44px; padding: 0 16px; background: #FFFFFF; color: #0E0E10; border: 0; font: 500 12px Inter, sans-serif; text-transform: uppercase; letter-spacing: .05em; cursor: pointer">Subscribe</button>
+</form>
+</div>
+<sc-for list="{{cols}}" as="col" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font: 500 11px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #CDBDFF">{{col.h}}</span>
+<sc-for list="{{col.links}}" as="l"><a href="{{l.href}}" style="font-size: 14px; color: #D6D6DC; text-decoration: none; padding: 2px 0">{{l.t}}</a></sc-for>
+</div>
+</sc-for>
+</div>
+<div style="padding: 20px clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; font: 400 12px Inter, sans-serif; color: #9A9AA3">
+<span>© 2026 Skanor · Dotnapps, Bengaluru</span>
+<span>Privacy · Terms · Refund policy · Status</span>
+</div>
+</div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":460}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const f = 'Features.dc.html', ind = 'Industries.dc.html';
+    return {
+      cols: [
+        { h: 'Product', links: [{ t: 'QR Studio', href: f }, { t: 'Review Assistant', href: 'ModuleReviews.dc.html' }, { t: 'Loyalty & offers', href: f }, { t: 'Tickets & assets', href: f }, { t: 'Product QR & warranty', href: f }, { t: 'Pricing', href: 'Pricing.dc.html' }] },
+        { h: 'Solutions', links: [{ t: 'Retail', href: ind }, { t: 'Restaurants', href: ind }, { t: 'Clinics', href: ind }, { t: 'Real estate', href: ind }, { t: 'Manufacturers', href: ind }] },
+        { h: 'Developers', links: [{ t: 'API docs', href: 'Integrations.dc.html' }, { t: 'Webhooks', href: 'Integrations.dc.html' }, { t: 'White-label', href: 'Integrations.dc.html' }, { t: 'Status', href: 'Contact.dc.html' }] },
+        { h: 'Company', links: [{ t: 'About Dotnapps', href: 'Contact.dc.html' }, { t: 'Contact', href: 'Contact.dc.html' }, { t: 'Book a demo', href: 'Contact.dc.html' }, { t: 'Partners', href: 'Contact.dc.html' }] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+  /* Visible keyboard focus everywhere; black, never blue. */
+  :focus-visible {
+    outline: 2px solid #0e0e10;
+    outline-offset: 2px;
+  }
+  /* On dark surfaces (footer) the ring flips to white. */
+  .on-dark :focus-visible {
+    outline-color: #ffffff;
+  }
+  a {
+    @apply text-ink;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-semibold;
+  }
+}
+
+@layer components {
+  /* "Display" heading: Inter Tight 600, tight tracking. */
+  .disp {
+    @apply font-display font-semibold tracking-display;
+  }
+  /* 11px uppercase label (".k"). */
+  .k {
+    @apply text-label uppercase text-muted;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Honour reduced motion for any transition we add. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

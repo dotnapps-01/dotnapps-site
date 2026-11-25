@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>App sidebar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<aside style="font-family: Inter, system-ui, sans-serif; color: #0E0E10; background: #FFFFFF; border-right: 1px solid #E7E7EB; width: 100%; height: 100%; min-height: 1040px; box-sizing: border-box; display: flex; flex-direction: column">
+<div style="padding: 18px 18px 14px; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 14px">
+<a href="Dashboard.dc.html" aria-label="Skanor dashboard" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0E0E10"><svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="2" width="22" height="22" fill="none" stroke="#0E0E10" stroke-width="4"></rect><rect x="9" y="9" width="8" height="8" fill="#0E0E10"></rect></svg><span style="font-family: 'Inter Tight', Inter, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.04em">skanor</span></a>
+<button type="button" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; padding: 0 12px; background: #FAFAFA; border: 1px solid #E7E7EB; border-radius: 12px; cursor: pointer; text-align: left; font: inherit; color: #0E0E10">
+<span style="display: flex; flex-direction: column; gap: 1px"><span style="font: 500 10px Inter, sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #6B6B75">Location</span><span style="font-size: 13px; font-weight: 600">{{location}}</span></span>
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D3D45" stroke-width="2" aria-hidden="true"><path d="M7 10l5 5 5-5"></path></svg>
+</button>
+</div>
+<nav aria-label="App" style="flex: 1; padding: 10px 10px 16px; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font: 500 10px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #6B6B75; padding: 6px 10px 4px">{{g.h}}</span>
+<sc-for list="{{g.items}}" as="it"><a href="{{it.href}}" style="display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; text-decoration: none; font-size: 13.5px; color: {{it.fg}}; background: {{it.bg}}; font-weight: {{it.w}}; border-left: {{it.line}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.ic}}"></path></svg><span style="flex: 1">{{it.t}}</span><sc-if value="{{it.badge}}" hint-placeholder-val="{{ false }}"><span style="font: 500 10px Inter, sans-serif; padding: 2px 6px; background: #0E0E10; color: #FFFFFF">{{it.badge}}</span></sc-if></a></sc-for>
+</div>
+</sc-for>
+</nav>
+<div style="padding: 14px; border-top: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 12px">
+<div style="padding: 14px; border-radius: 14px; background-image: radial-gradient(60% 80% at 10% 10%, #E6DEFF, rgba(230,222,255,0) 70%), radial-gradient(60% 80% at 90% 90%, #FBDDEC, rgba(251,221,236,0) 70%); background-color: #F3F0FF; border: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; font: 500 11px Inter, sans-serif"><span style="color: #0E0E10">GROWTH PLAN</span><span style="color: #3D3D45">38/50 QR</span></div>
+<div style="height: 4px; border-radius: 4px; background: #FFFFFF"><div style="width: 76%; height: 4px; border-radius: 4px; background: #0E0E10"></div></div>
+<a href="Settings.dc.html" style="font-size: 12px; font-weight: 600; color: #0E0E10">Upgrade to Business</a>
+</div>
+<div style="display: flex; align-items: center; gap: 10px"><div style="width: 32px; height: 32px; border-radius: 50%; background: #0E0E10; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font: 600 12px Inter, sans-serif">VR</div><div style="display: flex; flex-direction: column"><span style="font-size: 13px; font-weight: 600">Vikas R</span><span style="font-size: 11px; color: #6B6B75">Owner</span></div></div>
+</div>
+</aside>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","default":"dashboard","options":["dashboard","analytics","studio","library","pages","reviews","leads","offers","tickets","attendance","bookings","realestate","products","integrations","settings","admin"]},"location":{"editor":"text","default":"Anna Nagar, Chennai"},"$preview":{"width":260,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'dashboard';
+    const I = {
+      grid: 'M3 3h8v8H3zM13 3h8v5h-8zM13 10h8v11h-8zM3 13h8v8H3z',
+      chart: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+      plus: 'M12 5v14M5 12h14',
+      qr: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3z',
+      page: 'M6 2h9l5 5v15H6zM14 2v6h6',
+      star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z',
+      user: 'M9 11a4 4 0 100-8 4 4 0 000 8zM2 21a7 7 0 0114 0M16 3.5a4 4 0 010 7.5M22 21a7 7 0 00-4-6.3',
+      tag: 'M3 12V4h8l10 10-8 8zM7.5 7.5h.01',
+      ticket: 'M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z',
+      clock: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 7v5l3 2',
+      cal: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
+      home: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6',
+      box: 'M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10',
+      code: 'M8 6l-6 6 6 6M16 6l6 6-6 6',
+      set: 'M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M14 4v4M8 10v4M16 16v4',
+      shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'
+    };
+    const groups = [
+      { h: 'Overview', items: [{ k: 'dashboard', t: 'Dashboard', href: 'Dashboard.dc.html', ic: I.grid }, { k: 'analytics', t: 'Analytics', href: 'Analytics.dc.html', ic: I.chart }] },
+      { h: 'QR codes', items: [{ k: 'studio', t: 'Create QR', href: 'QRStudio.dc.html', ic: I.plus }, { k: 'library', t: 'QR Library', href: 'QRLibrary.dc.html', ic: I.qr }, { k: 'pages', t: 'Pages', href: 'Pages.dc.html', ic: I.page }] },
+      { h: 'Engage', items: [{ k: 'reviews', t: 'Reviews & feedback', href: 'Reviews.dc.html', ic: I.star, badge: '6' }, { k: 'leads', t: 'Leads & contacts', href: 'Leads.dc.html', ic: I.user, badge: '12' }, { k: 'offers', t: 'Offers & loyalty', href: 'Offers.dc.html', ic: I.tag }] },
+      { h: 'Operate', items: [{ k: 'tickets', t: 'Tickets & assets', href: 'Tickets.dc.html', ic: I.ticket, badge: '4' }, { k: 'attendance', t: 'Attendance & visitors', href: 'Attendance.dc.html', ic: I.clock }, { k: 'bookings', t: 'Bookings & events', href: 'Bookings.dc.html', ic: I.cal }, { k: 'realestate', t: 'Real estate plots', href: 'RealEstate.dc.html', ic: I.home }] },
+      { h: 'Products', items: [{ k: 'products', t: 'Product QR & warranty', href: 'Products.dc.html', ic: I.box }] },
+      { h: 'Platform', items: [{ k: 'integrations', t: 'Integrations & API', href: 'Integrations.dc.html', ic: I.code }, { k: 'settings', t: 'Settings', href: 'Settings.dc.html', ic: I.set }, { k: 'admin', t: 'Admin console', href: 'AdminConsole.dc.html', ic: I.shield }] }
+    ];
+    return {
+      location: this.props.location ?? 'Anna Nagar, Chennai',
+      groups: groups.map((g) => ({
+        ...g,
+        items: g.items.map((it) => {
+          const on = it.k === active;
+          return { ...it, badge: it.badge || '', fg: on ? '#0E0E10' : '#3D3D45', bg: on ? '#F1F1F3' : 'transparent', w: on ? '600' : '400', line: on ? '2px solid #0E0E10' : '2px solid transparent' };
+        })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

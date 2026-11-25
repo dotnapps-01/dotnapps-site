@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Scan · Product</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.045em;font-weight:600}
+.lbl{font:500 14px/1.2 Inter,sans-serif}
+.cap{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;font-size:15px;font-weight:600}
+.cap i{font-style:normal;font-size:12px;font-weight:600;color:#6B6B75;background:#F1F1F3;border-radius:999px;padding:3px 9px}
+.ph{width:390px;height:844px;box-sizing:border-box;border-radius:48px;background:#fff;border:1px solid #E7E7EB;box-shadow:0 30px 70px rgba(90,80,180,.14);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.sb{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-size:14px;font-weight:600}
+.scr{flex:1;display:flex;flex-direction:column;gap:14px;padding:8px 22px 22px;overflow:hidden}
+.top{display:flex;align-items:center;gap:10px}
+.av{width:40px;height:40px;border-radius:12px;background:#0E0E10;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.h{font-family:'Inter Tight',Inter,sans-serif;font-size:26px;line-height:1.1;letter-spacing:-0.04em;font-weight:600;margin:0}
+.s{font-size:14px;line-height:1.5;color:#3D3D45;margin:0}
+.m{font-size:12px;color:#6B6B75}
+.pb{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:999px;background:#0E0E10;color:#fff;font:600 15px Inter,sans-serif;border:0;width:100%}
+.po{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:999px;background:#fff;color:#0E0E10;font:600 15px Inter,sans-serif;border:1px solid #D6D6DC;width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid #E7E7EB;font-size:13px;font-weight:500;background:#fff}
+.chip.on{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:13px;font-weight:600}
+.f .i{min-height:46px;border-radius:14px;border:1px solid #E7E7EB;padding:0 14px;display:flex;align-items:center;font-size:14px;color:#0E0E10;background:#fff}
+.f .i.ph2{color:#9A9AA3}
+.box{border-radius:18px;border:1px solid #E7E7EB;padding:14px;background:#fff}
+.soft{border-radius:18px;background:#F6F6F8;padding:14px}
+.mar{background-color:#EEF2FF;background-image:radial-gradient(55% 60% at 12% 18%,#AFCBFF 0%,rgba(175,203,255,0) 70%),radial-gradient(45% 55% at 88% 22%,#F6B8DA 0%,rgba(246,184,218,0) 70%),radial-gradient(55% 60% at 72% 88%,#CDBDFF 0%,rgba(205,189,255,0) 70%)}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.pw{margin-top:auto;text-align:center;font-size:11.5px;color:#9A9AA3}
+.tagg{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="width: 1832px; height: 1110px; box-sizing: border-box; padding: 48px 70px; background: #FAFAFA; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap"><span class="lbl" style="padding: 5px 14px; border-radius: 999px; background: #F1F1F3">Customer view · after scanning</span><h1 class="disp" style="margin: 0; font-size: 34px">Product QR</h1><span style="font-size: 15px; color: #6B6B75">Product hub, warranty and authenticity checks</span></div>
+<div style="display: flex; gap: 44px; align-items: flex-start">
+<div><div class="cap">Product hub<i>Products</i></div><div class="ph"><div class="sb"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#0E0E10"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#0E0E10"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#0E0E10"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#0E0E10"/></svg><svg width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#0E0E10"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#0E0E10"/></svg></span></div><div class="scr"><div class="top"><div class="av">AQ</div><div><div style="font-weight:600;font-size:15px">AquaPure</div><div class="m">Official product page</div></div></div><div class="mar" style="height:180px;border-radius:24px;display:flex;align-items:center;justify-content:center"><div style="width:90px;height:140px;border-radius:18px;background:#fff;box-shadow:0 12px 30px rgba(90,80,180,.2)"></div></div><div><p class="h">AquaPure RO 8L</p><p class="m" style="margin-top:4px">Serial AQ-25-112384</p></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="soft" style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>Register warranty</div><div class="soft" style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>Setup videos</div><div class="soft" style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6.5a4 4 0 0 0-5 5L4 17l3 3 5.5-5.5a4 4 0 0 0 5-5l-2.5 2.5-2.5-.5-.5-2.5z"/></svg>Book service</div><div class="soft" style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.5 11h11L21 8H7"/><circle cx="9.5" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></svg>Buy filters</div></div><button class="po" type="button">User manual (PDF)</button><div class="pw">Powered by Skanor</div></div></div></div>
+<div><div class="cap">Warranty registration<i>Products</i></div><div class="ph"><div class="sb"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#0E0E10"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#0E0E10"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#0E0E10"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#0E0E10"/></svg><svg width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#0E0E10"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#0E0E10"/></svg></span></div><div class="scr"><div class="top"><div class="av">AQ</div><div><div style="font-weight:600;font-size:15px">AquaPure</div><div class="m">Official product page</div></div></div><p class="h">Register your warranty</p><p class="s">Takes one minute. Get service reminders on WhatsApp.</p><div class="f"><label>Serial number</label><div class="i" style="background:#F6F6F8">AQ-25-112384 (from QR)</div></div><div class="f"><label>Your name</label><div class="i">Ramesh G.</div></div><div class="f"><label>WhatsApp number</label><div class="i">+91 98xxx xx210</div></div><div class="f"><label>Purchase date</label><div class="i">20 Nov 2026</div></div><div class="box" style="display:flex;gap:10px;align-items:center;border-style:dashed"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg><span style="font-size:14px">Upload invoice photo</span></div><button class="pb" type="button" style="margin-top:auto">Activate 2-year warranty</button></div></div></div>
+<div><div class="cap">Genuine product<i>Authentic</i></div><div class="ph"><div class="sb"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#0E0E10"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#0E0E10"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#0E0E10"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#0E0E10"/></svg><svg width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#0E0E10"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#0E0E10"/></svg></span></div><div class="scr"><div class="top"><div class="av">AQ</div><div><div style="font-weight:600;font-size:15px">AquaPure</div><div class="m">Official product page</div></div></div><div style="margin-top:24px"><div style="width:88px;height:88px;border-radius:50%;background:#E3F2EA;display:flex;align-items:center;justify-content:center;margin:0 auto"><svg width="44.0" height="44.0" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div><p class="h" style="text-align:center">Genuine AquaPure product</p><p class="s" style="text-align:center">This is the first scan of this code. Your product is original.</p><div class="box"><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">Model</span><span style="font-weight:600">RO 8L</span></div><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">Serial</span><span style="font-weight:600">AQ-25-112384</span></div><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">Manufactured</span><span style="font-weight:600">Sep 2026, Chennai</span></div><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">Warranty</span><span style="font-weight:600">Not registered yet</span></div></div><button class="pb" type="button" style="margin-top:auto">Register warranty</button></div></div></div>
+<div><div class="cap">Counterfeit warning<i>Authentic</i></div><div class="ph"><div class="sb"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="#0E0E10"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#0E0E10"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#0E0E10"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#0E0E10"/></svg><svg width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#0E0E10"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#0E0E10"/></svg></span></div><div class="scr"><div class="top"><div class="av">AQ</div><div><div style="font-weight:600;font-size:15px">AquaPure</div><div class="m">Official product page</div></div></div><div style="margin-top:24px"><div style="width:88px;height:88px;border-radius:50%;background:#FBE4E1;display:flex;align-items:center;justify-content:center;margin:0 auto"><svg width="44.0" height="44.0" viewBox="0 0 24 24" fill="none" stroke="#A8321F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg></div></div><p class="h" style="text-align:center">This code was scanned before</p><p class="s" style="text-align:center">It may be a copy. Please check before you pay.</p><div class="box" style="border-color:#F2C7C0;background:#FFF8F7"><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">Times scanned</span><span style="font-weight:600">14</span></div><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">First scan</span><span style="font-weight:600">Madurai, 2 Nov</span></div><div class="row2" style="padding:9px 0;border-bottom:1px solid #F1F1F3"><span style="color:#3D3D45">This scan</span><span style="font-weight:600">Kolkata, today</span></div></div><button class="pb" type="button" style="background:#A8321F">Report this seller</button><button class="po" type="button">Contact AquaPure support</button><p class="m" style="margin:0;text-align:center">Your report goes to the brand’s protection team.</p></div></div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1832,"height":1110}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

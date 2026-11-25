@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Style guide</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.045em;font-weight:600}
+.lbl{font:500 14px/1.2 Inter,sans-serif}
+.card{background:#fff;border:1px solid #E7E7EB}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 15px/1 Inter,sans-serif;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;border-radius:999px}
+.btn-p{background:#0E0E10;color:#fff}
+.pill{display:inline-flex;align-items:center;padding:4px 10px;font:600 11px/1.2 Inter,sans-serif;letter-spacing:.04em;border-radius:999px}
+.in{width:100%;box-sizing:border-box;min-height:44px;border:1px solid #E7E7EB;padding:0 14px;font:400 14px Inter,sans-serif;background:#fff;border-radius:12px}
+.k{font:600 11px/1.3 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.sw{display:flex;flex-direction:column;gap:8px}
+.sw span{height:84px;border-radius:16px;border:1px solid #E7E7EB}
+.tog{position:relative;display:inline-block;width:38px;height:22px;border-radius:999px;flex:none}
+.tog i{position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+section{display:flex;flex-direction:column;gap:18px}
+h2{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.04em;font-weight:600;font-size:28px;margin:0}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; padding: clamp(28px, 5vw, 72px) clamp(20px, 5vw, 80px); display: flex; flex-direction: column; gap: 56px; max-width: 1440px; margin: 0 auto">
+<header style="display: flex; flex-direction: column; gap: 16px">
+<span class="lbl">Skanor design system</span>
+<h1 class="disp" style="margin: 0; font-size: clamp(44px, 6vw, 84px); line-height: .95">Clean white. Bold black.<br>Soft marble.</h1>
+<p style="margin: 0; max-width: 620px; font-size: 18px; line-height: 1.55; color: #3D3D45">One system for the website, the business app and every scan page. Black does the work, pastel marble adds warmth, and status colours carry meaning.</p>
+</header>
+
+<section>
+<h2>Colour</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px">
+<sc-for list="{{colors}}" as="c"><div class="sw"><span style="background: {{c.v}}"></span><div style="font-size: 14px; font-weight: 600">{{c.n}}</div><div class="k" style="text-transform: none; letter-spacing: 0">{{c.v}} · {{c.u}}</div></div></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px">
+<sc-for list="{{status}}" as="s"><div class="card" style="border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center"><span style="font-size: 14px; font-weight: 600">{{s.n}}</span><span class="pill" style="background: {{s.b}}; color: {{s.f}}">{{s.t}}</span></div></sc-for>
+</div>
+</section>
+
+<section>
+<h2>Marble gradient</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div style="flex: 2 1 420px; height: 240px; border-radius: 28px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%), radial-gradient(45% 50% at 18% 90%, #F8C6D6 0%, rgba(248,198,214,0) 70%); display: flex; align-items: flex-end; padding: 24px; box-sizing: border-box"><span style="background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600">Hero frames, plan cards, scan page headers</span></div>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.6; color: #3D3D45"><div><b style="color: #0E0E10">Base</b> #EEF2FF</div><div><b style="color: #0E0E10">Stops</b> #AFCBFF · #F6B8DA · #CDBDFF · #F8C6D6</div><div>Use it as a frame behind content, never behind long text. One marble area per screen.</div></div>
+</div>
+</section>
+
+<section>
+<h2>Type</h2>
+<div class="card" style="border-radius: 20px">
+<sc-for list="{{type}}" as="t"><div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: baseline; padding: 18px 22px; border-bottom: 1px solid #F1F1F3"><div class="k" style="width: 170px">{{t.n}}</div><div style="flex: 1 1 360px; font-family: {{t.f}}; font-size: {{t.s}}; font-weight: {{t.w}}; letter-spacing: {{t.l}}; line-height: 1.15">{{t.e}}</div></div></sc-for>
+</div>
+</section>
+
+<section>
+<h2>Controls</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div class="card" style="flex: 1 1 320px; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 16px">
+<div class="k">Buttons</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap"><button type="button" class="btn btn-p">Start free</button><button type="button" class="btn">Book a demo</button><button type="button" class="btn" style="min-height: 36px; padding: 0 14px; font-size: 13px">Small</button></div>
+<div class="k">Badge</div>
+<div><span style="display: inline-flex; align-items: center; gap: 10px; padding: 5px 14px 5px 5px; border-radius: 999px; background: #F1F1F3; font-size: 14px; font-weight: 500"><span style="background: #0E0E10; color: #fff; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600">+ New</span>Product QR with counterfeit alerts</span></div>
+</div>
+<div class="card" style="flex: 1 1 320px; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div class="k">Inputs</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Business name<input class="in" value="Saravana Cafe"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">City<select class="in"><option>Coimbatore</option></select></label>
+<div class="k">Toggles and tabs</div>
+<div style="display: flex; gap: 14px; align-items: center"><span class="tog" role="switch" aria-checked="true" aria-label="On example" style="background: #0E0E10"><i style="left: 18px"></i></span><span class="tog" role="switch" aria-checked="false" aria-label="Off example" style="background: #D6D6DC"><i style="left: 2px"></i></span>
+<span style="display: flex; gap: 18px; font-size: 14px; border-bottom: 1px solid #E7E7EB; margin-left: 12px"><span style="padding: 8px 0; border-bottom: 2px solid #0E0E10; font-weight: 600">Overview</span><span style="padding: 8px 0; color: #6B6B75">Inbox</span><span style="padding: 8px 0; color: #6B6B75">Settings</span></span></div>
+</div>
+<div class="card" style="flex: 1 1 320px; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<div class="k">Card and KPI</div>
+<div style="border: 1px solid #E7E7EB; border-radius: 16px; padding: 16px"><div class="k">Google reviews</div><div class="disp" style="font-size: 32px; margin-top: 6px">1,284</div><div style="font-size: 12px; color: #1F6B45; margin-top: 4px">▲ 18% this month</div></div>
+<div class="k">Radii</div>
+<div style="display: flex; gap: 10px; align-items: flex-end; font-size: 11px; color: #6B6B75"><sc-for list="{{radii}}" as="r"><div style="display: flex; flex-direction: column; gap: 6px; align-items: center"><span style="width: 52px; height: 52px; background: #F1F1F3; border: 1px solid #E7E7EB; border-radius: {{r}}"></span>{{r}}</div></sc-for></div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>QR mark</h2>
+<p style="margin: 0; color: #3D3D45; font-size: 15px">Three styles from QR Studio. Always black on white with a quiet zone, so every phone can read it.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 16px">
+<div class="card" style="border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center"><dc-import name="QRMark" size="170" variant="square" color="#0E0E10" seed="4" hint-size="170px,170px"></dc-import><span style="font-size: 13px; font-weight: 600">Square</span></div>
+<div class="card" style="border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center"><dc-import name="QRMark" size="170" variant="dot" color="#0E0E10" seed="9" hint-size="170px,170px"></dc-import><span style="font-size: 13px; font-weight: 600">Dot</span></div>
+<div class="card" style="border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 10px; align-items: center"><dc-import name="QRMark" size="170" variant="halftone" color="#0E0E10" seed="11" hint-size="170px,170px"></dc-import><span style="font-size: 13px; font-weight: 600">Halftone</span></div>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      colors: [
+        { n: 'Ink', v: '#0E0E10', u: 'text, buttons' }, { n: 'Graphite', v: '#3D3D45', u: 'body text' }, { n: 'Muted', v: '#6B6B75', u: 'labels' },
+        { n: 'Line', v: '#E7E7EB', u: 'borders' }, { n: 'Mist', v: '#F1F1F3', u: 'fills, badges' }, { n: 'Paper', v: '#FAFAFA', u: 'page' },
+        { n: 'Sky', v: '#AFCBFF', u: 'marble' }, { n: 'Blush', v: '#F6B8DA', u: 'marble' }, { n: 'Lilac', v: '#CDBDFF', u: 'marble' }, { n: 'Info', v: '#5B45B8', u: 'info badges' }
+      ],
+      status: [
+        { n: 'Success', t: 'PAID', b: '#E3F2EA', f: '#1F6B45' }, { n: 'Warning', t: 'PENDING', b: '#FDF0E1', f: '#8A4A06' },
+        { n: 'Danger', t: 'SLA BREACH', b: '#FBE4E1', f: '#A8321F' }, { n: 'Info', t: 'TRIAL', b: '#F3EEFF', f: '#5B45B8' }
+      ],
+      type: [
+        { n: 'Display · Inter Tight 600', f: "'Inter Tight', Inter, sans-serif", s: '64px', w: '600', l: '-0.045em', e: 'Every scan, a customer.' },
+        { n: 'H1 · 40', f: "'Inter Tight', Inter, sans-serif", s: '40px', w: '600', l: '-0.04em', e: 'Reviews and feedback' },
+        { n: 'H2 · 28', f: "'Inter Tight', Inter, sans-serif", s: '28px', w: '600', l: '-0.035em', e: 'Rating split this month' },
+        { n: 'Body · Inter 16', f: 'Inter, sans-serif', s: '16px', w: '400', l: '0', e: 'Customers scan, rate and post on Google in under ten seconds.' },
+        { n: 'Small · Inter 13', f: 'Inter, sans-serif', s: '13px', w: '500', l: '0', e: 'Last synced 2 minutes ago' },
+        { n: 'Label · 11 caps', f: 'Inter, sans-serif', s: '11px', w: '600', l: '0.06em', e: 'SCANS · LAST 30 DAYS' }
+      ],
+      radii: ['8px', '12px', '16px', '24px', '999px']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Tickets and assets</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="tickets" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Operate</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Tickets &amp; asset service</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Add asset</button><button type="button" class="btn">SLA rules</button><button type="button" class="btn btn-p">New ticket</button></div>
+</header>
+<nav class="tabs" aria-label="Ticket sections" style="padding: 0 clamp(8px, 1.6vw, 20px)"><sc-for list="{{tabs}}" as="t"><a href="#" class="tab {{t.cls}}">{{t.t}} <span class="mono" style="font-size: 11px; color: #6B6B75">{{t.c}}</span></a></sc-for></nav>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border: 1px solid #E7E7EB; background: #fff">
+<sc-for list="{{kpis}}" as="k"><div style="padding: 16px 18px; border-right: 1px solid #F1F1F3"><div class="k">{{k.l}}</div><div class="disp" style="font-size: 28px; font-weight: 500; margin-top: 6px">{{k.v}}</div><div class="mono" style="font-size: 11px; color: {{k.c}}; margin-top: 4px">{{k.d}}</div></div></sc-for>
+</div>
+<div class="row">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Open tickets</h2><div style="display: flex; gap: 6px; flex-wrap: wrap"><select class="in" aria-label="Status" style="width: auto; min-height: 34px"><option>Open &amp; in progress</option></select><select class="in" aria-label="Category" style="width: auto; min-height: 34px"><option>All categories</option><option>Feedback</option><option>Asset</option><option>Housekeeping</option></select></div></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Ticket</th><th scope="col">Source</th><th scope="col">Location</th><th scope="col">Assignee</th><th scope="col">SLA</th><th scope="col">Status</th></tr></thead>
+<tbody><sc-for list="{{tickets}}" as="t"><tr style="background: {{t.row}}"><td><div style="font-weight: 600">{{t.id}} · {{t.t}}</div><div class="mono" style="font-size: 11px; color: #6B6B75; margin-top: 2px">{{t.ago}}</div></td><td><span class="pill" style="background: #F1F1F3; color: #3D3D45">{{t.src}}</span></td><td>{{t.l}}</td><td>{{t.a}}</td><td class="mono" style="color: {{t.sc}}; font-weight: 600">{{t.sla}}</td><td><span class="pill" style="background: {{t.sb}}; color: {{t.sf}}">{{t.s}}</span></td></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" style="flex: 1 1 340px">
+<div class="ch"><div><div class="k">#231 · Feedback</div><h2 class="ct" style="margin-top: 4px">“AC too cold near window”</h2></div><span class="pill" style="background: #FDF0E1; color: #8A4A06">OPEN</span></div>
+<div style="padding: 16px 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-bottom: 1px solid #F1F1F3">
+<div class="fl"><label for="as">Assignee</label><select id="as" class="in"><option>Meena S.</option><option>Ravi K.</option></select></div>
+<div class="fl"><label for="pr">Priority</label><select id="pr" class="in"><option>High</option><option>Normal</option></select></div>
+</div>
+<ol style="margin: 0; padding: 16px 18px; list-style: none; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{timeline}}" as="e"><li style="display: flex; gap: 12px"><span style="width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex: none; background: {{e.c}}"></span><div><div style="font-size: 13.5px">{{e.t}}</div><div class="mono" style="font-size: 11px; color: #6B6B75; margin-top: 2px">{{e.m}}</div></div></li></sc-for>
+</ol>
+<div style="padding: 0 18px 18px; display: flex; flex-direction: column; gap: 10px"><label class="sr" for="rep">Reply to customer</label><textarea id="rep" class="in" rows="3" style="padding: 10px 12px; min-height: 76px">Hi! Sorry about that — we’ve adjusted the AC near your table. Thanks for telling us.</textarea><div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn btn-p" style="flex: 1">Send on WhatsApp &amp; resolve</button><button type="button" class="btn">Escalate</button></div></div>
+</section>
+</div>
+<section class="card">
+<div class="ch"><h2 class="ct">Assets with QR</h2><div style="display: flex; gap: 8px"><span class="mono" style="font-size: 12px; color: #6B6B75">46 ASSETS · 3 SERVICES DUE THIS WEEK</span></div></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))">
+<sc-for list="{{assets}}" as="a"><article style="padding: 16px 18px; border-right: 1px solid #F1F1F3; border-bottom: 1px solid #F1F1F3; display: flex; gap: 14px"><div style="width: 44px; height: 44px; border-radius: 12px; background: #F1F1F3; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"></path></svg></div><div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px"><div style="font-size: 14px; font-weight: 600">{{a.n}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{a.id}} · {{a.l}}</div><div style="display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; font-size: 12px"><span>Next service</span><span style="color: {{a.c}}; font-weight: 600">{{a.due}}</span></div><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: #3D3D45"><span>AMC vendor</span><span>{{a.v}}</span></div></div></article></sc-for>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const O = { s: 'OPEN', sb: '#FDF0E1', sf: '#8A4A06' }, P = { s: 'IN PROGRESS', sb: '#F3EEFF', sf: '#5B45B8' }, B = { s: 'BREACHED', sb: '#FBE4E1', sf: '#A8321F' };
+    return {
+      tabs: [{ t: 'Tickets', cls: 'on', c: '9' }, { t: 'Assets', cls: '', c: '46' }, { t: 'Technician visits', cls: '', c: '128' }, { t: 'SLA rules', cls: '', c: '5' }, { t: 'Categories', cls: '', c: '7' }],
+      kpis: [{ l: 'Open', v: '9', d: '4 new today', c: '#3D3D45' }, { l: 'Breaching SLA', v: '2', d: 'escalated to owner', c: '#A8321F' }, { l: 'Avg resolution', v: '3h 12m', d: '▼ 41 min', c: '#1F6B45' }, { l: 'Resolved (30d)', v: '184', d: '96% within SLA', c: '#1F6B45' }, { l: 'Customer CSAT', v: '4.4', d: 'after resolution', c: '#3D3D45' }],
+      tickets: [
+        { id: '#231', t: 'AC too cold near window', ago: '12 min ago', src: 'FEEDBACK QR', l: 'Anna Nagar', a: 'Meena S.', sla: '1h 48m', sc: '#0E0E10', row: '#fff', ...O },
+        { id: '#229', t: 'Lift 2 stuck at 3rd floor', ago: '2 h ago', src: 'ASSET QR', l: 'Koramangala', a: 'OTIS · Ravi', sla: '−0h 20m', sc: '#A8321F', row: '#FFF8F7', ...B },
+        { id: '#227', t: 'Order took too long', ago: '3 h ago', src: 'FEEDBACK QR', l: 'Anna Nagar', a: 'Ravi K.', sla: '0h 40m', sc: '#8A4A06', row: '#fff', ...P },
+        { id: '#224', t: 'RO purifier leaking', ago: '5 h ago', src: 'ASSET QR', l: 'RS Puram', a: 'AquaCare · Siva', sla: '19h 10m', sc: '#0E0E10', row: '#fff', ...P },
+        { id: '#221', t: 'Washroom 2 needs cleaning', ago: '6 h ago', src: 'FACILITY QR', l: 'RS Puram', a: 'Housekeeping', sla: '−1h 05m', sc: '#A8321F', row: '#FFF8F7', ...B }
+      ],
+      timeline: [{ t: 'Customer submitted private feedback (2★)', m: 'Table 6 · 10:42 PM', c: '#0E0E10' }, { t: 'Ticket created, assigned to Meena S.', m: 'Auto rule · 10:42 PM', c: '#0E0E10' }, { t: 'Meena notified on WhatsApp', m: 'Delivered · 10:42 PM', c: '#0E0E10' }, { t: 'SLA: resolve within 2 hours', m: 'Due 12:42 AM', c: '#D6D6DC' }],
+      assets: [
+        { n: 'Daikin split AC · Hall 1', id: 'AST-0012', l: 'Anna Nagar', due: '28 Nov', c: '#8A4A06', v: 'CoolTech AMC' },
+        { n: 'OTIS lift 2', id: 'AST-0031', l: 'Koramangala', due: 'Overdue', c: '#A8321F', v: 'OTIS India' },
+        { n: 'Kirloskar genset 62.5 kVA', id: 'AST-0007', l: 'RS Puram', due: '12 Dec', c: '#1F6B45', v: 'PowerServ' },
+        { n: 'RO purifier · Kitchen', id: 'AST-0019', l: 'RS Puram', due: '30 Nov', c: '#8A4A06', v: 'AquaCare' },
+        { n: 'Fire extinguisher set', id: 'AST-0044', l: 'Anna Nagar', due: '3 Jan', c: '#1F6B45', v: 'SafeFire' },
+        { n: 'Cold room compressor', id: 'AST-0025', l: 'Anna Nagar', due: '18 Dec', c: '#1F6B45', v: 'CoolTech AMC' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

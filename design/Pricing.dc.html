@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor — Pricing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.lbl{font:500 12px/1.4 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#0E0E10}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;box-sizing:border-box;font:500 13px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer}
+.btn:hover{background:#0E0E10;color:#fff}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;border-color:#5B45B8;color:#fff}
+.x{position:absolute;width:15px;height:15px;font:300 18px/15px Inter,sans-serif;color:#8C8C84;text-align:center;pointer-events:none}
+.frame{max-width:1280px;margin:0 auto;border-left:1px solid #E7E7EB;border-right:1px solid #E7E7EB;box-sizing:border-box;position:relative}
+.sec{border-bottom:1px solid #E7E7EB;position:relative}
+.tbl{width:100%;border-collapse:collapse;min-width:900px}
+.tbl th,.tbl td{padding:14px 16px;border-bottom:1px solid #E7E7EB;text-align:left;font-size:14px}
+.tbl th{font:500 12px Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#3D3D45;background:#F6F6F8}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh">
+<dc-import name="SiteNav" active="pricing" hint-size="100%,73px"></dc-import>
+
+<section class="sec">
+<div class="frame" style="padding: clamp(56px, 7vw, 96px) clamp(20px, 5vw, 64px) 40px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px">
+<span class="lbl">Pricing</span>
+<h1 class="disp" style="margin: 0; font-size: clamp(42px, 6vw, 80px); line-height: 1">Simple plans. Per location.</h1>
+<p style="margin: 0; font-size: 18px; color: #3D3D45; max-width: 580px">Start free. Upgrade when you need more modules. All prices exclude GST.</p>
+<div role="group" aria-label="Billing period" style="display: inline-flex; border: 1px solid #0E0E10; background: #fff">
+<button type="button" class="mono" style="min-height: 44px; padding: 0 20px; border: 0; background: #0E0E10; color: #fff; font-size: 12px; cursor: pointer">MONTHLY</button>
+<button type="button" class="mono" style="min-height: 44px; padding: 0 20px; border: 0; background: #fff; color: #0E0E10; font-size: 12px; cursor: pointer">YEARLY · 2 MONTHS FREE</button>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))">
+<sc-for list="{{tiers}}" as="t" hint-placeholder-count="5">
+<div style="padding: 32px clamp(20px, 2vw, 28px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; display: flex; flex-direction: column; gap: 16px; background: {{t.bg}}; position: relative">
+<sc-if value="{{t.pop}}" hint-placeholder-val="{{ false }}"><span class="mono" style="position: absolute; top: 0; left: 0; right: 0; text-align: center; font-size: 10px; padding: 5px; background: #0E0E10; color: #fff">MOST POPULAR</span></sc-if>
+<span class="mono" style="font-size: 12px; color: #0E0E10; margin-top: 12px">{{t.n}}</span>
+<div><span class="disp" style="font-size: 38px; font-weight: 500">{{t.p}}</span><span style="font-size: 13px; color: #6B6B75"> {{t.per}}</span></div>
+<p style="margin: 0; font-size: 14px; color: #3D3D45; line-height: 1.5; min-height: 42px">{{t.d}}</p>
+<a class="btn {{t.cls}}" href="{{t.href}}" style="width: 100%">{{t.cta}}</a>
+<ul style="margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px">
+<sc-for list="{{t.f}}" as="f"><li style="display: flex; gap: 8px; font-size: 13px; line-height: 1.4"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0E0E10" stroke-width="2" style="flex: none; margin-top: 2px" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>{{f}}</li></sc-for>
+</ul>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame">
+<div style="padding: 48px clamp(20px, 5vw, 64px) 28px"><span class="lbl">Compare</span><h2 class="disp" style="margin: 12px 0 0; font-size: clamp(30px, 3.6vw, 44px)">Every feature, by plan</h2></div>
+<div style="overflow-x: auto; border-top: 1px solid #E7E7EB">
+<table class="tbl">
+<thead><tr><th scope="col" style="width: 32%">Feature</th><sc-for list="{{cols}}" as="c"><th scope="col">{{c}}</th></sc-for></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r">
+<sc-if value="{{r.group}}" hint-placeholder-val="{{ false }}"><tr><td colspan="6" class="mono" style="font-size: 12px; letter-spacing: .06em; color: #0E0E10; background: #F3EEFF; padding-top: 18px">{{r.t}}</td></tr></sc-if>
+<sc-if value="{{r.row}}" hint-placeholder-val="{{ true }}"><tr style="background: #fff"><th scope="row" style="font: 400 14px Inter, sans-serif; text-transform: none; letter-spacing: 0; color: #0E0E10; background: #fff">{{r.t}}</th><sc-for list="{{r.v}}" as="v"><td class="mono" style="font-size: 13px; color: {{v.c}}">{{v.t}}</td></sc-for></tr></sc-if>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame">
+<div style="padding: 48px clamp(20px, 5vw, 64px) 28px; border-bottom: 1px solid #E7E7EB"><span class="lbl">Add-ons</span><h2 class="disp" style="margin: 12px 0 0; font-size: clamp(30px, 3.6vw, 44px)">Pay only for what you use</h2></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))">
+<sc-for list="{{addons}}" as="a"><div style="padding: 28px clamp(20px, 2.4vw, 28px); border-right: 1px solid #E7E7EB; border-bottom: 1px solid #E7E7EB; background: #fff; display: flex; flex-direction: column; gap: 8px"><span style="font-size: 16px; font-weight: 600">{{a.t}}</span><span class="mono" style="font-size: 14px; color: #0E0E10">{{a.p}}</span><span style="font-size: 13px; color: #3D3D45; line-height: 1.5">{{a.d}}</span></div></sc-for>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<div class="frame" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr))">
+<div style="padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px); border-right: 1px solid #E7E7EB"><span class="lbl">Billing FAQ</span><h2 class="disp" style="margin: 14px 0 0; font-size: clamp(30px, 3.6vw, 44px)">Good to know</h2></div>
+<div><sc-for list="{{faqs}}" as="q"><details style="border-bottom: 1px solid #E7E7EB; padding: 22px clamp(20px, 3vw, 40px)"><summary style="cursor: pointer; font-size: 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px">{{q.q}}<span class="mono" style="color: #0E0E10">+</span></summary><p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #3D3D45">{{q.a}}</p></details></sc-for></div>
+</div>
+</section>
+<dc-import name="SiteFooter" hint-size="100%,460px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const Y = { t: '✓', c: '#5B45B8' }, N = { t: '—', c: '#9A9AA3' };
+    const t = (s) => ({ t: s, c: '#0E0E10' });
+    const row = (name, v) => ({ row: true, group: false, t: name, v });
+    const grp = (name) => ({ row: false, group: true, t: name, v: [] });
+    return {
+      tiers: [
+        { n: 'FREE', p: '₹0', per: 'forever', d: 'For trying Skanor at one location.', cta: 'Start free', cls: '', href: 'SignUp.dc.html', bg: '#fff', pop: false, f: ['3 dynamic + unlimited static QR', 'All basic QR types', 'Logo & colour designer', '30-day scan analytics'] },
+        { n: 'STARTER', p: '[₹ PRICE]', per: '/location/mo', d: 'For shops that want reviews and leads.', cta: 'Start 14-day trial', cls: '', href: 'SignUp.dc.html', bg: '#fff', pop: false, f: ['25 dynamic QR', 'Review Assistant + private feedback', 'Digital cards & link-in-bio', 'Menu & lead forms', '1 team member'] },
+        { n: 'GROWTH', p: '[₹ PRICE]', per: '/location/mo', d: 'For businesses building repeat customers.', cta: 'Start 14-day trial', cls: 'btn-p', href: 'SignUp.dc.html', bg: '#F3EEFF', pop: true, f: ['100 dynamic QR', 'Everything in Starter', 'Loyalty, coupons, digital bills', 'Tickets & bulk QR', '5 team members & roles'] },
+        { n: 'BUSINESS', p: '[₹ PRICE]', per: '/location/mo', d: 'For multi-branch operations.', cta: 'Start 14-day trial', cls: '', href: 'SignUp.dc.html', bg: '#fff', pop: false, f: ['Unlimited dynamic QR', 'Assets, attendance, bookings, plots', 'AI insights & replies', 'Integrations & smart redirects', 'Unlimited team'] },
+        { n: 'ENTERPRISE', p: 'Custom', per: '', d: 'For brands, manufacturers and agencies.', cta: 'Talk to sales', cls: '', href: 'Contact.dc.html', bg: '#fff', pop: false, f: ['Serialized product QR', 'Warranty & authenticity', 'API, webhooks, SSO', 'White-label & custom domain', 'Dedicated success manager'] }
+      ],
+      cols: ['Free', 'Starter', 'Growth', 'Business', 'Enterprise'],
+      rows: [
+        grp('BASIC'),
+        row('Dynamic QR codes', [t('3'), t('25'), t('100'), t('Unlimited'), t('Unlimited')]),
+        row('QR types, designer & downloads', [Y, Y, Y, Y, Y]),
+        row('Scan analytics history', [t('30 days'), t('1 year'), t('2 years'), t('Unlimited'), t('Unlimited')]),
+        grp('GROWTH'),
+        row('Review Assistant & private feedback', [N, Y, Y, Y, Y]),
+        row('Digital cards, link-in-bio, menu', [N, Y, Y, Y, Y]),
+        row('Lead forms', [N, Y, Y, Y, Y]),
+        row('Coupons, loyalty & digital bills', [N, N, Y, Y, Y]),
+        grp('PRO'),
+        row('Tickets with SLA', [N, N, Y, Y, Y]),
+        row('Bulk QR from CSV', [N, N, Y, Y, Y]),
+        row('Asset service logs', [N, N, N, Y, Y]),
+        row('Attendance & visitor passes', [N, N, N, Y, Y]),
+        row('Bookings & event check-in', [N, N, N, Y, Y]),
+        row('Real estate plots', [N, N, N, Y, Y]),
+        grp('ADVANCED'),
+        row('AI insights & reply drafts', [N, N, N, Y, Y]),
+        row('Smart redirects & A/B', [N, N, N, Y, Y]),
+        row('Integrations', [N, N, t('Basic'), Y, Y]),
+        row('Serialized product QR & warranty', [N, N, N, t('Add-on'), Y]),
+        row('API, webhooks & SSO', [N, N, N, N, Y]),
+        row('White-label & custom domain', [N, N, N, N, Y]),
+        grp('TEAM & SUPPORT'),
+        row('Team members', [t('1'), t('1'), t('5'), t('Unlimited'), t('Unlimited')]),
+        row('Support', [t('Help centre'), t('Email'), t('Email + chat'), t('Priority'), t('Dedicated')])
+      ],
+      addons: [
+        { t: 'Product QR codes', p: '[₹ PRICE] / 1,000 codes', d: 'Serialized codes with warranty and authenticity pages.' },
+        { t: 'Extra location', p: '[₹ PRICE] / mo', d: 'Add a branch to any paid plan.' },
+        { t: 'WhatsApp messages', p: '[₹ PRICE] / 1,000', d: 'Bills, offers and alerts sent from your number.' },
+        { t: 'Print shop', p: 'From [₹ PRICE]', d: 'Stickers, table tents and standees delivered.' }
+      ],
+      faqs: [
+        { q: 'What happens to my QR codes if I downgrade?', a: 'Static codes keep working forever. Dynamic codes above your new limit are paused, never deleted — upgrade again to resume them.' },
+        { q: 'Do you charge per scan?', a: 'No. Scans are unlimited on every plan.' },
+        { q: 'Can I pay yearly?', a: 'Yes — yearly billing gives you two months free.' },
+        { q: 'Which payment methods do you accept?', a: 'UPI, cards, net banking and bank transfer for annual plans.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

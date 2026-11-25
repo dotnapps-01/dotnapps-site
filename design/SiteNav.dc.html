@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site navigation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<header style="font-family: Inter, system-ui, sans-serif; color: #0E0E10; background: #FAFAFA; border-bottom: 1px solid #E7E7EB; width: 100%">
+<nav aria-label="Main" style="max-width: 1280px; margin: 0 auto; box-sizing: border-box; border-left: 1px solid #E7E7EB; border-right: 1px solid #E7E7EB; min-height: 72px; padding: 12px clamp(20px, 3vw, 32px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px">
+<a href="Main.dc.html" aria-label="Skanor home" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #0E0E10">
+<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="2" width="22" height="22" fill="none" stroke="#0E0E10" stroke-width="4"></rect><rect x="9" y="9" width="8" height="8" fill="#0E0E10"></rect></svg>
+<span style="font-family: 'Inter Tight', Inter, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.04em">skanor</span>
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px">
+<sc-for list="{{links}}" as="l" hint-placeholder-count="5"><a href="{{l.href}}" style="font-size: 14px; text-decoration: none; padding: 12px 12px; color: {{l.color}}; font-weight: {{l.w}}; border-bottom: {{l.line}}">{{l.t}}</a></sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="SignUp.dc.html" style="font: 500 15px Inter, sans-serif; color: #0E0E10; text-decoration: none; padding: 12px 18px; border: 1px solid #0E0E10; border-radius: 999px">Log in</a>
+<a href="SignUp.dc.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; background: #0E0E10; color: #FFFFFF; text-decoration: none; font: 500 15px Inter, sans-serif; border-radius: 999px">Start free <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</nav>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","default":"home","options":["home","features","industries","pricing","contact"]},"$preview":{"width":1440,"height":72}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'home';
+    const raw = [
+      { k: 'features', t: 'Features', href: 'Features.dc.html' },
+      { k: 'industries', t: 'Industries', href: 'Industries.dc.html' },
+      { k: 'pricing', t: 'Pricing', href: 'Pricing.dc.html' },
+      { k: 'docs', t: 'API docs', href: 'Integrations.dc.html' },
+      { k: 'contact', t: 'Contact', href: 'Contact.dc.html' }
+    ];
+    return {
+      links: raw.map((l) => ({
+        ...l,
+        color: l.k === active ? '#0E0E10' : '#3D3D45',
+        w: l.k === active ? '600' : '400',
+        line: l.k === active ? '2px solid transparent' : '2px solid transparent'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

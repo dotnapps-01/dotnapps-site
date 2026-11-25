@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Attendance and visitors</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="attendance" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Operate</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Attendance &amp; visitors</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><select class="in" aria-label="Site" style="width: auto"><option>Site B · Saravanampatti</option></select><button type="button" class="btn">Add worker</button><button type="button" class="btn btn-p">Export payroll</button></div>
+</header>
+<nav class="tabs" aria-label="Attendance sections" style="padding: 0 clamp(8px, 1.6vw, 20px)"><sc-for list="{{tabs}}" as="t"><a href="#" class="tab {{t.cls}}">{{t.t}}</a></sc-for></nav>
+<div style="padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); display: flex; flex-direction: column; gap: 20px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border: 1px solid #E7E7EB; background: #fff">
+<sc-for list="{{kpis}}" as="k"><div style="padding: 16px 18px; border-right: 1px solid #F1F1F3"><div class="k">{{k.l}}</div><div class="disp" style="font-size: 28px; font-weight: 500; margin-top: 6px">{{k.v}}</div><div class="mono" style="font-size: 11px; color: {{k.c}}; margin-top: 4px">{{k.d}}</div></div></sc-for>
+</div>
+<div class="row">
+<section class="card" style="flex: 2 1 560px">
+<div class="ch"><h2 class="ct">Today · 25 Nov</h2><div style="display: flex; gap: 6px"><label class="sr" for="ws">Search workers</label><input id="ws" class="in" type="search" placeholder="Search name or ID" style="width: 200px; min-height: 34px"></div></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Worker</th><th scope="col">Role</th><th scope="col">Check-in</th><th scope="col">Check-out</th><th scope="col">Verified</th><th scope="col">Status</th></tr></thead>
+<tbody><sc-for list="{{rows}}" as="r"><tr><td><div style="display: flex; gap: 10px; align-items: center"><div style="width: 32px; height: 32px; border-radius: 50%; background: {{r.av}}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600">{{r.i}}</div><div><div style="font-weight: 600">{{r.n}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{r.id}}</div></div></div></td><td>{{r.role}}</td><td class="mono">{{r.in}}</td><td class="mono">{{r.out}}</td><td><span style="display: flex; gap: 6px; font-size: 12px; color: {{r.vc}}">{{r.v}}</span></td><td><span class="pill" style="background: {{r.sb}}; color: {{r.sf}}">{{r.s}}</span></td></tr></sc-for></tbody></table></div>
+</section>
+<div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section class="card">
+<div class="ch"><h2 class="ct">Check-in points</h2><a href="QRStudio.dc.html" style="font-size: 13px; font-weight: 600">+ Add</a></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{points}}" as="p"><li style="padding: 12px 18px; border-bottom: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 10px"><div><div style="font-size: 13.5px; font-weight: 600">{{p.n}}</div><div class="mono" style="font-size: 11px; color: #6B6B75; margin-top: 2px">{{p.d}}</div></div><span class="mono" style="font-size: 12px">{{p.c}}</span></li></sc-for></ul>
+</section>
+<section class="card">
+<div class="ch"><h2 class="ct">Rules</h2></div>
+<div style="padding: 12px 18px 16px; display: flex; flex-direction: column; gap: 10px"><sc-for list="{{rules}}" as="o"><div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><span style="font-size: 13px">{{o.t}}</span><span class="tog" style="background: {{o.bg}}"><i style="left: {{o.x}}"></i></span></div></sc-for></div>
+</section>
+</div>
+</div>
+<section class="card">
+<div class="ch"><h2 class="ct">Visitor log</h2><div style="display: flex; gap: 6px; align-items: center"><span class="pill" style="background: #FDF0E1; color: #8A4A06">2 AWAITING APPROVAL</span></div></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Visitor</th><th scope="col">Purpose</th><th scope="col">Host</th><th scope="col">In</th><th scope="col">Out</th><th scope="col">Pass</th><th scope="col"><span class="sr">Actions</span></th></tr></thead>
+<tbody><sc-for list="{{visitors}}" as="v"><tr><td><div style="font-weight: 600">{{v.n}}</div><div class="mono" style="font-size: 11px; color: #6B6B75">{{v.p}}</div></td><td>{{v.why}}</td><td>{{v.h}}</td><td class="mono">{{v.in}}</td><td class="mono">{{v.out}}</td><td><span class="pill" style="background: {{v.sb}}; color: {{v.sf}}">{{v.s}}</span></td><td><sc-if value="{{v.pending}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 6px"><button type="button" class="btn btn-p" style="min-height: 32px; padding: 0 12px; font-size: 13px">Approve</button><button type="button" class="btn" style="min-height: 32px; padding: 0 12px; font-size: 13px">Deny</button></div></sc-if></td></tr></sc-for></tbody></table></div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1550}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = { s: 'PRESENT', sb: '#E3F2EA', sf: '#1F6B45' }, L = { s: 'LATE', sb: '#FDF0E1', sf: '#8A4A06' }, A = { s: 'ABSENT', sb: '#FBE4E1', sf: '#A8321F' };
+    const ok = { v: '✓ Selfie + location', vc: '#1F6B45' };
+    const on = (x) => ({ bg: x ? '#0E0E10' : '#D6D6DC', x: x ? '18px' : '2px' });
+    return {
+      tabs: [{ t: 'Today', cls: 'on' }, { t: 'Staff', cls: '' }, { t: 'Labour', cls: '' }, { t: 'Shifts', cls: '' }, { t: 'Leave', cls: '' }, { t: 'Visitors', cls: '' }, { t: 'Payroll', cls: '' }],
+      kpis: [{ l: 'On site now', v: '42', d: 'of 48 scheduled', c: '#3D3D45' }, { l: 'Late today', v: '5', d: 'after 9:15 AM', c: '#8A4A06' }, { l: 'Absent', v: '6', d: '2 on approved leave', c: '#A8321F' }, { l: 'Overtime (week)', v: '64h', d: '11 workers', c: '#3D3D45' }, { l: 'Visitors today', v: '9', d: '2 awaiting approval', c: '#3D3D45' }],
+      rows: [
+        { i: 'MK', n: 'Murugan K.', id: 'LB-0114', role: 'Mason', in: '08:52', out: '—', av: '#E6DEFF', ...ok, ...P },
+        { i: 'SP', n: 'Selvi P.', id: 'LB-0121', role: 'Helper', in: '09:24', out: '—', av: '#FBDDEC', ...ok, ...L },
+        { i: 'RA', n: 'Rajesh A.', id: 'LB-0098', role: 'Electrician', in: '08:40', out: '—', av: '#E6DEFF', ...ok, ...P },
+        { i: 'BK', n: 'Bala K.', id: 'LB-0133', role: 'Carpenter', in: '08:58', out: '—', av: '#E6DEFF', v: '⚠ Outside geofence 140 m', vc: '#8A4A06', ...P },
+        { i: 'AN', n: 'Anand N.', id: 'ST-0007', role: 'Site supervisor', in: '08:15', out: '—', av: '#F1F1F3', ...ok, ...P },
+        { i: 'VJ', n: 'Vijay J.', id: 'LB-0140', role: 'Helper', in: '—', out: '—', av: '#F1F1F3', v: '—', vc: '#6B6B75', ...A }
+      ],
+      points: [{ n: 'Main gate', d: 'Geofence 100 m · selfie required', c: '38 today' }, { n: 'Site office', d: 'Staff only', c: '6 today' }, { n: 'Material store', d: 'Store keeper', c: '4 today' }],
+      rules: [{ t: 'Selfie at check-in', ...on(true) }, { t: 'Location must be inside geofence', ...on(true) }, { t: 'Late after 9:15 AM', ...on(true) }, { t: 'Daily summary to owner on WhatsApp', ...on(true) }, { t: 'Allow check-in from personal phone', ...on(false) }],
+      visitors: [
+        { n: 'Prakash V.', p: '+91 98xxx xx402', why: 'Cement delivery', h: 'Anand N.', in: '10:12', out: '10:48', s: 'CHECKED OUT', sb: '#F1F1F3', sf: '#3D3D45', pending: false },
+        { n: 'Sangeetha R.', p: '+91 97xxx xx881', why: 'Client site visit', h: 'Vikas R.', in: '11:30', out: '—', s: 'ON SITE', sb: '#E3F2EA', sf: '#1F6B45', pending: false },
+        { n: 'Imran S.', p: '+91 90xxx xx115', why: 'Electrical inspection', h: 'Anand N.', in: '—', out: '—', s: 'AWAITING', sb: '#FDF0E1', sf: '#8A4A06', pending: true },
+        { n: 'Kavya M.', p: '+91 94xxx xx530', why: 'Interview', h: 'Vikas R.', in: '—', out: '—', s: 'AWAITING', sb: '#FDF0E1', sf: '#8A4A06', pending: true }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skanor app — Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap">
+<style>
+body{margin:0;background:#FAFAFA;color:#0E0E10;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#0E0E10}a:hover{color:#5B45B8}
+.mono{font-family:Inter,system-ui,sans-serif}
+.disp{font-family:'Inter Tight',Inter,sans-serif;letter-spacing:-0.035em;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 16px;box-sizing:border-box;font:500 12px/1 Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;border:1px solid #0E0E10;color:#0E0E10;background:#fff;cursor:pointer;white-space:nowrap}
+.btn-p{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover{background:#5B45B8;color:#fff}
+.btn-d{background:#0E0E10;color:#fff}
+.card{background:#fff;border:1px solid #E7E7EB;min-width:0}
+.ch{padding:14px 18px;border-bottom:1px solid #E7E7EB;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ct{font-size:15px;font-weight:600;margin:0}
+.k{font:500 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6B6B75}
+.pill{display:inline-block;font:500 10.5px/1.5 Inter,sans-serif;padding:2px 8px;white-space:nowrap}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:12px 18px;border-bottom:1px solid #F1F1F3;text-align:left;font-size:13.5px;white-space:nowrap}
+.tbl th{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#6B6B75;background:#F6F6F8}
+.in{min-height:40px;padding:0 12px;border:1px solid #E7E7EB;background:#fff;font:400 14px Inter,sans-serif;color:#0E0E10;box-sizing:border-box;width:100%}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl label,.fl .lb{font:500 11px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#3D3D45}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #E7E7EB;background:#fff}
+.tab{padding:12px 16px;font-size:13.5px;text-decoration:none;color:#3D3D45;border-bottom:2px solid transparent;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px}
+.tab.on{color:#0E0E10;font-weight:600;border-bottom-color:#0E0E10}
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tog{width:36px;height:20px;border-radius:10px;position:relative;flex:none;display:inline-block}
+.tog i{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+
+/* Nexo-style theme */
+a{color:#0E0E10}a:hover{color:#3D3D45}
+.mono{font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.disp{letter-spacing:-0.045em;font-weight:600}
+.btn{border-radius:999px;text-transform:none;letter-spacing:0;font:500 15px/1 Inter,sans-serif}
+.btn:hover{background:#F1F1F3;color:#0E0E10}
+.btn-p,.btn-d{background:#0E0E10;border-color:#0E0E10;color:#fff}
+.btn-p:hover,.btn-d:hover{background:#2A2A30;border-color:#2A2A30;color:#fff}
+.lbl{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;background:#F1F1F3;color:#0E0E10;text-transform:none;letter-spacing:0;font:500 14px/1.2 Inter,sans-serif}
+.lbl::before{content:"";width:22px;height:22px;border-radius:50%;flex:none;background:radial-gradient(circle at 30% 30%,#AFCBFF,#F6B8DA 55%,#CDBDFF)}
+.lbl>span:first-child{display:none}
+.card{border-radius:16px;overflow:hidden}
+.pill{border-radius:999px}
+.in{border-radius:12px}
+.x{display:none}
+.frame{border-left-color:transparent!important;border-right-color:transparent!important}
+.sec{border-bottom-color:transparent}
+.tab.on{border-bottom-color:#0E0E10}
+.k{letter-spacing:.04em}
+div[style*="minmax(170px, 1fr)"][style*="border: 1px solid"]{border-radius:16px;overflow:hidden}
+.tbl th{letter-spacing:.02em}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+<div style="flex: 1 1 248px; max-width: 100%"><dc-import name="AppSidebar" active="settings" hint-size="100%,1040px"></dc-import></div>
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px clamp(16px, 2.4vw, 32px); border-bottom: 1px solid #E7E7EB; background: #FFFFFF">
+<div><div class="k">Account</div><h1 class="disp" style="margin: 2px 0 0; font-size: 24px">Settings</h1></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Cancel</button><button type="button" class="btn btn-p">Save changes</button></div>
+</header>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; padding: clamp(16px, 2.4vw, 28px) clamp(16px, 2.4vw, 32px); align-items: flex-start">
+<nav aria-label="Settings sections" style="flex: 1 1 200px; max-width: 240px; display: flex; flex-direction: column; gap: 2px"><sc-for list="{{nav}}" as="n"><a href="#{{n.id}}" style="padding: 9px 12px; border-radius: 10px; font-size: 14px; font-weight: {{n.w}}; background: {{n.bg}}; color: #0E0E10; text-decoration: none">{{n.t}}</a></sc-for></nav>
+<div style="flex: 999 1 560px; display: flex; flex-direction: column; gap: 20px; min-width: 0">
+<section class="card" id="business">
+<div class="ch"><h2 class="ct">Business profile</h2></div>
+<div style="padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+<div class="fl"><label for="s1">Business name</label><input id="s1" class="in" value="Saravana Cafe"></div>
+<div class="fl"><label for="s2">Category</label><select id="s2" class="in"><option>Restaurant · Cafe</option></select></div>
+<div class="fl"><label for="s3">GSTIN (optional)</label><input id="s3" class="in" placeholder="[GSTIN]"></div>
+<div class="fl"><label for="s4">Default language on scan pages</label><select id="s4" class="in"><option>English + Tamil</option><option>English + Hindi</option></select></div>
+</div>
+<div style="border-top: 1px solid #F1F1F3"><div class="ch" style="border: 0"><h3 class="ct" style="font-size: 15px">Locations</h3><a href="#" style="font-size: 13px; font-weight: 600">+ Add location</a></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{locs}}" as="l"><li style="padding: 12px 18px; border-top: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center"><div><div style="font-size: 14px; font-weight: 600">{{l.n}}</div><div style="font-size: 12.5px; color: #6B6B75">{{l.a}}</div></div><span class="pill" style="background: {{l.sb}}; color: {{l.sf}}">{{l.g}}</span></li></sc-for></ul></div>
+</section>
+<section class="card" id="team">
+<div class="ch"><h2 class="ct">Team &amp; roles</h2><button type="button" class="btn" style="min-height: 34px">Invite member</button></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Permission</th><sc-for list="{{roles}}" as="r"><th scope="col" style="text-align: center">{{r}}</th></sc-for></tr></thead>
+<tbody><sc-for list="{{perms}}" as="p"><tr><td>{{p.t}}</td><sc-for list="{{p.v}}" as="v"><td style="text-align: center"><span aria-label="{{v.l}}" style="display: inline-flex; width: 22px; height: 22px; border-radius: 50%; align-items: center; justify-content: center; background: {{v.bg}}; color: {{v.fg}}; font-size: 12px; font-weight: 700">{{v.s}}</span></td></sc-for></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" id="billing">
+<div class="ch"><h2 class="ct">Plan &amp; billing</h2><a href="Pricing.dc.html" style="font-size: 13px; font-weight: 600">Compare plans →</a></div>
+<div style="padding: 18px; display: flex; flex-wrap: wrap; gap: 18px">
+<div style="flex: 1 1 260px; border-radius: 16px; padding: 18px; background-color: #EEF2FF; background-image: radial-gradient(55% 60% at 12% 18%, #AFCBFF 0%, rgba(175,203,255,0) 70%), radial-gradient(45% 55% at 88% 22%, #F6B8DA 0%, rgba(246,184,218,0) 70%), radial-gradient(55% 60% at 72% 88%, #CDBDFF 0%, rgba(205,189,255,0) 70%)"><div class="k">Current plan</div><div class="disp" style="font-size: 26px; font-weight: 600; margin-top: 6px">Growth</div><div style="font-size: 13px; margin-top: 4px">[₹ PRICE] / location / month · renews 1 Dec</div><button type="button" class="btn btn-p" style="margin-top: 14px">Upgrade to Business</button></div>
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 12px"><sc-for list="{{usage}}" as="u"><div><div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{u.t}}</span><span class="mono">{{u.v}}</span></div><div style="height: 6px; border-radius: 6px; background: #F1F1F3; margin-top: 6px"><div style="height: 6px; border-radius: 6px; background: #0E0E10; width: {{u.w}}"></div></div></div></sc-for></div>
+</div>
+<div style="overflow-x: auto; border-top: 1px solid #F1F1F3"><table class="tbl"><thead><tr><th scope="col">Invoice</th><th scope="col">Date</th><th scope="col">Amount</th><th scope="col">Status</th><th scope="col"><span class="sr">Download</span></th></tr></thead>
+<tbody><sc-for list="{{inv}}" as="i"><tr><td class="mono">{{i.n}}</td><td>{{i.d}}</td><td>[₹ AMOUNT]</td><td><span class="pill" style="background: #E3F2EA; color: #1F6B45">PAID</span></td><td><a href="#">GST invoice PDF</a></td></tr></sc-for></tbody></table></div>
+</section>
+<div class="row">
+<section class="card" id="brand" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Brand kit &amp; domain</h2></div>
+<div style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 12px; align-items: center"><div style="width: 56px; height: 56px; border-radius: 14px; border: 1px dashed #D6D6DC; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #6B6B75">Logo</div><button type="button" class="btn" style="min-height: 34px">Upload logo</button></div>
+<div style="display: flex; gap: 8px"><sc-for list="{{colors}}" as="c"><span aria-label="Brand color {{c}}" style="width: 32px; height: 32px; border-radius: 10px; background: {{c}}; border: 1px solid #E7E7EB"></span></sc-for></div>
+<div class="fl"><label for="b1">Scan page domain</label><input id="b1" class="in" value="saravanacafe.skn.to"></div>
+<div class="fl"><label for="b2">Custom domain (Business plan)</label><input id="b2" class="in" placeholder="scan.yourbrand.com"></div>
+</div>
+</section>
+<section class="card" id="security" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Security</h2></div>
+<ul style="margin: 0; padding: 0; list-style: none"><sc-for list="{{sec}}" as="o"><li style="padding: 14px 18px; border-bottom: 1px solid #F1F1F3; display: flex; justify-content: space-between; gap: 12px; align-items: center"><div><div style="font-size: 14px; font-weight: 600">{{o.t}}</div><div style="font-size: 12.5px; color: #6B6B75">{{o.d}}</div></div><span class="tog" role="switch" aria-checked="{{o.on}}" aria-label="{{o.t}}" style="background: {{o.bg}}"><i style="left: {{o.x}}"></i></span></li></sc-for></ul>
+<div style="padding: 14px 18px"><a href="#" style="font-size: 13px; font-weight: 600">View audit log →</a></div>
+</section>
+</div>
+<div class="row">
+<section class="card" id="notifications" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Notifications</h2></div>
+<div style="overflow-x: auto"><table class="tbl"><thead><tr><th scope="col">Event</th><th scope="col">WhatsApp</th><th scope="col">Email</th><th scope="col">App</th></tr></thead>
+<tbody><sc-for list="{{notif}}" as="n"><tr><td>{{n.t}}</td><sc-for list="{{n.v}}" as="v"><td><span role="checkbox" aria-checked="{{v.a}}" aria-label="{{n.t}} {{v.c}}" style="display: inline-flex; width: 20px; height: 20px; border-radius: 6px; align-items: center; justify-content: center; background: {{v.bg}}; border: 1px solid {{v.bd}}; color: #fff; font-size: 12px; font-weight: 700">{{v.s}}</span></td></sc-for></tr></sc-for></tbody></table></div>
+</section>
+<section class="card" id="data" style="flex: 1 1 320px">
+<div class="ch"><h2 class="ct">Data &amp; privacy</h2></div>
+<div style="padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<p style="margin: 0; font-size: 13px; color: #3D3D45; line-height: 1.6">Customer data collected through your QR pages belongs to you. Export it any time, or set how long it is kept.</p>
+<div class="fl"><label for="d1">Keep scan and lead data for</label><select id="d1" class="in"><option>24 months</option><option>12 months</option><option>Forever</option></select></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="btn">Export all data (CSV)</button><button type="button" class="btn" style="color: #A8321F; border-color: #F2C7C0">Delete workspace</button></div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = (x) => ({ on: x ? 'true' : 'false', bg: x ? '#0E0E10' : '#D6D6DC', x: x ? '18px' : '2px' });
+    const Y = { s: '✓', bg: '#0E0E10', fg: '#fff', l: 'Allowed' }, V = { s: '·', bg: '#F1F1F3', fg: '#6B6B75', l: 'View only' }, N = { s: '—', bg: 'transparent', fg: '#D6D6DC', l: 'Not allowed' };
+    const nv = [['business', 'Business profile'], ['team', 'Team & roles'], ['billing', 'Plan & billing'], ['brand', 'Brand kit & domain'], ['security', 'Security'], ['notifications', 'Notifications'], ['data', 'Data & privacy']];
+    return {
+      nav: nv.map((n, i) => ({ id: n[0], t: n[1], w: i === 0 ? '600' : '500', bg: i === 0 ? '#F1F1F3' : 'transparent' })),
+      locs: [{ n: 'RS Puram', a: 'Coimbatore · 3 QR codes on tables', g: 'GOOGLE LINKED', sb: '#E3F2EA', sf: '#1F6B45' }, { n: 'Peelamedu', a: 'Coimbatore · 12 QR codes', g: 'GOOGLE LINKED', sb: '#E3F2EA', sf: '#1F6B45' }, { n: 'Saibaba Colony', a: 'Coimbatore · 0 QR codes', g: 'LINK GOOGLE', sb: '#FDF0E1', sf: '#8A4A06' }],
+      roles: ['Owner', 'Manager', 'Staff'],
+      perms: [
+        { t: 'Create and edit QR codes', v: [Y, Y, N] }, { t: 'Reply to reviews', v: [Y, Y, N] }, { t: 'View analytics', v: [Y, Y, V] },
+        { t: 'Manage leads and tickets', v: [Y, Y, Y] }, { t: 'Redeem coupons and stamp loyalty', v: [Y, Y, Y] }, { t: 'Billing and plan', v: [Y, N, N] }, { t: 'Invite team members', v: [Y, Y, N] }
+      ],
+      usage: [{ t: 'QR codes', v: '38 / 50', w: '76%' }, { t: 'Scans this month', v: '12,410 / unlimited', w: '20%' }, { t: 'WhatsApp messages', v: '1,820 / 2,500', w: '73%' }, { t: 'Team seats', v: '6 / 10', w: '60%' }],
+      inv: [{ n: 'SKN-2026-1104', d: '1 Nov 2026' }, { n: 'SKN-2026-1003', d: '1 Oct 2026' }, { n: 'SKN-2026-0902', d: '1 Sep 2026' }],
+      colors: ['#0E0E10', '#C2410C', '#FDF0E1', '#FFFFFF'],
+      sec: [{ t: 'Two-factor login', d: 'OTP on WhatsApp or authenticator app', ...on(true) }, { t: 'Google sign-in (SSO)', d: 'Team logs in with company Google accounts', ...on(false) }, { t: 'Alert on new device login', d: 'Owner gets a WhatsApp message', ...on(true) }],
+      notif: (() => { const ck = (c, x) => ({ c, a: x ? 'true' : 'false', s: x ? '✓' : '', bg: x ? '#0E0E10' : '#fff', bd: x ? '#0E0E10' : '#D6D6DC' }); return [
+        { t: 'New review (1–3★)', v: [ck('WhatsApp', true), ck('Email', true), ck('App', true)] },
+        { t: 'New lead', v: [ck('WhatsApp', true), ck('Email', false), ck('App', true)] },
+        { t: 'Ticket breaches SLA', v: [ck('WhatsApp', true), ck('Email', true), ck('App', true)] },
+        { t: 'Weekly summary', v: [ck('WhatsApp', false), ck('Email', true), ck('App', false)] }
+      ]; })()
+    };
+  }
+}
+</script>
+</body>
+</html>
