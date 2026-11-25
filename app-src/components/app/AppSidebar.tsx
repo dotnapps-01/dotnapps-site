@@ -5,22 +5,24 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut, X } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/cn";
-import { plan, sidebarBadges } from "@/lib/mock/app";
+import { sidebarBadges } from "@/lib/mock/app";
 import { appNav } from "@/lib/routes";
 import { LocationSwitcher } from "./LocationSwitcher";
 
 export type SidebarUser = { initials: string; name: string; role: string };
 export type SidebarLocation = { id: string; name: string };
+export type SidebarPlan = { name: string; used: number; /** null = unlimited */ limit: number | null; upgradeTo: string | null };
 
 type Props = {
   user: SidebarUser;
   locations: SidebarLocation[];
+  plan: SidebarPlan;
   /** shown only below lg, where the sidebar is a drawer */
   onClose?: () => void;
 };
 
 /** App sidebar (design/AppSidebar.dc.html). Every app route is linked; active state comes from the URL. */
-export function AppSidebar({ user, locations, onClose }: Props) {
+export function AppSidebar({ user, locations, plan, onClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   async function logOut() {
@@ -28,7 +30,7 @@ export function AppSidebar({ user, locations, onClose }: Props) {
     router.push("/login");
     router.refresh();
   }
-  const pct = Math.round((plan.used / plan.limit) * 100);
+  const pct = plan.limit ? Math.min(100, Math.round((plan.used / plan.limit) * 100)) : 0;
 
   return (
     <aside className="flex h-full w-full flex-col border-r border-line bg-surface text-ink">
@@ -90,23 +92,23 @@ export function AppSidebar({ user, locations, onClose }: Props) {
         <div className="flex flex-col gap-2 rounded-[14px] border border-line bg-marble-soft p-3.5">
           <div className="flex justify-between text-[11px] font-medium uppercase">
             <span className="text-ink">{plan.name} plan</span>
-            <span className="text-graphite">
-              {plan.used}/{plan.limit} QR
-            </span>
+            <span className="text-graphite">{plan.limit === null ? `${plan.used} QR · unlimited` : `${plan.used}/${plan.limit} QR`}</span>
           </div>
           <div
             role="progressbar"
             aria-label="QR codes used"
             aria-valuemin={0}
-            aria-valuemax={plan.limit}
+            aria-valuemax={plan.limit ?? plan.used}
             aria-valuenow={plan.used}
             className="h-1 rounded bg-white"
           >
             <div className="h-1 rounded bg-ink" style={{ width: `${pct}%` }} />
           </div>
-          <Link href="/app/settings" className="text-xs font-semibold text-ink underline-offset-2 hover:underline">
-            Upgrade to {plan.upgradeTo}
-          </Link>
+          {plan.upgradeTo ? (
+            <Link href="/app/settings" className="text-xs font-semibold text-ink underline-offset-2 hover:underline">
+              Upgrade to {plan.upgradeTo}
+            </Link>
+          ) : null}
         </div>
         <div className="flex items-center gap-2.5">
           <div

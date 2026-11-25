@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/app/ComingSoon";
-import { PageBody, PageHeader } from "@/components/app/PageHeader";
+import { redirect } from "next/navigation";
+import { LibraryView } from "@/components/qr/LibraryView";
+import { currentWorkspace } from "@/lib/auth/current";
+import { listFolders, listLocations, listQrCodes } from "@/lib/qr-repo";
+import { getShortLinkBase } from "@/lib/short-link";
 
 export const metadata: Metadata = { title: "QR Library" };
+export const dynamic = "force-dynamic";
 
-export default function Page() {
+export default async function LibraryPage() {
+  const ws = await currentWorkspace();
+  if (!ws) redirect("/login");
+  const [codes, folders, locations, short] = await Promise.all([listQrCodes(ws.id), listFolders(ws.id), listLocations(ws.id), getShortLinkBase()]);
   return (
-    <>
-      <PageHeader eyebrow="QR codes" title="QR Library" />
-      <PageBody>
-        <ComingSoon name="QR Library" phase={4} designFile="QRLibrary.dc.html" />
-      </PageBody>
-    </>
+    <LibraryView
+      codes={codes}
+      folders={folders}
+      locations={locations}
+      shortBase={short.base}
+      shortLabel={short.label}
+      bulkLocked={ws.plan === "free" || ws.plan === "starter"}
+    />
   );
 }

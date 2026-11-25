@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { signToken, verifyToken } from "./crypto";
 import { OTP_TTL_MS, type Challenge } from "./otp";
 
-export const COOKIE = { session: "skn_session", workspace: "skn_ws", otp: "skn_otp" } as const;
+export const COOKIE = { session: "skn_session", otp: "skn_otp" } as const;
 
 const SESSION_DAYS = 30;
 

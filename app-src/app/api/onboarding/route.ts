@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
-import { emptyWorkspace, getWorkspace, sanitizeWorkspacePatch, saveWorkspace } from "@/lib/workspace";
+import { ensureWorkspace, sanitizeWorkspacePatch, saveWorkspace } from "@/lib/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const current = (await getWorkspace(session.sub)) ?? emptyWorkspace(session.sub);
+  const current = await ensureWorkspace(session.sub);
   const next = { ...current, ...sanitizeWorkspacePatch(body) };
 
   if (body.complete === true) {

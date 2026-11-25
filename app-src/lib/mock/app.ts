@@ -1,9 +1,4 @@
-/**
- * Placeholder counters for the app shell until QR codes, reviews, leads and tickets exist (Phase 4+).
- * A new workspace starts on the Free plan (3 dynamic QR codes, see /pricing) with nothing waiting.
- */
+/** Placeholder sidebar badges until reviews, leads and tickets exist (Phases 5-7). A new workspace has none. */
 import type { AppNavKey } from "@/lib/routes";
 
 export const sidebarBadges: Partial<Record<AppNavKey, string>> = {};
-
-export const plan = { name: "Free", used: 0, limit: 3, upgradeTo: "Starter" };

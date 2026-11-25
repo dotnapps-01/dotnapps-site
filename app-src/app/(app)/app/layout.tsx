@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/app/AppShell";
-import { getSession } from "@/lib/auth/session";
-import { getWorkspace } from "@/lib/workspace";
+import { currentWorkspace } from "@/lib/auth/current";
+import { countDynamic } from "@/lib/qr-repo";
+import { dynamicLimit } from "@/lib/qr-types";
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -11,15 +12,23 @@ function initials(name: string) {
 }
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
-  const session = await getSession();
-  if (!session) redirect("/login");
-  const ws = await getWorkspace(session.sub);
+  const ws = await currentWorkspace();
+  if (!ws) redirect("/login");
 
-  const name = ws?.businessName || "Your business";
-  const locations = ws?.locationName ? [{ id: "primary", name: ws.locationName }] : [{ id: "none", name: "No location yet" }];
+  const name = ws.businessName || "Your business";
+  const locations = ws.locationName ? [{ id: "primary", name: ws.locationName }] : [{ id: "none", name: "No location yet" }];
+
+  const limit = dynamicLimit[ws.plan];
+  const upgrade = { free: "Starter", starter: "Growth", growth: "Business", business: "Enterprise", enterprise: null }[ws.plan];
+  const plan = {
+    name: ws.plan[0].toUpperCase() + ws.plan.slice(1),
+    used: await countDynamic(ws.id),
+    limit: Number.isFinite(limit) ? limit : null,
+    upgradeTo: upgrade,
+  };
 
   return (
-    <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations}>
+    <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations} plan={plan}>
       {children}
     </AppShell>
   );

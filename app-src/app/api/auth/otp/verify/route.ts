@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyOtp } from "@/lib/auth/otp";
 import { clearChallengeCookie, readChallengeCookie, startSession } from "@/lib/auth/session";
-import { emptyWorkspace, getWorkspace, saveWorkspace } from "@/lib/workspace";
+import { ensureWorkspace } from "@/lib/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -23,14 +23,7 @@ export async function POST(req: Request) {
   await startSession(r.phone);
   await clearChallengeCookie();
 
-  let ws = await getWorkspace(r.phone);
-  if (!ws) {
-    ws = emptyWorkspace(r.phone, r.businessName ?? "");
-    await saveWorkspace(ws);
-  } else if (r.businessName && !ws.businessName) {
-    ws = { ...ws, businessName: r.businessName };
-    await saveWorkspace(ws);
-  }
+  const ws = await ensureWorkspace(r.phone, r.businessName ?? "");
   // Returning users who already finished setup go straight to the app.
   return NextResponse.json({ ok: true, next: ws.onboarded ? "/app/dashboard" : null });
 }

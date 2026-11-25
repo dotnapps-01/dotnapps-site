@@ -1,16 +1,42 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/app/ComingSoon";
-import { PageBody, PageHeader } from "@/components/app/PageHeader";
+import { notFound, redirect } from "next/navigation";
+import { StudioWizard } from "@/components/qr/StudioWizard";
+import { currentWorkspace } from "@/lib/auth/current";
+import { countDynamic, getQrCode, listFolders, listLocations } from "@/lib/qr-repo";
+import { dynamicLimit, randomShortCode } from "@/lib/qr-types";
+import { getShortLinkBase } from "@/lib/short-link";
 
 export const metadata: Metadata = { title: "Create a QR code" };
+export const dynamic = "force-dynamic";
 
-export default function Page() {
+export default async function StudioPage({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
+  const ws = await currentWorkspace();
+  if (!ws) redirect("/login");
+  const { edit } = await searchParams;
+
+  const [locations, folders, used, short, record] = await Promise.all([
+    listLocations(ws.id),
+    listFolders(ws.id),
+    countDynamic(ws.id),
+    getShortLinkBase(),
+    edit ? getQrCode(ws.id, edit) : Promise.resolve(null),
+  ]);
+  if (edit && (!record || record.status === "archived")) notFound();
+
+  const limit = dynamicLimit[ws.plan];
   return (
-    <>
-      <PageHeader eyebrow="QR codes" title="Create a QR code" />
-      <PageBody>
-        <ComingSoon name="Create a QR code" phase={4} designFile="QRStudio.dc.html" />
-      </PageBody>
-    </>
+    <StudioWizard
+      key={record?.id ?? "new"}
+      mode={record ? "edit" : "create"}
+      initial={record ?? undefined}
+      locations={locations}
+      folders={folders.map((f) => ({ id: f.id, name: f.name }))}
+      shortBase={short.base}
+      shortLabel={short.label}
+      suggestedCode={randomShortCode()}
+      dynamicUsed={used}
+      dynamicLimit={Number.isFinite(limit) ? limit : null}
+      planName={ws.plan[0].toUpperCase() + ws.plan.slice(1)}
+    />
   );
 }
