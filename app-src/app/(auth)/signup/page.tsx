@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { SitePlaceholder } from "@/components/site/SitePlaceholder";
+import { redirect } from "next/navigation";
+import { AuthScreen } from "@/components/auth/AuthScreen";
+import { getSession } from "@/lib/auth/session";
 
-export const metadata: Metadata = { title: "Sign up & log in" };
+export const metadata: Metadata = { title: "Create your free account" };
 
-export default function Page() {
-  return (
-    <main id="main">
-      <SitePlaceholder title="Sign up & log in" phase={3} designFile="SignUp.dc.html" />
-    </main>
-  );
+export default async function SignUpPage() {
+  if (await getSession()) redirect("/app/dashboard");
+  return <AuthScreen mode="signup" />;
 }

@@ -1,22 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LogOut, X } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/cn";
-import { currentUser, locations, plan, sidebarBadges } from "@/lib/mock/app";
+import { plan, sidebarBadges } from "@/lib/mock/app";
 import { appNav } from "@/lib/routes";
 import { LocationSwitcher } from "./LocationSwitcher";
 
+export type SidebarUser = { initials: string; name: string; role: string };
+export type SidebarLocation = { id: string; name: string };
+
 type Props = {
+  user: SidebarUser;
+  locations: SidebarLocation[];
   /** shown only below lg, where the sidebar is a drawer */
   onClose?: () => void;
 };
 
 /** App sidebar (design/AppSidebar.dc.html). Every app route is linked; active state comes from the URL. */
-export function AppSidebar({ onClose }: Props) {
+export function AppSidebar({ user, locations, onClose }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
+  async function logOut() {
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    router.push("/login");
+    router.refresh();
+  }
   const pct = Math.round((plan.used / plan.limit) * 100);
 
   return (
@@ -102,12 +113,21 @@ export function AppSidebar({ onClose }: Props) {
             aria-hidden="true"
             className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-semibold text-white"
           >
-            {currentUser.initials}
+            {user.initials}
           </div>
-          <div className="flex flex-col">
-            <span className="text-[13px] font-semibold">{currentUser.name}</span>
-            <span className="text-[11px] text-muted">{currentUser.role}</span>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <span className="truncate text-[13px] font-semibold">{user.name}</span>
+            <span className="text-[11px] text-muted">{user.role}</span>
           </div>
+          <button
+            type="button"
+            aria-label="Log out"
+            title="Log out"
+            onClick={logOut}
+            className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full text-graphite hover:bg-mist hover:text-ink"
+          >
+            <LogOut size={16} aria-hidden="true" />
+          </button>
         </div>
       </div>
     </aside>

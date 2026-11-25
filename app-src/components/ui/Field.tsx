@@ -38,3 +38,7 @@ export function Field({ label, hint, error, className, children, hideLabel, labe
 
 export const controlClasses =
   "w-full min-h-11 rounded-input border border-line bg-surface px-3.5 text-sm font-normal text-ink placeholder:text-faint disabled:bg-paper disabled:text-muted aria-[invalid=true]:border-danger-fg";
+
+/** Caps label + 48px control used by the sign-up, onboarding and contact forms (design/SignUp.dc.html). */
+export const captionLabel = "text-xs font-medium uppercase tracking-[0.04em] text-graphite";
+export const bigControl = "min-h-12 border-track text-[15px]";

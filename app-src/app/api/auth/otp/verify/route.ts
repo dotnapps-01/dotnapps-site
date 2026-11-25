@@ -1,0 +1,36 @@
+import { NextResponse } from "next/server";
+import { verifyOtp } from "@/lib/auth/otp";
+import { clearChallengeCookie, readChallengeCookie, startSession } from "@/lib/auth/session";
+import { emptyWorkspace, getWorkspace, saveWorkspace } from "@/lib/workspace";
+
+export const dynamic = "force-dynamic";
+
+export async function POST(req: Request) {
+  let code = "";
+  try {
+    code = String((await req.json()).code ?? "").replace(/\D/g, "");
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+
+  const r = await verifyOtp(await readChallengeCookie(), code);
+  if (!r.ok) {
+    if (r.reason === "wrong") return NextResponse.json({ error: "wrong", attemptsLeft: r.attemptsLeft }, { status: 401 });
+    if (r.reason === "locked") return NextResponse.json({ error: "locked" }, { status: 429 });
+    return NextResponse.json({ error: r.reason }, { status: 400 });
+  }
+
+  await startSession(r.phone);
+  await clearChallengeCookie();
+
+  let ws = await getWorkspace(r.phone);
+  if (!ws) {
+    ws = emptyWorkspace(r.phone, r.businessName ?? "");
+    await saveWorkspace(ws);
+  } else if (r.businessName && !ws.businessName) {
+    ws = { ...ws, businessName: r.businessName };
+    await saveWorkspace(ws);
+  }
+  // Returning users who already finished setup go straight to the app.
+  return NextResponse.json({ ok: true, next: ws.onboarded ? "/app/dashboard" : null });
+}

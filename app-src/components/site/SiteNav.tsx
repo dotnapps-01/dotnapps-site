@@ -51,7 +51,7 @@ export function SiteNav() {
 
         <div className="flex items-center gap-2.5">
           <span className="hidden sm:inline-flex">
-            <Link href="/signup" className={buttonClasses({ size: "nav" })}>
+            <Link href="/login" className={buttonClasses({ size: "nav" })}>
               Log in
             </Link>
           </span>
@@ -77,7 +77,7 @@ export function SiteNav() {
               {l.label}
             </Link>
           ))}
-          <Link href="/signup" className={cn(linkCls("/signup"), "min-h-11 py-3 sm:hidden")}>
+          <Link href="/login" className={cn(linkCls("/login"), "min-h-11 py-3 sm:hidden")}>
             Log in
           </Link>
         </div>

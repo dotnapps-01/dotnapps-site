@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/cn";
-import { AppSidebar } from "./AppSidebar";
+import { AppSidebar, type SidebarLocation, type SidebarUser } from "./AppSidebar";
 
 /**
  * App layout: sticky sidebar from lg up; a slide-in drawer with a top bar below lg.
  * Pages render a <PageHeader/> and their content inside.
  */
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, user, locations }: { children: ReactNode; user: SidebarUser; locations: SidebarLocation[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           open ? "translate-x-0" : "invisible -translate-x-full",
         )}
       >
-        <AppSidebar onClose={() => setOpen(false)} />
+        <AppSidebar user={user} locations={locations} onClose={() => setOpen(false)} />
       </div>
 
       <main id="main" className="flex min-w-0 flex-1 flex-col pt-14 lg:pt-0">

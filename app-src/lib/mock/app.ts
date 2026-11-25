@@ -1,18 +1,9 @@
-/** Sample data for the app shell, taken from design/AppSidebar.dc.html. */
+/**
+ * Placeholder counters for the app shell until QR codes, reviews, leads and tickets exist (Phase 4+).
+ * A new workspace starts on the Free plan (3 dynamic QR codes, see /pricing) with nothing waiting.
+ */
 import type { AppNavKey } from "@/lib/routes";
 
-export const sidebarBadges: Partial<Record<AppNavKey, string>> = {
-  reviews: "6",
-  leads: "12",
-  tickets: "4",
-};
+export const sidebarBadges: Partial<Record<AppNavKey, string>> = {};
 
-export const locations = [
-  { id: "anna-nagar", name: "Anna Nagar, Chennai" },
-  { id: "rs-puram", name: "RS Puram, Coimbatore" },
-  { id: "koramangala", name: "Koramangala, Bengaluru" },
-];
-
-export const plan = { name: "Growth", used: 38, limit: 50, upgradeTo: "Business" };
-
-export const currentUser = { initials: "VR", name: "Vikas R", role: "Owner" };
+export const plan = { name: "Free", used: 0, limit: 3, upgradeTo: "Starter" };

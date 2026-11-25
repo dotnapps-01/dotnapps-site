@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
+import { bigControl, captionLabel } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
@@ -17,9 +18,8 @@ import { Mono } from "./parts";
 
 type Status = "idle" | "sending" | "sent" | "failed" | "unavailable";
 
-// The design's contact fields: 12px caps labels, 46px controls, slightly darker border.
-const label = "text-xs font-medium uppercase tracking-[0.04em] text-graphite";
-const control = "min-h-[46px] border-track text-[15px]";
+const label = captionLabel;
+const control = bigControl;
 
 export function DemoForm() {
   const [errors, setErrors] = useState<DemoRequestErrors>({});
