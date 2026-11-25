@@ -10,15 +10,16 @@ type FieldProps = {
   children: (a11y: { id: string; describedBy?: string; invalid: boolean }) => ReactNode;
   /** hide the visible label but keep it for screen readers */
   hideLabel?: boolean;
+  labelClassName?: string;
 };
 
 /** Shared real-<label> wrapper for Input, Select and Textarea. */
-export function Field({ label, hint, error, className, children, hideLabel }: FieldProps) {
+export function Field({ label, hint, error, className, children, hideLabel, labelClassName }: FieldProps) {
   const id = useId();
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className={cn("text-[13px] font-semibold text-ink", hideLabel && "sr-only")}>
+      <label htmlFor={id} className={cn("text-[13px] font-semibold text-ink", labelClassName, hideLabel && "sr-only")}>
         {label}
       </label>
       {children({ id, describedBy, invalid: Boolean(error) })}

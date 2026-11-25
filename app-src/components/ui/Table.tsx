@@ -9,7 +9,12 @@ export function Table({
   ...rest
 }: { caption?: string } & ComponentPropsWithoutRef<"table">) {
   return (
-    <div className="overflow-x-auto">
+    <div
+      role="region"
+      aria-label={caption ? `${caption} (scrollable)` : "Table (scrollable)"}
+      tabIndex={0}
+      className="relative overflow-x-auto"
+    >
       <table {...rest} className={cn("w-full border-collapse", className)}>
         {caption ? <caption className="sr-only">{caption}</caption> : null}
         {children}

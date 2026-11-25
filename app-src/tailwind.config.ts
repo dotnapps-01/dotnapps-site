@@ -67,6 +67,12 @@ const config: Config = {
         knob: "0 1px 2px rgba(0,0,0,.25)",
       },
       maxWidth: { frame: "1280px" },
+      spacing: {
+        // horizontal page gutter used by every marketing section
+        gutter: "clamp(20px, 5vw, 64px)",
+        // tighter gutter inside grid cells
+        cell: "clamp(20px, 2.4vw, 32px)",
+      },
     },
   },
   plugins: [

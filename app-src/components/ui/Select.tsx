@@ -3,15 +3,15 @@ import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
 import { Field, controlClasses } from "./Field";
 
-type Props = { label: string; hint?: string; error?: string; hideLabel?: boolean; wrapperClassName?: string } & Omit<
+type Props = { label: string; hint?: string; error?: string; hideLabel?: boolean; wrapperClassName?: string; labelClassName?: string } & Omit<
   ComponentPropsWithoutRef<"select">,
   "id"
 >;
 
 /** Native <select> (best on phones) with a custom chevron. */
-export function Select({ label, hint, error, hideLabel, wrapperClassName, className, children, ...rest }: Props) {
+export function Select({ label, hint, error, hideLabel, wrapperClassName, labelClassName, className, children, ...rest }: Props) {
   return (
-    <Field label={label} hint={hint} error={error} hideLabel={hideLabel} className={wrapperClassName}>
+    <Field label={label} hint={hint} error={error} hideLabel={hideLabel} className={wrapperClassName} labelClassName={labelClassName}>
       {({ id, describedBy, invalid }) => (
         <div className="relative">
           <select

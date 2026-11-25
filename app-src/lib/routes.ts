@@ -35,7 +35,7 @@ export const footerColumns: { heading: string; links: SiteLink[] }[] = [
     heading: "Product",
     links: [
       { label: "QR Studio", href: "/features" },
-      { label: "Review Assistant", href: "/features" },
+      { label: "Review Assistant", href: "/features/review-assistant" },
       { label: "Loyalty & offers", href: "/features" },
       { label: "Tickets & assets", href: "/features" },
       { label: "Product QR & warranty", href: "/features" },
