@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { AppShell } from "@/components/app/AppShell";
 import { currentWorkspace } from "@/lib/auth/current";
 import { countDynamic } from "@/lib/qr-repo";
+import { openFeedbackCount } from "@/lib/reviews";
 import { dynamicLimit } from "@/lib/qr-types";
 
 function initials(name: string) {
@@ -27,8 +28,11 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     upgradeTo: upgrade,
   };
 
+  const openFeedback = await openFeedbackCount(ws.id);
+  const badges = openFeedback > 0 ? { reviews: String(openFeedback) } : {};
+
   return (
-    <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations} plan={plan}>
+    <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations} plan={plan} badges={badges}>
       {children}
     </AppShell>
   );

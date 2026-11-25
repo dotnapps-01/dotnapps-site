@@ -20,13 +20,19 @@ export function parseLang(accept: string): "en" | "ta" | "hi" | "other" {
   return first === "en" || first === "ta" || first === "hi" ? first : "other";
 }
 
+/** Keyed hash of IP + user agent + code. Identifies a visitor without storing either value. */
+export async function visitorHash(h: Headers, qrId: string): Promise<string> {
+  const ua = h.get("user-agent") ?? "";
+  const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? h.get("x-real-ip") ?? "";
+  return (await hmacHex(`${ip}|${ua}|${qrId}`)).slice(0, 32);
+}
+
 /** Records one scan. Never throws: a logging problem must not stop the redirect. */
 export async function logScan(qr: { id: string; workspace_id: string }, h: Headers): Promise<void> {
   try {
     const ua = h.get("user-agent") ?? "";
     if (isBot(ua)) return;
-    const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? h.get("x-real-ip") ?? "";
-    const visitor = (await hmacHex(`${ip}|${ua}|${qr.id}`)).slice(0, 32);
+    const visitor = await visitorHash(h, qr.id);
     const rawCity = h.get("x-vercel-ip-city") ?? h.get("cf-ipcity") ?? "";
     let city: string | null = null;
     try {

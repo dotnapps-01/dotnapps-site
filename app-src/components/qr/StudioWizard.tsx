@@ -18,6 +18,7 @@ import {
   MIN_QR_CONTRAST,
   contrastRatio,
   defaultDesign,
+  defaultLabelFor,
   designColors,
   designVariants,
   destinationFor,
@@ -33,6 +34,8 @@ import {
 type Props = {
   mode: "create" | "edit";
   initial?: QrRecord;
+  /** pre-selected type for a new code (from ?type=) */
+  initialType?: string;
   locations: { id: string; name: string }[];
   folders: { id: string; name: string }[];
   shortBase: string;
@@ -60,11 +63,11 @@ const stepOfField = (k: string) => (k === "type" ? 0 : k === "design" ? 2 : 1);
 
 type Banner = { tone: "success" | "error"; text: string; upgrade?: boolean };
 
-export function StudioWizard({ mode, initial, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName }: Props) {
+export function StudioWizard({ mode, initial, initialType, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName }: Props) {
   const router = useRouter();
   const editing = mode === "edit";
-  const [step, setStep] = useState(editing ? 1 : 0);
-  const [type, setType] = useState(initial?.type ?? "url");
+  const [step, setStep] = useState(editing || initialType ? 1 : 0);
+  const [type, setType] = useState(initial?.type ?? initialType ?? "url");
   const [name, setName] = useState(initial?.name ?? "");
   const [nameTouched, setNameTouched] = useState(Boolean(initial));
   const [locationId, setLocationId] = useState(initial?.locationId ?? "");
@@ -75,7 +78,10 @@ export function StudioWizard({ mode, initial, locations, folders, shortBase, sho
   const [scheduled, setScheduled] = useState(Boolean(initial?.startsAt || initial?.endsAt));
   const [startsAt, setStartsAt] = useState(toLocalInput(initial?.startsAt ?? null));
   const [endsAt, setEndsAt] = useState(toLocalInput(initial?.endsAt ?? null));
-  const [design, setDesign] = useState<QrDesign>(initial?.design ?? defaultDesign);
+  const [designState, setDesign] = useState<QrDesign>(initial?.design ?? defaultDesign);
+  const [labelTouched, setLabelTouched] = useState(Boolean(initial));
+  // the frame label follows the type until the person picks one themselves
+  const design: QrDesign = labelTouched ? designState : { ...designState, label: defaultLabelFor(type) };
   const [query, setQuery] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [banner, setBanner] = useState<Banner | null>(null);
@@ -92,7 +98,7 @@ export function StudioWizard({ mode, initial, locations, folders, shortBase, sho
   };
 
   const def = typeByKey(type)!;
-  const isDynamic = def.staticOnly ? false : dynamic;
+  const isDynamic = def.dynamicOnly ? true : def.staticOnly ? false : dynamic;
   const locName = locations.find((l) => l.id === locationId)?.name ?? "All locations";
 
   // the name follows the type and location until the person types their own
@@ -408,13 +414,13 @@ export function StudioWizard({ mode, initial, locations, folders, shortBase, sho
                   <div>
                     <div className="text-[13.5px] font-semibold">Dynamic (editable after print)</div>
                     <div className="text-xs text-muted">
-                      {def.staticOnly ? `${def.label} codes are always static: the data is inside the code.` : (limitNote ?? "Change the destination any time, and count scans.")}
+                      {def.staticOnly ? `${def.label} codes are always static: the data is inside the code.` : def.dynamicOnly ? `${def.label} codes are always dynamic: they open a page and count scans.` : (limitNote ?? "Change the destination any time, and count scans.")}
                     </div>
                   </div>
                   <Toggle
                     aria-label="Dynamic (editable after print)"
                     checked={isDynamic}
-                    disabled={def.staticOnly || editing || Boolean(saved)}
+                    disabled={def.staticOnly || def.dynamicOnly || editing || Boolean(saved)}
                     onCheckedChange={setDynamic}
                   />
                 </div>
@@ -514,7 +520,10 @@ export function StudioWizard({ mode, initial, locations, folders, shortBase, sho
                         key={l || "none"}
                         type="button"
                         aria-pressed={design.label === l}
-                        onClick={() => setDesign((d) => ({ ...d, label: l }))}
+                        onClick={() => {
+                          setDesign((d) => ({ ...d, label: l }));
+                          setLabelTouched(true);
+                        }}
                         className={cn("tabular min-h-11 px-3.5 text-[11px] text-ink", design.label === l ? "border-2 border-ink bg-info-bg" : "border border-line bg-white hover:bg-paper")}
                       >
                         {l || "NO LABEL"}

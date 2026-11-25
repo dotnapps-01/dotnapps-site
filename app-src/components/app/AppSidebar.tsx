@@ -5,8 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut, X } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/cn";
-import { sidebarBadges } from "@/lib/mock/app";
-import { appNav } from "@/lib/routes";
+import { appNav, type AppNavKey } from "@/lib/routes";
 import { LocationSwitcher } from "./LocationSwitcher";
 
 export type SidebarUser = { initials: string; name: string; role: string };
@@ -17,12 +16,14 @@ type Props = {
   user: SidebarUser;
   locations: SidebarLocation[];
   plan: SidebarPlan;
+  /** counts shown next to nav items that need attention */
+  badges: Partial<Record<AppNavKey, string>>;
   /** shown only below lg, where the sidebar is a drawer */
   onClose?: () => void;
 };
 
 /** App sidebar (design/AppSidebar.dc.html). Every app route is linked; active state comes from the URL. */
-export function AppSidebar({ user, locations, plan, onClose }: Props) {
+export function AppSidebar({ user, locations, plan, badges, onClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   async function logOut() {
@@ -59,7 +60,7 @@ export function AppSidebar({ user, locations, plan, onClose }: Props) {
             </span>
             {g.items.map((it) => {
               const on = pathname === it.href || pathname.startsWith(it.href + "/");
-              const badge = sidebarBadges[it.key];
+              const badge = badges[it.key];
               const Icon = it.icon;
               return (
                 <Link

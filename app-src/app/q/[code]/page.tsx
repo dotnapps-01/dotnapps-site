@@ -38,7 +38,8 @@ export default async function ShortLinkPage({ params }: { params: Promise<{ code
     );
   }
 
-  const dest = destinationFor(qr.type, qr.config);
+  // Review codes open the rating page; everything else goes to its configured destination.
+  const dest = qr.type === "review" ? `/r/${code.toLowerCase()}` : destinationFor(qr.type, qr.config);
   if (!dest) notFound();
 
   await logScan(qr, await headers());

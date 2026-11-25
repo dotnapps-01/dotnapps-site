@@ -3,16 +3,16 @@ import { notFound, redirect } from "next/navigation";
 import { StudioWizard } from "@/components/qr/StudioWizard";
 import { currentWorkspace } from "@/lib/auth/current";
 import { countDynamic, getQrCode, listFolders, listLocations } from "@/lib/qr-repo";
-import { dynamicLimit, randomShortCode } from "@/lib/qr-types";
+import { dynamicLimit, randomShortCode, typeByKey } from "@/lib/qr-types";
 import { getShortLinkBase } from "@/lib/short-link";
 
 export const metadata: Metadata = { title: "Create a QR code" };
 export const dynamic = "force-dynamic";
 
-export default async function StudioPage({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
+export default async function StudioPage({ searchParams }: { searchParams: Promise<{ edit?: string; type?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
-  const { edit } = await searchParams;
+  const { edit, type } = await searchParams;
 
   const [locations, folders, used, short, record] = await Promise.all([
     listLocations(ws.id),
@@ -29,6 +29,7 @@ export default async function StudioPage({ searchParams }: { searchParams: Promi
       key={record?.id ?? "new"}
       mode={record ? "edit" : "create"}
       initial={record ?? undefined}
+      initialType={!record && typeByKey(type ?? "")?.live ? type : undefined}
       locations={locations}
       folders={folders.map((f) => ({ id: f.id, name: f.name }))}
       shortBase={short.base}

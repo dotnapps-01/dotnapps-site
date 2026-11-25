@@ -13,6 +13,7 @@ npm run build && npm start
 - `/`, `/features`, `/features/review-assistant`, `/industries`, `/pricing`, `/contact` — marketing site (Phase 2). Copy and sample data live in `lib/content/`, sections in `components/marketing/`
 - `/signup`, `/login`, `/onboarding` — WhatsApp-OTP sign-up and the 5-step wizard (Phase 3); `/app/*` now requires a session
 - `/app/studio`, `/app/library`, `/app/analytics`, `/app/dashboard` — QR Studio, QR Library, Analytics and Dashboard on real data (Phase 4); `/q/<code>` is the redirect service
+- `/app/reviews` — Reviews & feedback (Phase 5); customers reach `/r/<code>` from a Review QR (`/r/demo` is a public demo, `/r/preview` previews your own settings)
 - `/docs` — placeholder until the Integrations/API screen (Phase 8)
 - `/app/dashboard` and the other `/app/*` routes — app shell with sidebar (placeholders until Phases 4–8)
 
@@ -59,3 +60,19 @@ npm run check:codes   # QR create/validate, plan limits, redirects, scan logging
 **What's live in Studio.** Website, WhatsApp, UPI (static), Wi-Fi (static), Google Maps and PDF link. The other types are visible but disabled until their customer pages exist (Phases 5-8). Wi-Fi and UPI always encode their data directly; the rest are dynamic by default (editable, scan-counted) and can be made static. Free plans include 3 dynamic codes; static codes are unlimited.
 
 **Not built yet:** bulk CSV import (needs the Growth plan, so it waits for billing in Phase 8), PDF/EPS/table-tent/sticker-sheet exports, logo in the QR centre, smart redirects, password-protected codes, scheduled reports, print shop.
+
+## Review Assistant (Phase 5)
+
+A **Review page** QR (Studio, Engage group) opens a rating page: `/q/<code>` logs the scan and redirects to `/r/<code>`.
+
+- **Google policy:** every customer, at every star rating, sees "Post on Google". Ratings of 1-3 *also* get a private-feedback form as an extra choice, never a filter. The Google link must be on a Google-owned domain (or a Place ID); anything else is refused when the QR is saved. `npm run check:reviews` and the browser tests assert the link is present at all five ratings.
+- **Languages:** English, Tamil and Hindi, chosen from the browser language or `?lang=`. A business's own question and chips are shown as typed in every language (only the defaults are translated). **The Tamil and Hindi wording is a first translation: have a native speaker review it before launch.**
+- **Suggested text** is template wording built from the chips the customer taps (with variations), not AI. The customer can edit it. Wiring an LLM in later only means replacing `suggestReview()` in `lib/review-i18n.ts`.
+- **Data:** every rating, "went to Google" click and private note is stored per workspace (`review_responses`, `feedback`). Phone numbers on feedback are optional and shown only to the owner. Public endpoints are bound to the visitor that created a rating, rate-limited (20 ratings/hour per visitor) and have a honeypot.
+- **Owner screen:** KPIs, insights computed from the numbers, recent ratings, private-feedback inbox (open / in progress / resolved), rating split, staff leaderboard (from the "Staff member" field on each Review QR), and the rating-page settings.
+
+```bash
+npm run check:reviews   # API tests: QR validation, redirect, languages, visitor binding, rate limit, privacy, isolation (dev server running)
+```
+
+**Not built:** reading and replying to Google reviews and review widgets (need Google Business Profile, with Integrations), AI-written text and AI reply drafts (need an LLM key), WhatsApp alerts to the manager and auto-created tickets (Phase 7), thank-you offers (Phase 6).

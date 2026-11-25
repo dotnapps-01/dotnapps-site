@@ -93,4 +93,53 @@ create table otp_sends (
 create index otp_sends_phone_idx on otp_sends(phone, sent_at);
 `,
   },
+  {
+    id: "002_reviews",
+    sql: `
+-- Rating page settings, one row per workspace (defaults apply until saved).
+create table review_settings (
+  workspace_id uuid primary key references workspaces(id) on delete cascade,
+  question text not null default 'How was your visit today?',
+  chips text[] not null default '{Food,Service,Ambience,Price,Staff}',
+  languages text[] not null default '{en,ta,hi}',
+  manager_phone text not null default '',
+  suggest_text boolean not null default true,
+  links jsonb not null default '[]',
+  updated_at timestamptz not null default now()
+);
+
+-- One row per rating given on a rating page.
+create table review_responses (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  qr_id uuid references qr_codes(id) on delete set null,
+  location_id uuid references locations(id) on delete set null,
+  rating smallint not null check (rating between 1 and 5),
+  chips text[] not null default '{}',
+  lang text not null default 'en',
+  source text not null default '',
+  staff text not null default '',
+  visitor text not null,
+  google_clicked boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index review_responses_ws_time_idx on review_responses(workspace_id, created_at);
+create index review_responses_visitor_idx on review_responses(visitor, created_at);
+
+-- Private feedback: an extra channel next to Google, never a filter.
+create table feedback (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  response_id uuid unique references review_responses(id) on delete set null,
+  qr_id uuid references qr_codes(id) on delete set null,
+  message text not null,
+  phone text not null default '',
+  chips text[] not null default '{}',
+  status text not null default 'open' check (status in ('open','in_progress','resolved')),
+  created_at timestamptz not null default now(),
+  resolved_at timestamptz
+);
+create index feedback_ws_status_idx on feedback(workspace_id, status, created_at);
+`,
+  },
 ];

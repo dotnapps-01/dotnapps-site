@@ -14,6 +14,8 @@ export type FieldDef = {
   options?: string[];
   required?: boolean;
   hint?: string;
+  /** extra validation for a non-empty value; returns an error message or null */
+  check?: (value: string) => string | null;
 };
 
 export type QrTypeDef = {
@@ -26,6 +28,8 @@ export type QrTypeDef = {
   phase?: number;
   /** encodes its data directly, so it can never be dynamic (no short link, no scan tracking) */
   staticOnly?: boolean;
+  /** needs a short link and a customer page, so it can never be static */
+  dynamicOnly?: boolean;
   fields: FieldDef[];
 };
 
@@ -85,7 +89,11 @@ export const qrTypes: QrTypeDef[] = [
     { key: "url", label: "Link to the PDF or file", placeholder: "https://", kind: "url", required: true, hint: "File upload arrives with Pages. For now, link to a hosted file." },
   ] },
 
-  { key: "review", label: "Review page", group: "Engage", icon: ic.star, live: false, phase: 5, fields: [] },
+  { key: "review", label: "Review page", group: "Engage", icon: ic.star, live: true, dynamicOnly: true, fields: [
+    { key: "googleUrl", label: "Google review link or Place ID", placeholder: "https://g.page/r/…/review or ChIJ…", required: true, check: (v) => (googleReviewLink(v) ? null : "Paste the review link from your Google Business Profile, or your Place ID (starts with ChIJ)."), hint: "In Google Business Profile choose “Ask for reviews” and copy the link." },
+    { key: "source", label: "Where this code is placed", placeholder: "Table 4, Counter, Invoice…" },
+    { key: "staff", label: "Staff member (optional)", placeholder: "Meena" },
+  ] },
   { key: "menu", label: "Menu / catalogue", group: "Engage", icon: ic.menu, live: false, phase: 6, fields: [] },
   { key: "lead", label: "Lead form", group: "Engage", icon: ic.user, live: false, phase: 6, fields: [] },
   { key: "coupon", label: "Coupon", group: "Engage", icon: ic.tag, live: false, phase: 6, fields: [] },
@@ -126,6 +134,8 @@ export const designVariants: { key: QrVariant; label: string }[] = [
 ];
 export const frameLabels = ["SCAN TO REVIEW US", "SCAN FOR MENU", "SCAN TO PAY", "SCAN ME", ""];
 export const defaultDesign: QrDesign = { color: "#0E0E10", variant: "dot", label: "SCAN ME" };
+/** Frame label pre-selected for a type until the person picks their own. */
+export const defaultLabelFor = (type: string) => (type === "review" ? "SCAN TO REVIEW US" : type === "upi" ? "SCAN TO PAY" : "SCAN ME");
 
 function luminance(hex: string) {
   const v = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
@@ -156,6 +166,25 @@ function httpUrl(input: string): string | null {
   try {
     const u = new URL(/^[a-z][a-z0-9+.-]*:/i.test(t) ? t : `https://${t}`);
     return u.protocol === "http:" || u.protocol === "https:" ? u.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+// Exact Google-owned domains (and their subdomains). The TLD list is explicit so "google.com.evil.example" can never match.
+const GOOGLE_HOSTS = /(^|\.)(google\.(com|co\.in|in)|g\.page|goo\.gl|g\.co)$/i;
+
+/**
+ * Turns what a business pastes into a Google review URL. Accepts a Place ID (ChIJ…) or a link on a
+ * Google-owned domain; anything else is refused so the rating page can't send customers elsewhere.
+ */
+export function googleReviewLink(input: string): string | null {
+  const t = input.trim();
+  if (/^ChIJ[\w-]{10,}$/.test(t)) return `https://search.google.com/local/writereview?placeid=${t}`;
+  const u = httpUrl(t);
+  if (!u) return null;
+  try {
+    return GOOGLE_HOSTS.test(new URL(u).hostname) ? u : null;
   } catch {
     return null;
   }
@@ -280,7 +309,7 @@ export function parseQrInput(raw: unknown, publish: boolean): ParseResult {
   if (!type) fields.type = "Choose what the scan should do.";
   else if (!type.live) fields.type = `${type.label} pages arrive in Phase ${type.phase}.`;
 
-  const dynamic = type?.staticOnly ? false : r.dynamic !== false;
+  const dynamic = type?.dynamicOnly ? true : type?.staticOnly ? false : r.dynamic !== false;
 
   const config: Record<string, string> = {};
   const incoming = (r.config && typeof r.config === "object" ? r.config : {}) as Record<string, unknown>;
@@ -293,6 +322,8 @@ export function parseQrInput(raw: unknown, publish: boolean): ParseResult {
       continue;
     }
     if (f.kind === "url" && !httpUrl(v)) fields[`config.${f.key}`] = "Enter a valid web address (http or https).";
+    const custom = f.check?.(v);
+    if (custom) fields[`config.${f.key}`] = custom;
     if (f.kind === "tel" && !waDigits(v)) fields[`config.${f.key}`] = "Enter a valid number with country code.";
     if (f.kind === "number" && !(Number(v) > 0 && Number(v) < 1e7)) fields[`config.${f.key}`] = "Enter a valid amount.";
     if (type?.key === "upi" && f.key === "vpa" && !/^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/.test(v)) fields[`config.${f.key}`] = "Enter a valid UPI ID, like name@bank.";

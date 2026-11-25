@@ -43,7 +43,7 @@ const config: Config = {
         info: { bg: "#F3EEFF", fg: "#5B45B8" },
       },
       fontFamily: {
-        sans: ['"Inter Variable"', "Inter", "system-ui", "sans-serif"],
+        sans: ['"Inter Variable"', "Inter", "system-ui", '"Noto Sans Tamil"', '"Noto Sans Devanagari"', "Nirmala UI", "sans-serif"],
         display: ['"Inter Tight Variable"', '"Inter Tight"', '"Inter Variable"', "Inter", "sans-serif"],
       },
       fontSize: {

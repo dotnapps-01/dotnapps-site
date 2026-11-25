@@ -6,12 +6,15 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/cn";
 import { AppSidebar, type SidebarLocation, type SidebarPlan, type SidebarUser } from "./AppSidebar";
+import type { AppNavKey } from "@/lib/routes";
+
+type AppSidebarProps = { badges: Partial<Record<AppNavKey, string>> };
 
 /**
  * App layout: sticky sidebar from lg up; a slide-in drawer with a top bar below lg.
  * Pages render a <PageHeader/> and their content inside.
  */
-export function AppShell({ children, user, locations, plan }: { children: ReactNode; user: SidebarUser; locations: SidebarLocation[]; plan: SidebarPlan }) {
+export function AppShell({ children, user, locations, plan, badges }: { children: ReactNode; user: SidebarUser; locations: SidebarLocation[]; plan: SidebarPlan; badges: AppSidebarProps["badges"] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
@@ -75,7 +78,7 @@ export function AppShell({ children, user, locations, plan }: { children: ReactN
           open ? "translate-x-0" : "invisible -translate-x-full",
         )}
       >
-        <AppSidebar user={user} locations={locations} plan={plan} onClose={() => setOpen(false)} />
+        <AppSidebar user={user} locations={locations} plan={plan} badges={badges} onClose={() => setOpen(false)} />
       </div>
 
       <main id="main" className="flex min-w-0 flex-1 flex-col pt-14 lg:pt-0">
