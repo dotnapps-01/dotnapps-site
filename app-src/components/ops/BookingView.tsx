@@ -2,7 +2,7 @@
 
 import { Calendar, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import type { PublicBookable } from "@/lib/engage-public";
 import { addDays } from "@/lib/ops-input";
 import { O, fmtDay, fmtDayTime, fmtMinutes } from "@/lib/ops-i18n";
@@ -32,6 +32,7 @@ export function BookingView({ code, business, location, initialLang, item, today
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [left, setLeft] = useState(item.seatsLeft);
+  const picked = useRef(false); // true once the customer chooses a day themselves
 
   const fetchSlots = useCallback(
     async (day: string): Promise<Slot[]> => {
@@ -54,12 +55,15 @@ export function BookingView({ code, business, location, initialLang, item, today
       setSlots(null);
       setStart(null);
       const s = await fetchSlots(date);
-      if (live) setSlots(s);
+      if (!live) return;
+      // nothing left today (after closing, or a day off): open on the next day instead of an empty list
+      if (s.length === 0 && !picked.current && date < addDays(today, DAYS - 1)) setDate(addDays(date, 1));
+      else setSlots(s);
     })();
     return () => {
       live = false;
     };
-  }, [date, isEvent, fetchSlots]);
+  }, [date, today, isEvent, fetchSlots]);
 
   // changing staff keeps the chosen time when that person is free then
   const pickStaff = (s: string) => {
@@ -147,7 +151,7 @@ export function BookingView({ code, business, location, initialLang, item, today
                   </span>
                   <div role="group" aria-labelledby="bk-date" className="flex gap-2 overflow-x-auto pb-1">
                     {days.map((d) => (
-                      <button key={d} type="button" aria-pressed={date === d} onClick={() => setDate(d)} className={cn(chip(date === d), "flex-none")}>
+                      <button key={d} type="button" aria-pressed={date === d} onClick={() => { picked.current = true; setDate(d); }} className={cn(chip(date === d), "flex-none")}>
                         {fmtDay(lang, dayIso(d))}
                       </button>
                     ))}

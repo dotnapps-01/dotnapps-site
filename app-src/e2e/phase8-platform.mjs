@@ -1,6 +1,7 @@
 // Browser test (Playwright + axe). Needs the dev server running: see e2e/README.md.
 //   node e2e/phase8-platform.mjs [baseUrl]      (screenshots and downloads go to e2e/out, which is git-ignored)
 import fs from "node:fs";
+import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { chromium } from "playwright";
 const require = createRequire(import.meta.url);
