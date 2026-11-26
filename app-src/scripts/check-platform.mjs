@@ -43,7 +43,7 @@ const hasDb = !!process.env.DATABASE_URL;
 let db = null;
 if (hasDb) { const { default: pgmod } = await import("pg"); db = new pgmod.Client({ connectionString: process.env.DATABASE_URL }); await db.connect(); }
 
-const ADMIN_PHONE = "9000000001";
+const ADMIN_PHONE = process.env.ADMIN_PHONE ?? "9000000001";
 const admin = await signUp("Skanor Staff", ADMIN_PHONE);
 const A = await signUp("Aqua Corp");        // gets Enterprise from the admin
 const E = await signUp("Spare Works");      // a second Enterprise tenant, for isolation
