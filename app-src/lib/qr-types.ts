@@ -6,7 +6,7 @@
 
 export type QrGroup = "Basic" | "Engage" | "Operate" | "Advanced";
 
-export type RefKind = "page:menu" | "page:card" | "page:bio" | "form" | "coupon" | "loyalty";
+export type RefKind = "page:menu" | "page:card" | "page:bio" | "form" | "coupon" | "loyalty" | "asset" | "point" | "bookable" | "plot";
 
 export type FieldDef = {
   key: string;
@@ -60,6 +60,8 @@ const ic = {
   box: "M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7M12 11v10",
   badge: "M4 4h16v16H4zM9 9a3 3 0 106 0 3 3 0 00-6 0M7 18a5 5 0 0110 0",
 };
+
+export const TICKET_CATEGORIES = ["Feedback", "Housekeeping", "Facility", "Order", "Billing", "Other"];
 
 export const qrGroups: { key: QrGroup; plan: string; tone: "neutral" | "info" | "ink" }[] = [
   { key: "Basic", plan: "FREE", tone: "neutral" },
@@ -118,12 +120,25 @@ export const qrTypes: QrTypeDef[] = [
   ] },
   { key: "bill", label: "Digital bill", group: "Engage", icon: ic.bill, live: false, phase: 6, fields: [] },
 
-  { key: "ticket", label: "Feedback → ticket", group: "Operate", icon: ic.ticket, live: false, phase: 7, fields: [] },
-  { key: "asset", label: "Asset service", group: "Operate", icon: ic.wrench, live: false, phase: 7, fields: [] },
-  { key: "attend", label: "Attendance point", group: "Operate", icon: ic.clock, live: false, phase: 7, fields: [] },
-  { key: "visitor", label: "Visitor pass", group: "Operate", icon: ic.badge, live: false, phase: 7, fields: [] },
-  { key: "booking", label: "Booking / event", group: "Operate", icon: ic.cal, live: false, phase: 7, fields: [] },
-  { key: "plot", label: "Real estate plot", group: "Operate", icon: ic.home, live: false, phase: 7, fields: [] },
+  { key: "ticket", label: "Feedback → ticket", group: "Operate", icon: ic.ticket, live: true, dynamicOnly: true, fields: [
+    { key: "place", label: "Where this code is placed", placeholder: "Washroom 2, Table 6, Lobby…", required: true },
+    { key: "category", label: "Ticket category", placeholder: "", kind: "select", options: TICKET_CATEGORIES },
+  ] },
+  { key: "asset", label: "Asset service", group: "Operate", icon: ic.wrench, live: true, dynamicOnly: true, fields: [
+    { key: "assetId", label: "Asset", placeholder: "Choose an asset", kind: "ref", ref: "asset", required: true },
+  ] },
+  { key: "attend", label: "Attendance point", group: "Operate", icon: ic.clock, live: true, dynamicOnly: true, fields: [
+    { key: "pointId", label: "Check-in point", placeholder: "Choose a check-in point", kind: "ref", ref: "point", required: true },
+  ] },
+  { key: "visitor", label: "Visitor pass", group: "Operate", icon: ic.badge, live: true, dynamicOnly: true, fields: [
+    { key: "place", label: "Where this code is placed", placeholder: "Reception, Main gate…" },
+  ] },
+  { key: "booking", label: "Booking / event", group: "Operate", icon: ic.cal, live: true, dynamicOnly: true, fields: [
+    { key: "itemId", label: "Service or event", placeholder: "Choose a service or event", kind: "ref", ref: "bookable", required: true },
+  ] },
+  { key: "plot", label: "Real estate plot", group: "Operate", icon: ic.home, live: true, dynamicOnly: true, fields: [
+    { key: "plotId", label: "Plot", placeholder: "Choose a plot", kind: "ref", ref: "plot", required: true },
+  ] },
 
   { key: "product", label: "Product (serialized)", group: "Advanced", icon: ic.box, live: false, phase: 8, fields: [] },
 ];
@@ -257,6 +272,9 @@ export function staticPayload(type: string, config: Record<string, string>): str
 
 /** Types whose scans open a Skanor customer page at /s/<code> (the rest redirect elsewhere or use /r). */
 export const ENGAGE_TYPES = ["menu", "lead", "coupon", "loyalty", "vcard", "bio"];
+/** Operate types: tickets, asset service, attendance, visitor pass, bookings, plots. Also served at /s/<code>. */
+export const OPS_TYPES = ["ticket", "asset", "attend", "visitor", "booking", "plot"];
+export const SCAN_PAGE_TYPES = [...ENGAGE_TYPES, ...OPS_TYPES];
 
 /* ---------- short codes ---------- */
 

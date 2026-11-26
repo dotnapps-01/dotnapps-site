@@ -12,7 +12,8 @@
     "check:auth": "node scripts/check-auth.mjs",
     "check:codes": "node scripts/check-codes.mjs",
     "check:reviews": "node scripts/check-reviews.mjs",
-    "check:engage": "node scripts/check-engage.mjs"
+    "check:engage": "node scripts/check-engage.mjs",
+    "check:ops": "node scripts/check-ops.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.6.0",

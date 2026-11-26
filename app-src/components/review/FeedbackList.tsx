@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { Pill, type PillTone } from "@/components/ui/Pill";
 import { Select } from "@/components/ui/Select";
 import { T, type IssueKey } from "@/lib/review-i18n";
@@ -33,6 +35,13 @@ export function FeedbackList({ items }: { items: FeedbackItem[] }) {
     const res = await fetch(`/api/feedback/${id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status }) });
     if (res.ok) router.refresh();
     else setNote("We couldn't update that. Please try again.");
+  }
+
+  async function makeTicket(id: string) {
+    setNote("");
+    const res = await fetch("/api/tickets/from-feedback", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ feedbackId: id }) });
+    if (res.ok) router.refresh();
+    else setNote("We couldn't make a ticket from that. Please try again.");
   }
 
   return (
@@ -80,18 +89,29 @@ export function FeedbackList({ items }: { items: FeedbackItem[] }) {
                   </>
                 ) : null}
               </div>
-              <Select
-                label={`Status for feedback: ${f.message.slice(0, 40)}`}
-                hideLabel
-                value={f.status}
-                onChange={(e) => setStatus(f.id, e.target.value as FeedbackStatus)}
-                wrapperClassName="w-auto max-w-[200px]"
-                className="min-h-9 text-[13px]"
-              >
-                <option value="open">Open</option>
-                <option value="in_progress">In progress</option>
-                <option value="resolved">Resolved</option>
-              </Select>
+              <div className="flex flex-wrap items-center gap-2">
+                <Select
+                  label={`Status for feedback: ${f.message.slice(0, 40)}`}
+                  hideLabel
+                  value={f.status}
+                  onChange={(e) => setStatus(f.id, e.target.value as FeedbackStatus)}
+                  wrapperClassName="w-auto max-w-[200px]"
+                  className="min-h-9 text-[13px]"
+                >
+                  <option value="open">Open</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="resolved">Resolved</option>
+                </Select>
+                {f.ticketSeq !== null ? (
+                  <Link href="/app/tickets" className="text-[13px] font-semibold underline underline-offset-2">
+                    {`Ticket #${f.ticketSeq}`}
+                  </Link>
+                ) : (
+                  <Button size="sm" aria-label={`Make a ticket from: ${f.message.slice(0, 40)}`} onClick={() => makeTicket(f.id)}>
+                    Make ticket
+                  </Button>
+                )}
+              </div>
             </li>
           ))}
         </ul>

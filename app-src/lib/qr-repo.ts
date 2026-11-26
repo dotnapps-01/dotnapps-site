@@ -126,6 +126,10 @@ async function checkRefs(workspaceId: string, type: string, config: Record<strin
     if (f.ref === "loyalty") exists = (await query("select 1 from loyalty_programs where workspace_id = $1", [workspaceId])).length > 0;
     else if (f.ref === "form") exists = (await query("select 1 from lead_forms where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
     else if (f.ref === "coupon") exists = (await query("select 1 from coupons where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
+    else if (f.ref === "asset") exists = (await query("select 1 from assets where id = $1 and workspace_id = $2 and active", [v, workspaceId])).length > 0;
+    else if (f.ref === "point") exists = (await query("select 1 from attend_points where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
+    else if (f.ref === "bookable") exists = (await query("select 1 from booking_items where id = $1 and workspace_id = $2 and active", [v, workspaceId])).length > 0;
+    else if (f.ref === "plot") exists = (await query("select 1 from plots where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
     else if (f.ref?.startsWith("page:")) {
       const rows = await query<{ status: string }>("select status from pages where id = $1 and workspace_id = $2 and kind = $3", [v, workspaceId, f.ref.slice(5)]);
       exists = rows.length > 0 && (!publish || rows[0].status === "published");

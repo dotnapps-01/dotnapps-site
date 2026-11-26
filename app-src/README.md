@@ -15,6 +15,7 @@ npm run build && npm start
 - `/app/studio`, `/app/library`, `/app/analytics`, `/app/dashboard` — QR Studio, QR Library, Analytics and Dashboard on real data (Phase 4); `/q/<code>` is the redirect service
 - `/app/reviews` — Reviews & feedback (Phase 5); customers reach `/r/<code>` from a Review QR (`/r/demo` is a public demo, `/r/preview` previews your own settings)
 - `/app/pages`, `/app/leads`, `/app/offers` — Pages (menu, business card, link-in-bio), Leads & contacts, Offers & loyalty (Phase 6); customers reach `/s/<code>` from the matching QR type
+- `/app/tickets`, `/app/attendance`, `/app/bookings`, `/app/real-estate` — Tickets & assets, Attendance & visitors, Bookings & events, Real estate plots (Phase 7); customers reach `/s/<code>` from the code and `/o/<token>` from their own ticket, visitor pass or booking link
 - `/docs` — placeholder until the Integrations/API screen (Phase 8)
 - `/app/dashboard` and the other `/app/*` routes — app shell with sidebar (placeholders until Phases 4–8)
 
@@ -96,3 +97,22 @@ npm run check:engage   # API tests: pages, lead forms, contacts import, coupons,
 `check:engage` also covers multi-day loyalty rewards when `DATABASE_URL` points at the server's database (it moves a card's last stamp back a day); without it those checks are skipped. No new environment variables.
 
 **Not built:** sending WhatsApp broadcasts, win-back messages and digital bills (they need WhatsApp sending and a billing connection, with Integrations; the screens say so and the buttons are disabled), thank-you offers on the review page, landing pages, drag-and-drop in the pipeline (each card has a stage select instead), a loyalty rule per spend, click tracking on link-in-bio links, bulk CSV QR creation (billing-gated).
+
+## Tickets, Attendance, Bookings & Real estate (Phase 7)
+
+Six more QR types are live (all dynamic): **Feedback → ticket**, **Asset service**, **Attendance point**, **Visitor pass**, **Booking / event** and **Real estate plot**. A scan opens `/s/<code>`. What a customer does next gives them their own unguessable link, `/o/<token>`, to see a ticket's progress, a visitor pass or a booking. Nothing on those links shows a phone number, internal notes or other people's data.
+
+- **Tickets & assets** (`/app/tickets`): tickets from a Feedback code, an Asset code, a private-feedback note in Reviews ("Make ticket", once per note) or by hand. SLA hours by priority (breaching tickets are highlighted), assignee, internal notes, and replies the customer sees on their ticket page. Assets get a code like AST-0001, a service interval and a service log that moves the next due date.
+- **Attendance & visitors** (`/app/attendance`): staff and labour with their own IDs (ST-0001, LB-0002) and shifts; check-in points with a geofence. A worker scans, enters their ID and the last 4 digits of their number, and the phone's location is checked against the point. The first scan checks in, a later scan checks out; late arrivals follow a grace period you set. Visitors request a pass, you approve it, and you check them in and out; a pass lasts until the end of the day. Export a month as CSV for payroll (figures only, not a payroll calculation).
+- **Bookings & events** (`/app/bookings`): services with duration, price and staff; weekly opening hours; a week calendar. Time slots are built from your hours (every 30 min, up to 2 weeks ahead, 30 min notice) and a slot is taken under a database lock, so two customers can't get the same one. A service can ask for your confirmation first. Events have a ticket limit that cannot be oversold, a ticket code with a QR, and a gate scanner that checks a code in once.
+- **Real estate plots** (`/app/real-estate`): projects with numbered plots on a layout map (roads between rows), plot details and status (available, on hold, booked, sold), CSV import, a QR per plot, and buyer enquiries. An enquiry also becomes a lead (source PLOT QR) and a contact in Leads.
+- **Languages:** every customer page is English, Tamil and Hindi (browser language or `?lang=`). **The Tamil and Hindi wording is a first translation: have a native speaker review it before launch.**
+- **Abuse limits:** public endpoints are throttled per visitor and carry a honeypot. Check-in guesses are also limited per worker ID, so the last 4 digits can't be brute-forced, and an unknown ID and a wrong number look the same.
+
+```bash
+npm run check:ops   # API tests: tickets, assets, attendance, visitors, bookings, events, plots, isolation (dev server running)
+```
+
+`check:ops` also runs the checks that need time to pass (checking out later, an expired pass) when `DATABASE_URL` points at the server's database; without it those are skipped. No new environment variables.
+
+**Not built:** selfie check-in and photos on tickets (need file storage); a technician page with a checklist and customer OTP to close a ticket; WhatsApp reminders, escalations, alerts and the daily summary (need Integrations); CSAT after resolution; shifts as a separate screen, leave and a payroll calculation; owner-created bookings; per-gate counts at events; payments for bookings and event tickets; printing a whole sheet of plot QRs at once (a QR is made per plot, using one dynamic code each).

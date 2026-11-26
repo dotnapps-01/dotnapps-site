@@ -302,4 +302,249 @@ create table public_hits (
 create index public_hits_idx on public_hits(visitor, kind, at);
 `,
   },
+  {
+    id: "004_operate",
+    sql: `
+alter table workspaces add column ticket_seq int not null default 0;
+alter table workspaces add column asset_seq int not null default 0;
+alter table workspaces add column worker_seq int not null default 0;
+
+-- ---------- tickets & assets ----------
+create table assets (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  seq int not null,
+  name text not null,
+  place text not null default '',
+  location_id uuid references locations(id) on delete set null,
+  vendor text not null default '',
+  interval_days int check (interval_days is null or interval_days between 1 and 3650),
+  last_service date,
+  next_due date,
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  unique (workspace_id, seq)
+);
+
+create table asset_services (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  asset_id uuid not null references assets(id) on delete cascade,
+  serviced_on date not null,
+  by_name text not null default '',
+  notes text not null default '',
+  ticket_id uuid,
+  created_at timestamptz not null default now()
+);
+create index asset_services_asset_idx on asset_services(asset_id, serviced_on);
+
+create table sla_rules (
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  priority text not null check (priority in ('high','normal','low')),
+  hours int not null check (hours between 1 and 720),
+  primary key (workspace_id, priority)
+);
+
+create table tickets (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  seq int not null,
+  title text not null,
+  category text not null default 'Other',
+  priority text not null default 'normal' check (priority in ('high','normal','low')),
+  status text not null default 'open' check (status in ('open','in_progress','resolved')),
+  source text not null default 'manual',
+  qr_id uuid references qr_codes(id) on delete set null,
+  asset_id uuid references assets(id) on delete set null,
+  feedback_id uuid unique references feedback(id) on delete set null,
+  place text not null default '',
+  customer_name text not null default '',
+  customer_phone text not null default '',
+  details text not null default '',
+  assignee text not null default '',
+  token text not null unique,
+  visitor text not null default '',
+  due_at timestamptz not null,
+  resolved_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (workspace_id, seq)
+);
+create index tickets_ws_status_idx on tickets(workspace_id, status, created_at);
+
+create table ticket_events (
+  id bigserial primary key,
+  ticket_id uuid not null references tickets(id) on delete cascade,
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  kind text not null,
+  text text not null,
+  public boolean not null default false,
+  created_at timestamptz not null default now()
+);
+create index ticket_events_ticket_idx on ticket_events(ticket_id, created_at);
+
+-- ---------- attendance & visitors ----------
+create table workers (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  code text not null,
+  kind text not null default 'staff' check (kind in ('staff','labour')),
+  name text not null,
+  phone text not null,
+  role text not null default '',
+  shift_start int not null default 540 check (shift_start between 0 and 1439),
+  shift_end int not null default 1080 check (shift_end between 1 and 1440),
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
+  unique (workspace_id, code)
+);
+
+create table attend_points (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  name text not null,
+  lat double precision,
+  lng double precision,
+  radius_m int not null default 100 check (radius_m between 20 and 5000),
+  require_geo boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table attend_settings (
+  workspace_id uuid primary key references workspaces(id) on delete cascade,
+  late_after_min int not null default 15 check (late_after_min between 0 and 240)
+);
+
+create table attendance (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  worker_id uuid not null references workers(id) on delete cascade,
+  day date not null,
+  point_id uuid references attend_points(id) on delete set null,
+  qr_id uuid references qr_codes(id) on delete set null,
+  in_at timestamptz not null,
+  out_at timestamptz,
+  in_dist int,
+  out_dist int,
+  in_verified boolean not null default false,
+  late_min int not null default 0,
+  unique (worker_id, day)
+);
+create index attendance_ws_day_idx on attendance(workspace_id, day);
+
+create table visitors (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  qr_id uuid references qr_codes(id) on delete set null,
+  name text not null,
+  phone text not null,
+  purpose text not null default '',
+  host text not null default '',
+  status text not null default 'awaiting' check (status in ('awaiting','approved','declined','on_site','checked_out')),
+  token text not null unique,
+  visitor text not null default '',
+  valid_until timestamptz,
+  decided_at timestamptz,
+  in_at timestamptz,
+  out_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index visitors_ws_idx on visitors(workspace_id, created_at);
+
+-- ---------- bookings & events ----------
+create table booking_items (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  kind text not null check (kind in ('service','event')),
+  name text not null,
+  description text not null default '',
+  duration_min int check (duration_min is null or duration_min between 5 and 1440),
+  price numeric(10,2) check (price is null or price >= 0),
+  staff text[] not null default '{}',
+  needs_approval boolean not null default false,
+  capacity int check (capacity is null or capacity between 1 and 100000),
+  starts_at timestamptz,
+  venue text not null default '',
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+create index booking_items_ws_idx on booking_items(workspace_id, kind);
+
+create table booking_hours (
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  dow int not null check (dow between 0 and 6),
+  open_min int not null check (open_min between 0 and 1439),
+  close_min int not null check (close_min between 1 and 1440),
+  closed boolean not null default false,
+  primary key (workspace_id, dow)
+);
+
+create table bookings (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  item_id uuid not null references booking_items(id) on delete cascade,
+  qr_id uuid references qr_codes(id) on delete set null,
+  name text not null,
+  phone text not null,
+  staff text not null default '',
+  starts_at timestamptz not null,
+  ends_at timestamptz not null,
+  qty int not null default 1 check (qty between 1 and 20),
+  status text not null default 'confirmed' check (status in ('pending','confirmed','completed','no_show','cancelled')),
+  code text not null unique,
+  token text not null unique,
+  visitor text not null default '',
+  checked_in_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index bookings_ws_time_idx on bookings(workspace_id, starts_at);
+create index bookings_item_idx on bookings(item_id, starts_at);
+
+-- ---------- real estate ----------
+create table re_projects (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  name text not null,
+  approval text not null default '',
+  columns int not null default 10 check (columns between 2 and 20),
+  road_after int[] not null default '{}',
+  brochure_url text not null default '',
+  whatsapp text not null default '',
+  created_at timestamptz not null default now()
+);
+
+create table plots (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  project_id uuid not null references re_projects(id) on delete cascade,
+  number int not null check (number between 1 and 9999),
+  size_sqft int check (size_sqft is null or size_sqft > 0),
+  dims text not null default '',
+  facing text not null default '',
+  price_lakh numeric(10,2) check (price_lakh is null or price_lakh >= 0),
+  approval text not null default '',
+  corner boolean not null default false,
+  status text not null default 'available' check (status in ('available','hold','booked','sold')),
+  created_at timestamptz not null default now(),
+  unique (project_id, number)
+);
+
+create table plot_enquiries (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  plot_id uuid not null references plots(id) on delete cascade,
+  qr_id uuid references qr_codes(id) on delete set null,
+  name text not null,
+  phone text not null,
+  ask text not null,
+  visit_on date,
+  visit_slot text not null default '',
+  lead_id uuid references leads(id) on delete set null,
+  source text not null default 'PLOT QR',
+  visitor text not null default '',
+  created_at timestamptz not null default now()
+);
+create index plot_enquiries_ws_idx on plot_enquiries(workspace_id, created_at);
+`,
+  },
 ];

@@ -52,8 +52,8 @@ type Props = {
 };
 
 const STEPS = ["Type", "Content", "Design", "Download"] as const;
-const REF_LINK: Record<string, string> = { "page:menu": "/app/pages", "page:card": "/app/pages", "page:bio": "/app/pages", form: "/app/leads?tab=forms", coupon: "/app/offers", loyalty: "/app/offers?tab=loyalty" };
-const REF_LINK_LABEL: Record<string, string> = { "page:menu": "Create or publish a menu", "page:card": "Create or publish a card", "page:bio": "Create or publish a link page", form: "Create a form", coupon: "Create an offer", loyalty: "Set up your programme" };
+const REF_LINK: Record<string, string> = { "page:menu": "/app/pages", "page:card": "/app/pages", "page:bio": "/app/pages", form: "/app/leads?tab=forms", coupon: "/app/offers", loyalty: "/app/offers?tab=loyalty", asset: "/app/tickets?tab=assets", point: "/app/attendance?tab=points", bookable: "/app/bookings?tab=services", plot: "/app/real-estate" };
+const REF_LINK_LABEL: Record<string, string> = { "page:menu": "Create or publish a menu", "page:card": "Create or publish a card", "page:bio": "Create or publish a link page", form: "Create a form", coupon: "Create an offer", loyalty: "Set up your programme", asset: "Add an asset", point: "Add a check-in point", bookable: "Add a service or event", plot: "Add a project and plots" };
 const label = "text-[11px] font-medium uppercase tracking-[0.05em] text-graphite";
 const control = "min-h-10 text-sm";
 

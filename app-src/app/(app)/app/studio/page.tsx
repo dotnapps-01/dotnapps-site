@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { StudioWizard } from "@/components/qr/StudioWizard";
 import { currentWorkspace } from "@/lib/auth/current";
-import { listCoupons, getProgram, listForms, listPages } from "@/lib/engage";
+import { getProgram, listCoupons, listForms, listPages } from "@/lib/engage";
+import { listPoints } from "@/lib/attendance";
+import { listItems } from "@/lib/bookings";
+import { listPlotOptions } from "@/lib/realestate";
+import { listAssets } from "@/lib/tickets";
 import { countDynamic, getQrCode, listFolders, listLocations } from "@/lib/qr-repo";
 import { dynamicLimit, randomShortCode, typeByKey } from "@/lib/qr-types";
 import { getShortLinkBase } from "@/lib/short-link";
@@ -15,7 +19,7 @@ export default async function StudioPage({ searchParams }: { searchParams: Promi
   if (!ws) redirect("/login");
   const { edit, type, ref } = await searchParams;
 
-  const [locations, folders, used, short, record, pages, forms, coupons, program] = await Promise.all([
+  const [locations, folders, used, short, record, pages, forms, coupons, program, assets, points, items, plotOptions] = await Promise.all([
     listLocations(ws.id),
     listFolders(ws.id),
     countDynamic(ws.id),
@@ -25,6 +29,10 @@ export default async function StudioPage({ searchParams }: { searchParams: Promi
     listForms(ws.id),
     listCoupons(ws.id),
     getProgram(ws.id),
+    listAssets(ws.id),
+    listPoints(ws.id),
+    listItems(ws.id),
+    listPlotOptions(ws.id),
   ]);
   const refs = {
     "page:menu": pages.filter((p) => p.kind === "menu" && p.status === "published").map((p) => ({ id: p.id, name: p.title })),
@@ -33,6 +41,10 @@ export default async function StudioPage({ searchParams }: { searchParams: Promi
     form: forms.map((f) => ({ id: f.id, name: f.title })),
     coupon: coupons.map((c) => ({ id: c.id, name: `${c.headline} · ${c.title}` })),
     loyalty: program?.active ? [{ id: "program", name: program.name }] : [],
+    asset: assets.map((a) => ({ id: a.id, name: `${a.code} · ${a.name}` })),
+    point: points.map((p) => ({ id: p.id, name: p.name })),
+    bookable: items.map((i) => ({ id: i.id, name: `${i.kind === "event" ? "Event" : "Service"} · ${i.name}` })),
+    plot: plotOptions,
   };
   if (edit && (!record || record.status === "archived")) notFound();
 

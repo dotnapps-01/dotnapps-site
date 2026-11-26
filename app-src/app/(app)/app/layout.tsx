@@ -4,7 +4,10 @@ import { AppShell } from "@/components/app/AppShell";
 import { currentWorkspace } from "@/lib/auth/current";
 import { countDynamic } from "@/lib/qr-repo";
 import { openFeedbackCount } from "@/lib/reviews";
+import { awaitingVisitors } from "@/lib/attendance";
+import { pendingBookings } from "@/lib/bookings";
 import { newLeadCount } from "@/lib/engage";
+import { openTicketCount } from "@/lib/tickets";
 import { dynamicLimit } from "@/lib/qr-types";
 
 function initials(name: string) {
@@ -29,10 +32,13 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     upgradeTo: upgrade,
   };
 
-  const [openFeedback, newLeads] = await Promise.all([openFeedbackCount(ws.id), newLeadCount(ws.id)]);
+  const [openFeedback, newLeads, openTickets, visitors, pending] = await Promise.all([openFeedbackCount(ws.id), newLeadCount(ws.id), openTicketCount(ws.id), awaitingVisitors(ws.id), pendingBookings(ws.id)]);
   const badges: Record<string, string> = {};
   if (openFeedback > 0) badges.reviews = String(openFeedback);
   if (newLeads > 0) badges.leads = String(newLeads);
+  if (openTickets > 0) badges.tickets = String(openTickets);
+  if (visitors > 0) badges.attendance = String(visitors);
+  if (pending > 0) badges.bookings = String(pending);
 
   return (
     <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations} plan={plan} badges={badges}>

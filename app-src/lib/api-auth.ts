@@ -17,3 +17,11 @@ export async function authedJson(req: Request, opts: { body?: boolean } = { body
 }
 
 export const invalid = (fields: Record<string, string>) => NextResponse.json({ error: "invalid", fields }, { status: 422 });
+
+/* ---------- small response helpers shared by the owner APIs ---------- */
+export type Ctx = { params: Promise<{ id: string }> };
+export const ok = (extra: Record<string, unknown> = {}, status = 200) => NextResponse.json({ ok: true, ...extra }, { status });
+export const notFound = () => NextResponse.json({ error: "not_found" }, { status: 404 });
+export const conflict = (error: string, extra: Record<string, unknown> = {}) => NextResponse.json({ error, ...extra }, { status: 409 });
+/** Maps the "ok | in_use | not_found" result of a delete to a response. */
+export const deleted = (r: "ok" | "in_use" | "not_found") => (r === "ok" ? ok() : r === "in_use" ? conflict("in_use") : notFound());

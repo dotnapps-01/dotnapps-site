@@ -13,6 +13,7 @@ import { currentWorkspace } from "@/lib/auth/current";
 import { cn } from "@/lib/cn";
 import { listLocations, listQrCodes } from "@/lib/qr-repo";
 import { engageActionsByQr } from "@/lib/engage";
+import { opsActionsByQr } from "@/lib/ops-stats";
 import { reviewActionsByQr } from "@/lib/reviews";
 
 export const metadata: Metadata = { title: "Analytics" };
@@ -37,14 +38,16 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
   const qr = qrCodes.some((c) => c.id === sp.qr) ? sp.qr! : "";
   const location = locations.some((l) => l.id === sp.location) ? sp.location! : "";
 
-  const [a, review, engage] = await Promise.all([
+  const [a, review, engage, ops] = await Promise.all([
     getAnalytics(ws.id, { range, qrId: qr, locationId: location, interval }),
     reviewActionsByQr(ws.id, range.from, range.to),
     engageActionsByQr(ws.id, range.from, range.to),
+    opsActionsByQr(ws.id, range.from, range.to),
   ]);
-  // what each code produced: ratings for review codes, leads / claims / stamps for the Engage types
+  // what each code produced: ratings for review codes, leads / claims / stamps for Engage types, tickets / check-ins / bookings / enquiries for Operate types
   const actions = new Map<string, { count: number; text: string }>();
   for (const [id, v] of engage) actions.set(id, v);
+  for (const [id, v] of ops) actions.set(id, v);
   for (const [id, v] of review) actions.set(id, { count: v.ratings, text: `${fmt(v.ratings)} ratings · ${fmt(v.google)} to Google` });
   const totalActions = a.byQr.reduce((n, r) => n + (actions.get(r.id)?.count ?? 0), 0);
   const dScans = pctDelta(a.scans, a.prevScans);

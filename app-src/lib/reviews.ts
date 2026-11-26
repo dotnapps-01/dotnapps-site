@@ -157,6 +157,8 @@ export type FeedbackItem = {
   source: string;
   staff: string;
   qrName: string | null;
+  /** number of the ticket made from this note, if any */
+  ticketSeq: number | null;
 };
 
 export async function listFeedback(workspaceId: string, limit = 100): Promise<FeedbackItem[]> {
@@ -171,11 +173,13 @@ export async function listFeedback(workspaceId: string, limit = 100): Promise<Fe
     source: string | null;
     staff: string | null;
     qr_name: string | null;
+    ticket_seq: number | null;
   }>(
-    `select f.id, f.message, f.phone, f.chips, f.status, f.created_at, r.rating, r.source, r.staff, q.name as qr_name
+    `select f.id, f.message, f.phone, f.chips, f.status, f.created_at, r.rating, r.source, r.staff, q.name as qr_name, t.seq as ticket_seq
        from feedback f
        left join review_responses r on r.id = f.response_id
        left join qr_codes q on q.id = f.qr_id
+       left join tickets t on t.feedback_id = f.id
       where f.workspace_id = $1
       order by (f.status = 'resolved'), f.created_at desc limit $2`,
     [workspaceId, limit],
@@ -191,6 +195,7 @@ export async function listFeedback(workspaceId: string, limit = 100): Promise<Fe
     source: r.source ?? "",
     staff: r.staff ?? "",
     qrName: r.qr_name,
+    ticketSeq: r.ticket_seq,
   }));
 }
 
