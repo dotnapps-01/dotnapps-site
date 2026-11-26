@@ -12,6 +12,7 @@ import { BookingView } from "@/components/ops/BookingView";
 import { PlotView } from "@/components/ops/PlotView";
 import { TicketView } from "@/components/ops/TicketView";
 import { VisitorView } from "@/components/ops/VisitorView";
+import { ScanBrand } from "@/components/scan/Brand";
 import { istDay } from "@/lib/ops-input";
 import { E } from "@/lib/engage-i18n";
 import { loadPublicEngage } from "@/lib/engage-public";
@@ -46,6 +47,7 @@ export default async function EngagePage({ params, searchParams }: { params: Pro
   const common = { business: qr.business || "Your business", location: qr.location, initialLang: lang };
   return (
     <main id="main">
+      <ScanBrand logoId={qr.logoId}>
       {data.type === "menu" ? <MenuView {...common} title={data.page.title} content={data.page.content as MenuContent} /> : null}
       {data.type === "vcard" ? <CardView {...common} content={data.page.content as CardContent} /> : null}
       {data.type === "bio" ? <BioView {...common} title={data.page.title} content={data.page.content as BioContent} /> : null}
@@ -58,6 +60,7 @@ export default async function EngagePage({ params, searchParams }: { params: Pro
       {data.type === "visitor" ? <VisitorView {...common} code={qr.code} place={data.place} /> : null}
       {data.type === "booking" ? <BookingView {...common} code={qr.code} item={data.item} today={istDay()} ended={data.item.kind === "event" && !!data.item.startsAt && new Date(data.item.startsAt).getTime() < nowMs - 6 * 3_600_000} /> : null}
       {data.type === "plot" ? <PlotView {...common} code={qr.code} plot={{ ...data.plot, project: data.plot.project, brochureUrl: data.plot.brochureUrl, whatsapp: data.plot.whatsapp }} today={istDay()} /> : null}
+      </ScanBrand>
     </main>
   );
 }

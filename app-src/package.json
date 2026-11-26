@@ -15,6 +15,8 @@
     "check:engage": "node scripts/check-engage.mjs",
     "check:ops": "node scripts/check-ops.mjs",
     "check:platform": "node scripts/check-platform.mjs",
+    "check:files": "node scripts/check-files.mjs",
+    "check:storage": "node scripts/check-storage.mjs",
     "check:net": "node scripts/check-net.mjs",
     "e2e": "node e2e/run.mjs",
     "test:all": "node scripts/test-all.mjs"

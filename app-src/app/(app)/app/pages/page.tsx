@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/app/PageHeader";
+import { ScanBrand } from "@/components/scan/Brand";
 import { PageBuilder } from "@/components/pages/PageBuilder";
 import { currentWorkspace } from "@/lib/auth/current";
 import { listPages } from "@/lib/engage";
@@ -17,7 +18,9 @@ export default async function PagesScreen({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHeader eyebrow="QR codes / Pages" title={selected ? selected.title : "Pages"} />
-      <PageBuilder pages={pages} selected={selected} business={ws.businessName || "Your business"} location={ws.locationName} />
+      <ScanBrand logoId={ws.logoFileId}>
+        <PageBuilder pages={pages} selected={selected} business={ws.businessName || "Your business"} location={ws.locationName} />
+      </ScanBrand>
     </>
   );
 }

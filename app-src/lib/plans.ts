@@ -11,3 +11,6 @@ export type Feature = keyof typeof FEATURE_PLAN;
 
 export const planAtLeast = (plan: Plan, min: Plan) => PLAN_ORDER.indexOf(plan) >= PLAN_ORDER.indexOf(min);
 export const canUse = (plan: Plan, feature: Feature) => planAtLeast(plan, FEATURE_PLAN[feature]);
+
+/** File storage included with each plan, in MB (logos and PDFs). Adjust here when the pricing is confirmed. */
+export const STORAGE_MB: Record<Plan, number> = { free: 20, starter: 100, growth: 500, business: 2000, enterprise: 10000 };

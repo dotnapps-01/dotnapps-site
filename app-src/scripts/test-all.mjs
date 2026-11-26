@@ -1,5 +1,5 @@
-// Runs everything: type-independent checks, every API suite, the browser tests, then the platform suite again the way
-// production behaves. It starts and stops its own dev server (the dev server is needed because sign-in codes are shown
+// Runs everything: type-independent checks, every API suite, the browser tests, the platform suite again the way
+// production behaves, and the file suite again against S3-style storage. It starts and stops its own dev server (the dev server is needed because sign-in codes are shown
 // on screen only outside production).
 //
 //   npm run test:all                      uses DATABASE_URL if set, otherwise the embedded database in .data
@@ -48,9 +48,10 @@ const run = (name, args, env = {}) => {
 let server;
 try {
   record("net: private-address rules", spawnSync(process.execPath, ["scripts/check-net.mjs"], { stdio: "inherit" }).status === 0);
+  record("storage: file types and S3 signing", spawnSync(process.execPath, ["scripts/check-storage.mjs"], { stdio: "inherit" }).status === 0);
 
   server = await startServer("main", { WEBHOOK_ALLOW_PRIVATE: "1" });
-  for (const s of ["qr", "auth", "codes", "reviews", "engage", "ops", "platform"]) run(`api: ${s}`, [`scripts/check-${s}.mjs`, base]);
+  for (const s of ["qr", "auth", "codes", "reviews", "engage", "ops", "platform", "files"]) run(`api: ${s}`, [`scripts/check-${s}.mjs`, base]);
   if (!process.env.SKIP_E2E) run("browser: all phases", ["e2e/run.mjs", base]);
   stopServer(server);
   await new Promise((r) => setTimeout(r, 2500));
@@ -58,6 +59,19 @@ try {
   // production never delivers webhooks to local or internal addresses: check that it refuses them
   server = await startServer("production-like", {});
   run("api: platform (private addresses refused)", ["scripts/check-platform.mjs", base]);
+  stopServer(server);
+  await new Promise((r) => setTimeout(r, 2500));
+
+  // files kept in S3-compatible storage: a mock S3 server that checks every request's signature
+  const { startMockS3, MOCK } = await import("./mock-s3.mjs");
+  const mockPort = Number(process.env.MOCK_S3_PORT ?? 9100);
+  const mock = await startMockS3(mockPort);
+  try {
+    server = await startServer("s3", { S3_BUCKET: MOCK.bucket, S3_ACCESS_KEY_ID: MOCK.accessKeyId, S3_SECRET_ACCESS_KEY: MOCK.secretAccessKey, S3_ENDPOINT: `http://127.0.0.1:${mockPort}` });
+    run("api: files (S3 storage)", ["scripts/check-files.mjs", base], { MOCK_S3: `http://127.0.0.1:${mockPort}` });
+  } finally {
+    mock.close();
+  }
 } catch (e) {
   console.error(String(e.message ?? e));
   record("setup", false);

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { UploadButton } from "@/components/files/UploadButton";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
@@ -57,7 +58,10 @@ export function ProjectForm({ project, onDone }: { project: ProjectRecord | null
           <Input label="Roads after row(s)" value={v.roadAfter} onChange={set("roadAfter")} error={errors.roadAfter} placeholder="2, 5" labelClassName={label} className={control} />
           <Input label="Approval" value={v.approval} onChange={set("approval")} placeholder="DTCP approved layout" labelClassName={label} className={control} />
           <Input label="Sales WhatsApp number" type="tel" value={v.whatsapp} onChange={set("whatsapp")} error={errors.whatsapp} placeholder="+91" labelClassName={label} className={control} />
-          <Input label="Brochure link" value={v.brochureUrl} onChange={set("brochureUrl")} error={errors.brochureUrl} placeholder="https://" labelClassName={label} className={control} />
+          <div className="flex flex-col gap-2">
+            <Input label="Brochure link" value={v.brochureUrl} onChange={set("brochureUrl")} error={errors.brochureUrl} placeholder="https://" labelClassName={label} className={control} />
+            <UploadButton purpose="document" label="Upload a PDF instead" onUploaded={(f) => setV((x) => ({ ...x, brochureUrl: f.url }))} />
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-2.5">
           <Button type="submit" variant="primary" disabled={busy}>

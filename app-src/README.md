@@ -62,7 +62,7 @@ npm run check:codes   # QR create/validate, plan limits, redirects, scan logging
 
 **What's live in Studio.** Website, WhatsApp, UPI (static), Wi-Fi (static), Google Maps and PDF link. The other types are visible but disabled until their customer pages exist (Phases 5-8). Wi-Fi and UPI always encode their data directly; the rest are dynamic by default (editable, scan-counted) and can be made static. Free plans include 3 dynamic codes; static codes are unlimited.
 
-**Not built yet:** bulk CSV import (needs the Growth plan, so it waits for billing in Phase 8), PDF/EPS/table-tent/sticker-sheet exports, logo in the QR centre, smart redirects, password-protected codes, scheduled reports, print shop.
+**Not built yet:** bulk CSV import (needs the Growth plan, so it waits for billing in Phase 8), PDF/EPS/table-tent/sticker-sheet exports, smart redirects, password-protected codes, scheduled reports, print shop.
 
 ## Review Assistant (Phase 5)
 
@@ -136,4 +136,23 @@ npm run check:net        # which addresses a webhook may never be sent to (no se
 
 Without `WEBHOOK_ALLOW_PRIVATE`, `check:platform` instead checks that local and internal addresses are refused. Set `DATABASE_URL` to the server's database to also run the retention purge and "nothing left behind after delete" checks.
 
-**Not built:** online billing and invoices (so MRR, paying tenants and trials stay as placeholders); team members and roles; logo upload, brand colours and custom scan-page domains; WhatsApp or email notifications and a notification matrix; two-factor and Google sign-in; ready-made connections to Google Business Profile, WhatsApp, Shopify, WooCommerce, Zoho, Tally, Razorpay and Orkha (use webhooks and the API meanwhile); white-label for agencies; invoice photos on warranty registrations (an invoice number instead); service requests as their own screen (they are tickets from PRODUCT QR); dealers; the admin print-orders queue and support inbox.
+**Not built:** online billing and invoices (so MRR, paying tenants and trials stay as placeholders); team members and roles; brand colours and custom scan-page domains; WhatsApp or email notifications and a notification matrix; two-factor and Google sign-in; ready-made connections to Google Business Profile, WhatsApp, Shopify, WooCommerce, Zoho, Tally, Razorpay and Orkha (use webhooks and the API meanwhile); white-label for agencies; invoice photos on warranty registrations (an invoice number instead); service requests as their own screen (they are tickets from PRODUCT QR); dealers; the admin print-orders queue and support inbox.
+
+## File storage
+
+Logos and PDFs. One upload endpoint (`POST /api/files`, a form with `file` and `purpose`: `logo`, `document` or `image`) and one public address, `/f/<id>`.
+
+- **What is accepted:** PNG, JPEG, WebP and PDF only, judged from the file's first bytes, never from its name or the browser's type (`lib/file-sniff.ts`). SVG and HTML are refused, because they can carry scripts. Limits: logo 1 MB (at least 64 px, at most 4096 px), PDF 8 MB, image 5 MB (the proxy clones request bodies up to 10 MB).
+- **Where the bytes go:** Postgres by default (nothing to set up), or S3-compatible storage when `S3_BUCKET`, `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` are set (AWS S3, Cloudflare R2, MinIO, Supabase Storage; `S3_ENDPOINT` for the last three). Requests are signed with Signature V4 in `lib/s3-sign.ts` (checked against AWS's published examples), using plain `fetch`, so there is no SDK. Each file row records where its bytes are, so switching later leaves older files readable. Set `APP_URL` so the links to files use your real domain.
+- **Serving:** `/f/<id>` is public by design (that is how a QR code reaches a PDF); the id is an unguessable UUID. Served with the type found in the bytes, `nosniff`, a sandbox policy on images, and a year of caching (the id changes whenever the content does).
+- **Where it is used:** the workspace logo (Settings, onboarding step 4) shows in the header of every customer page and, if you switch it on, in the centre of a QR code (drawn with the highest error correction; the PNG and SVG downloads carry the logo inside them). A PDF QR code can upload its file instead of linking to one; real-estate brochures and product manuals can be uploaded the same way. Settings lists every file with its use ("In use" means a QR code, page, product, brochure or the logo links to it), copy link, delete, and "delete unused".
+- **Limits:** each plan includes a storage allowance (`STORAGE_MB` in `lib/plans.ts`: 20 MB Free to 10 GB Enterprise, defaults until pricing is confirmed). The same file uploaded twice is stored once. A new logo replaces the old one. 60 uploads an hour per workspace. Deleting a workspace removes its objects from S3 as well.
+
+```bash
+npm run check:storage   # file types, upload rules and the S3 signing examples (no server needed)
+npm run check:files     # needs the dev server; set MOCK_S3 to run it against scripts/mock-s3.mjs (see test:all)
+```
+
+`npm run test:all` runs `check:files` twice: once on Postgres storage and once against a mock S3 server that verifies every request's signature, including an outage during upload and cleanup on delete.
+
+**Not built:** photos from customers (selfie check-in, ticket photos, an invoice photo for warranty claims), a gallery of images for menus and pages, direct browser-to-S3 uploads for large files, virus scanning, image resizing.

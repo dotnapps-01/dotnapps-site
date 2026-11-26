@@ -41,6 +41,7 @@ export type RatingPage = {
   locationId: string | null;
   code: string;
   business: string;
+  logoId: string | null;
   location: string;
   googleUrl: string;
   source: string;
@@ -61,11 +62,12 @@ export async function getRatingPage(code: string): Promise<RatingPage | null> {
     ends_at: Date | null;
     config: Record<string, string>;
     business: string;
+    logo_file_id: string | null;
     location: string | null;
     suspended: boolean;
   }>(
     `select q.id, q.workspace_id, q.location_id, q.short_code, q.status, q.starts_at, q.ends_at, q.config,
-            w.name as business, w.suspended,
+            w.name as business, w.logo_file_id, w.suspended,
             coalesce(l.name, case when (select count(*) from locations where workspace_id = w.id) = 1
                                   then (select name from locations where workspace_id = w.id limit 1) end) as location
        from qr_codes q
@@ -81,6 +83,7 @@ export async function getRatingPage(code: string): Promise<RatingPage | null> {
     locationId: r.location_id,
     code: r.short_code,
     business: r.business,
+    logoId: r.logo_file_id,
     location: r.location ?? "",
     googleUrl: googleReviewLink(r.config.googleUrl ?? "") ?? "",
     source: r.config.source ?? "",

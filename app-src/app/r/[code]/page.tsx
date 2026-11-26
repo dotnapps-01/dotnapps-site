@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { ScanBrand } from "@/components/scan/Brand";
 import { RatingFlow } from "@/components/review/RatingFlow";
 import { T, pickLang } from "@/lib/review-i18n";
 import { getRatingPage } from "@/lib/reviews";
@@ -31,6 +32,7 @@ export default async function RatingPageRoute({ params, searchParams }: { params
   }
   return (
     <main id="main">
+      <ScanBrand logoId={page.logoId}>
       <RatingFlow
         code={page.code}
         business={page.business || "Your business"}
@@ -45,6 +47,7 @@ export default async function RatingPageRoute({ params, searchParams }: { params
         links={page.settings.links}
         initialLang={initialLang}
       />
+      </ScanBrand>
     </main>
   );
 }

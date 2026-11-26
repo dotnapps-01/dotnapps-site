@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PathIcon } from "@/components/marketing/parts";
+import { UploadButton } from "@/components/files/UploadButton";
 import { QRFramed } from "@/components/qr/QRFramed";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -12,7 +13,7 @@ import { Pill } from "@/components/ui/Pill";
 import { Select } from "@/components/ui/Select";
 import { Toggle } from "@/components/ui/Toggle";
 import { cn } from "@/lib/cn";
-import { fileSafe, framedPng, framedSvgString, saveBlob } from "@/lib/qr-export";
+import { fileSafe, framedPng, framedSvgString, logoDataUrl, logoFor, saveBlob } from "@/lib/qr-export";
 import type { QrRecord } from "@/lib/qr-repo";
 import {
   MIN_QR_CONTRAST,
@@ -49,6 +50,8 @@ type Props = {
   /** null = unlimited */
   dynamicLimit: number | null;
   planName: string;
+  /** the workspace logo's file id, when one is uploaded */
+  logoId: string | null;
 };
 
 const STEPS = ["Type", "Content", "Design", "Download"] as const;
@@ -69,7 +72,7 @@ const stepOfField = (k: string) => (k === "type" ? 0 : k === "design" ? 2 : 1);
 
 type Banner = { tone: "success" | "error"; text: string; upgrade?: boolean };
 
-export function StudioWizard({ mode, initial, initialType, initialRef, refs, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName }: Props) {
+export function StudioWizard({ mode, initial, initialType, initialRef, refs, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName, logoId }: Props) {
   const router = useRouter();
   const editing = mode === "edit";
   const [step, setStep] = useState(editing || initialType ? 1 : 0);
@@ -137,6 +140,7 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
   }, [isDynamic, activeCode, type, config, shortBase]);
   const complete = parseQrInput({ name: shownName, type, config, design, dynamic: isDynamic }, true).ok;
 
+  const logoSrc = logoFor(design, logoId);
   const ratio = contrastRatio(design.color);
   const scanOk = ratio >= MIN_QR_CONTRAST;
   const scanText = ratio >= 7 ? "Excellent" : scanOk ? "Good" : "Too low";
@@ -210,8 +214,9 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
 
   async function download(kind: "png" | "svg") {
     const file = fileSafe(shownName);
-    if (kind === "png") saveBlob(await framedPng(previewValue, design), `${file}.png`);
-    else saveBlob(new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${framedSvgString(previewValue, design)}`], { type: "image/svg+xml" }), `${file}.svg`);
+    const href = logoSrc ? await logoDataUrl(logoSrc) : undefined; // a saved SVG or a PNG render can't fetch the logo itself
+    if (kind === "png") saveBlob(await framedPng(previewValue, design, 2000, href), `${file}.png`);
+    else saveBlob(new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${framedSvgString(previewValue, design, href)}`], { type: "image/svg+xml" }), `${file}.svg`);
   }
 
   const err = (k: string) => errors[k];
@@ -419,8 +424,8 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
                       ))}
                     </Select>
                   ) : (
+                    <div key={f.key} className="flex flex-col gap-2">
                     <Input
-                      key={f.key}
                       label={f.label}
                       type={f.kind === "password" ? "text" : f.kind === "number" ? "text" : (f.kind ?? "text")}
                       inputMode={f.kind === "number" ? "decimal" : undefined}
@@ -433,6 +438,10 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
                       labelClassName={label}
                       className={control}
                     />
+                    {def.key === "pdf" && f.key === "url" ? (
+                      <UploadButton purpose="document" label="Upload a PDF instead" onUploaded={(file) => setConfig((c) => ({ ...c, url: file.url }))} />
+                    ) : null}
+                    </div>
                   ),
                 )}
                 <Select label="Folder" value={folderId} onChange={(e) => setFolderId(e.target.value)} labelClassName={label} className={control}>
@@ -582,14 +591,26 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
                   </div>
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-3">
-                  <div className="flex items-center gap-3 border border-dashed border-track p-3.5">
-                    <div className="flex h-10 w-10 flex-none items-center justify-center bg-ink text-xs font-semibold text-white">[B]</div>
-                    <div>
-                      <div className="text-[13px] font-semibold">Logo in centre</div>
-                      <div className="text-xs text-muted">
-                        Logo upload arrives with Settings <span className="tabular text-[10px]">SOON</span>
+                  <div className="flex items-center justify-between gap-3 border border-line-soft p-3.5">
+                    <div className="flex items-center gap-3">
+                      {logoId ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={`/f/${logoId}`} alt="" className="h-10 w-10 flex-none border border-line bg-white object-contain" />
+                      ) : (
+                        <div aria-hidden="true" className="flex h-10 w-10 flex-none items-center justify-center bg-ink text-xs font-semibold text-white">[B]</div>
+                      )}
+                      <div>
+                        <div className="text-[13px] font-semibold">Logo in centre</div>
+                        <div className="text-xs text-muted">
+                          {logoId ? "Your logo, with a safe scan margin" : (
+                            <>
+                              <a href="/app/settings#brand" className="font-semibold">Upload a logo</a> in Settings first
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    {logoId ? <Toggle aria-label="Logo in centre of the QR code" checked={!!design.logo} onCheckedChange={(on) => setDesign((d) => ({ ...d, logo: on }))} /> : null}
                   </div>
                   <div className="flex items-center justify-between gap-2 border border-line-soft p-3.5">
                     <div>
@@ -679,7 +700,7 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
               <span className="tabular text-[11px] text-muted">{def.label}</span>
             </CardHeader>
             <div className="flex flex-col items-center gap-3.5 bg-marble px-5 py-7">
-              <QRFramed value={previewValue} variant={design.variant} color={design.color} label={design.label} size={240} title={`Preview of your ${def.label} QR code`} />
+              <QRFramed value={previewValue} variant={design.variant} color={design.color} label={design.label} size={240} title={`Preview of your ${def.label} QR code`} logoHref={logoSrc} />
               {!complete ? <p className="m-0 rounded-full bg-white px-3 py-1.5 text-xs text-graphite">Preview only until the details are complete</p> : null}
             </div>
             <dl className="m-0 flex flex-col gap-2.5 border-t border-line px-[18px] py-3.5 text-[13px]">

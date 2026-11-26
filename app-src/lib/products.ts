@@ -122,6 +122,7 @@ export type PublicProduct = {
   workspaceId: string;
   serial: string;
   business: string;
+  logoId: string | null;
   suspended: boolean;
   product: { name: string; model: string; madeIn: string; manualUrl: string; videosUrl: string; buyUrl: string; serviceEnabled: boolean; warrantyMonths: number };
   madeOn: string;
@@ -132,10 +133,10 @@ export type PublicProduct = {
 export async function getPublicProduct(token: string): Promise<PublicProduct | null> {
   if (!/^[0-9a-f]{16}$/.test(token)) return null;
   const [r] = await query<{
-    id: string; workspace_id: string; serial: string; business: string; suspended: boolean; name: string; model: string; made_in: string; manual_url: string; videos_url: string; buy_url: string;
+    id: string; workspace_id: string; serial: string; business: string; logo: string | null; suspended: boolean; name: string; model: string; made_in: string; manual_url: string; videos_url: string; buy_url: string;
     service_enabled: boolean; warranty_months: number; made_on: Date; w_until: string | null; w_status: "verified" | "review" | "rejected" | null;
   }>(
-    `select c.id, c.workspace_id, c.serial, w.name as business, w.suspended, p.name, p.model, p.made_in, p.manual_url, p.videos_url, p.buy_url, p.service_enabled, b.warranty_months,
+    `select c.id, c.workspace_id, c.serial, w.name as business, w.logo_file_id as logo, w.suspended, p.name, p.model, p.made_in, p.manual_url, p.videos_url, p.buy_url, p.service_enabled, b.warranty_months,
             b.created_at as made_on, r.valid_until::text as w_until, r.status as w_status
        from product_codes c
        join workspaces w on w.id = c.workspace_id
@@ -147,7 +148,7 @@ export async function getPublicProduct(token: string): Promise<PublicProduct | n
   );
   if (!r) return null;
   return {
-    codeId: r.id, workspaceId: r.workspace_id, serial: r.serial, business: r.business, suspended: r.suspended,
+    codeId: r.id, workspaceId: r.workspace_id, serial: r.serial, business: r.business, logoId: r.logo, suspended: r.suspended,
     product: { name: r.name, model: r.model, madeIn: r.made_in, manualUrl: r.manual_url, videosUrl: r.videos_url, buyUrl: r.buy_url, serviceEnabled: r.service_enabled, warrantyMonths: r.warranty_months },
     madeOn: r.made_on.toISOString(),
     warranty: r.w_until && r.w_status ? { validUntil: r.w_until, status: r.w_status } : null,

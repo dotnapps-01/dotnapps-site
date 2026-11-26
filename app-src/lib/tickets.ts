@@ -164,13 +164,13 @@ export async function openTicketCount(workspaceId: string): Promise<number> {
 /** What a customer sees on their own ticket link: status and the replies meant for them. */
 export async function getTicketByToken(token: string) {
   if (!/^t[A-Za-z0-9_-]{22}$/.test(token)) return null;
-  const [t] = await query<{ id: string; seq: number; title: string; status: TicketStatus; place: string; created_at: Date; business: string }>(
-    "select t.id, t.seq, t.title, t.status, t.place, t.created_at, w.name as business from tickets t join workspaces w on w.id = t.workspace_id where t.token = $1",
+  const [t] = await query<{ id: string; seq: number; title: string; status: TicketStatus; place: string; created_at: Date; business: string; logo: string | null }>(
+    "select t.id, t.seq, t.title, t.status, t.place, t.created_at, w.name as business, w.logo_file_id as logo from tickets t join workspaces w on w.id = t.workspace_id where t.token = $1",
     [token],
   );
   if (!t) return null;
   const ev = await query<{ kind: string; text: string; created_at: Date }>("select kind, text, created_at from ticket_events where ticket_id = $1 and public order by created_at, id", [t.id]);
-  return { seq: t.seq, title: t.title, status: t.status, place: t.place, createdAt: t.created_at.toISOString(), business: t.business, events: ev.map((e) => ({ kind: e.kind, text: e.text, at: e.created_at.toISOString() })) };
+  return { seq: t.seq, title: t.title, status: t.status, place: t.place, createdAt: t.created_at.toISOString(), business: t.business, logoId: t.logo, events: ev.map((e) => ({ kind: e.kind, text: e.text, at: e.created_at.toISOString() })) };
 }
 
 /** Turns a private-feedback item from the Reviews inbox into a ticket (once). */

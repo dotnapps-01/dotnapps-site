@@ -238,12 +238,12 @@ export async function actOnVisitor(workspaceId: string, id: string, action: Visi
 /** A visitor's own pass link. Shows only what they entered and the decision. */
 export async function getVisitorByToken(token: string) {
   if (!/^v[A-Za-z0-9_-]{22}$/.test(token)) return null;
-  const [r] = await query<VisitorRow & { business: string }>(
-    `select v.id, v.name, v.phone, v.purpose, v.host, v.status, v.valid_until, v.in_at, v.out_at, v.created_at, nullif(q.config->>'place','') as place, w.name as business
+  const [r] = await query<VisitorRow & { business: string; logo: string | null }>(
+    `select v.id, v.name, v.phone, v.purpose, v.host, v.status, v.valid_until, v.in_at, v.out_at, v.created_at, nullif(q.config->>'place','') as place, w.name as business, w.logo_file_id as logo
        from visitors v join workspaces w on w.id = v.workspace_id left join qr_codes q on q.id = v.qr_id where v.token = $1`,
     [token],
   );
   if (!r) return null;
   const v = toVisitor(r);
-  return { name: v.name, purpose: v.purpose, host: v.host, status: v.status, validUntil: v.validUntil, expired: v.expired, inAt: v.inAt, outAt: v.outAt, business: r.business, place: v.place };
+  return { name: v.name, purpose: v.purpose, host: v.host, status: v.status, validUntil: v.validUntil, expired: v.expired, inAt: v.inAt, outAt: v.outAt, business: r.business, logoId: r.logo, place: v.place };
 }

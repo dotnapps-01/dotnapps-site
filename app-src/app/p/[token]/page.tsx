@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { ScanBrand } from "@/components/scan/Brand";
 import { ProductView } from "@/components/product/ProductView";
 import { PT } from "@/lib/product-i18n";
 import { istDay } from "@/lib/ops-input";
@@ -49,7 +50,9 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
 
   return (
     <main id="main">
+      <ScanBrand logoId={pp.logoId}>
       <ProductView token={token} business={pp.business} serial={pp.serial} initialLang={lang} today={istDay()} madeOn={pp.madeOn} product={pp.product} warranty={pp.warranty} scan={scan} />
+      </ScanBrand>
     </main>
   );
 }

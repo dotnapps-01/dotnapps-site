@@ -65,6 +65,7 @@ export default async function StudioPage({ searchParams }: { searchParams: Promi
       dynamicUsed={used}
       dynamicLimit={Number.isFinite(limit) ? limit : null}
       planName={ws.plan[0].toUpperCase() + ws.plan.slice(1)}
+      logoId={ws.logoFileId}
     />
   );
 }

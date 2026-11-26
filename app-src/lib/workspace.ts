@@ -26,6 +26,8 @@ export type Workspace = {
   defaultLang: "en" | "ta" | "hi";
   /** months of scan and lead data kept; null keeps everything */
   retentionMonths: number | null;
+  /** uploaded logo (a file id), or null; it is served at /f/<id> */
+  logoFileId: string | null;
 };
 
 type Row = {
@@ -41,12 +43,13 @@ type Row = {
   gstin: string;
   default_lang: "en" | "ta" | "hi";
   retention_months: number | null;
+  logo_file_id: string | null;
   location_name: string | null;
   location_address: string | null;
 };
 
 const SELECT = `
-  select w.id, u.phone, w.name, w.industry, w.goals, w.plan, w.step, w.onboarded, w.suspended, w.gstin, w.default_lang, w.retention_months,
+  select w.id, u.phone, w.name, w.industry, w.goals, w.plan, w.step, w.onboarded, w.suspended, w.gstin, w.default_lang, w.retention_months, w.logo_file_id,
          l.name as location_name, l.address as location_address
     from users u
     join workspaces w on w.owner_id = u.id
@@ -67,6 +70,7 @@ const toWorkspace = (r: Row): Workspace => ({
   gstin: r.gstin,
   defaultLang: r.default_lang,
   retentionMonths: r.retention_months,
+  logoFileId: r.logo_file_id,
 });
 
 export async function getWorkspace(sub: string): Promise<Workspace | null> {

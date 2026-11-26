@@ -16,6 +16,7 @@ export type EngageQr = {
   code: string;
   config: Record<string, string>;
   business: string;
+  logoId: string | null;
   location: string;
   active: boolean;
 };
@@ -33,10 +34,11 @@ export async function getEngageQr(code: string, type?: string): Promise<EngageQr
     ends_at: Date | null;
     config: Record<string, string>;
     business: string;
+    logo_file_id: string | null;
     location: string | null;
     suspended: boolean;
   }>(
-    `select q.id, q.workspace_id, q.type, q.name, q.short_code, q.status, q.starts_at, q.ends_at, q.config, w.name as business, w.suspended,
+    `select q.id, q.workspace_id, q.type, q.name, q.short_code, q.status, q.starts_at, q.ends_at, q.config, w.name as business, w.logo_file_id, w.suspended,
             coalesce(l.name, case when (select count(*) from locations where workspace_id = w.id) = 1
                                   then (select name from locations where workspace_id = w.id limit 1) end) as location
        from qr_codes q join workspaces w on w.id = q.workspace_id left join locations l on l.id = q.location_id
@@ -52,6 +54,7 @@ export async function getEngageQr(code: string, type?: string): Promise<EngageQr
     code: r.short_code,
     config: r.config,
     business: r.business,
+    logoId: r.logo_file_id,
     location: r.location ?? "",
     active: !r.suspended && effectiveStatus({ status: r.status, starts_at: r.starts_at, ends_at: r.ends_at }) === "active",
   };

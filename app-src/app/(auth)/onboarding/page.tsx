@@ -29,6 +29,7 @@ export default async function OnboardingPage() {
           goals: ws?.goals ?? [],
           locationName: ws?.locationName ?? "",
           address: ws?.address ?? "",
+          logoId: ws?.logoFileId ?? null,
           scanUrl,
         }}
       />
@@ -48,6 +49,7 @@ export default async function OnboardingPage() {
         goals: [],
         locationName: "",
         address: "",
+        logoId: null,
         scanUrl,
       }}
     />

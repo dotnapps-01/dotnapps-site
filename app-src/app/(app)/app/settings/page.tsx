@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/app/PageHeader";
+import { BrandCard } from "@/components/settings/BrandCard";
 import { DataPanel } from "@/components/settings/DataPanel";
 import { LocationsCard } from "@/components/settings/LocationsCard";
 import { ProfileForm } from "@/components/settings/ProfileForm";
@@ -11,7 +12,9 @@ import { Table, TableBody, TableHead, TableRow, Td, Th } from "@/components/ui/T
 import { listAudit } from "@/lib/audit";
 import { currentActor } from "@/lib/auth/admin";
 import { currentWorkspace } from "@/lib/auth/current";
+import { formatBytes as fmtBytes } from "@/components/files/upload";
 import { PLAN_LABEL } from "@/lib/plans";
+import { listFiles } from "@/lib/files";
 import { listLocationsFull, usage } from "@/lib/settings";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -38,6 +41,9 @@ const WHAT: Record<string, string> = {
   "product.created": "Product added",
   "batch.created": "Product codes generated",
   "batch.exported": "Product codes downloaded",
+  "file.uploaded": "File uploaded",
+  "file.deleted": "File deleted",
+  "file.cleanup": "Unused files deleted",
   "data.exported": "Data exported",
   "retention.changed": "Data retention changed",
   "plan.changed": "Plan changed",
@@ -69,7 +75,7 @@ export default async function SettingsPage() {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
   const actor = await currentActor();
-  const [locations, u, log] = await Promise.all([listLocationsFull(ws.id), usage(ws), listAudit(ws.id, 50)]);
+  const [locations, u, log, files] = await Promise.all([listLocationsFull(ws.id), usage(ws), listAudit(ws.id, 50), listFiles(ws.id, "")]);
   const keep = ws.retentionMonths === null ? "forever" : String(ws.retentionMonths);
 
   return (
@@ -118,6 +124,7 @@ export default async function SettingsPage() {
                 <Bar label="Dynamic QR codes" value={u.dynamicUsed} of={u.dynamicLimit} text={`${fmt(u.dynamicUsed)} / ${u.dynamicLimit === null ? "unlimited" : fmt(u.dynamicLimit)}`} />
                 <Bar label="Scans this month" value={u.scansMonth} of={null} text={`${fmt(u.scansMonth)} / unlimited`} />
                 <Bar label="Contacts" value={u.contacts} of={null} text={fmt(u.contacts)} />
+                <Bar label="File storage" value={u.storageUsed} of={u.storageQuota} text={`${fmtBytes(u.storageUsed)} / ${fmtBytes(u.storageQuota)}`} />
                 <Bar label="Team seats" value={1} of={1} text="1 / 1" />
               </div>
             </div>
@@ -144,10 +151,12 @@ export default async function SettingsPage() {
 
           <Card id="brand" className="scroll-mt-4">
             <CardHeader>
-              <CardTitle>Brand kit &amp; domain</CardTitle>
-              <Pill>SOON</Pill>
+              <CardTitle>Brand kit &amp; files</CardTitle>
             </CardHeader>
-            <p className="m-0 p-[18px] text-sm leading-[1.6] text-graphite">Uploading a logo needs file storage, and a scan-page domain like yourbrand.skn.to or scan.yourbrand.com needs DNS and certificate set-up. Neither is built yet. Customer pages show your business name and its initials for now.</p>
+            <BrandCard logoId={ws.logoFileId} files={files} used={u.storageUsed} quota={u.storageQuota} />
+            <p className="m-0 border-t border-line-soft p-[18px] text-sm leading-[1.6] text-graphite">
+              A scan-page domain like yourbrand.skn.to or scan.yourbrand.com needs DNS and certificate set-up and isn&rsquo;t built yet. <Pill>SOON</Pill>
+            </p>
           </Card>
 
           <Card id="security" className="scroll-mt-4">

@@ -94,7 +94,7 @@ export const qrTypes: QrTypeDef[] = [
     { key: "query", label: "Google Maps link or address", placeholder: "Search an address or paste a link", required: true },
   ] },
   { key: "pdf", label: "PDF / file", group: "Basic", icon: ic.file, live: true, fields: [
-    { key: "url", label: "Link to the PDF or file", placeholder: "https://", kind: "url", required: true, hint: "File upload arrives with Pages. For now, link to a hosted file." },
+    { key: "url", label: "Link to the PDF or file", placeholder: "https://", kind: "url", required: true, hint: "Paste a link to a hosted file, or upload a PDF below (up to 8 MB)." },
   ] },
 
   { key: "review", label: "Review page", group: "Engage", icon: ic.star, live: true, dynamicOnly: true, fields: [
@@ -151,7 +151,8 @@ export const typeLabel = (key: string) => typeByKey(key)?.label ?? key;
 /* ---------- design ---------- */
 
 export type QrVariant = "square" | "dot" | "halftone";
-export type QrDesign = { color: string; variant: QrVariant; label: string };
+/** `logo`: put the workspace logo in the centre of the code (the code is then drawn with the highest error correction). */
+export type QrDesign = { color: string; variant: QrVariant; label: string; logo?: boolean };
 
 export const designColors = [
   { name: "Ink", value: "#0E0E10" },
@@ -380,6 +381,7 @@ export function parseQrInput(raw: unknown, publish: boolean): ParseResult {
     variant: designVariants.some((v) => v.key === d.variant) ? (d.variant as QrVariant) : defaultDesign.variant,
     label: frameLabels.includes(str(d.label, 40)) ? str(d.label, 40) : defaultDesign.label,
   };
+  if (d.logo === true) design.logo = true;
   if (contrastRatio(design.color) < MIN_QR_CONTRAST) fields.design = "That colour is too light to scan reliably. Pick a darker one.";
 
   let shortCode: string | null = null;

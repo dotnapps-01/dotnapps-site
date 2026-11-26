@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { initialsOf } from "@/lib/pages";
 import { LANGS, type Lang } from "@/lib/review-i18n";
 import { E } from "@/lib/engage-i18n";
+import { BizMark } from "@/components/scan/Brand";
 
 export const primaryBtn =
   "flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border-0 bg-ink px-4 text-center text-[15px] font-semibold text-white no-underline transition-colors hover:bg-ink-2 hover:text-white disabled:cursor-not-allowed disabled:opacity-60";
@@ -38,9 +39,7 @@ export function Shell({
   return (
     <div lang={lang} className={cn("mx-auto flex w-full flex-col gap-3.5 px-[22px] pb-[22px] pt-6", embedded ? "min-h-0" : "min-h-screen", wide ? "max-w-[520px]" : "max-w-[430px]")}>
       <header className="flex items-center gap-2.5">
-        <div aria-hidden="true" className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-ink text-sm font-bold text-white">
-          {initialsOf(business)}
-        </div>
+        <BizMark initials={initialsOf(business)} />
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold">{business}</div>
           {location ? <div className="truncate text-xs text-muted">{location}</div> : null}

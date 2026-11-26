@@ -13,7 +13,7 @@ import { Pill, type PillTone } from "@/components/ui/Pill";
 import { Select } from "@/components/ui/Select";
 import { Table, TableBody, TableHead, TableRow, Td, Th } from "@/components/ui/Table";
 import { cn } from "@/lib/cn";
-import { fileSafe, framedPng, framedSvgString, saveBlob } from "@/lib/qr-export";
+import { fileSafe, framedPng, framedSvgString, logoDataUrl, logoFor, saveBlob } from "@/lib/qr-export";
 import type { FolderRecord, QrRecord } from "@/lib/qr-repo";
 import { qrValue, typeLabel, type EffectiveStatus } from "@/lib/qr-types";
 
@@ -24,6 +24,7 @@ type Props = {
   shortBase: string;
   shortLabel: string;
   bulkLocked: boolean;
+  logoId: string | null;
 };
 
 const statusTone: Record<EffectiveStatus, { tone: PillTone; text: string }> = {
@@ -38,7 +39,7 @@ const statusTone: Record<EffectiveStatus, { tone: PillTone; text: string }> = {
 const fmt = (n: number) => n.toLocaleString("en-IN");
 const bulkBtn = "tabular min-h-[34px] border border-[#4A4A52] bg-transparent px-3 text-[11px] text-white enabled:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50";
 
-export function LibraryView({ codes, folders, locations, shortBase, shortLabel, bulkLocked }: Props) {
+export function LibraryView({ codes, folders, locations, shortBase, shortLabel, bulkLocked, logoId }: Props) {
   const router = useRouter();
   const [folder, setFolder] = useState<string>("all"); // "all" | "archived" | folder id
   const [q, setQ] = useState("");
@@ -109,7 +110,8 @@ export function LibraryView({ codes, folders, locations, shortBase, shortLabel, 
   }
 
   async function downloadOne(c: QrRecord) {
-    saveBlob(await framedPng(valueOf(c), c.design), `${fileSafe(c.name)}.png`);
+    const src = logoFor(c.design, logoId);
+    saveBlob(await framedPng(valueOf(c), c.design, 2000, src ? await logoDataUrl(src) : undefined), `${fileSafe(c.name)}.png`);
   }
 
   async function downloadZip() {
@@ -118,10 +120,12 @@ export function LibraryView({ codes, folders, locations, shortBase, shortLabel, 
     try {
       const { default: JSZip } = await import("jszip");
       const zip = new JSZip();
+      const logo = logoId ? await logoDataUrl(`/f/${logoId}`) : undefined;
       for (const c of chosen) {
         const base = `${fileSafe(c.name)}-${c.shortCode ?? c.id.slice(0, 6)}`;
-        zip.file(`${base}.png`, await framedPng(valueOf(c), c.design, 1000));
-        zip.file(`${base}.svg`, `<?xml version="1.0" encoding="UTF-8"?>\n${framedSvgString(valueOf(c), c.design)}`);
+        const href = c.design.logo ? logo : undefined;
+        zip.file(`${base}.png`, await framedPng(valueOf(c), c.design, 1000, href));
+        zip.file(`${base}.svg`, `<?xml version="1.0" encoding="UTF-8"?>\n${framedSvgString(valueOf(c), c.design, href)}`);
       }
       saveBlob(await zip.generateAsync({ type: "blob" }), "skanor-qr-codes.zip");
       setNote(`ZIP with ${chosen.length} ${chosen.length === 1 ? "code" : "codes"} downloaded.`);

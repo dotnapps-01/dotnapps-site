@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { UploadButton } from "@/components/files/UploadButton";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
@@ -52,7 +53,10 @@ function ProductForm({ product, onDone }: { product: ProductRecord | null; onDon
         <Input label="Model" value={v.model} onChange={set("model")} placeholder="RO 8L" labelClassName={label} className={control} />
         <Input label="Made in" value={v.madeIn} onChange={set("madeIn")} placeholder="Chennai" labelClassName={label} className={control} />
         <Input label="Warranty (months)" inputMode="numeric" value={v.warrantyMonths} onChange={set("warrantyMonths")} error={errors.warrantyMonths} hint="0 turns warranty registration off." labelClassName={label} className={control} />
-        <Input label="User manual link (PDF)" value={v.manualUrl} onChange={set("manualUrl")} error={errors.manualUrl} placeholder="https://" labelClassName={label} className={control} />
+        <div className="flex flex-col gap-2">
+          <Input label="User manual link (PDF)" value={v.manualUrl} onChange={set("manualUrl")} error={errors.manualUrl} placeholder="https://" labelClassName={label} className={control} />
+          <UploadButton purpose="document" label="Upload a PDF instead" onUploaded={(f) => setV((x) => ({ ...x, manualUrl: f.url }))} />
+        </div>
         <Input label="Setup videos link" value={v.videosUrl} onChange={set("videosUrl")} error={errors.videosUrl} placeholder="https://" labelClassName={label} className={control} />
         <Input label="Buy accessories link" value={v.buyUrl} onChange={set("buyUrl")} error={errors.buyUrl} placeholder="https://" labelClassName={label} className={control} />
       </div>

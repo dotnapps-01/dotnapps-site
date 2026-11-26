@@ -12,7 +12,7 @@ const int = (v: unknown): number | null => {
 const httpUrl = (v: string) => {
   try {
     const u = new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`);
-    return (u.protocol === "https:" || u.protocol === "http:") && u.hostname.includes(".") ? u.toString() : null;
+    return (u.protocol === "https:" || u.protocol === "http:") && (u.hostname.includes(".") || (process.env.NODE_ENV !== "production" && u.hostname === "localhost")) ? u.toString() : null; // localhost only while developing, so an uploaded file's address works on a dev machine
   } catch {
     return null;
   }

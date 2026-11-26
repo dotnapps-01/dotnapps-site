@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { DEFAULT_CHIPS, ISSUE_KEYS, LANGS, T, chipLabel, questionFor, suggestReview, type IssueKey, type Lang } from "@/lib/review-i18n";
+import { BizMark } from "@/components/scan/Brand";
 
 export type RatingFlowProps = {
   code: string;
@@ -198,9 +199,7 @@ export function RatingFlow(p: RatingFlowProps) {
       ) : null}
 
       <header className="flex items-center gap-2.5">
-        <div aria-hidden="true" className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-ink text-sm font-bold text-white">
-          {initials(p.business)}
-        </div>
+        <BizMark initials={initials(p.business)} />
         <div className="min-w-0">
           <div className="truncate text-[15px] font-semibold">{p.business}</div>
           <div className="truncate text-xs text-muted">{[p.location, p.source].filter(Boolean).join(" · ")}</div>

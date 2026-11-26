@@ -257,14 +257,14 @@ export async function cancelByToken(token: string): Promise<"ok" | "not_found" |
 
 export async function getBookingByToken(token: string) {
   if (!/^b[A-Za-z0-9_-]{22}$/.test(token)) return null;
-  const [r] = await query<BookingRow & { business: string; venue: string }>(`select b.id, b.item_id, i.name as item_name, i.kind, b.name, b.phone, b.staff, b.starts_at, b.ends_at, b.qty, b.status, b.code, b.checked_in_at, i.price::text as price, b.token, w.name as business, i.venue
+  const [r] = await query<BookingRow & { business: string; venue: string; logo: string | null }>(`select b.id, b.item_id, i.name as item_name, i.kind, b.name, b.phone, b.staff, b.starts_at, b.ends_at, b.qty, b.status, b.code, b.checked_in_at, i.price::text as price, b.token, w.name as business, w.logo_file_id as logo, i.venue
     from bookings b join booking_items i on i.id = b.item_id join workspaces w on w.id = b.workspace_id where b.token = $1`, [token]);
   if (!r) return null;
   const b = toBooking(r);
   // only what the customer needs on their own page: no phone number, no internal ids
   return {
     itemName: b.itemName, kind: b.kind, name: b.name, staff: b.staff, startsAt: b.startsAt, qty: b.qty, status: b.status, code: b.code, price: b.price,
-    business: r.business, venue: r.venue, canCancel: ["pending", "confirmed"].includes(b.status) && r.starts_at.getTime() > Date.now(),
+    business: r.business, logoId: r.logo, venue: r.venue, canCancel: ["pending", "confirmed"].includes(b.status) && r.starts_at.getTime() > Date.now(),
   };
 }
 

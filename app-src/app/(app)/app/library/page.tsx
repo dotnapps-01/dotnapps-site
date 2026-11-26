@@ -20,6 +20,7 @@ export default async function LibraryPage() {
       shortBase={short.base}
       shortLabel={short.label}
       bulkLocked={ws.plan === "free" || ws.plan === "starter"}
+      logoId={ws.logoFileId}
     />
   );
 }

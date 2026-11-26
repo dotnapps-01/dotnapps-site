@@ -706,4 +706,28 @@ create index counterfeit_alerts_ws_idx on counterfeit_alerts(workspace_id, statu
 create unique index counterfeit_alerts_auto_idx on counterfeit_alerts(code_id, kind) where kind <> 'report';
 `,
   },
+  {
+    id: "006_files",
+    sql: `
+create table files (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  purpose text not null,
+  name text not null,
+  mime text not null,
+  size int not null,
+  sha256 text not null,
+  width int,
+  height int,
+  storage text not null check (storage in ('db','s3')),
+  skey text,
+  data bytea,
+  created_at timestamptz not null default now(),
+  check ((storage = 'db' and data is not null) or (storage = 's3' and skey is not null))
+);
+create index files_ws_idx on files(workspace_id, created_at desc);
+create unique index files_dedupe_idx on files(workspace_id, purpose, sha256);
+alter table workspaces add column logo_file_id uuid references files(id) on delete set null;
+`,
+  },
 ];

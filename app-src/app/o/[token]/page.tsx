@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { ScanBrand } from "@/components/scan/Brand";
 import { Track } from "@/components/ops/Track";
 import { getVisitorByToken } from "@/lib/attendance";
 import { getBookingByToken } from "@/lib/bookings";
@@ -19,17 +20,17 @@ export default async function OwnLinkPage({ params, searchParams }: { params: Pr
   if (kind === "t") {
     const data = await getTicketByToken(token);
     if (!data) notFound();
-    return <main id="main"><Track kind="t" token={token} initialLang={lang} data={data} /></main>;
+    return <main id="main"><ScanBrand logoId={data.logoId}><Track kind="t" token={token} initialLang={lang} data={data} /></ScanBrand></main>;
   }
   if (kind === "v") {
     const data = await getVisitorByToken(token);
     if (!data) notFound();
-    return <main id="main"><Track kind="v" token={token} initialLang={lang} data={data} /></main>;
+    return <main id="main"><ScanBrand logoId={data.logoId}><Track kind="v" token={token} initialLang={lang} data={data} /></ScanBrand></main>;
   }
   if (kind === "b") {
     const data = await getBookingByToken(token);
     if (!data) notFound();
-    return <main id="main"><Track kind="b" token={token} initialLang={lang} data={data} /></main>;
+    return <main id="main"><ScanBrand logoId={data.logoId}><Track kind="b" token={token} initialLang={lang} data={data} /></ScanBrand></main>;
   }
   notFound();
 }

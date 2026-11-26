@@ -12,7 +12,7 @@ export function proxy(req: NextRequest) {
     // the bare short domain goes to the marketing site when SITE_URL is set
     if (url.pathname === "/" && process.env.SITE_URL) return NextResponse.redirect(new URL(process.env.SITE_URL));
     // serialized product codes and customer links keep their own paths on the short domain
-    if (/^\/(p|o|s|r)\//.test(url.pathname)) return NextResponse.next();
+    if (/^\/(p|o|s|r|f)\//.test(url.pathname)) return NextResponse.next();
     url.pathname = `/q${url.pathname}`;
     return NextResponse.rewrite(url);
   }

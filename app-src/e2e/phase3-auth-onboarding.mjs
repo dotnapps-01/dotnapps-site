@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import { chromium } from "playwright";
+import { makePng } from "../scripts/images.mjs";
 const require = createRequire(import.meta.url);
 const S = process.env.E2E_OUT ?? new URL("./out", import.meta.url).pathname;
 fs.mkdirSync(S + "/shots", { recursive: true });
@@ -96,11 +97,15 @@ await p.getByRole("button", { name: "Create my workspace" }).click();
 t(await p.getByText("Enter a location name to continue.").isVisible(), "location: empty name blocked");
 await p.getByRole("button", { name: "Connect", exact: true }).click();
 t(await p.getByText(/after setup, from Integrations/).isVisible(), "location: Connect explains it comes after setup");
+await p.locator("input[type=file]").setInputFiles({ name: "logo.png", mimeType: "image/png", buffer: makePng(128, 128) });
+await p.getByText("Your logo is saved").waitFor();
+t(await p.getByRole("img", { name: "Your logo" }).isVisible(), "location: uploading a logo works during onboarding");
 await p.getByLabel("Location name").fill("Anna Nagar, Chennai");
 // refresh mid-wizard resumes at this step with data kept? (saved server-side up to step 3)
 await p.reload();
 await p.getByRole("heading", { name: "Add your first location" }).waitFor();
 t(true, "refresh resumes the wizard at step 4");
+t(await p.getByText("Your logo is saved").isVisible(), "refresh keeps the uploaded logo");
 await p.getByLabel("Location name").fill("Anna Nagar, Chennai");
 await p.getByRole("button", { name: "Back" }).click();
 t(await p.getByRole("button", { name: /Wi-Fi/ }).getAttribute("aria-pressed") === "true", "back: goal selections kept");

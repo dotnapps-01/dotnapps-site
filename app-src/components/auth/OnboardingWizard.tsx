@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { UploadButton } from "@/components/files/UploadButton";
 import { PathIcon } from "@/components/marketing/parts";
 import { QRMark } from "@/components/qr/QRMark";
 import { LogoMark } from "@/components/site/Logo";
@@ -30,6 +31,7 @@ export type WizardInitial = {
   goals: GoalKey[];
   locationName: string;
   address: string;
+  logoId: string | null;
   scanUrl: string;
 };
 
@@ -71,6 +73,7 @@ export function OnboardingWizard({ initial }: { initial: WizardInitial }) {
   const [fieldNote, setFieldNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [connectNote, setConnectNote] = useState("");
+  const [logoId, setLogoId] = useState<string | null>(initial.logoId);
   const devCode = useSyncExternalStore(subscribeStorage, readDevCode, () => "");
 
   // resend countdown
@@ -340,18 +343,26 @@ export function OnboardingWizard({ initial }: { initial: WizardInitial }) {
                 labelClassName={captionLabel}
                 className={bigControl}
               />
-              {[
-                { t: "Connect Google Business Profile", d: "Needed for the review link and review inbox.", b: "Connect" },
-                { t: "Upload your logo", d: "We'll use it on QR codes and scan pages.", b: "Upload" },
-              ].map((c) => (
-                <div key={c.t} className="flex flex-wrap items-center justify-between gap-3.5 border border-line bg-white p-[18px]">
-                  <div>
-                    <div className="text-[15px] font-semibold">{c.t}</div>
-                    <div className="mt-[3px] text-[13px] text-graphite">{c.d}</div>
-                  </div>
-                  <Button onClick={() => setConnectNote("You can do this after setup, from Integrations and Settings.")}>{c.b}</Button>
+              <div className="flex flex-wrap items-center justify-between gap-3.5 border border-line bg-white p-[18px]">
+                <div>
+                  <div className="text-[15px] font-semibold">Connect Google Business Profile</div>
+                  <div className="mt-[3px] text-[13px] text-graphite">Needed for the review link and review inbox.</div>
                 </div>
-              ))}
+                <Button onClick={() => setConnectNote("You can do this after setup, from Integrations and Settings.")}>Connect</Button>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3.5 border border-line bg-white p-[18px]">
+                <div className="flex items-center gap-3.5">
+                  {logoId ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={`/f/${logoId}`} alt="Your logo" className="h-12 w-12 flex-none rounded-[10px] border border-line object-contain" />
+                  ) : null}
+                  <div>
+                    <div className="text-[15px] font-semibold">{logoId ? "Your logo is saved" : "Upload your logo"}</div>
+                    <div className="mt-[3px] text-[13px] text-graphite">We&rsquo;ll use it on QR codes and scan pages. PNG, JPG or WebP, up to 1 MB.</div>
+                  </div>
+                </div>
+                <UploadButton purpose="logo" label={logoId ? "Replace" : "Upload"} size="md" onUploaded={(f) => setLogoId(f.id)} />
+              </div>
               {connectNote ? (
                 <p role="status" className="m-0 text-xs text-muted">
                   {connectNote}

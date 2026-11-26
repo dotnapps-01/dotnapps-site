@@ -309,7 +309,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           </div>
         )}
         <p role="note" className="m-0 max-w-[760px] text-xs leading-[1.6] text-muted">
-          An invoice photo isn&rsquo;t collected (that needs file storage), so buyers give an invoice number instead. Place on the &ldquo;first scan&rdquo; line comes from the buyer&rsquo;s connection and is blank when the hosting doesn&rsquo;t provide it. Alerts are signals to check, not proof of a fake.
+          An invoice photo isn&rsquo;t collected, so buyers give an invoice number instead. Place on the &ldquo;first scan&rdquo; line comes from the buyer&rsquo;s connection and is blank when the hosting doesn&rsquo;t provide it. Alerts are signals to check, not proof of a fake.
         </p>
       </PageBody>
     </>

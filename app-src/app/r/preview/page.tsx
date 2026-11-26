@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { ScanBrand } from "@/components/scan/Brand";
 import { RatingFlow } from "@/components/review/RatingFlow";
 import { currentWorkspace } from "@/lib/auth/current";
 import { pickLang } from "@/lib/review-i18n";
@@ -17,6 +18,7 @@ export default async function RatingPreviewPage({ searchParams }: { searchParams
   const { lang } = await searchParams;
   return (
     <main id="main">
+      <ScanBrand logoId={ws.logoFileId}>
       <RatingFlow
         demo
         code="preview"
@@ -32,6 +34,7 @@ export default async function RatingPreviewPage({ searchParams }: { searchParams
         links={s.links}
         initialLang={pickLang((await headers()).get("accept-language"), s.languages, lang)}
       />
+      </ScanBrand>
     </main>
   );
 }
