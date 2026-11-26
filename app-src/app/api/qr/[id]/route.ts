@@ -28,6 +28,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!parsed.ok) return NextResponse.json({ error: "invalid", fields: parsed.fields }, { status: 422 });
 
   const r = await updateQrCode(ws, id, parsed.value, publish);
-  if (!r.ok) return NextResponse.json({ error: r.error }, { status: r.error === "not_found" ? 404 : 422 });
+  if (!r.ok) return NextResponse.json({ error: r.error, ...(r.fields ? { fields: r.fields } : {}) }, { status: r.error === "not_found" ? 404 : 422 });
   return NextResponse.json({ ok: true, id: r.id, shortCode: r.shortCode, status: r.status });
 }

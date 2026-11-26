@@ -6,12 +6,16 @@
 
 export type QrGroup = "Basic" | "Engage" | "Operate" | "Advanced";
 
+export type RefKind = "page:menu" | "page:card" | "page:bio" | "form" | "coupon" | "loyalty";
+
 export type FieldDef = {
   key: string;
   label: string;
   placeholder: string;
-  kind?: "text" | "url" | "tel" | "password" | "number" | "select";
+  kind?: "text" | "url" | "tel" | "password" | "number" | "select" | "ref";
   options?: string[];
+  /** for kind "ref": which of the workspace's own records this field points at */
+  ref?: RefKind;
   required?: boolean;
   hint?: string;
   /** extra validation for a non-empty value; returns an error message or null */
@@ -94,12 +98,24 @@ export const qrTypes: QrTypeDef[] = [
     { key: "source", label: "Where this code is placed", placeholder: "Table 4, Counter, Invoice…" },
     { key: "staff", label: "Staff member (optional)", placeholder: "Meena" },
   ] },
-  { key: "menu", label: "Menu / catalogue", group: "Engage", icon: ic.menu, live: false, phase: 6, fields: [] },
-  { key: "lead", label: "Lead form", group: "Engage", icon: ic.user, live: false, phase: 6, fields: [] },
-  { key: "coupon", label: "Coupon", group: "Engage", icon: ic.tag, live: false, phase: 6, fields: [] },
-  { key: "loyalty", label: "Loyalty card", group: "Engage", icon: ic.stamp, live: false, phase: 6, fields: [] },
-  { key: "vcard", label: "Business card", group: "Engage", icon: ic.card, live: false, phase: 6, fields: [] },
-  { key: "bio", label: "Link-in-bio", group: "Engage", icon: ic.link, live: false, phase: 6, fields: [] },
+  { key: "menu", label: "Menu / catalogue", group: "Engage", icon: ic.menu, live: true, dynamicOnly: true, fields: [
+    { key: "pageId", label: "Menu", placeholder: "Choose a menu", kind: "ref", ref: "page:menu", required: true },
+  ] },
+  { key: "lead", label: "Lead form", group: "Engage", icon: ic.user, live: true, dynamicOnly: true, fields: [
+    { key: "formId", label: "Form", placeholder: "Choose a form", kind: "ref", ref: "form", required: true },
+  ] },
+  { key: "coupon", label: "Coupon", group: "Engage", icon: ic.tag, live: true, dynamicOnly: true, fields: [
+    { key: "couponId", label: "Offer", placeholder: "Choose an offer", kind: "ref", ref: "coupon", required: true },
+  ] },
+  { key: "loyalty", label: "Loyalty card", group: "Engage", icon: ic.stamp, live: true, dynamicOnly: true, fields: [
+    { key: "program", label: "Loyalty programme", placeholder: "Set up your programme", kind: "ref", ref: "loyalty", required: true },
+  ] },
+  { key: "vcard", label: "Business card", group: "Engage", icon: ic.card, live: true, dynamicOnly: true, fields: [
+    { key: "pageId", label: "Business card", placeholder: "Choose a card", kind: "ref", ref: "page:card", required: true },
+  ] },
+  { key: "bio", label: "Link-in-bio", group: "Engage", icon: ic.link, live: true, dynamicOnly: true, fields: [
+    { key: "pageId", label: "Link page", placeholder: "Choose a page", kind: "ref", ref: "page:bio", required: true },
+  ] },
   { key: "bill", label: "Digital bill", group: "Engage", icon: ic.bill, live: false, phase: 6, fields: [] },
 
   { key: "ticket", label: "Feedback → ticket", group: "Operate", icon: ic.ticket, live: false, phase: 7, fields: [] },
@@ -239,6 +255,9 @@ export function staticPayload(type: string, config: Record<string, string>): str
   }
 }
 
+/** Types whose scans open a Skanor customer page at /s/<code> (the rest redirect elsewhere or use /r). */
+export const ENGAGE_TYPES = ["menu", "lead", "coupon", "loyalty", "vcard", "bio"];
+
 /* ---------- short codes ---------- */
 
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -322,6 +341,10 @@ export function parseQrInput(raw: unknown, publish: boolean): ParseResult {
       continue;
     }
     if (f.kind === "url" && !httpUrl(v)) fields[`config.${f.key}`] = "Enter a valid web address (http or https).";
+    if (f.kind === "ref") {
+      const ok = f.ref === "loyalty" ? v === "program" : /^[0-9a-f-]{36}$/i.test(v);
+      if (!ok) fields[`config.${f.key}`] = `Choose a valid ${f.label.toLowerCase()}.`;
+    }
     const custom = f.check?.(v);
     if (custom) fields[`config.${f.key}`] = custom;
     if (f.kind === "tel" && !waDigits(v)) fields[`config.${f.key}`] = "Enter a valid number with country code.";

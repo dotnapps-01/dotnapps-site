@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   if (!r.ok) {
     if (r.error === "plan_limit") return NextResponse.json({ error: "plan_limit", limit: dynamicLimit[ws.plan] }, { status: 403 });
     if (r.error === "slug_taken") return NextResponse.json({ error: "slug_taken" }, { status: 409 });
-    return NextResponse.json({ error: r.error }, { status: 422 });
+    return NextResponse.json({ error: r.error, ...(r.fields ? { fields: r.fields } : {}) }, { status: 422 });
   }
   return NextResponse.json({ ok: true, id: r.id, shortCode: r.shortCode, status: r.status }, { status: 201 });
 }

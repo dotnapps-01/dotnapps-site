@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
-import { ComingSoon } from "@/components/app/ComingSoon";
-import { PageBody, PageHeader } from "@/components/app/PageHeader";
+import { redirect } from "next/navigation";
+import { PageHeader } from "@/components/app/PageHeader";
+import { PageBuilder } from "@/components/pages/PageBuilder";
+import { currentWorkspace } from "@/lib/auth/current";
+import { listPages } from "@/lib/engage";
 
 export const metadata: Metadata = { title: "Pages" };
+export const dynamic = "force-dynamic";
 
-export default function Page() {
+export default async function PagesScreen({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const ws = await currentWorkspace();
+  if (!ws) redirect("/login");
+  const { page } = await searchParams;
+  const pages = await listPages(ws.id);
+  const selected = pages.find((p) => p.id === page) ?? null;
   return (
     <>
-      <PageHeader eyebrow="QR codes" title="Pages" />
-      <PageBody>
-        <ComingSoon name="Pages" phase={6} designFile="Pages.dc.html" />
-      </PageBody>
+      <PageHeader eyebrow="QR codes / Pages" title={selected ? selected.title : "Pages"} />
+      <PageBuilder pages={pages} selected={selected} business={ws.businessName || "Your business"} location={ws.locationName} />
     </>
   );
 }

@@ -14,6 +14,7 @@ npm run build && npm start
 - `/signup`, `/login`, `/onboarding` — WhatsApp-OTP sign-up and the 5-step wizard (Phase 3); `/app/*` now requires a session
 - `/app/studio`, `/app/library`, `/app/analytics`, `/app/dashboard` — QR Studio, QR Library, Analytics and Dashboard on real data (Phase 4); `/q/<code>` is the redirect service
 - `/app/reviews` — Reviews & feedback (Phase 5); customers reach `/r/<code>` from a Review QR (`/r/demo` is a public demo, `/r/preview` previews your own settings)
+- `/app/pages`, `/app/leads`, `/app/offers` — Pages (menu, business card, link-in-bio), Leads & contacts, Offers & loyalty (Phase 6); customers reach `/s/<code>` from the matching QR type
 - `/docs` — placeholder until the Integrations/API screen (Phase 8)
 - `/app/dashboard` and the other `/app/*` routes — app shell with sidebar (placeholders until Phases 4–8)
 
@@ -75,4 +76,23 @@ A **Review page** QR (Studio, Engage group) opens a rating page: `/q/<code>` log
 npm run check:reviews   # API tests: QR validation, redirect, languages, visitor binding, rate limit, privacy, isolation (dev server running)
 ```
 
-**Not built:** reading and replying to Google reviews and review widgets (need Google Business Profile, with Integrations), AI-written text and AI reply drafts (need an LLM key), WhatsApp alerts to the manager and auto-created tickets (Phase 7), thank-you offers (Phase 6).
+**Not built:** reading and replying to Google reviews and review widgets (need Google Business Profile, with Integrations), AI-written text and AI reply drafts (need an LLM key), WhatsApp alerts to the manager and auto-created tickets (Phase 7), thank-you offers on the review page (not built yet).
+
+## Leads, Offers & loyalty, Pages (Phase 6)
+
+Six QR types are now live (all dynamic): **Menu**, **Lead form**, **Coupon**, **Loyalty card**, **Business card** and **Link-in-bio**. `/q/<code>` logs the scan and redirects to `/s/<code>`, which shows the matching customer page. A code points at something you build first, so a printed code can be edited without reprinting: pages, forms and offers are chosen in the Studio, and the Studio only lists published pages. Pages and forms that a live code uses can't be unpublished or deleted.
+
+- **Pages** (`/app/pages`): menu with sections, prices, veg marks, tags, sold-out toggle and an optional "Order on WhatsApp" cart; business card with a vCard download; link-in-bio. Live phone preview, draft/publish.
+- **Leads** (`/app/leads`): lead forms (choose the fields and the "interested in" choices), a five-stage pipeline with owner and notes, contacts (created from forms, coupons and loyalty; CSV import with per-row reasons; opt-in is stored only when the customer ticked it), and live segment counts.
+- **Offers** (`/app/offers`): coupons with a code prefix, validity, start/end, per-customer and total limits, pause; every claim gets a one-use code. **Redeem a code** looks a code up and marks it redeemed atomically (two staff redeeming at once: only one succeeds). Loyalty: stamps needed, reward, staff PIN, card expiry.
+- **Loyalty rules:** the customer joins with a phone number; staff add a stamp by entering a 4-digit PIN on the customer's phone. One stamp per card per day, 5 wrong PINs lock that card for 15 minutes, and the earning of a reward creates a one-use `RWD-` code redeemed the same way as a coupon. The PIN is stored as a keyed hash (it uses `AUTH_SECRET` in production). The public card never returns the full number or the name.
+- **Languages:** the chrome of every customer page is English, Tamil and Hindi (browser language or `?lang=`). What a business types (items, offers, form titles) is shown as typed. **The Tamil and Hindi wording is a first translation: have a native speaker review it before launch.**
+- **Abuse limits:** public endpoints are throttled per visitor (leads 10/hour, loyalty joins 10/hour, plus the earlier review limits), carry a honeypot, and only accept codes whose QR is active and whose target is published.
+
+```bash
+npm run check:engage   # API tests: pages, lead forms, contacts import, coupons, redeem, loyalty, isolation (dev server running)
+```
+
+`check:engage` also covers multi-day loyalty rewards when `DATABASE_URL` points at the server's database (it moves a card's last stamp back a day); without it those checks are skipped. No new environment variables.
+
+**Not built:** sending WhatsApp broadcasts, win-back messages and digital bills (they need WhatsApp sending and a billing connection, with Integrations; the screens say so and the buttons are disabled), thank-you offers on the review page, landing pages, drag-and-drop in the pipeline (each card has a stage select instead), a loyalty rule per spend, click tracking on link-in-bio links, bulk CSV QR creation (billing-gated).

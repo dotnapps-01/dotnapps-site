@@ -1,6 +1,7 @@
 import "server-only";
 import { query } from "@/lib/db";
 import {
+  typeByKey,
   dynamicLimit,
   effectiveStatus,
   randomShortCode,
@@ -104,8 +105,8 @@ export async function countDynamic(workspaceId: string): Promise<number> {
 const isUnique = (e: unknown) =>
   (e as { code?: string })?.code === "23505" || /duplicate key|unique constraint/i.test((e as Error)?.message ?? "");
 
-export type SaveError = "plan_limit" | "slug_taken" | "bad_location" | "bad_folder" | "not_found";
-export type SaveResult = { ok: true; id: string; shortCode: string | null; status: StoredStatus } | { ok: false; error: SaveError };
+export type SaveError = "plan_limit" | "slug_taken" | "bad_location" | "bad_folder" | "not_found" | "bad_ref";
+export type SaveResult = { ok: true; id: string; shortCode: string | null; status: StoredStatus } | { ok: false; error: SaveError; fields?: Record<string, string> };
 
 async function ownedBy(table: "locations" | "folders", id: string | null, workspaceId: string) {
   if (!id) return true;
@@ -113,9 +114,36 @@ async function ownedBy(table: "locations" | "folders", id: string | null, worksp
   return r.length > 0;
 }
 
+/** The page, form, coupon or programme a code points at must exist in the same workspace. */
+async function checkRefs(workspaceId: string, type: string, config: Record<string, string>, publish: boolean): Promise<Record<string, string> | null> {
+  const def = typeByKey(type);
+  const bad: Record<string, string> = {};
+  for (const f of def?.fields ?? []) {
+    if (f.kind !== "ref") continue;
+    const v = config[f.key];
+    if (!v) continue;
+    let exists = false;
+    if (f.ref === "loyalty") exists = (await query("select 1 from loyalty_programs where workspace_id = $1", [workspaceId])).length > 0;
+    else if (f.ref === "form") exists = (await query("select 1 from lead_forms where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
+    else if (f.ref === "coupon") exists = (await query("select 1 from coupons where id = $1 and workspace_id = $2", [v, workspaceId])).length > 0;
+    else if (f.ref?.startsWith("page:")) {
+      const rows = await query<{ status: string }>("select status from pages where id = $1 and workspace_id = $2 and kind = $3", [v, workspaceId, f.ref.slice(5)]);
+      exists = rows.length > 0 && (!publish || rows[0].status === "published");
+      if (rows.length > 0 && publish && rows[0].status !== "published") {
+        bad[`config.${f.key}`] = "Publish that page first. A code can only point at a published page.";
+        continue;
+      }
+    }
+    if (!exists) bad[`config.${f.key}`] = `That ${f.label.toLowerCase()} no longer exists. Choose another.`;
+  }
+  return Object.keys(bad).length ? bad : null;
+}
+
 export async function createQrCode(ws: Workspace, input: QrInput, publish: boolean): Promise<SaveResult> {
   if (!(await ownedBy("locations", input.locationId, ws.id))) return { ok: false, error: "bad_location" };
   if (!(await ownedBy("folders", input.folderId, ws.id))) return { ok: false, error: "bad_folder" };
+  const refErr = await checkRefs(ws.id, input.type, input.config, publish);
+  if (refErr) return { ok: false, error: "bad_ref", fields: refErr };
   if (input.dynamic && (await countDynamic(ws.id)) >= (dynamicLimit[ws.plan] ?? 0)) return { ok: false, error: "plan_limit" };
 
   const custom = input.shortCode;
@@ -156,6 +184,9 @@ export async function updateQrCode(ws: Workspace, id: string, input: QrInput, pu
   if (!existing || existing.status === "archived") return { ok: false, error: "not_found" };
   if (!(await ownedBy("locations", input.locationId, ws.id))) return { ok: false, error: "bad_location" };
   if (!(await ownedBy("folders", input.folderId, ws.id))) return { ok: false, error: "bad_folder" };
+  const goingLive = (publish && existing.status === "draft") || existing.status === "active";
+  const refErr = await checkRefs(ws.id, input.type, input.config, goingLive);
+  if (refErr) return { ok: false, error: "bad_ref", fields: refErr };
   const status: StoredStatus = publish && existing.status === "draft" ? "active" : existing.status;
   await query(
     `update qr_codes set name=$3, location_id=$4, folder_id=$5, config=$6, design=$7, starts_at=$8, ends_at=$9, status=$10, updated_at=now()

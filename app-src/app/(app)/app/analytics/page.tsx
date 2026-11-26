@@ -12,6 +12,7 @@ import { getAnalytics, pctDelta, resolveRange, type Interval } from "@/lib/analy
 import { currentWorkspace } from "@/lib/auth/current";
 import { cn } from "@/lib/cn";
 import { listLocations, listQrCodes } from "@/lib/qr-repo";
+import { engageActionsByQr } from "@/lib/engage";
 import { reviewActionsByQr } from "@/lib/reviews";
 
 export const metadata: Metadata = { title: "Analytics" };
@@ -36,8 +37,16 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
   const qr = qrCodes.some((c) => c.id === sp.qr) ? sp.qr! : "";
   const location = locations.some((l) => l.id === sp.location) ? sp.location! : "";
 
-  const [a, actions] = await Promise.all([getAnalytics(ws.id, { range, qrId: qr, locationId: location, interval }), reviewActionsByQr(ws.id, range.from, range.to)]);
-  const totalActions = a.byQr.reduce((n, r) => n + (actions.get(r.id)?.ratings ?? 0), 0);
+  const [a, review, engage] = await Promise.all([
+    getAnalytics(ws.id, { range, qrId: qr, locationId: location, interval }),
+    reviewActionsByQr(ws.id, range.from, range.to),
+    engageActionsByQr(ws.id, range.from, range.to),
+  ]);
+  // what each code produced: ratings for review codes, leads / claims / stamps for the Engage types
+  const actions = new Map<string, { count: number; text: string }>();
+  for (const [id, v] of engage) actions.set(id, v);
+  for (const [id, v] of review) actions.set(id, { count: v.ratings, text: `${fmt(v.ratings)} ratings · ${fmt(v.google)} to Google` });
+  const totalActions = a.byQr.reduce((n, r) => n + (actions.get(r.id)?.count ?? 0), 0);
   const dScans = pctDelta(a.scans, a.prevScans);
   const dUnique = pctDelta(a.unique, a.prevUnique);
   const repeatDelta =
@@ -98,7 +107,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           <KpiTile variant="cell" label="Scans" value={fmt(a.scans)} delta={dScans?.text} tone={dScans ? tone(dScans.dir) : "flat"} />
           <KpiTile variant="cell" label="Unique" value={fmt(a.unique)} delta={dUnique?.text} tone={dUnique ? tone(dUnique.dir) : "flat"} />
           <KpiTile variant="cell" label="Repeat rate" value={a.repeatRate === null ? "—" : `${a.repeatRate}%`} delta={repeatDelta?.text} tone={repeatDelta ? tone(repeatDelta.dir) : "flat"} />
-          <KpiTile variant="cell" label="Actions taken" value={totalActions ? fmt(totalActions) : "—"} delta={totalActions ? "Ratings given on review pages" : "Starts with review pages"} tone="flat" />
+          <KpiTile variant="cell" label="Actions taken" value={totalActions ? fmt(totalActions) : "—"} delta={totalActions ? "Ratings, leads, claims, stamps" : "Starts with your first customer action"} tone="flat" />
           <KpiTile variant="cell" label="Avg time on page" value="—" delta="Needs Engage modules" tone="flat" />
         </KpiStrip>
 
@@ -138,7 +147,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
                   </div>
                 </div>
               ))}
-              <p className="m-0 text-xs leading-[1.5] text-muted">Actions from review pages count in the KPI and table. Leads, offers and other modules join as they launch.</p>
+              <p className="m-0 text-xs leading-[1.5] text-muted">Actions (ratings, leads, coupon claims, loyalty stamps) count in the KPI and table.</p>
             </div>
           </Card>
         </div>
@@ -209,9 +218,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
                     <Td className="tabular">{fmt(r.scans)}</Td>
                     <Td className="tabular">{fmt(r.unique)}</Td>
                     <Td className={actions.get(r.id) ? "text-graphite" : "text-muted"}>
-                      {actions.get(r.id) ? `${fmt(actions.get(r.id)!.ratings)} ratings · ${fmt(actions.get(r.id)!.google)} to Google` : "—"}
+                      {actions.get(r.id)?.text ?? "—"}
                     </Td>
-                    <Td className={cn("tabular", !actions.get(r.id) && "text-muted")}>{actions.get(r.id) && r.scans ? `${Math.round((actions.get(r.id)!.ratings / r.scans) * 1000) / 10}%` : "—"}</Td>
+                    <Td className={cn("tabular", !actions.get(r.id) && "text-muted")}>{actions.get(r.id) && r.scans ? `${Math.round((actions.get(r.id)!.count / r.scans) * 1000) / 10}%` : "—"}</Td>
                     <Td>
                       <Spark values={r.spark} />
                     </Td>

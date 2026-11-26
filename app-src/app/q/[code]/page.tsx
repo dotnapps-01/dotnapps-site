@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { Logo } from "@/components/site/Logo";
 import { findByShortCode } from "@/lib/qr-repo";
-import { destinationFor, effectiveStatus } from "@/lib/qr-types";
+import { ENGAGE_TYPES, destinationFor, effectiveStatus } from "@/lib/qr-types";
 import { logScan } from "@/lib/scan";
 
 export const dynamic = "force-dynamic";
@@ -38,8 +38,8 @@ export default async function ShortLinkPage({ params }: { params: Promise<{ code
     );
   }
 
-  // Review codes open the rating page; everything else goes to its configured destination.
-  const dest = qr.type === "review" ? `/r/${code.toLowerCase()}` : destinationFor(qr.type, qr.config);
+  // Review codes open the rating page, Engage types open their customer page, the rest go to their destination.
+  const dest = qr.type === "review" ? `/r/${code.toLowerCase()}` : ENGAGE_TYPES.includes(qr.type) ? `/s/${code.toLowerCase()}` : destinationFor(qr.type, qr.config);
   if (!dest) notFound();
 
   await logScan(qr, await headers());

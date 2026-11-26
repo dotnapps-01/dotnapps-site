@@ -25,8 +25,8 @@ let x = await call(A, "POST", "/api/qr", { name: "x", type: "url", config: {}, p
 t(x.r.status === 422 && x.j.fields.name && x.j.fields["config.url"], "create: short name + missing URL -> 422 with field errors");
 x = await call(A, "POST", "/api/qr", urlQr({ config: { url: "javascript:alert(1)" } }));
 t(x.r.status === 422 && x.j.fields["config.url"], "create: javascript: URL rejected");
-x = await call(A, "POST", "/api/qr", urlQr({ type: "menu" }));
-t(x.r.status === 422 && /Phase 6/.test(x.j.fields.type), "create: type whose page isn't built yet is refused");
+x = await call(A, "POST", "/api/qr", urlQr({ type: "ticket" }));
+t(x.r.status === 422 && /Phase 7/.test(x.j.fields.type), "create: type whose page isn't built yet is refused");
 x = await call(A, "POST", "/api/qr", urlQr({ design: { color: "#EEEEEE", variant: "dot", label: "SCAN ME" } }));
 t(x.r.status === 422 && x.j.fields.design, "create: low-contrast colour rejected");
 x = await call(A, "POST", "/api/qr", urlQr({ shortCode: "api" }));

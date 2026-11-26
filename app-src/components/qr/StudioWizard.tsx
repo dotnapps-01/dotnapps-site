@@ -36,6 +36,10 @@ type Props = {
   initial?: QrRecord;
   /** pre-selected type for a new code (from ?type=) */
   initialType?: string;
+  /** pre-selected page / form / coupon for the type's reference field (from ?ref=) */
+  initialRef?: string;
+  /** the workspace's own records the reference fields can point at */
+  refs: Record<string, { id: string; name: string }[]>;
   locations: { id: string; name: string }[];
   folders: { id: string; name: string }[];
   shortBase: string;
@@ -48,6 +52,8 @@ type Props = {
 };
 
 const STEPS = ["Type", "Content", "Design", "Download"] as const;
+const REF_LINK: Record<string, string> = { "page:menu": "/app/pages", "page:card": "/app/pages", "page:bio": "/app/pages", form: "/app/leads?tab=forms", coupon: "/app/offers", loyalty: "/app/offers?tab=loyalty" };
+const REF_LINK_LABEL: Record<string, string> = { "page:menu": "Create or publish a menu", "page:card": "Create or publish a card", "page:bio": "Create or publish a link page", form: "Create a form", coupon: "Create an offer", loyalty: "Set up your programme" };
 const label = "text-[11px] font-medium uppercase tracking-[0.05em] text-graphite";
 const control = "min-h-10 text-sm";
 
@@ -63,7 +69,7 @@ const stepOfField = (k: string) => (k === "type" ? 0 : k === "design" ? 2 : 1);
 
 type Banner = { tone: "success" | "error"; text: string; upgrade?: boolean };
 
-export function StudioWizard({ mode, initial, initialType, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName }: Props) {
+export function StudioWizard({ mode, initial, initialType, initialRef, refs, locations, folders, shortBase, shortLabel, suggestedCode, dynamicUsed, dynamicLimit, planName }: Props) {
   const router = useRouter();
   const editing = mode === "edit";
   const [step, setStep] = useState(editing || initialType ? 1 : 0);
@@ -72,7 +78,12 @@ export function StudioWizard({ mode, initial, initialType, locations, folders, s
   const [nameTouched, setNameTouched] = useState(Boolean(initial));
   const [locationId, setLocationId] = useState(initial?.locationId ?? "");
   const [folderId, setFolderId] = useState(initial?.folderId ?? "");
-  const [config, setConfig] = useState<Record<string, string>>(initial?.config ?? {});
+  const [config, setConfig] = useState<Record<string, string>>(() => {
+    if (initial) return initial.config;
+    const first = typeByKey(initialType ?? "")?.fields.find((f) => f.kind === "ref");
+    if (initialType === "loyalty" && refs.loyalty?.length) return { program: "program" };
+    return first && initialRef ? { [first.key]: initialRef } : {};
+  });
   const [dynamic, setDynamic] = useState(initial?.dynamic ?? true);
   const [shortCode, setShortCode] = useState(initial?.shortCode ?? "");
   const [scheduled, setScheduled] = useState(Boolean(initial?.startsAt || initial?.endsAt));
@@ -303,7 +314,7 @@ export function StudioWizard({ mode, initial, initialType, locations, folders, s
                               disabled={off}
                               onClick={() => {
                                 setType(t.key);
-                                setConfig({});
+                                setConfig(t.key === "loyalty" && refs.loyalty?.length ? { program: "program" } : {});
                                 setErrors({});
                               }}
                               className={cn(
@@ -355,7 +366,37 @@ export function StudioWizard({ mode, initial, initialType, locations, folders, s
                   ))}
                 </Select>
                 {def.fields.map((f) =>
-                  f.kind === "select" ? (
+                  f.kind === "ref" ? (
+                    <div key={f.key} className="flex flex-col gap-1.5">
+                      {(refs[f.ref ?? ""] ?? []).length > 0 ? (
+                        <Select
+                          label={f.label}
+                          value={config[f.key] ?? ""}
+                          onChange={(e) => setConfig((c) => ({ ...c, [f.key]: e.target.value }))}
+                          error={err(`config.${f.key}`)}
+                          labelClassName={label}
+                          className={control}
+                        >
+                          <option value="">{f.placeholder}</option>
+                          {refs[f.ref ?? ""].map((r) => (
+                            <option key={r.id} value={r.id}>
+                              {r.name}
+                            </option>
+                          ))}
+                        </Select>
+                      ) : (
+                        <>
+                          <span className={label}>{f.label}</span>
+                          <p role={err(`config.${f.key}`) ? "alert" : undefined} className={cn("m-0 border border-dashed border-track bg-paper px-3 py-2.5 text-sm", err(`config.${f.key}`) ? "text-danger-fg" : "text-graphite")}>
+                            {err(`config.${f.key}`) ?? "You haven't created one yet."}{" "}
+                            <Link href={REF_LINK[f.ref ?? ""] ?? "/app/pages"} className="font-semibold underline underline-offset-2">
+                              {REF_LINK_LABEL[f.ref ?? ""] ?? "Create one"}
+                            </Link>
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  ) : f.kind === "select" ? (
                     <Select
                       key={f.key}
                       label={f.label}
