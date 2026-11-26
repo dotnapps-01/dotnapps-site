@@ -1,6 +1,7 @@
 import "server-only";
 import { query } from "@/lib/db";
 import { hmacHex } from "@/lib/auth/crypto";
+import { emitLater } from "@/lib/webhooks";
 
 export type Device = "android" | "iphone" | "other";
 
@@ -40,14 +41,10 @@ export async function logScan(qr: { id: string; workspace_id: string }, h: Heade
     } catch {
       city = null;
     }
-    await query("insert into scans (qr_id, workspace_id, visitor, city, device, lang) values ($1, $2, $3, $4, $5, $6)", [
-      qr.id,
-      qr.workspace_id,
-      visitor,
-      city,
-      parseDevice(ua),
-      parseLang(h.get("accept-language") ?? ""),
-    ]);
+    const device = parseDevice(ua);
+    const lang = parseLang(h.get("accept-language") ?? "");
+    await query("insert into scans (qr_id, workspace_id, visitor, city, device, lang) values ($1, $2, $3, $4, $5, $6)", [qr.id, qr.workspace_id, visitor, city, device, lang]);
+    emitLater(qr.workspace_id, "scan.created", { qr_id: qr.id, city, device, lang });
   } catch (e) {
     console.error("[scan] could not record scan:", e instanceof Error ? e.message : e);
   }

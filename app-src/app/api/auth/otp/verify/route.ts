@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyOtp } from "@/lib/auth/otp";
 import { clearChallengeCookie, readChallengeCookie, startSession } from "@/lib/auth/session";
-import { ensureWorkspace } from "@/lib/workspace";
+import { flagOn } from "@/lib/flags";
+import { ensureWorkspace, getWorkspace } from "@/lib/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,9 @@ export async function POST(req: Request) {
     if (r.reason === "locked") return NextResponse.json({ error: "locked" }, { status: 429 });
     return NextResponse.json({ error: r.reason }, { status: 400 });
   }
+
+  // the admin console can close sign-ups; people who already have a workspace can still log in
+  if (!(await getWorkspace(r.phone)) && !(await flagOn("signups_open"))) return NextResponse.json({ error: "signups_closed" }, { status: 403 });
 
   await startSession(r.phone);
   await clearChallengeCookie();

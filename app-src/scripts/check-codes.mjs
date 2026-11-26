@@ -26,7 +26,7 @@ t(x.r.status === 422 && x.j.fields.name && x.j.fields["config.url"], "create: sh
 x = await call(A, "POST", "/api/qr", urlQr({ config: { url: "javascript:alert(1)" } }));
 t(x.r.status === 422 && x.j.fields["config.url"], "create: javascript: URL rejected");
 x = await call(A, "POST", "/api/qr", urlQr({ type: "product" }));
-t(x.r.status === 422 && /Phase 8/.test(x.j.fields.type), "create: type whose page isn't built yet is refused");
+t(x.r.status === 422 && /generated in Products/.test(x.j.fields.type), "create: type whose page isn't built yet is refused");
 x = await call(A, "POST", "/api/qr", urlQr({ design: { color: "#EEEEEE", variant: "dot", label: "SCAN ME" } }));
 t(x.r.status === 422 && x.j.fields.design, "create: low-contrast colour rejected");
 x = await call(A, "POST", "/api/qr", urlQr({ shortCode: "api" }));

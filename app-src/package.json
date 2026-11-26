@@ -13,7 +13,9 @@
     "check:codes": "node scripts/check-codes.mjs",
     "check:reviews": "node scripts/check-reviews.mjs",
     "check:engage": "node scripts/check-engage.mjs",
-    "check:ops": "node scripts/check-ops.mjs"
+    "check:ops": "node scripts/check-ops.mjs",
+    "check:platform": "node scripts/check-platform.mjs",
+    "check:net": "node scripts/check-net.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.6.0",

@@ -34,6 +34,8 @@ export type QrTypeDef = {
   staticOnly?: boolean;
   /** needs a short link and a customer page, so it can never be static */
   dynamicOnly?: boolean;
+  /** made somewhere else in the app (each serial has its own code), with where to go */
+  elsewhere?: { href: string; label: string };
   fields: FieldDef[];
 };
 
@@ -140,7 +142,7 @@ export const qrTypes: QrTypeDef[] = [
     { key: "plotId", label: "Plot", placeholder: "Choose a plot", kind: "ref", ref: "plot", required: true },
   ] },
 
-  { key: "product", label: "Product (serialized)", group: "Advanced", icon: ic.box, live: false, phase: 8, fields: [] },
+  { key: "product", label: "Product (serialized)", group: "Advanced", icon: ic.box, live: false, phase: 8, elsewhere: { href: "/app/products#generate", label: "Generate a batch in Products" }, fields: [] },
 ];
 
 export const typeByKey = (key: string) => qrTypes.find((t) => t.key === key);
@@ -344,7 +346,7 @@ export function parseQrInput(raw: unknown, publish: boolean): ParseResult {
 
   const type = typeByKey(str(r.type, 40));
   if (!type) fields.type = "Choose what the scan should do.";
-  else if (!type.live) fields.type = `${type.label} pages arrive in Phase ${type.phase}.`;
+  else if (!type.live) fields.type = type.elsewhere ? `${type.label} codes are generated in Products: ${type.elsewhere.label}.` : `${type.label} pages arrive in Phase ${type.phase}.`;
 
   const dynamic = type?.dynamicOnly ? true : type?.staticOnly ? false : r.dynamic !== false;
 

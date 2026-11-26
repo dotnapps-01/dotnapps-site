@@ -25,3 +25,6 @@ export const notFound = () => NextResponse.json({ error: "not_found" }, { status
 export const conflict = (error: string, extra: Record<string, unknown> = {}) => NextResponse.json({ error, ...extra }, { status: 409 });
 /** Maps the "ok | in_use | not_found" result of a delete to a response. */
 export const deleted = (r: "ok" | "in_use" | "not_found") => (r === "ok" ? ok() : r === "in_use" ? conflict("in_use") : notFound());
+
+/** Owner APIs for plan-gated modules answer 403 { error: "plan_required" } below the plan. */
+export const planRequired = (feature: string) => NextResponse.json({ error: "plan_required", feature }, { status: 403 });

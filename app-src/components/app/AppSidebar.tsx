@@ -18,12 +18,14 @@ type Props = {
   plan: SidebarPlan;
   /** counts shown next to nav items that need attention */
   badges: Partial<Record<AppNavKey, string>>;
+  /** Skanor staff see the Admin console link; nobody else does */
+  admin?: boolean;
   /** shown only below lg, where the sidebar is a drawer */
   onClose?: () => void;
 };
 
 /** App sidebar (design/AppSidebar.dc.html). Every app route is linked; active state comes from the URL. */
-export function AppSidebar({ user, locations, plan, badges, onClose }: Props) {
+export function AppSidebar({ user, locations, plan, badges, admin = false, onClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   async function logOut() {
@@ -53,12 +55,12 @@ export function AppSidebar({ user, locations, plan, badges, onClose }: Props) {
       </div>
 
       <nav aria-label="App" className="flex flex-1 flex-col gap-3.5 overflow-y-auto px-2.5 pb-4 pt-2.5">
-        {appNav.map((g) => (
+        {appNav.filter((g) => admin || g.items.some((it) => it.key !== "admin")).map((g) => (
           <div key={g.heading} className="flex flex-col gap-0.5">
             <span className="px-2.5 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-muted">
               {g.heading}
             </span>
-            {g.items.map((it) => {
+            {g.items.filter((it) => it.key !== "admin" || admin).map((it) => {
               const on = pathname === it.href || pathname.startsWith(it.href + "/");
               const badge = badges[it.key];
               const Icon = it.icon;

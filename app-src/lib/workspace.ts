@@ -19,6 +19,13 @@ export type Workspace = {
   /** furthest wizard step reached: 0 verify … 4 live */
   step: number;
   onboarded: boolean;
+  /** switched off by a Skanor admin: public pages stop working and the owner sees a notice */
+  suspended: boolean;
+  gstin: string;
+  /** language scan pages open in when the customer's phone matches none */
+  defaultLang: "en" | "ta" | "hi";
+  /** months of scan and lead data kept; null keeps everything */
+  retentionMonths: number | null;
 };
 
 type Row = {
@@ -30,12 +37,16 @@ type Row = {
   plan: Plan;
   step: number;
   onboarded: boolean;
+  suspended: boolean;
+  gstin: string;
+  default_lang: "en" | "ta" | "hi";
+  retention_months: number | null;
   location_name: string | null;
   location_address: string | null;
 };
 
 const SELECT = `
-  select w.id, u.phone, w.name, w.industry, w.goals, w.plan, w.step, w.onboarded,
+  select w.id, u.phone, w.name, w.industry, w.goals, w.plan, w.step, w.onboarded, w.suspended, w.gstin, w.default_lang, w.retention_months,
          l.name as location_name, l.address as location_address
     from users u
     join workspaces w on w.owner_id = u.id
@@ -52,10 +63,20 @@ const toWorkspace = (r: Row): Workspace => ({
   address: r.location_address ?? "",
   step: r.step,
   onboarded: r.onboarded,
+  suspended: r.suspended,
+  gstin: r.gstin,
+  defaultLang: r.default_lang,
+  retentionMonths: r.retention_months,
 });
 
 export async function getWorkspace(sub: string): Promise<Workspace | null> {
   const [r] = await query<Row>(`${SELECT} where u.phone = $1`, [sub]);
+  return r ? toWorkspace(r) : null;
+}
+
+export async function getWorkspaceById(id: string): Promise<Workspace | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const [r] = await query<Row>(`${SELECT} where w.id = $1`, [id]);
   return r ? toWorkspace(r) : null;
 }
 

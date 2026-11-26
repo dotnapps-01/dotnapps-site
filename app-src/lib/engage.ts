@@ -3,6 +3,7 @@ import { hmacHex, safeEqual } from "@/lib/auth/crypto";
 import { query, tx } from "@/lib/db";
 import { STAGES, type Stage } from "@/lib/engage-input";
 import type { CouponInput, ImportRow, LeadFormInput, LoyaltyInput, Submission } from "@/lib/engage-input";
+import { emitEvent } from "@/lib/webhooks";
 import { emptyContent, type PageContent, type PageKind } from "@/lib/pages";
 
 const uuidRe = /^[0-9a-f-]{36}$/i;
@@ -231,7 +232,7 @@ export type LeadRecord = {
 };
 
 export async function createLead(p: { workspaceId: string; formId: string; qrId: string; qrName: string; visitor: string; s: Submission }): Promise<string> {
-  return tx(async (q) => {
+  const id = await tx(async (q) => {
     const contactId = await upsertContact(q, p.workspaceId, { name: p.s.name, phone: p.s.phone, email: p.s.email, source: "Lead form", optIn: p.s.optIn });
     const [l] = await q.query<{ id: string }>(
       `insert into leads (workspace_id, form_id, qr_id, contact_id, name, phone, email, interest, preferred_time, message, source, visitor)
@@ -240,6 +241,8 @@ export async function createLead(p: { workspaceId: string; formId: string; qrId:
     );
     return l.id;
   });
+  await emitEvent(p.workspaceId, "lead.created", { lead_id: id, name: p.s.name, phone: p.s.phone, interest: p.s.interest, source: p.qrName });
+  return id;
 }
 
 export async function listLeads(workspaceId: string, limit = 300): Promise<LeadRecord[]> {

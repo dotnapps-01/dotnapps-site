@@ -274,7 +274,8 @@ export async function findByShortCode(code: string) {
     status: StoredStatus;
     starts_at: Date | null;
     ends_at: Date | null;
-  }>("select id, workspace_id, type, config, status, starts_at, ends_at from qr_codes where short_code = $1 and dynamic", [code]);
+    suspended: boolean;
+  }>("select id, workspace_id, type, config, status, starts_at, ends_at, (select suspended from workspaces w where w.id = qr_codes.workspace_id) as suspended from qr_codes where short_code = $1 and dynamic", [code]);
   return r ?? null;
 }
 

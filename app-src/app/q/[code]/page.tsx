@@ -25,7 +25,8 @@ export default async function ShortLinkPage({ params }: { params: Promise<{ code
   const qr = await findByShortCode(code.toLowerCase());
   if (!qr || qr.status === "archived") notFound();
 
-  const state = effectiveStatus(qr);
+  // a business switched off by a Skanor admin reads as paused
+  const state = qr.suspended ? "paused" : effectiveStatus(qr);
   if (state !== "active") {
     const m = messages[state] ?? messages.draft;
     return (

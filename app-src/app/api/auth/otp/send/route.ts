@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { sendOtp } from "@/lib/auth/otp";
 import { normalizeIndianMobile } from "@/lib/auth/phone";
 import { getChallenge, setChallengeCookie } from "@/lib/auth/session";
+import { flagOn } from "@/lib/flags";
+import { getWorkspace } from "@/lib/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +37,8 @@ export async function POST(req: Request) {
     if (mode === "signup" && (businessName?.length ?? 0) < 2) fields.businessName = "Enter your business name.";
     if (Object.keys(fields).length) return NextResponse.json({ error: "invalid", fields }, { status: 422 });
   }
+
+  if (!(await getWorkspace(phone!)) && !(await flagOn("signups_open"))) return NextResponse.json({ error: "signups_closed" }, { status: 403 });
 
   const r = await sendOtp(phone!, mode, businessName);
   if (!r.ok) {

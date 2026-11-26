@@ -547,4 +547,163 @@ create table plot_enquiries (
 create index plot_enquiries_ws_idx on plot_enquiries(workspace_id, created_at);
 `,
   },
+  {
+    id: "005_platform",
+    sql: `
+alter table workspaces add column suspended boolean not null default false;
+alter table workspaces add column gstin text not null default '';
+alter table workspaces add column default_lang text not null default 'en' check (default_lang in ('en','ta','hi'));
+alter table workspaces add column retention_months int default 24 check (retention_months is null or retention_months in (12, 24));
+alter table workspaces add column purged_on date;
+alter table workspaces add column batch_seq int not null default 0;
+
+-- What happened in a workspace, and who did it (the owner, or a Skanor admin acting for them).
+create table audit_log (
+  id bigserial primary key,
+  workspace_id uuid references workspaces(id) on delete cascade,
+  actor text not null,
+  action text not null,
+  detail text not null default '',
+  at timestamptz not null default now()
+);
+create index audit_log_ws_idx on audit_log(workspace_id, at desc);
+
+-- Platform switches the admin console controls. A missing row means "on".
+create table feature_flags (
+  key text primary key,
+  enabled boolean not null,
+  updated_at timestamptz not null default now()
+);
+
+-- ---------- API & webhooks ----------
+create table api_keys (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  name text not null,
+  scope text not null check (scope in ('read','qr:write','all')),
+  key_hash text not null unique,
+  last4 text not null,
+  created_at timestamptz not null default now(),
+  last_used_at timestamptz,
+  revoked_at timestamptz
+);
+create index api_keys_ws_idx on api_keys(workspace_id);
+
+create table webhook_endpoints (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  url text not null,
+  events text[] not null,
+  secret text not null,
+  active boolean not null default true,
+  failures int not null default 0,
+  last_status int,
+  last_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index webhook_endpoints_ws_idx on webhook_endpoints(workspace_id);
+
+create table webhook_deliveries (
+  id bigserial primary key,
+  endpoint_id uuid not null references webhook_endpoints(id) on delete cascade,
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  event text not null,
+  event_id uuid not null,
+  status int,
+  ok boolean not null,
+  error text not null default '',
+  attempt int not null default 1,
+  at timestamptz not null default now()
+);
+create index webhook_deliveries_ep_idx on webhook_deliveries(endpoint_id, at desc);
+create index webhook_deliveries_at_idx on webhook_deliveries(at);
+
+-- ---------- product QR, warranty, authenticity ----------
+create table products (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  name text not null,
+  model text not null default '',
+  made_in text not null default '',
+  warranty_months int not null default 12 check (warranty_months between 0 and 120),
+  manual_url text not null default '',
+  videos_url text not null default '',
+  buy_url text not null default '',
+  service_enabled boolean not null default true,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table product_batches (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  product_id uuid not null references products(id) on delete cascade,
+  seq int not null,
+  prefix text not null,
+  first_no int not null,
+  last_no int not null,
+  qty int not null check (qty between 1 and 20000),
+  warranty_months int not null,
+  format text not null default 'csv' check (format in ('csv','a4','label')),
+  status text not null default 'printing' check (status in ('printing','in_market')),
+  created_at timestamptz not null default now(),
+  unique (workspace_id, seq)
+);
+create index product_batches_ws_idx on product_batches(workspace_id, created_at desc);
+
+create table product_codes (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  product_id uuid not null references products(id) on delete cascade,
+  batch_id uuid not null references product_batches(id) on delete cascade,
+  serial text not null,
+  token text not null unique,
+  scan_count int not null default 0,
+  first_scan_at timestamptz,
+  first_city text,
+  flagged boolean not null default false,
+  unique (workspace_id, serial)
+);
+create index product_codes_batch_idx on product_codes(batch_id);
+
+create table product_scans (
+  id bigserial primary key,
+  code_id uuid not null references product_codes(id) on delete cascade,
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  visitor text not null,
+  city text,
+  at timestamptz not null default now()
+);
+create index product_scans_code_idx on product_scans(code_id, at);
+create index product_scans_ws_idx on product_scans(workspace_id, at);
+
+create table warranty_regs (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  code_id uuid not null unique references product_codes(id) on delete cascade,
+  name text not null,
+  phone text not null,
+  bought_from text not null default '',
+  invoice_no text not null default '',
+  purchased_on date not null,
+  valid_until date not null,
+  status text not null default 'verified' check (status in ('verified','review','rejected')),
+  note text not null default '',
+  created_at timestamptz not null default now()
+);
+create index warranty_regs_ws_idx on warranty_regs(workspace_id, created_at desc);
+
+create table counterfeit_alerts (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  code_id uuid not null references product_codes(id) on delete cascade,
+  kind text not null check (kind in ('many_devices','two_cities','double_registration','report')),
+  reason text not null,
+  status text not null default 'new' check (status in ('new','investigating','dismissed','confirmed')),
+  created_at timestamptz not null default now()
+);
+create index counterfeit_alerts_ws_idx on counterfeit_alerts(workspace_id, status, created_at desc);
+create unique index counterfeit_alerts_auto_idx on counterfeit_alerts(code_id, kind) where kind <> 'report';
+`,
+  },
 ];

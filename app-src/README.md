@@ -16,8 +16,9 @@ npm run build && npm start
 - `/app/reviews` — Reviews & feedback (Phase 5); customers reach `/r/<code>` from a Review QR (`/r/demo` is a public demo, `/r/preview` previews your own settings)
 - `/app/pages`, `/app/leads`, `/app/offers` — Pages (menu, business card, link-in-bio), Leads & contacts, Offers & loyalty (Phase 6); customers reach `/s/<code>` from the matching QR type
 - `/app/tickets`, `/app/attendance`, `/app/bookings`, `/app/real-estate` — Tickets & assets, Attendance & visitors, Bookings & events, Real estate plots (Phase 7); customers reach `/s/<code>` from the code and `/o/<token>` from their own ticket, visitor pass or booking link
-- `/docs` — placeholder until the Integrations/API screen (Phase 8)
-- `/app/dashboard` and the other `/app/*` routes — app shell with sidebar (placeholders until Phases 4–8)
+- `/app/products`, `/app/integrations`, `/app/settings`, `/app/admin` — Product QR & warranty, Integrations & API, Settings & billing, Admin console (Phase 8); buyers reach `/p/<secret token>` from a serialized product code
+- `/docs` — the API and webhook reference
+- `/app/*` — the app shell with sidebar; every sidebar item is now a real screen
 
 Tokens: `tailwind.config.ts` (colours, status pills, radii, shadow, `bg-marble`) and `app/globals.css`.
 Primitives: `components/ui`. Shared: `components/site`, `components/app`, `components/qr/QRMark.tsx`.
@@ -116,3 +117,23 @@ npm run check:ops   # API tests: tickets, assets, attendance, visitors, bookings
 `check:ops` also runs the checks that need time to pass (checking out later, an expired pass) when `DATABASE_URL` points at the server's database; without it those are skipped. No new environment variables.
 
 **Not built:** selfie check-in and photos on tickets (need file storage); a technician page with a checklist and customer OTP to close a ticket; WhatsApp reminders, escalations, alerts and the daily summary (need Integrations); CSAT after resolution; shifts as a separate screen, leave and a payroll calculation; owner-created bookings; per-gate counts at events; payments for bookings and event tickets; printing a whole sheet of plot QRs at once (a QR is made per plot, using one dynamic code each).
+
+## Product QR, Integrations, Settings & Admin (Phase 8)
+
+- **Product QR, warranty & authenticity** (`/app/products`, Enterprise): add a product, generate up to 20,000 serial codes per batch (`AQ-26-000001`…). Each serial has its own secret 64-bit token and URL (`/p/<token>`), so a serial can't be guessed from its neighbours. Download a CSV for the packaging-line printer or print an A4 sheet of QR codes (60 a page). The buyer's page says *Genuine* on the first scan and *Scanned before* when another phone has scanned it, and offers warranty registration, "Book service" (which raises an ordinary ticket) and "Report this seller". A code is flagged and an alert raised when 3 different devices scan it, when it is scanned in two cities within a day (only where the host passes a city header, e.g. Vercel or Cloudflare), when it is registered twice with different numbers, or when a buyer reports it. Alerts are signals, not proof. A repeat scan on the same phone within 10 minutes is not counted again, and link-preview robots don't count.
+- **API** (`/docs`, `/app/integrations`, Enterprise): keys are shown once and stored only as a hash. Scopes: read-only, create QR codes and batches, everything. `GET/POST /v1/qr`, `GET /v1/qr/{id}`, `POST /v1/batches`, `GET /v1/codes/{serial}`, 120 requests a minute per key. Every change an API key makes is in the audit log.
+- **Webhooks:** `scan.created`, `lead.created`, `review.received`, `ticket.created`, `booking.created`, `warranty.registered`, `counterfeit.flagged`. Each request is signed (`Skanor-Signature: t=…,v1=HMAC-SHA256`), sent after the response so a slow endpoint never slows a customer, retried once, and an endpoint is paused after 20 failures in a row. URLs must be https and resolve only to public addresses; redirects are never followed (`npm run check:net` tests the address rules, including IPv6 and IPv4-mapped spellings). There is no durable retry queue.
+- **Settings** (`/app/settings`): business profile (name, category, GSTIN, default scan-page language), locations (add, edit, make primary, remove), plan and usage, an audit log, CSV export of contacts, leads, tickets, bookings, ratings and scans, a retention period (24 months, 12 months, forever; older scans and leads are deleted when you choose it and once a day after), and deleting the workspace (type the business name).
+- **Admin console** (`/app/admin`): only numbers in `ADMIN_PHONES` (everyone else gets a 404). Tenants with search and filter, plan changes, suspend and resume (a suspended business's QR codes, rating page, customer pages and product pages stop working and its owner sees a notice), "Log in as" (4 hours, with a banner, recorded in the tenant's audit log, and an admin can't delete a workspace while viewing it), two real platform switches (new sign-ups, webhook delivery) and a health panel of what the platform can measure itself.
+- **Plans:** Product QR and the API are Enterprise. There is no online billing yet, so an admin changes a tenant's plan after talking to them.
+
+```bash
+# the server needs an admin number, and (to test real delivery to a local receiver) the dev-only bypass
+ADMIN_PHONES=+919000000001 WEBHOOK_ALLOW_PRIVATE=1 npm run dev
+npm run check:platform   # settings, API keys and /v1, webhooks, products, admin, plan gating
+npm run check:net        # which addresses a webhook may never be sent to (no server needed)
+```
+
+Without `WEBHOOK_ALLOW_PRIVATE`, `check:platform` instead checks that local and internal addresses are refused. Set `DATABASE_URL` to the server's database to also run the retention purge and "nothing left behind after delete" checks.
+
+**Not built:** online billing and invoices (so MRR, paying tenants and trials stay as placeholders); team members and roles; logo upload, brand colours and custom scan-page domains; WhatsApp or email notifications and a notification matrix; two-factor and Google sign-in; ready-made connections to Google Business Profile, WhatsApp, Shopify, WooCommerce, Zoho, Tally, Razorpay and Orkha (use webhooks and the API meanwhile); white-label for agencies; invoice photos on warranty registrations (an invoice number instead); service requests as their own screen (they are tickets from PRODUCT QR); dealers; the admin print-orders queue and support inbox.

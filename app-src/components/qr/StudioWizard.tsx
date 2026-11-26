@@ -306,6 +306,15 @@ export function StudioWizard({ mode, initial, initialType, initialRef, refs, loc
                           const on = t.key === type;
                           const locked = editing && !on;
                           const off = !t.live || locked;
+                          if (t.elsewhere && !locked) {
+                            return (
+                              <Link key={t.key} href={t.elsewhere.href} className="box-border flex min-h-[84px] flex-col items-start gap-2 border border-line bg-white p-3 text-left text-ink no-underline transition-colors hover:bg-paper">
+                                <PathIcon d={t.icon} size={20} />
+                                <span className="text-[13px] font-semibold">{t.label}</span>
+                                <span className="text-[10px] text-muted">Made in Products →</span>
+                              </Link>
+                            );
+                          }
                           return (
                             <button
                               key={t.key}

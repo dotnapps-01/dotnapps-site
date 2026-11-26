@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { bookService, getItem, registerEvent } from "@/lib/bookings";
 import { getEngageQr } from "@/lib/engage-public";
 import { parseBookingRequest } from "@/lib/ops-input";
+import { emitEvent } from "@/lib/webhooks";
 import { visitorHash } from "@/lib/scan";
 import { allow } from "@/lib/throttle";
 
@@ -28,6 +29,9 @@ export async function POST(req: Request) {
 
   const args = { workspaceId: qr.workspaceId, qrId: qr.id, itemId: item.id, req: p.value, visitor };
   const r = item.kind === "event" ? await registerEvent(args) : await bookService(args);
-  if (r.ok) return NextResponse.json({ ok: true, ...r.booking }, { status: 201 });
+  if (r.ok) {
+    await emitEvent(qr.workspaceId, "booking.created", { code: r.booking.code, item: item.name, kind: item.kind, starts_at: r.booking.startsAt, qty: p.value.qty, status: r.booking.status });
+    return NextResponse.json({ ok: true, ...r.booking }, { status: 201 });
+  }
   return NextResponse.json({ error: r.reason, left: r.left }, { status: r.reason === "taken" || r.reason === "sold_out" ? 409 : r.reason === "past" ? 422 : 409 });
 }

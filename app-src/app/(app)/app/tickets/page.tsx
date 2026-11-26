@@ -30,7 +30,7 @@ const TABS = [
   { key: "sla", label: "SLA rules" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
-const SOURCE: Record<string, string> = { feedback_qr: "FEEDBACK QR", asset_qr: "ASSET QR", manual: "MANUAL", review: "REVIEW" };
+const SOURCE: Record<string, string> = { feedback_qr: "FEEDBACK QR", asset_qr: "ASSET QR", product_qr: "PRODUCT QR", manual: "MANUAL", review: "REVIEW" };
 const dur = (min: number | null) => (min === null ? "—" : min >= 60 ? `${Math.floor(min / 60)}h ${String(min % 60).padStart(2, "0")}m` : `${min}m`);
 const dmy = (d: string) => new Date(`${d}T06:00:00Z`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
 

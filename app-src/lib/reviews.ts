@@ -3,6 +3,7 @@ import { query } from "@/lib/db";
 import { effectiveStatus, googleReviewLink, type StoredStatus } from "@/lib/qr-types";
 import { defaultSettings, type ReviewSettings } from "./review-settings";
 import type { Lang } from "./review-i18n";
+import { emitEvent } from "@/lib/webhooks";
 
 /* ---------- settings ---------- */
 
@@ -61,9 +62,10 @@ export async function getRatingPage(code: string): Promise<RatingPage | null> {
     config: Record<string, string>;
     business: string;
     location: string | null;
+    suspended: boolean;
   }>(
     `select q.id, q.workspace_id, q.location_id, q.short_code, q.status, q.starts_at, q.ends_at, q.config,
-            w.name as business,
+            w.name as business, w.suspended,
             coalesce(l.name, case when (select count(*) from locations where workspace_id = w.id) = 1
                                   then (select name from locations where workspace_id = w.id limit 1) end) as location
        from qr_codes q
@@ -83,7 +85,7 @@ export async function getRatingPage(code: string): Promise<RatingPage | null> {
     googleUrl: googleReviewLink(r.config.googleUrl ?? "") ?? "",
     source: r.config.source ?? "",
     staff: r.config.staff ?? "",
-    state: effectiveStatus({ status: r.status, starts_at: r.starts_at, ends_at: r.ends_at }) === "active" ? "active" : "unavailable",
+    state: !r.suspended && effectiveStatus({ status: r.status, starts_at: r.starts_at, ends_at: r.ends_at }) === "active" ? "active" : "unavailable",
     settings: await getReviewSettings(r.workspace_id),
   };
 }
@@ -110,6 +112,7 @@ export async function createResponse(p: {
      values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id`,
     [p.page.workspaceId, p.page.qrId, p.page.locationId, p.rating, p.chips, p.lang, p.page.source, p.page.staff, p.visitor],
   );
+  await emitEvent(p.page.workspaceId, "review.received", { response_id: r.id, rating: p.rating, source: p.page.source, staff: p.page.staff });
   return r.id;
 }
 

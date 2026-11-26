@@ -1,6 +1,7 @@
 import "server-only";
 import { query, tx, type Queryable } from "@/lib/db";
 import { upsertContact } from "@/lib/engage";
+import { emitEvent } from "@/lib/webhooks";
 import { DEFAULT_SLA, PRIORITIES, assetCode, dueState, istDay, istInstant, nextDue, type AssetInput, type DueState, type Priority, type ServiceLogInput, type SlaInput, type TicketInput, type TicketPatch, type TicketStatus } from "@/lib/ops-input";
 import { newToken } from "@/lib/token";
 
@@ -74,7 +75,7 @@ const toTicket = (r: TicketRow): TicketRecord => ({
 export type NewTicket = TicketInput & { source: string; qrId?: string | null; assetId?: string | null; feedbackId?: string | null; visitor?: string };
 
 export async function createTicket(workspaceId: string, t: NewTicket): Promise<{ id: string; seq: number; token: string }> {
-  return tx(async (q) => {
+  const made = await tx(async (q) => {
     const [w] = await q.query<{ ticket_seq: number }>("update workspaces set ticket_seq = ticket_seq + 1 where id = $1 returning ticket_seq", [workspaceId]);
     const hours = (await getSla(workspaceId, q))[t.priority];
     const token = newToken("t");
@@ -88,6 +89,8 @@ export async function createTicket(workspaceId: string, t: NewTicket): Promise<{
     if (t.assignee) await q.query("insert into ticket_events (ticket_id, workspace_id, kind, text) values ($1,$2,'assign',$3)", [r.id, workspaceId, `Assigned to ${t.assignee}`]);
     return { id: r.id, seq: w.ticket_seq, token };
   });
+  await emitEvent(workspaceId, "ticket.created", { ticket_id: made.id, number: made.seq, title: t.title, category: t.category, source: t.source, place: t.place });
+  return made;
 }
 
 export async function listTickets(workspaceId: string, opts: { scope?: "active" | "all" | "resolved"; category?: string; limit?: number } = {}): Promise<TicketRecord[]> {
