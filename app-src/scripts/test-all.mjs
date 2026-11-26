@@ -63,14 +63,19 @@ try {
   await new Promise((r) => setTimeout(r, 2500));
 
   // files kept in S3-compatible storage: a mock S3 server that checks every request's signature
-  const { startMockS3, MOCK } = await import("./mock-s3.mjs");
+  // (a separate process: run() below blocks this one while the suite is going, so the mock could not answer from here)
+  const { MOCK } = await import("./mock-s3.mjs");
   const mockPort = Number(process.env.MOCK_S3_PORT ?? 9100);
-  const mock = await startMockS3(mockPort);
+  const mock = spawn(process.execPath, ["scripts/mock-s3.mjs", String(mockPort)], { stdio: "ignore", detached: true });
   try {
+    for (let i = 0; i < 30; i++) {
+      try { if ((await fetch(`http://127.0.0.1:${mockPort}/__objects`)).ok) break; } catch {}
+      await new Promise((r) => setTimeout(r, 200));
+    }
     server = await startServer("s3", { S3_BUCKET: MOCK.bucket, S3_ACCESS_KEY_ID: MOCK.accessKeyId, S3_SECRET_ACCESS_KEY: MOCK.secretAccessKey, S3_ENDPOINT: `http://127.0.0.1:${mockPort}` });
     run("api: files (S3 storage)", ["scripts/check-files.mjs", base], { MOCK_S3: `http://127.0.0.1:${mockPort}` });
   } finally {
-    mock.close();
+    stopServer(mock);
   }
 } catch (e) {
   console.error(String(e.message ?? e));
