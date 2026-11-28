@@ -38,8 +38,13 @@ const until = async (fn, ms = 8000) => { const end = Date.now() + ms; while (Dat
 
 async function signUp(name, phone = rnd(), viewport = { width: 1440, height: 900 }) {
   const ctx = await b.newContext({ viewport, acceptDownloads: true, permissions: ["clipboard-read", "clipboard-write"] });
-  const r = await ctx.request.post(B + "/api/auth/otp/send", { data: { mode: "signup", phone, businessName: name } });
-  const j = await r.json();
+  let j = {};
+  for (let i = 0; i < 3; i++) {
+    const r = await ctx.request.post(B + "/api/auth/otp/send", { data: { mode: "signup", phone, businessName: name } });
+    j = await r.json();
+    if (j.error === "rate_limited" && j.retryAfter <= 40) { await new Promise((x) => setTimeout(x, (j.retryAfter + 1) * 1000)); continue; } // a number used a moment ago (the admin's) has a resend cooldown
+    break;
+  }
   if (!j.devCode) throw new Error("no dev code: " + JSON.stringify(j));
   await ctx.request.post(B + "/api/auth/otp/verify", { data: { code: j.devCode } });
   await ctx.request.post(B + "/api/onboarding", { data: { industry: "retail", goals: ["reviews"], locationName: "Anna Nagar, Chennai", address: "1 Main Rd", complete: true } });

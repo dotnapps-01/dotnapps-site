@@ -10,7 +10,11 @@ import { mkdirSync, openSync, rmSync } from "node:fs";
 
 const port = process.env.PORT ?? "3100";
 const base = `http://localhost:${port}`;
-const adminDigits = "9" + String(Math.floor(Math.random() * 1e9)).padStart(9, "0");
+// Several admin numbers, one handed to each suite: a number may be sent only 5 codes an hour, with 30 seconds between them.
+const newAdmin = () => "9" + String(Math.floor(Math.random() * 1e9)).padStart(9, "0");
+const admins = Array.from({ length: 12 }, newAdmin);
+let nextAdmin = 0;
+const adminFor = () => admins[nextAdmin++ % admins.length];
 const out = new URL("../e2e/out/", import.meta.url).pathname;
 mkdirSync(out, { recursive: true });
 const results = [];
@@ -23,7 +27,7 @@ async function startServer(label, extra) {
   const child = spawn("npx", ["next", "dev", "-p", port], {
     detached: true,
     stdio: ["ignore", log, log],
-    env: { ...process.env, ADMIN_PHONES: `+91${adminDigits}`, ADMIN_PHONE: adminDigits, AUTH_SECRET: process.env.AUTH_SECRET ?? "test-secret-test-secret-1234", ...extra },
+    env: { ...process.env, ADMIN_PHONES: admins.map((d) => `+91${d}`).join(","), AUTH_SECRET: process.env.AUTH_SECRET ?? "test-secret-test-secret-1234", ...extra },
   });
   for (let i = 0; i < 90; i++) {
     try {
@@ -41,7 +45,7 @@ function stopServer(child) {
 }
 const run = (name, args, env = {}) => {
   console.log(`\n=== ${name}`);
-  const r = spawnSync(process.execPath, args, { stdio: "inherit", env: { ...process.env, ADMIN_PHONE: adminDigits, ...env } });
+  const r = spawnSync(process.execPath, args, { stdio: "inherit", env: { ...process.env, ADMIN_PHONE: adminFor(), ...env } });
   record(name, r.status === 0);
 };
 
