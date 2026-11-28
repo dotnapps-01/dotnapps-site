@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import { Zap } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -65,6 +67,7 @@ function Stars({ n }: { n: number }) {
 export default async function ReviewsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "reviews")) return <NoAccess role={ws.role} need="reviews" />;
   const { tab: tabParam } = await searchParams;
   const tab: Tab = TABS.some((t) => t.key === tabParam) ? (tabParam as Tab) : "inbox";
 

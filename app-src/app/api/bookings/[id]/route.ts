@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Confirm, complete, mark no-show, or cancel a booking. Only sensible moves are allowed. */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const status = a.body.status as BookingStatus;
   if (!BOOKING_STATUSES.some((s) => s.key === status)) return invalid({ status: "Unknown status." });

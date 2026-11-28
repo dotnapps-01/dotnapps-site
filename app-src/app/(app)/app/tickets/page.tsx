@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
+import { resolveTabs } from "@/lib/tab-access";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { AssetManager } from "@/components/tickets/AssetManager";
 import { NewTicketForm } from "@/components/tickets/NewTicketForm";
@@ -30,6 +33,7 @@ const TABS = [
   { key: "sla", label: "SLA rules" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
+const TAB_NEED = { tickets: "work", assets: "build", visits: "work", sla: "build" } as const;
 const SOURCE: Record<string, string> = { feedback_qr: "FEEDBACK QR", asset_qr: "ASSET QR", product_qr: "PRODUCT QR", manual: "MANUAL", review: "REVIEW" };
 const dur = (min: number | null) => (min === null ? "—" : min >= 60 ? `${Math.floor(min / 60)}h ${String(min % 60).padStart(2, "0")}m` : `${min}m`);
 const dmy = (d: string) => new Date(`${d}T06:00:00Z`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
@@ -44,7 +48,9 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
   const sp = await searchParams;
-  const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "tickets";
+  const access = resolveTabs(TABS, TAB_NEED, ws.role, sp.tab, "tickets");
+  if (access.denied) return <NoAccess role={ws.role} need={access.denied} />;
+  const tab = access.tab as Tab;
   const scope = sp.scope === "resolved" || sp.scope === "all" ? sp.scope : "active";
   const category = TICKET_CATEGORIES.includes(sp.category ?? "") ? sp.category : undefined;
   const h = await headers();
@@ -72,12 +78,16 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
         title="Tickets & asset service"
         actions={
           <>
-            <Link href="/app/tickets?tab=assets" className={buttonClasses()}>
-              Add asset
-            </Link>
-            <Link href="/app/tickets?tab=sla" className={buttonClasses()}>
-              SLA rules
-            </Link>
+            {can(ws.role, "build") ? (
+              <>
+                <Link href="/app/tickets?tab=assets" className={buttonClasses()}>
+                  Add asset
+                </Link>
+                <Link href="/app/tickets?tab=sla" className={buttonClasses()}>
+                  SLA rules
+                </Link>
+              </>
+            ) : null}
             <Link href="/app/tickets?new=1" className={buttonClasses({ variant: "primary" })}>
               New ticket
             </Link>
@@ -85,7 +95,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
         }
       />
       <nav aria-label="Ticket sections" className="flex flex-wrap border-b border-line bg-surface px-[clamp(8px,1.6vw,20px)]">
-        {TABS.map((t) => (
+        {access.visible.map((t) => (
           <Link
             key={t.key}
             href={t.key === "tickets" ? "/app/tickets" : `/app/tickets?tab=${t.key}`}

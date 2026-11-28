@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LibraryView } from "@/components/qr/LibraryView";
@@ -11,6 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function LibraryPage() {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "build")) return <NoAccess role={ws.role} need="build" />;
   const [codes, folders, locations, short] = await Promise.all([listQrCodes(ws.id), listFolders(ws.id), listLocations(ws.id), getShortLinkBase()]);
   return (
     <LibraryView

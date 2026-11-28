@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Creates a service ({ kind: "service" }) or an event ({ kind: "event" }). */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   if (a.body.kind === "event") {
     const p = parseEvent(a.body);

@@ -730,4 +730,27 @@ create unique index files_dedupe_idx on files(workspace_id, purpose, sha256);
 alter table workspaces add column logo_file_id uuid references files(id) on delete set null;
 `,
   },
+  {
+    id: "007_team",
+    sql: `
+-- People other than the owner. The owner stays workspaces.owner_id. A phone number belongs to one workspace at most.
+create table workspace_members (
+  id uuid primary key default gen_random_uuid(),
+  workspace_id uuid not null references workspaces(id) on delete cascade,
+  user_id uuid references users(id) on delete cascade,
+  phone text not null,
+  name text not null default '',
+  role text not null check (role in ('manager','staff')),
+  status text not null default 'invited' check (status in ('invited','active')),
+  invited_by text not null default '',
+  created_at timestamptz not null default now(),
+  joined_at timestamptz,
+  last_login_at timestamptz,
+  check ((status = 'invited' and user_id is null) or (status = 'active' and user_id is not null))
+);
+create unique index workspace_members_phone_idx on workspace_members(phone);
+create unique index workspace_members_user_idx on workspace_members(user_id) where user_id is not null;
+create index workspace_members_ws_idx on workspace_members(workspace_id);
+`,
+  },
 ];

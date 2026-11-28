@@ -14,3 +14,6 @@ export const canUse = (plan: Plan, feature: Feature) => planAtLeast(plan, FEATUR
 
 /** File storage included with each plan, in MB (logos and PDFs). Adjust here when the pricing is confirmed. */
 export const STORAGE_MB: Record<Plan, number> = { free: 20, starter: 100, growth: 500, business: 2000, enterprise: 10000 };
+
+/** Team seats each plan includes (the owner counts as one; a pending invitation holds a seat). Defaults until pricing is confirmed. */
+export const SEATS: Record<Plan, number> = { free: 1, starter: 3, growth: 10, business: 25, enterprise: 100 };

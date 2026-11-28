@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { createFolder } from "@/lib/qr-repo";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   let name = "";
   try {
     name = String((await req.json()).name ?? "").trim().slice(0, 40);

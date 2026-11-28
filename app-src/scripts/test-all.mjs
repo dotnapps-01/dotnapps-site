@@ -49,9 +49,10 @@ let server;
 try {
   record("net: private-address rules", spawnSync(process.execPath, ["scripts/check-net.mjs"], { stdio: "inherit" }).status === 0);
   record("storage: file types and S3 signing", spawnSync(process.execPath, ["scripts/check-storage.mjs"], { stdio: "inherit" }).status === 0);
+  record("guards: every owner route chooses a permission", spawnSync(process.execPath, ["scripts/check-guards.mjs"], { stdio: "inherit" }).status === 0);
 
   server = await startServer("main", { WEBHOOK_ALLOW_PRIVATE: "1" });
-  for (const s of ["qr", "auth", "codes", "reviews", "engage", "ops", "platform", "files"]) run(`api: ${s}`, [`scripts/check-${s}.mjs`, base]);
+  for (const s of ["qr", "auth", "codes", "reviews", "engage", "ops", "platform", "files", "team"]) run(`api: ${s}`, [`scripts/check-${s}.mjs`, base]);
   if (!process.env.SKIP_E2E) run("browser: all phases", ["e2e/run.mjs", base]);
   stopServer(server);
   await new Promise((r) => setTimeout(r, 2500));

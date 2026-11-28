@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Save the loyalty programme. The 4-digit staff PIN is required the first time and is never returned. */
 export async function PUT(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const existing = await getProgram(a.ws.id);
   const p = parseLoyalty(a.body, !existing?.hasPin);

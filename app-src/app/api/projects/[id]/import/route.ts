@@ -7,7 +7,7 @@ const MAX_ROWS = 600;
 
 /** Plots from a CSV (parsed in the browser): number, size, dims, facing, price, approval, corner, status. Existing plot numbers are updated. */
 export async function POST(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const rows = Array.isArray(a.body.rows) ? (a.body.rows as Record<string, string>[]).slice(0, MAX_ROWS) : [];
   if (rows.length === 0) return invalid({ rows: "The file has no rows." });

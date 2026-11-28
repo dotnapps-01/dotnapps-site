@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** The owner raises a ticket by hand (a phone call, a walk-in, something they noticed). */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const p = parseManualTicket(a.body);
   if (!p.ok) return invalid(p.fields);

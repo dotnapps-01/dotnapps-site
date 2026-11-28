@@ -5,7 +5,7 @@ import { parseEvent, parseService } from "@/lib/ops-input";
 export const dynamic = "force-dynamic";
 
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const id = (await params).id;
   const item = await getItem(a.ws.id, id);
@@ -22,7 +22,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 export async function DELETE(req: Request, { params }: Ctx) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "build", { body: false });
   if ("error" in a) return a.error;
   return deleted(await retireItem(a.ws.id, (await params).id));
 }

@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { setFeedbackStatus, type FeedbackStatus } from "@/lib/reviews";
 
 export const dynamic = "force-dynamic";
 const STATUSES: FeedbackStatus[] = ["open", "in_progress", "resolved"];
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("reviews");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   const { id } = await params;
   let status: unknown;
   try {

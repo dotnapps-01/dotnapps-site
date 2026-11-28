@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Verify or reject a warranty registration that was held for review. */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "products")) return planRequired("products");
   if (a.body.status !== "verified" && a.body.status !== "rejected") return invalid({ status: "Choose verified or rejected." });

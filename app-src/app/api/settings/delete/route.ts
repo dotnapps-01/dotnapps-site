@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /** Deletes the workspace and everything in it, for good. The owner must type the business name; an admin viewing the tenant can't do it. */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "owner");
   if ("error" in a) return a.error;
   const actor = await currentActor();
   if (!actor || actor.act) return conflict("not_allowed");

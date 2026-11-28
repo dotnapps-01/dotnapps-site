@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Your data as a CSV: contacts, leads, tickets, bookings, ratings or scans. */
 export async function GET(req: Request, { params }: { params: Promise<{ dataset: string }> }) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "export", { body: false });
   if ("error" in a) return a.error;
   const key = (await params).dataset as ExportKey;
   if (!EXPORTS.some((e) => e.key === key)) return notFound();

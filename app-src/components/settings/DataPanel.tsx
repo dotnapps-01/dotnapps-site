@@ -8,7 +8,7 @@ import { Select } from "@/components/ui/Select";
 import { EXPORTS, RETENTION } from "@/lib/settings-input";
 
 /** Keep-for period, CSV exports and deleting the workspace. */
-export function DataPanel({ keep, businessName, canDelete }: { keep: string; businessName: string; canDelete: boolean }) {
+export function DataPanel({ keep, businessName, canRetain, canDelete }: { keep: string; businessName: string; canRetain: boolean; canDelete: boolean }) {
   const router = useRouter();
   const [value, setValue] = useState(keep);
   const [msg, setMsg] = useState("");
@@ -46,6 +46,7 @@ export function DataPanel({ keep, businessName, canDelete }: { keep: string; bus
   return (
     <div className="flex flex-col gap-4 p-[18px]">
       <p className="m-0 text-[13px] leading-[1.6] text-graphite">Customer data collected through your QR pages belongs to you. Export it any time, or set how long scans and leads are kept.</p>
+      {canRetain ? (
       <form onSubmit={save} aria-label="Data retention" className="flex flex-col gap-2.5">
         <Select label="Keep scan and lead data for" value={value} onChange={(e) => setValue(e.target.value)} labelClassName="text-[11px] font-medium uppercase tracking-[0.05em] text-graphite" className="min-h-10 text-sm">
           {RETENTION.map((r) => (
@@ -65,6 +66,7 @@ export function DataPanel({ keep, businessName, canDelete }: { keep: string; bus
           ) : null}
         </div>
       </form>
+      ) : null}
       <div>
         <div className="k mb-2">Export (CSV)</div>
         <div className="flex flex-wrap gap-2">

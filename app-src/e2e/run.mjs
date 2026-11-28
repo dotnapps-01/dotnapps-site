@@ -3,7 +3,7 @@
 import { spawnSync } from "node:child_process";
 
 const base = process.argv[2] ?? process.env.BASE_URL ?? "http://localhost:3100";
-const scripts = ["phase3-auth-onboarding", "phase4-qr-analytics", "phase5-reviews", "phase6-engage", "phase7-operate", "phase8-platform", "phase9-files"];
+const scripts = ["phase3-auth-onboarding", "phase4-qr-analytics", "phase5-reviews", "phase6-engage", "phase7-operate", "phase8-platform", "phase9-files", "phase10-team"];
 const only = process.env.ONLY?.split(",");
 const results = [];
 for (const s of scripts.filter((x) => !only || only.some((o) => x.includes(o)))) {

@@ -10,7 +10,7 @@ import { LocationSwitcher } from "./LocationSwitcher";
 
 export type SidebarUser = { initials: string; name: string; role: string };
 export type SidebarLocation = { id: string; name: string };
-export type SidebarPlan = { name: string; used: number; /** null = unlimited */ limit: number | null; upgradeTo: string | null };
+export type SidebarPlan = { name: string; used: number; /** null = unlimited */ limit: number | null; upgradeTo: string | null; /** only the owner changes the plan */ canUpgrade?: boolean };
 
 type Props = {
   user: SidebarUser;
@@ -20,12 +20,14 @@ type Props = {
   badges: Partial<Record<AppNavKey, string>>;
   /** Skanor staff see the Admin console link; nobody else does */
   admin?: boolean;
+  /** screens this person may not open: left out of the menu */
+  hidden?: AppNavKey[];
   /** shown only below lg, where the sidebar is a drawer */
   onClose?: () => void;
 };
 
 /** App sidebar (design/AppSidebar.dc.html). Every app route is linked; active state comes from the URL. */
-export function AppSidebar({ user, locations, plan, badges, admin = false, onClose }: Props) {
+export function AppSidebar({ user, locations, plan, badges, admin = false, hidden = [], onClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   async function logOut() {
@@ -55,12 +57,12 @@ export function AppSidebar({ user, locations, plan, badges, admin = false, onClo
       </div>
 
       <nav aria-label="App" className="flex flex-1 flex-col gap-3.5 overflow-y-auto px-2.5 pb-4 pt-2.5">
-        {appNav.filter((g) => admin || g.items.some((it) => it.key !== "admin")).map((g) => (
+        {appNav.filter((g) => g.items.some((it) => !hidden.includes(it.key) && (it.key !== "admin" || admin))).map((g) => (
           <div key={g.heading} className="flex flex-col gap-0.5">
             <span className="px-2.5 pb-1 pt-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-muted">
               {g.heading}
             </span>
-            {g.items.filter((it) => it.key !== "admin" || admin).map((it) => {
+            {g.items.filter((it) => !hidden.includes(it.key) && (it.key !== "admin" || admin)).map((it) => {
               const on = pathname === it.href || pathname.startsWith(it.href + "/");
               const badge = badges[it.key];
               const Icon = it.icon;
@@ -107,7 +109,7 @@ export function AppSidebar({ user, locations, plan, badges, admin = false, onClo
           >
             <div className="h-1 rounded bg-ink" style={{ width: `${pct}%` }} />
           </div>
-          {plan.upgradeTo ? (
+          {plan.upgradeTo && plan.canUpgrade !== false ? (
             <Link href="/app/settings" className="text-xs font-semibold text-ink underline-offset-2 hover:underline">
               Upgrade to {plan.upgradeTo}
             </Link>

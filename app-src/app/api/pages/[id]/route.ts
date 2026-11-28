@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Save a page. Body: { title, content, status }. Publishing applies the strict content rules. */
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const { id } = await params;
   const page = await getPage(a.ws.id, id);
@@ -26,7 +26,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "build", { body: false });
   if ("error" in a) return a.error;
   const r = await deletePage(a.ws.id, (await params).id);
   if (r === "not_found") return NextResponse.json({ error: "not_found" }, { status: 404 });

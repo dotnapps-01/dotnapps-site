@@ -4,6 +4,9 @@ import type { ReactNode } from "react";
 import { AppShell } from "@/components/app/AppShell";
 import { currentActor } from "@/lib/auth/admin";
 import { currentWorkspace } from "@/lib/auth/current";
+import { can, ROLE_LABEL } from "@/lib/permissions";
+import { navNeeds } from "@/lib/routes";
+import type { AppNavKey } from "@/lib/routes";
 import { canUse } from "@/lib/plans";
 import { newAlertCount } from "@/lib/products";
 import { purgeIfDue } from "@/lib/settings";
@@ -51,7 +54,9 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     used: await countDynamic(ws.id),
     limit: Number.isFinite(limit) ? limit : null,
     upgradeTo: upgrade,
+    canUpgrade: can(ws.role, "owner"),
   };
+  const hidden = (Object.entries(navNeeds) as [AppNavKey, NonNullable<(typeof navNeeds)[AppNavKey]>][]).filter(([, need]) => !need.some((p) => can(ws.role, p))).map(([k]) => k);
 
   const [openFeedback, newLeads, openTickets, visitors, pending, fakes] = await Promise.all([openFeedbackCount(ws.id), newLeadCount(ws.id), openTicketCount(ws.id), awaitingVisitors(ws.id), pendingBookings(ws.id), canUse(ws.plan, "products") ? newAlertCount(ws.id) : Promise.resolve(0)]);
   const badges: Record<string, string> = {};
@@ -63,7 +68,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   if (fakes > 0) badges.products = String(fakes);
 
   return (
-    <AppShell user={{ initials: initials(name), name, role: "Owner" }} locations={locations} plan={plan} badges={badges} admin={!!actor?.admin} viewingAs={actor?.act ? name : null}>
+    <AppShell user={{ initials: initials(ws.role === "owner" ? name : ws.memberName || name), name: ws.role === "owner" ? name : ws.memberName || name, role: ws.role === "owner" ? "Owner" : `${ROLE_LABEL[ws.role]} · ${name}` }} locations={locations} plan={plan} badges={badges} hidden={hidden} admin={!!actor?.admin} viewingAs={actor?.act ? name : null}>
       {children}
     </AppShell>
   );

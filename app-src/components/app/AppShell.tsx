@@ -14,7 +14,7 @@ type AppSidebarProps = { badges: Partial<Record<AppNavKey, string>> };
  * App layout: sticky sidebar from lg up; a slide-in drawer with a top bar below lg.
  * Pages render a <PageHeader/> and their content inside.
  */
-export function AppShell({ children, user, locations, plan, badges, admin = false, viewingAs = null }: { children: ReactNode; user: SidebarUser; locations: SidebarLocation[]; plan: SidebarPlan; badges: AppSidebarProps["badges"]; admin?: boolean; /** business name while a Skanor admin is viewing it */ viewingAs?: string | null }) {
+export function AppShell({ children, user, locations, plan, badges, admin = false, hidden = [], viewingAs = null }: { children: ReactNode; user: SidebarUser; locations: SidebarLocation[]; plan: SidebarPlan; badges: AppSidebarProps["badges"]; admin?: boolean; hidden?: AppNavKey[]; /** business name while a Skanor admin is viewing it */ viewingAs?: string | null }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -79,7 +79,7 @@ export function AppShell({ children, user, locations, plan, badges, admin = fals
           open ? "translate-x-0" : "invisible -translate-x-full",
         )}
       >
-        <AppSidebar user={user} locations={locations} plan={plan} badges={badges} admin={admin} onClose={() => setOpen(false)} />
+        <AppSidebar user={user} locations={locations} plan={plan} badges={badges} admin={admin} hidden={hidden} onClose={() => setOpen(false)} />
       </div>
 
       <main id="main" className="flex min-w-0 flex-1 flex-col pt-14 lg:pt-0">

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { auditAs } from "@/lib/audit";
 import { fileUrl, listFiles, putFile, quotaBytes, requestOrigin, storageUsed } from "@/lib/files";
 import { PURPOSES, isPurpose } from "@/lib/file-sniff";
@@ -9,16 +9,18 @@ export const dynamic = "force-dynamic";
 
 /** The workspace's files and how much of the plan's space they use. */
 export async function GET(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   const [files, used] = await Promise.all([listFiles(ws.id, requestOrigin(req)), storageUsed(ws.id)]);
   return NextResponse.json({ files, used, quota: quotaBytes(ws) });
 }
 
 /** Upload: multipart form with `file` and `purpose` (logo, document or image). The type is judged from the bytes, not the name. */
 export async function POST(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   if (ws.suspended) return NextResponse.json({ error: "suspended" }, { status: 403 });
   if (!(req.headers.get("content-type") ?? "").toLowerCase().startsWith("multipart/form-data")) return NextResponse.json({ error: "invalid", message: "Send the file as a form upload." }, { status: 415 });
   if (!(await allow(`ws:${ws.id}`, "file_upload", 60))) return NextResponse.json({ error: "rate_limited", message: "Too many uploads. Try again in a while." }, { status: 429 });

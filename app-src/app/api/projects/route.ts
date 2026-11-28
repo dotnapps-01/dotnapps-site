@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** A project with N numbered plots, ready to edit or import over. */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const p = parseProject(a.body, true);
   if (!p.ok) return invalid(p.fields);

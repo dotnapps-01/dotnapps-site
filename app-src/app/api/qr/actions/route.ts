@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { bulkAction, type BulkAction } from "@/lib/qr-repo";
 
 export const dynamic = "force-dynamic";
@@ -8,8 +8,9 @@ const ACTIONS: BulkAction[] = ["pause", "resume", "archive", "restore", "move"];
 
 /** Library bulk actions. Body: { ids: string[], action, folderId?: string | null } */
 export async function POST(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
 
   let body: { ids?: unknown; action?: unknown; folderId?: unknown };
   try {

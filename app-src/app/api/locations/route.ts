@@ -5,7 +5,7 @@ import { addLocation, parseLocation } from "@/lib/settings";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "settings");
   if ("error" in a) return a.error;
   const p = parseLocation(a.body);
   if (!p.ok) return invalid(p.fields);

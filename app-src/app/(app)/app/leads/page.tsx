@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
+import { resolveTabs } from "@/lib/tab-access";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { ContactImport } from "@/components/leads/ContactImport";
 import { FormBuilder } from "@/components/leads/FormBuilder";
@@ -26,13 +29,16 @@ const TABS = [
   { key: "segments", label: "Segments" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
+const TAB_NEED = { pipeline: "work", contacts: "work", forms: "build", broadcasts: "build", segments: "build" } as const;
 const fmt = (n: number) => n.toLocaleString("en-IN");
 
 export default async function LeadsPage({ searchParams }: { searchParams: Promise<{ tab?: string; q?: string; segment?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
   const sp = await searchParams;
-  const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "pipeline";
+  const access = resolveTabs(TABS, TAB_NEED, ws.role, sp.tab, "pipeline");
+  if (access.denied) return <NoAccess role={ws.role} need={access.denied} />;
+  const tab = access.tab as Tab;
   const segment = SEGMENTS.some((s) => s.key === sp.segment) ? (sp.segment as Segment) : "all";
 
   const [leads, forms, counts, contacts] = await Promise.all([
@@ -53,17 +59,21 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
             <Link href="/app/leads?tab=contacts#import" className={buttonClasses()}>
               Import contacts
             </Link>
-            <Link href="/app/leads?tab=broadcasts" className={buttonClasses()}>
-              New broadcast
-            </Link>
-            <Link href="/app/leads?tab=forms" className={buttonClasses({ variant: "primary" })}>
-              New form
-            </Link>
+            {can(ws.role, "build") ? (
+              <>
+                <Link href="/app/leads?tab=broadcasts" className={buttonClasses()}>
+                  New broadcast
+                </Link>
+                <Link href="/app/leads?tab=forms" className={buttonClasses({ variant: "primary" })}>
+                  New form
+                </Link>
+              </>
+            ) : null}
           </>
         }
       />
       <nav aria-label="Leads sections" className="flex flex-wrap border-b border-line bg-surface px-[clamp(8px,1.6vw,20px)]">
-        {TABS.map((t) => (
+        {access.visible.map((t) => (
           <Link
             key={t.key}
             href={t.key === "pipeline" ? "/app/leads" : `/app/leads?tab=${t.key}`}
@@ -85,9 +95,11 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                   <div className="text-[15px] font-semibold">No leads yet</div>
                   <div className="text-sm text-graphite">Build a form, link it to a QR code and put it where customers can scan it. Every submission lands here.</div>
                 </div>
-                <Link href="/app/leads?tab=forms" className={buttonClasses({ size: "sm", variant: "primary" })}>
-                  Build a form
-                </Link>
+                {can(ws.role, "build") ? (
+                  <Link href="/app/leads?tab=forms" className={buttonClasses({ size: "sm", variant: "primary" })}>
+                    Build a form
+                  </Link>
+                ) : null}
               </div>
             ) : null}
             <LeadsBoard leads={leads} />

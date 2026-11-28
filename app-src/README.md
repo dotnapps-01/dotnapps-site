@@ -136,7 +136,7 @@ npm run check:net        # which addresses a webhook may never be sent to (no se
 
 Without `WEBHOOK_ALLOW_PRIVATE`, `check:platform` instead checks that local and internal addresses are refused. Set `DATABASE_URL` to the server's database to also run the retention purge and "nothing left behind after delete" checks.
 
-**Not built:** online billing and invoices (so MRR, paying tenants and trials stay as placeholders); team members and roles; brand colours and custom scan-page domains; WhatsApp or email notifications and a notification matrix; two-factor and Google sign-in; ready-made connections to Google Business Profile, WhatsApp, Shopify, WooCommerce, Zoho, Tally, Razorpay and Orkha (use webhooks and the API meanwhile); white-label for agencies; invoice photos on warranty registrations (an invoice number instead); service requests as their own screen (they are tickets from PRODUCT QR); dealers; the admin print-orders queue and support inbox.
+**Not built:** online billing and invoices (so MRR, paying tenants and trials stay as placeholders); brand colours and custom scan-page domains; WhatsApp or email notifications and a notification matrix; two-factor and Google sign-in; ready-made connections to Google Business Profile, WhatsApp, Shopify, WooCommerce, Zoho, Tally, Razorpay and Orkha (use webhooks and the API meanwhile); white-label for agencies; invoice photos on warranty registrations (an invoice number instead); service requests as their own screen (they are tickets from PRODUCT QR); dealers; the admin print-orders queue and support inbox.
 
 ## File storage
 
@@ -156,3 +156,34 @@ npm run check:files     # needs the dev server; set MOCK_S3 to run it against sc
 `npm run test:all` runs `check:files` twice: once on Postgres storage and once against a mock S3 server that verifies every request's signature, including an outage during upload and cleanup on delete.
 
 **Not built:** photos from customers (selfie check-in, ticket photos, an invoice photo for warranty claims), a gallery of images for menus and pages, direct browser-to-S3 uploads for large files, virus scanning, image resizing.
+
+## Team & roles
+
+Three roles, as in the design (Settings → Team & roles): **Owner**, **Manager**, **Staff**. The owner is whoever signed the business up; there is always exactly one. A person is a member of at most one business, and a mobile number is either an owner or a member, never both.
+
+- **Inviting:** enter a name, mobile number and role. No message is sent for you (WhatsApp sending isn't built), so Settings gives you a ready-made WhatsApp message and a copy button. The person joins the first time they sign in with that number and its one-time code, from either the Log in or the Sign up form (an invitation wins over starting a business of their own, and works even while the admin console has sign-ups closed). A pending invitation holds a seat.
+- **Who may do what** (`lib/permissions.ts`, the one table the screens and the API share):
+
+| | Owner | Manager | Staff |
+|---|---|---|---|
+| Create and edit QR codes, pages, forms, offers and every module's set-up | yes | yes | no |
+| Reply to reviews | yes | yes | no |
+| View analytics | yes | yes | view only (no downloads) |
+| Download data as CSV | yes | yes | no |
+| Manage leads, tickets, bookings, visitors, plots | yes | yes | yes |
+| Redeem coupons and stamp loyalty cards | yes | yes | yes |
+| Business settings, logo and files | yes | yes | no |
+| Invite and remove team members | everyone | Staff only | no |
+| Change roles; add a Manager | yes | no | no |
+| Billing and plan, API keys, webhooks, data retention, deleting the workspace, audit log | yes | no | no |
+
+- **Seats:** each plan includes a number of seats (`SEATS` in `lib/plans.ts`: 1 Free, 3 Starter, 10 Growth, 25 Business, 100 Enterprise; defaults until pricing is confirmed). The owner counts as one. Two invitations racing for the last seat can't both win.
+- **Enforcement:** every owner API route calls `authorize(permission)` or `authedJson(req, permission)`, which answers 403 `{ error: "forbidden" }` when the role doesn't allow it (the permission argument is required, so the compiler flags a route that forgets it, and `npm run check:guards` fails if one slips through). Screens check the same table: the sidebar leaves out what you can't open, a screen you can't open says why in words, tabs you can't open are left out, and Staff see a redeem-only version of Offers. A role change or removal takes effect on the person's next click, with no sign-in needed; a removed person's open session no longer reaches the business.
+- **Audit log:** invitations, role changes and removals are recorded with who did them (owner only).
+
+```bash
+npm run check:guards   # every owner route chooses a permission (no server needed)
+npm run check:team     # needs the dev server with ADMIN_PHONES; invitations, joining, seats, every route as every role
+```
+
+**Not built:** transferring ownership, one person in several businesses (a workspace switcher), per-location permissions, custom roles, two-factor, and sending the invitation by WhatsApp or email.

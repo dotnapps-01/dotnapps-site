@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { getQrCode, updateQrCode } from "@/lib/qr-repo";
 import { parseQrInput } from "@/lib/qr-types";
 
@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 
 /** Edit a QR code. Type, dynamic/static and short code are fixed once created. */
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   const { id } = await params;
 
   let body: Record<string, unknown>;

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
+import { resolveTabs } from "@/lib/tab-access";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { PointManager } from "@/components/attendance/PointManager";
 import { RulesForm } from "@/components/attendance/RulesForm";
@@ -28,6 +31,7 @@ const TABS = [
   { key: "points", label: "Check-in points & rules" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
+const TAB_NEED = { today: "work", staff: "build", labour: "build", visitors: "work", points: "build" } as const;
 const hm = (iso: string | null) => (iso ? new Date(iso).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" }) : "—");
 const dayText = (d: string) => new Date(`${d}T06:00:00Z`).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" });
 const STATUS: Record<BoardRow["status"], { tone: PillTone; text: (r: BoardRow) => string }> = {
@@ -42,7 +46,9 @@ export default async function AttendancePage({ searchParams }: { searchParams: P
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
   const sp = await searchParams;
-  const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "today";
+  const access = resolveTabs(TABS, TAB_NEED, ws.role, sp.tab, "today");
+  if (access.denied) return <NoAccess role={ws.role} need={access.denied} />;
+  const tab = access.tab as Tab;
   const month = istDay().slice(0, 7);
 
   const [board, awaiting, workers, points, visitors, lateAfter] = await Promise.all([
@@ -65,17 +71,21 @@ export default async function AttendancePage({ searchParams }: { searchParams: P
         title="Attendance & visitors"
         actions={
           <>
-            <Link href="/app/attendance?tab=staff&new=1" className={buttonClasses()}>
-              Add worker
-            </Link>
-            <a href={`/api/attendance/export?month=${month}`} className={buttonClasses({ variant: "primary" })}>
-              Export payroll CSV
-            </a>
+            {can(ws.role, "build") ? (
+              <Link href="/app/attendance?tab=staff&new=1" className={buttonClasses()}>
+                Add worker
+              </Link>
+            ) : null}
+            {can(ws.role, "export") ? (
+              <a href={`/api/attendance/export?month=${month}`} className={buttonClasses({ variant: "primary" })}>
+                Export payroll CSV
+              </a>
+            ) : null}
           </>
         }
       />
       <nav aria-label="Attendance sections" className="flex flex-wrap border-b border-line bg-surface px-[clamp(8px,1.6vw,20px)]">
-        {TABS.map((t) => (
+        {access.visible.map((t) => (
           <Link
             key={t.key}
             href={t.key === "today" ? "/app/attendance" : `/app/attendance?tab=${t.key}`}

@@ -6,6 +6,8 @@ import { EXPORTS, RETENTION, type ExportKey } from "@/lib/settings-input";
 export { EXPORTS, RETENTION, type ExportKey };
 import { dynamicLimit } from "@/lib/qr-types";
 import { deleteWorkspaceFiles, quotaBytes, storageUsed } from "@/lib/files";
+import { SEATS } from "@/lib/plans";
+import { seatsUsed } from "@/lib/team";
 import type { Result } from "@/lib/engage-input";
 import type { Workspace } from "@/lib/workspace";
 
@@ -87,7 +89,7 @@ export async function removeLocation(workspaceId: string, id: string): Promise<"
 
 /* ---------- plan usage ---------- */
 
-export type Usage = { dynamicUsed: number; dynamicLimit: number | null; scansMonth: number; contacts: number; apiKeys: number; seats: number; storageUsed: number; storageQuota: number };
+export type Usage = { dynamicUsed: number; dynamicLimit: number | null; scansMonth: number; contacts: number; apiKeys: number; seats: number; seatLimit: number; storageUsed: number; storageQuota: number };
 export async function usage(ws: Workspace): Promise<Usage> {
   const [r] = await query<{ dyn: number; scans: number; contacts: number; keys: number }>(
     `select (select count(*)::int from qr_codes where workspace_id = $1 and dynamic and status <> 'archived') as dyn,
@@ -97,7 +99,7 @@ export async function usage(ws: Workspace): Promise<Usage> {
     [ws.id],
   );
   const lim = dynamicLimit[ws.plan];
-  return { dynamicUsed: r.dyn, dynamicLimit: Number.isFinite(lim) ? lim : null, scansMonth: r.scans, contacts: r.contacts, apiKeys: r.keys, seats: 1, storageUsed: await storageUsed(ws.id), storageQuota: quotaBytes(ws) };
+  return { dynamicUsed: r.dyn, dynamicLimit: Number.isFinite(lim) ? lim : null, scansMonth: r.scans, contacts: r.contacts, apiKeys: r.keys, seats: await seatsUsed(ws.id), seatLimit: SEATS[ws.plan], storageUsed: await storageUsed(ws.id), storageQuota: quotaBytes(ws) };
 }
 
 /* ---------- data: retention, export, delete ---------- */

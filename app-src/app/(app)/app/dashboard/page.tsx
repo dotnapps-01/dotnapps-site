@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PathIcon } from "@/components/marketing/parts";
+import { can } from "@/lib/permissions";
+import { seatsUsed } from "@/lib/team";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { ScanBars } from "@/components/analytics/charts";
 import { buttonClasses } from "@/components/ui/Button";
@@ -39,14 +41,16 @@ export default async function DashboardPage() {
   const dScans = pctDelta(a.scans, a.prevScans);
   const dUnique = pctDelta(a.unique, a.prevUnique);
 
+  const teamSize = await seatsUsed(ws.id);
   const setup = [
     { t: "Add your first location", done: Boolean(ws.locationName), href: "/app/settings" },
     { t: "Create your first QR", done: live.length > 0, href: "/app/studio" },
     { t: "Publish a QR code", done: active.length > 0, href: "/app/library" },
     { t: "Get your first scan", done: a.scans > 0 || live.some((c) => c.scans30 > 0), href: "/app/library" },
-    { t: "Connect Google Business Profile", done: false, href: "/app/integrations", soon: true },
-    { t: "Invite your team", done: false, href: "/app/settings", soon: true },
+    { t: "Connect Google Business Profile", done: false, href: can(ws.role, "owner") ? "/app/integrations" : "/app/settings", soon: true },
+    { t: "Invite your team", done: teamSize > 1, href: "/app/settings#team" },
   ];
+  const builder = can(ws.role, "build");
   const doneCount = setup.filter((s) => s.done).length;
 
   return (
@@ -55,10 +59,12 @@ export default async function DashboardPage() {
         eyebrow="Overview"
         title={`${greeting()}, ${ws.businessName || "there"}`}
         actions={
-          <Link href="/app/studio" className={buttonClasses({ variant: "primary" })}>
-            <PathIcon d="M12 5v14M5 12h14" size={14} strokeWidth={2.2} />
-            Create QR
-          </Link>
+          builder ? (
+            <Link href="/app/studio" className={buttonClasses({ variant: "primary" })}>
+              <PathIcon d="M12 5v14M5 12h14" size={14} strokeWidth={2.2} />
+              Create QR
+            </Link>
+          ) : undefined
         }
       />
       <PageBody>
@@ -79,6 +85,7 @@ export default async function DashboardPage() {
             </CardHeader>
             <ScanBars series={a.series} />
           </Card>
+          {builder ? (
           <Card className="flex-[1_1_320px]">
             <CardHeader>
               <CardTitle>Finish setting up</CardTitle>
@@ -103,22 +110,27 @@ export default async function DashboardPage() {
               ))}
             </ul>
           </Card>
+          ) : null}
         </div>
 
         <div className="flex flex-wrap items-start gap-5">
           <Card className="flex-[2_1_560px]">
             <CardHeader>
               <CardTitle>Top QR codes</CardTitle>
-              <Link href="/app/library" className="tabular text-[11px] text-ink">
-                VIEW ALL →
-              </Link>
+              {builder ? (
+                <Link href="/app/library" className="tabular text-[11px] text-ink">
+                  VIEW ALL →
+                </Link>
+              ) : null}
             </CardHeader>
             {top.length === 0 ? (
               <div className="flex flex-col items-start gap-3 p-[18px]">
-                <p className="m-0 text-sm text-graphite">You haven&rsquo;t created a QR code yet.</p>
-                <Link href="/app/studio" className={buttonClasses({ size: "sm", variant: "primary" })}>
-                  Create your first QR
-                </Link>
+                <p className="m-0 text-sm text-graphite">{builder ? "You haven\u2019t created a QR code yet." : "No QR codes have been created yet."}</p>
+                {builder ? (
+                  <Link href="/app/studio" className={buttonClasses({ size: "sm", variant: "primary" })}>
+                    Create your first QR
+                  </Link>
+                ) : null}
               </div>
             ) : (
               <Table caption="Top QR codes by scans in the last 30 days">

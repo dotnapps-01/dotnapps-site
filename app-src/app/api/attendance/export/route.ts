@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /** One row per worker for a month: the figures a payroll sheet starts from. This is not a payroll calculation. */
 export async function GET(req: Request) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "export", { body: false });
   if ("error" in a) return a.error;
   const m = new URL(req.url).searchParams.get("month") ?? istDay().slice(0, 7);
   if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return NextResponse.json({ error: "invalid", fields: { month: "Use YYYY-MM." } }, { status: 422 });

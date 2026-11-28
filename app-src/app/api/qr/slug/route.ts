@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { query } from "@/lib/db";
 import { slugError } from "@/lib/qr-types";
 
@@ -7,7 +7,8 @@ export const dynamic = "force-dynamic";
 
 /** GET /api/qr/slug?slug=an-t4 -> { available: boolean, error?: string } */
 export async function GET(req: Request) {
-  if (!(await currentWorkspace())) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
   const slug = (new URL(req.url).searchParams.get("slug") ?? "").trim().toLowerCase();
   const err = slugError(slug);
   if (err) return NextResponse.json({ available: false, error: err });

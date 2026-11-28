@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyOtp } from "@/lib/auth/otp";
 import { clearChallengeCookie, readChallengeCookie, startSession } from "@/lib/auth/session";
 import { flagOn } from "@/lib/flags";
+import { claimInvite, hasInvite } from "@/lib/team";
 import { ensureWorkspace, getWorkspace } from "@/lib/workspace";
 
 export const dynamic = "force-dynamic";
@@ -22,12 +23,14 @@ export async function POST(req: Request) {
   }
 
   // the admin console can close sign-ups; people who already have a workspace can still log in
-  if (!(await getWorkspace(r.phone)) && !(await flagOn("signups_open"))) return NextResponse.json({ error: "signups_closed" }, { status: 403 });
+  if (!(await getWorkspace(r.phone)) && !(await hasInvite(r.phone)) && !(await flagOn("signups_open"))) return NextResponse.json({ error: "signups_closed" }, { status: 403 });
 
   await startSession(r.phone);
   await clearChallengeCookie();
 
+  // someone invited to a team joins it now (an invitation wins over starting a workspace of their own)
+  await claimInvite(r.phone);
   const ws = await ensureWorkspace(r.phone, r.businessName ?? "");
-  // Returning users who already finished setup go straight to the app.
-  return NextResponse.json({ ok: true, next: ws.onboarded ? "/app/dashboard" : null });
+  // Returning users who already finished setup go straight to the app; so does a team member, whose workspace the owner set up.
+  return NextResponse.json({ ok: true, next: ws.onboarded || ws.role !== "owner" ? "/app/dashboard" : null });
 }

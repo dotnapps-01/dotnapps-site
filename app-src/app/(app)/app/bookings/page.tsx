@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
+import { resolveTabs } from "@/lib/tab-access";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { BookingRow, BOOKING_PILL } from "@/components/bookings/BookingRow";
 import { EventManager } from "@/components/bookings/EventManager";
@@ -25,6 +28,7 @@ const TABS = [
   { key: "services", label: "Services & hours" },
 ] as const;
 type Tab = (typeof TABS)[number]["key"];
+const TAB_NEED = { calendar: "work", bookings: "work", events: "build", services: "build" } as const;
 const SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const CHIP = ["bg-mist text-ink", "bg-[#FBE3EF] text-ink", "bg-ink text-white"];
 const mondayOf = (day: string) => addDays(day, -((istDow(day) + 6) % 7));
@@ -37,7 +41,9 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
   const sp = await searchParams;
-  const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "calendar";
+  const access = resolveTabs(TABS, TAB_NEED, ws.role, sp.tab, "calendar");
+  if (access.denied) return <NoAccess role={ws.role} need={access.denied} />;
+  const tab = access.tab as Tab;
   const today = istDay();
   const monday = mondayOf(validDay(sp.week) ?? today);
   const sunday = addDays(monday, 6);
@@ -76,20 +82,24 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         title="Bookings & events"
         actions={
           <>
-            <Link href="/app/bookings?tab=services" className={buttonClasses()}>
-              Services &amp; hours
-            </Link>
-            <Link href="/app/bookings?tab=events&new=1" className={buttonClasses()}>
-              New event
-            </Link>
-            <Link href="/app/bookings?tab=services&new=1" className={buttonClasses({ variant: "primary" })}>
-              New service
-            </Link>
+            {can(ws.role, "build") ? (
+              <>
+                <Link href="/app/bookings?tab=services" className={buttonClasses()}>
+                  Services &amp; hours
+                </Link>
+                <Link href="/app/bookings?tab=events&new=1" className={buttonClasses()}>
+                  New event
+                </Link>
+                <Link href="/app/bookings?tab=services&new=1" className={buttonClasses({ variant: "primary" })}>
+                  New service
+                </Link>
+              </>
+            ) : null}
           </>
         }
       />
       <nav aria-label="Booking sections" className="flex flex-wrap border-b border-line bg-surface px-[clamp(8px,1.6vw,20px)]">
-        {TABS.map((t) => (
+        {access.visible.map((t) => (
           <Link
             key={t.key}
             href={t.key === "calendar" ? "/app/bookings" : `/app/bookings?tab=${t.key}`}

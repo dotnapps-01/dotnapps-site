@@ -8,9 +8,9 @@ import type { ProjectRecord } from "@/lib/realestate";
 import { ProjectForm } from "./ProjectForm";
 
 /** Project picker with new / edit / delete. */
-export function ProjectBar({ projects, current, startOpen }: { projects: ProjectRecord[]; current: ProjectRecord | null; startOpen: boolean }) {
+export function ProjectBar({ projects, current, startOpen, canBuild = true }: { projects: ProjectRecord[]; current: ProjectRecord | null; startOpen: boolean; canBuild?: boolean }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"new" | "edit" | null>(startOpen || projects.length === 0 ? "new" : null);
+  const [mode, setMode] = useState<"new" | "edit" | null>(canBuild && (startOpen || projects.length === 0) ? "new" : null);
   const [msg, setMsg] = useState("");
   async function remove() {
     if (!current || !window.confirm(`Delete “${current.name}” and all of its plots?`)) return;
@@ -28,10 +28,12 @@ export function ProjectBar({ projects, current, startOpen }: { projects: Project
             {`${p.name} · ${p.plots} plots`}
           </Link>
         ))}
-        <Button size="sm" onClick={() => setMode("new")}>
-          + New project
-        </Button>
-        {current ? (
+        {canBuild ? (
+          <Button size="sm" onClick={() => setMode("new")}>
+            + New project
+          </Button>
+        ) : null}
+        {current && canBuild ? (
           <>
             <Button size="sm" onClick={() => setMode("edit")}>
               Edit project

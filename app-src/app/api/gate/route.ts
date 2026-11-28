@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
  * { code, confirm: true } checks it in (once only).
  */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const code = String(a.body.code ?? "");
   if (a.body.confirm === true) {

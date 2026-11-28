@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Create a draft page. Body: { kind, title }. */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const kind = a.body.kind as PageKind;
   if (!PAGE_KINDS.some((k) => k.key === kind)) return invalid({ kind: "Choose a page type." });

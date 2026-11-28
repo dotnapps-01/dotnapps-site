@@ -17,6 +17,8 @@ export async function POST(req: Request) {
   }
 
   const current = await ensureWorkspace(session.sub);
+  // setting up the business is the owner's; a team member joins one that is already set up
+  if (current.role !== "owner") return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const next = { ...current, ...sanitizeWorkspacePatch(body) };
 
   if (body.complete === true) {

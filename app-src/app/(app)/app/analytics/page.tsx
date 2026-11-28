@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { KpiStrip, KpiTile, type KpiTone } from "@/components/ui/KpiTile";
 import { Table, TableBody, TableHead, TableRow, Td, Th } from "@/components/ui/Table";
 import { getAnalytics, pctDelta, resolveRange, type Interval } from "@/lib/analytics";
+import { can } from "@/lib/permissions";
 import { currentWorkspace } from "@/lib/auth/current";
 import { cn } from "@/lib/cn";
 import { listLocations, listQrCodes } from "@/lib/qr-repo";
@@ -83,9 +84,11 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
             <Button disabled title="Scheduled reports arrive with email delivery">
               Schedule report
             </Button>
-            <a href={exportHref} className={buttonClasses({ variant: "primary" })}>
-              Export CSV
-            </a>
+            {can(ws.role, "export") ? (
+              <a href={exportHref} className={buttonClasses({ variant: "primary" })}>
+                Export CSV
+              </a>
+            ) : null}
           </>
         }
       />
@@ -100,9 +103,11 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
               <div className="text-[15px] font-semibold">No scans in this period yet</div>
               <div className="text-sm text-graphite">Scans appear here as soon as someone scans a dynamic QR code. Static codes can&rsquo;t be counted.</div>
             </div>
-            <Link href={codes.length ? "/app/library" : "/app/studio"} className={buttonClasses({ size: "sm" })}>
-              {codes.length ? "Open library" : "Create a QR code"}
-            </Link>
+            {can(ws.role, "build") ? (
+              <Link href={codes.length ? "/app/library" : "/app/studio"} className={buttonClasses({ size: "sm" })}>
+                {codes.length ? "Open library" : "Create a QR code"}
+              </Link>
+            ) : null}
           </div>
         ) : null}
 
@@ -192,9 +197,11 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         <Card>
           <CardHeader>
             <CardTitle>Performance by QR code</CardTitle>
-            <Link href="/app/library" className="tabular text-[11px] text-ink">
-              OPEN LIBRARY →
-            </Link>
+            {can(ws.role, "build") ? (
+              <Link href="/app/library" className="tabular text-[11px] text-ink">
+                OPEN LIBRARY →
+              </Link>
+            ) : null}
           </CardHeader>
           <Table caption="Performance by QR code">
             <TableHead>

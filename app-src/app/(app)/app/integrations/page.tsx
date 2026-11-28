@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -59,6 +61,7 @@ function Upsell({ plan, what }: { plan: string; what: string }) {
 export default async function IntegrationsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "owner")) return <NoAccess role={ws.role} need="owner" />;
   const sp = await searchParams;
   const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "apps";
   const allowed = canUse(ws.plan, "api");

@@ -24,7 +24,7 @@ const CELL: Record<PlotStatus, string> = {
 const PILL: Record<PlotStatus, PillTone> = { available: "success", hold: "warning", booked: "info", sold: "neutral" };
 const STATUS_LABEL = Object.fromEntries(PLOT_STATUSES.map((s) => [s.key, s.label])) as Record<PlotStatus, string>;
 
-function PlotPanel({ plot }: { plot: PlotRecord }) {
+function PlotPanel({ plot, canBuild }: { plot: PlotRecord; canBuild: boolean }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [v, setV] = useState({ sizeSqft: plot.sizeSqft?.toString() ?? "", dims: plot.dims, facing: plot.facing, priceLakh: plot.priceLakh?.toString() ?? "", approval: plot.approval, corner: plot.corner });
@@ -108,9 +108,11 @@ function PlotPanel({ plot }: { plot: PlotRecord }) {
           <b>{plot.scans}</b> scans · <b>{plot.enquiries}</b> enquiries
         </div>
         {plot.shortCode ? <div className="tabular text-[11px] text-muted">{`/q/${plot.shortCode}`}</div> : <div className="text-xs text-muted">No QR code yet for this plot.</div>}
-        <Link href={`/app/studio?type=plot&ref=${plot.id}`} className="w-fit text-[13px] font-semibold underline underline-offset-2">
-          {plot.qrCodes ? "Create another QR for this plot" : "Create a QR for this plot"}
-        </Link>
+        {canBuild ? (
+          <Link href={`/app/studio?type=plot&ref=${plot.id}`} className="w-fit text-[13px] font-semibold underline underline-offset-2">
+            {plot.qrCodes ? "Create another QR for this plot" : "Create a QR for this plot"}
+          </Link>
+        ) : null}
       </div>
       <div className="flex flex-wrap items-end gap-2 p-[18px]">
         <Select label="Status" value={plot.status} onChange={(e) => void save({ status: e.target.value as PlotStatus })} wrapperClassName="min-w-[150px] flex-1" labelClassName={label} className={control}>
@@ -139,7 +141,7 @@ function PlotPanel({ plot }: { plot: PlotRecord }) {
 }
 
 /** The layout map: every plot as a button coloured by status, and the selected plot's details beside it. */
-export function PlotBoard({ project, plots, initialNumber }: { project: ProjectRecord; plots: PlotRecord[]; initialNumber: number | null }) {
+export function PlotBoard({ project, plots, initialNumber, canBuild = true }: { project: ProjectRecord; plots: PlotRecord[]; initialNumber: number | null; canBuild?: boolean }) {
   const [selected, setSelected] = useState<string | null>(plots.find((p) => p.number === initialNumber)?.id ?? plots[0]?.id ?? null);
   const plot = plots.find((p) => p.id === selected) ?? plots[0] ?? null;
 
@@ -191,7 +193,7 @@ export function PlotBoard({ project, plots, initialNumber }: { project: ProjectR
           </div>
         </div>
       </Card>
-      {plot ? <PlotPanel key={plot.id + plot.status} plot={plot} /> : null}
+      {plot ? <PlotPanel key={plot.id + plot.status} plot={plot} canBuild={canBuild} /> : null}
     </div>
   );
 }

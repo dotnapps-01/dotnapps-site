@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Creates an API key. The plain key is in this response and nowhere else, ever. */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "owner");
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "api")) return planRequired("api");
   const name = String(a.body.name ?? "").trim().slice(0, 60);

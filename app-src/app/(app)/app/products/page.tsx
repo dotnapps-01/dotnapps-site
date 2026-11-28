@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -204,6 +206,7 @@ function Warranty({ items, full }: { items: WarrantyRecord[]; full: boolean }) {
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ tab?: string; new?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "build")) return <NoAccess role={ws.role} need="build" />;
   const sp = await searchParams;
   const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "overview";
 

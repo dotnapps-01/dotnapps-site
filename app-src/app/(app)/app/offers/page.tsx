@@ -9,6 +9,7 @@ import { buttonClasses } from "@/components/ui/Button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { KpiStrip, KpiTile } from "@/components/ui/KpiTile";
 import { Pill } from "@/components/ui/Pill";
+import { can } from "@/lib/permissions";
 import { currentWorkspace } from "@/lib/auth/current";
 import { cn } from "@/lib/cn";
 import { getOfferStats, getProgram, listCoupons, recentRedemptions } from "@/lib/engage";
@@ -58,6 +59,25 @@ export default async function OffersPage({ searchParams }: { searchParams: Promi
   const tab: Tab = TABS.some((t) => t.key === sp.tab) ? (sp.tab as Tab) : "coupons";
 
   const [stats, coupons, program, redemptions] = await Promise.all([getOfferStats(ws.id), listCoupons(ws.id), getProgram(ws.id), recentRedemptions(ws.id, 8)]);
+
+  // Staff can redeem a code and stamp a loyalty card; setting offers up is for owners and managers
+  if (!can(ws.role, "build")) {
+    return (
+      <>
+        <PageHeader eyebrow="Engage" title="Redeem offers & stamp cards" actions={<RedeemDialog />} />
+        <PageBody>
+          <KpiStrip>
+            <KpiTile variant="cell" label="Active offers" value={fmt(stats.activeOffers)} delta={`${coupons.length} in total`} tone="flat" />
+            <KpiTile variant="cell" label="Redemptions" value={fmt(stats.redemptions30)} delta="last 30 days" tone="flat" />
+            <KpiTile variant="cell" label="Stamps given" value={fmt(stats.stamps30)} delta="last 30 days" tone="flat" />
+          </KpiStrip>
+          <div className="flex flex-wrap">
+            <Redemptions items={redemptions} />
+          </div>
+        </PageBody>
+      </>
+    );
+  }
 
   return (
     <>

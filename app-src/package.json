@@ -16,6 +16,8 @@
     "check:ops": "node scripts/check-ops.mjs",
     "check:platform": "node scripts/check-platform.mjs",
     "check:files": "node scripts/check-files.mjs",
+    "check:team": "node scripts/check-team.mjs",
+    "check:guards": "node scripts/check-guards.mjs",
     "check:storage": "node scripts/check-storage.mjs",
     "check:net": "node scripts/check-net.mjs",
     "e2e": "node e2e/run.mjs",

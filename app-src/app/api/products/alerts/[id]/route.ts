@@ -7,7 +7,7 @@ const STATUSES = ["new", "investigating", "dismissed", "confirmed"] as const;
 
 /** Move a counterfeit alert along: investigating, dismissed (a false alarm) or confirmed (a fake). */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "products")) return planRequired("products");
   const status = a.body.status as (typeof STATUSES)[number];

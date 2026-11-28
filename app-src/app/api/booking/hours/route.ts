@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Weekly opening hours that every service's time slots are built from. */
 export async function PUT(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const p = parseHours(a.body.hours);
   if (!p.ok) return invalid(p.fields);

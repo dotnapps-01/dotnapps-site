@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 import { createQrCode } from "@/lib/qr-repo";
 import { dynamicLimit, parseQrInput } from "@/lib/qr-types";
 
@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 
 /** Create a QR code. Body: the QR definition plus `publish: boolean` (false saves a draft). */
 export async function POST(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("build");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
 
   let body: Record<string, unknown>;
   try {

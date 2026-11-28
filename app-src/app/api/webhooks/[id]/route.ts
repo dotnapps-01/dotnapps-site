@@ -5,7 +5,7 @@ import { checkWebhookUrl, deleteEndpoint, parseEndpoint, updateEndpoint } from "
 export const dynamic = "force-dynamic";
 
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "owner");
   if ("error" in a) return a.error;
   const { events, url } = parseEndpoint(a.body);
   const f: Record<string, string> = {};
@@ -17,7 +17,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 export async function DELETE(req: Request, { params }: Ctx) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "owner", { body: false });
   if ("error" in a) return a.error;
   if (!(await deleteEndpoint(a.ws.id, (await params).id))) return notFound();
   await auditAs(a.ws.id, "webhook.deleted");

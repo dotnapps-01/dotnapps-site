@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 /** Adds a webhook endpoint. The signing secret is in this response and nowhere else. */
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "owner");
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "api")) return planRequired("api");
   const { events, url } = parseEndpoint(a.body);

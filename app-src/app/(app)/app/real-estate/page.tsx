@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { can } from "@/lib/permissions";
 import { PageBody, PageHeader } from "@/components/app/PageHeader";
 import { PlotBoard } from "@/components/realestate/PlotBoard";
 import { PlotImport } from "@/components/realestate/PlotImport";
@@ -33,7 +34,7 @@ export default async function RealEstatePage({ searchParams }: { searchParams: P
         title="Real estate plots"
         actions={
           <>
-            {current ? (
+            {current && can(ws.role, "build") ? (
               <Link href={`/app/real-estate?project=${current.id}#import`} className="inline-flex min-h-10 items-center rounded-full border border-ink bg-white px-4 text-[15px] font-medium text-ink no-underline hover:bg-mist">
                 Import plots CSV
               </Link>
@@ -42,7 +43,10 @@ export default async function RealEstatePage({ searchParams }: { searchParams: P
         }
       />
       <PageBody>
-        <ProjectBar projects={projects} current={current} startOpen={sp.new === "1"} />
+        {!current && !can(ws.role, "build") ? (
+          <p role="status" className="m-0 rounded-card border border-line bg-white p-5 text-sm text-graphite">No projects yet. The owner or a manager sets projects and plots up; they will show here once they do.</p>
+        ) : null}
+        <ProjectBar projects={projects} current={current} startOpen={sp.new === "1"} canBuild={can(ws.role, "build")} />
         {current && stats ? (
           <>
             <KpiStrip>
@@ -52,8 +56,8 @@ export default async function RealEstatePage({ searchParams }: { searchParams: P
               <KpiTile variant="cell" label="Plot QR scans" value={fmt(stats.scans30)} delta="last 30 days" tone="flat" />
               <KpiTile variant="cell" label="Site visits asked" value={fmt(stats.visits)} delta="from QR enquiries" tone="flat" />
             </KpiStrip>
-            <PlotBoard key={current.id} project={current} plots={plots} initialNumber={Number.isInteger(plotNo) ? plotNo : null} />
-            <PlotImport projectId={current.id} />
+            <PlotBoard key={current.id} project={current} plots={plots} initialNumber={Number.isInteger(plotNo) ? plotNo : null} canBuild={can(ws.role, "build")} />
+            {can(ws.role, "build") ? <PlotImport projectId={current.id} /> : null}
             <Card>
               <CardHeader>
                 <CardTitle>Enquiries from plot QR codes</CardTitle>
@@ -98,9 +102,11 @@ export default async function RealEstatePage({ searchParams }: { searchParams: P
                   )}
                 </TableBody>
               </Table>
+              {can(ws.role, "build") ? (
               <p role="note" className="m-0 border-t border-line-soft px-[18px] py-3 text-xs text-muted">
                 A QR code is made per plot from the panel above (it uses one of your dynamic codes). Printing a whole sheet of plot QRs at once needs bulk creation, which isn&rsquo;t built yet.
               </p>
+              ) : null}
             </Card>
           </>
         ) : null}

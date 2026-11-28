@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { StudioWizard } from "@/components/qr/StudioWizard";
@@ -17,6 +19,7 @@ export const dynamic = "force-dynamic";
 export default async function StudioPage({ searchParams }: { searchParams: Promise<{ edit?: string; type?: string; ref?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "build")) return <NoAccess role={ws.role} need="build" />;
   const { edit, type, ref } = await searchParams;
 
   const [locations, folders, used, short, record, pages, forms, coupons, program, assets, points, items, plotOptions] = await Promise.all([

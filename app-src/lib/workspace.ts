@@ -1,6 +1,7 @@
 import "server-only";
 import { query, tx } from "@/lib/db";
 import { goalOptions, industryOptions, type GoalKey, type IndustryKey } from "./content/onboarding";
+import type { Role } from "./permissions";
 
 export type Plan = "free" | "starter" | "growth" | "business" | "enterprise";
 
@@ -28,6 +29,10 @@ export type Workspace = {
   retentionMonths: number | null;
   /** uploaded logo (a file id), or null; it is served at /f/<id> */
   logoFileId: string | null;
+  /** what the signed-in person may do here: the owner, or a member's role */
+  role: Role;
+  /** a member's own name (empty for the owner) */
+  memberName: string;
 };
 
 type Row = {
@@ -44,15 +49,20 @@ type Row = {
   default_lang: "en" | "ta" | "hi";
   retention_months: number | null;
   logo_file_id: string | null;
+  role: Role;
+  member_name: string | null;
   location_name: string | null;
   location_address: string | null;
 };
 
+// The signed-in person is the workspace's owner, or a member of it (never both: a phone number is one or the other).
 const SELECT = `
   select w.id, u.phone, w.name, w.industry, w.goals, w.plan, w.step, w.onboarded, w.suspended, w.gstin, w.default_lang, w.retention_months, w.logo_file_id,
+         case when w.owner_id = u.id then 'owner' else m.role end as role, m.name as member_name,
          l.name as location_name, l.address as location_address
     from users u
-    join workspaces w on w.owner_id = u.id
+    left join workspace_members m on m.user_id = u.id
+    join workspaces w on w.owner_id = u.id or w.id = m.workspace_id
     left join locations l on l.workspace_id = w.id and l.is_primary`;
 
 const toWorkspace = (r: Row): Workspace => ({
@@ -71,21 +81,27 @@ const toWorkspace = (r: Row): Workspace => ({
   defaultLang: r.default_lang,
   retentionMonths: r.retention_months,
   logoFileId: r.logo_file_id,
+  role: r.role,
+  memberName: r.member_name ?? "",
 });
 
 export async function getWorkspace(sub: string): Promise<Workspace | null> {
-  const [r] = await query<Row>(`${SELECT} where u.phone = $1`, [sub]);
+  const [r] = await query<Row>(`${SELECT} where u.phone = $1 order by (w.owner_id = u.id) desc limit 1`, [sub]);
   return r ? toWorkspace(r) : null;
 }
 
 export async function getWorkspaceById(id: string): Promise<Workspace | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
-  const [r] = await query<Row>(`${SELECT} where w.id = $1`, [id]);
+  // addressed by id (an API key, an admin): it speaks for the workspace, so it is read as the owner
+  const [r] = await query<Row>(`${SELECT} where w.id = $1 and w.owner_id = u.id`, [id]);
   return r ? toWorkspace(r) : null;
 }
 
 /** Finds or creates the user + workspace for a verified phone number. */
 export async function ensureWorkspace(sub: string, businessName = ""): Promise<Workspace> {
+  // a team member already belongs to a workspace: never give them a second one
+  const existing = await getWorkspace(sub);
+  if (existing && existing.role !== "owner") return existing;
   await tx(async (q) => {
     const [u] = await q.query<{ id: string }>(
       "insert into users (phone) values ($1) on conflict (phone) do update set phone = excluded.phone returning id",

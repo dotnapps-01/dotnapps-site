@@ -7,7 +7,7 @@ import { createProduct } from "@/lib/products";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "products")) return planRequired("products");
   const p = parseProduct(a.body);

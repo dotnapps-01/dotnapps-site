@@ -1,3 +1,5 @@
+import { NoAccess } from "@/components/app/NoAccess";
+import { can } from "@/lib/permissions";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -12,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function PagesScreen({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "build")) return <NoAccess role={ws.role} need="build" />;
   const { page } = await searchParams;
   const pages = await listPages(ws.id);
   const selected = pages.find((p) => p.id === page) ?? null;

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Move a lead along the pipeline, assign an owner, or add notes. */
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const patch: { stage?: Stage; owner?: string; notes?: string } = {};
   if (a.body.stage !== undefined) {

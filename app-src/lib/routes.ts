@@ -1,3 +1,4 @@
+import type { Permission } from "@/lib/permissions";
 import {
   ChartColumn,
   CalendarDays,
@@ -144,5 +145,19 @@ export const appNav: { heading: string; items: AppNavItem[] }[] = [
     ],
   },
 ];
+
+/**
+ * What a person needs to see each screen (any one of these will do). Screens not listed are open to every role.
+ * The screens enforce the same rules themselves; this only keeps the sidebar from offering links that lead to "no access".
+ */
+export const navNeeds: Partial<Record<AppNavKey, Permission[]>> = {
+  studio: ["build"],
+  library: ["build"],
+  pages: ["build"],
+  reviews: ["reviews"],
+  products: ["build"],
+  integrations: ["owner"],
+  settings: ["settings"],
+};
 
 export const appNavFlat: AppNavItem[] = appNav.flatMap((g) => g.items);

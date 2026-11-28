@@ -17,7 +17,7 @@ export default async function OnboardingPage() {
   const session = await getSession();
   if (session) {
     const ws = await getWorkspace(session.sub);
-    if (ws?.onboarded) redirect("/app/dashboard");
+    if (ws?.onboarded || (ws && ws.role !== "owner")) redirect("/app/dashboard");
     return (
       <OnboardingWizard
         initial={{

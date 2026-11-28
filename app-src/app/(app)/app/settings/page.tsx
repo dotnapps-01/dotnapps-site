@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/app/PageHeader";
+import { NoAccess } from "@/components/app/NoAccess";
+import { TeamCard } from "@/components/settings/TeamCard";
 import { BrandCard } from "@/components/settings/BrandCard";
 import { DataPanel } from "@/components/settings/DataPanel";
 import { LocationsCard } from "@/components/settings/LocationsCard";
@@ -13,6 +15,8 @@ import { listAudit } from "@/lib/audit";
 import { currentActor } from "@/lib/auth/admin";
 import { currentWorkspace } from "@/lib/auth/current";
 import { formatBytes as fmtBytes } from "@/components/files/upload";
+import { can, ROLE_LABEL } from "@/lib/permissions";
+import { listTeam } from "@/lib/team";
 import { PLAN_LABEL } from "@/lib/plans";
 import { listFiles } from "@/lib/files";
 import { listLocationsFull, usage } from "@/lib/settings";
@@ -20,7 +24,7 @@ import { listLocationsFull, usage } from "@/lib/settings";
 export const metadata: Metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
 
-const NAV = [
+const NAV_ALL = [
   { id: "business", label: "Business profile" },
   { id: "team", label: "Team & roles" },
   { id: "billing", label: "Plan & billing" },
@@ -41,6 +45,9 @@ const WHAT: Record<string, string> = {
   "product.created": "Product added",
   "batch.created": "Product codes generated",
   "batch.exported": "Product codes downloaded",
+  "team.invited": "Team member added",
+  "team.role_changed": "Team role changed",
+  "team.removed": "Team member removed",
   "file.uploaded": "File uploaded",
   "file.deleted": "File deleted",
   "file.cleanup": "Unused files deleted",
@@ -74,8 +81,11 @@ function Bar({ label, value, of, text }: { label: string; value: number; of: num
 export default async function SettingsPage() {
   const ws = await currentWorkspace();
   if (!ws) redirect("/login");
+  if (!can(ws.role, "settings")) return <NoAccess role={ws.role} need="settings" />;
+  const isOwner = can(ws.role, "owner");
   const actor = await currentActor();
-  const [locations, u, log, files] = await Promise.all([listLocationsFull(ws.id), usage(ws), listAudit(ws.id, 50), listFiles(ws.id, "")]);
+  const [locations, u, log, files, team] = await Promise.all([listLocationsFull(ws.id), usage(ws), isOwner ? listAudit(ws.id, 50) : Promise.resolve([]), listFiles(ws.id, ""), listTeam(ws)]);
+  const nameOf = (actor: string) => (actor.startsWith("Skanor admin") || actor.startsWith("API key") ? actor : actor === ws.sub ? "You" : (() => { const m = team.find((x) => x.phone === actor); return m ? (m.status === "owner" ? "Owner" : `${m.name} (${ROLE_LABEL[m.role]})`) : actor; })());
   const keep = ws.retentionMonths === null ? "forever" : String(ws.retentionMonths);
 
   return (
@@ -83,7 +93,7 @@ export default async function SettingsPage() {
       <PageHeader eyebrow="Account" title="Settings" />
       <div className="flex flex-wrap items-start gap-6 px-[clamp(16px,2.4vw,32px)] py-[clamp(16px,2.4vw,28px)]">
         <nav aria-label="Settings sections" className="flex max-w-[240px] flex-[1_1_200px] flex-col gap-0.5">
-          {NAV.map((n) => (
+          {NAV_ALL.filter((n) => isOwner || n.id !== "security").map((n) => (
             <a key={n.id} href={`#${n.id}`} className="rounded-[10px] px-3 py-2.5 text-sm font-medium text-ink no-underline hover:bg-mist">
               {n.label}
             </a>
@@ -101,9 +111,8 @@ export default async function SettingsPage() {
           <Card id="team" className="scroll-mt-4">
             <CardHeader>
               <CardTitle>Team &amp; roles</CardTitle>
-              <Pill>SOON</Pill>
             </CardHeader>
-            <p className="m-0 p-[18px] text-sm leading-[1.6] text-graphite">Today each workspace has one owner, who can do everything. Inviting managers and staff with their own permissions (view only, redeem coupons, manage tickets…) is planned; it needs separate logins, so it isn&rsquo;t built yet.</p>
+            <TeamCard team={team} role={ws.role} businessName={ws.businessName || "your business"} seats={{ used: u.seats, limit: u.seatLimit }} />
           </Card>
 
           <Card id="billing" className="scroll-mt-4">
@@ -118,14 +127,14 @@ export default async function SettingsPage() {
                 <div className="k">Current plan</div>
                 <div className="mt-1.5 font-display text-[26px] font-semibold tracking-display">{PLAN_LABEL[ws.plan]}</div>
                 <div className="mt-1 text-[13px]">[₹ PRICE] / location / month</div>
-                <p className="mb-0 mt-3 text-[13px] leading-[1.5]">To change your plan, contact us at [sales@skanor.in]. Paying online isn&rsquo;t switched on yet.</p>
+                <p className="mb-0 mt-3 text-[13px] leading-[1.5]">{isOwner ? "To change your plan, contact us at [sales@skanor.in]. Paying online isn\u2019t switched on yet." : "Only the owner can change the plan or billing details."}</p>
               </div>
               <div className="flex flex-[1_1_260px] flex-col gap-3">
                 <Bar label="Dynamic QR codes" value={u.dynamicUsed} of={u.dynamicLimit} text={`${fmt(u.dynamicUsed)} / ${u.dynamicLimit === null ? "unlimited" : fmt(u.dynamicLimit)}`} />
                 <Bar label="Scans this month" value={u.scansMonth} of={null} text={`${fmt(u.scansMonth)} / unlimited`} />
                 <Bar label="Contacts" value={u.contacts} of={null} text={fmt(u.contacts)} />
                 <Bar label="File storage" value={u.storageUsed} of={u.storageQuota} text={`${fmtBytes(u.storageUsed)} / ${fmtBytes(u.storageQuota)}`} />
-                <Bar label="Team seats" value={1} of={1} text="1 / 1" />
+                <Bar label="Team seats" value={u.seats} of={u.seatLimit} text={`${u.seats} / ${u.seatLimit}`} />
               </div>
             </div>
             <div className="border-t border-line-soft">
@@ -159,6 +168,7 @@ export default async function SettingsPage() {
             </p>
           </Card>
 
+          {isOwner ? (
           <Card id="security" className="scroll-mt-4">
             <CardHeader>
               <CardTitle>Security &amp; audit log</CardTitle>
@@ -184,7 +194,7 @@ export default async function SettingsPage() {
                   log.map((e) => (
                     <TableRow key={e.id}>
                       <Td className="tabular">{when(e.at)}</Td>
-                      <Td>{e.actor.startsWith("Skanor admin") ? e.actor : e.actor.startsWith("API key") ? e.actor : "You"}</Td>
+                      <Td>{nameOf(e.actor)}</Td>
                       <Td>{WHAT[e.action] ?? e.action}</Td>
                       <Td className="max-w-[320px] whitespace-normal text-graphite">{e.detail || "—"}</Td>
                     </TableRow>
@@ -193,6 +203,7 @@ export default async function SettingsPage() {
               </TableBody>
             </Table>
           </Card>
+          ) : null}
 
           <Card id="notifications" className="scroll-mt-4">
             <CardHeader>
@@ -206,7 +217,7 @@ export default async function SettingsPage() {
             <CardHeader>
               <CardTitle>Data &amp; privacy</CardTitle>
             </CardHeader>
-            <DataPanel keep={keep} businessName={ws.businessName} canDelete={!actor?.act} />
+            <DataPanel keep={keep} businessName={ws.businessName} canRetain={isOwner} canDelete={isOwner && !actor?.act} />
           </Card>
         </div>
       </div>

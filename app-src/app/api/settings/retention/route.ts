@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** How long scans and leads are kept. Choosing a shorter period deletes the older ones straight away. */
 export async function PUT(req: Request) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "owner");
   if ("error" in a) return a.error;
   const opt = RETENTION.find((r) => r.value === String(a.body.keep));
   if (!opt) return invalid({ keep: "Choose 24 months, 12 months or forever." });

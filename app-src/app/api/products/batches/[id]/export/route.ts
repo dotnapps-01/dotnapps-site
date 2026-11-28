@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 /** CSV of every serial and the URL to print as its QR code, for a packaging-line printer. */
 export async function GET(req: Request, { params }: Ctx) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "export", { body: false });
   if ("error" in a) return a.error;
   if (!canUse(a.ws.plan, "products")) return planRequired("products");
   const batch = await getBatch(a.ws.id, (await params).id);

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Rename or re-address a location, or make it the primary one ({ primary: true }). */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "settings");
   if ("error" in a) return a.error;
   const id = (await params).id;
   if (a.body.primary === true) {
@@ -20,7 +20,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 export async function DELETE(req: Request, { params }: Ctx) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "settings", { body: false });
   if ("error" in a) return a.error;
   const r = await removeLocation(a.ws.id, (await params).id);
   if (r === "ok") {

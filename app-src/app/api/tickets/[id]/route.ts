@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Status, assignee, priority, an internal note, or a reply the customer sees on their ticket page. */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const p = parseTicketPatch(a.body);
   if (!p.ok) return invalid(p.fields);

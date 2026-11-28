@@ -5,7 +5,7 @@ import { parsePoint } from "@/lib/ops-input";
 export const dynamic = "force-dynamic";
 
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "build");
   if ("error" in a) return a.error;
   const p = parsePoint(a.body);
   if (!p.ok) return invalid(p.fields);
@@ -13,7 +13,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 export async function DELETE(req: Request, { params }: Ctx) {
-  const a = await authedJson(req, { body: false });
+  const a = await authedJson(req, "build", { body: false });
   if ("error" in a) return a.error;
   return deleted(await deletePoint(a.ws.id, (await params).id));
 }

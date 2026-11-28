@@ -6,7 +6,7 @@ const ACTIONS: VisitorAction[] = ["approve", "decline", "in", "out"];
 
 /** Approve or decline a pass request, then mark the visitor in and out at the gate. */
 export async function PATCH(req: Request, { params }: Ctx) {
-  const a = await authedJson(req);
+  const a = await authedJson(req, "work");
   if ("error" in a) return a.error;
   const action = a.body.action as VisitorAction;
   if (!ACTIONS.includes(action)) return invalid({ action: "Unknown action." });

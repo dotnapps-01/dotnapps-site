@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { exportScans, resolveRange } from "@/lib/analytics";
-import { currentWorkspace } from "@/lib/auth/current";
+import { authorize } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -8,8 +8,9 @@ const cell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v
 
 /** GET /app/analytics/export?range=30d&qr=<id>&location=<id> : scans as CSV (IST timestamps, no IP or user agent). */
 export async function GET(req: Request) {
-  const ws = await currentWorkspace();
-  if (!ws) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const a = await authorize("export");
+  if ("error" in a) return a.error;
+  const ws = a.ws;
   const sp = new URL(req.url).searchParams;
   const range = resolveRange(sp.get("range") ?? undefined);
   const rows = await exportScans(ws.id, range, sp.get("qr"), sp.get("location"));
